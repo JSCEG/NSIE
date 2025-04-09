@@ -1,0 +1,84 @@
+# Archivos de la IDE
+.vs/
+.vscode/
+.config/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+
+# Archivos de compilación y binarios
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+*.log
+# obj
+# bin
+obj/
+bin/
+
+# Archivos generados por la publicación del proyecto
+*.Publish.xml
+*.pubxml
+*.pubxml.user
+
+# Paquetes NuGet
+**/[Pp]ackages/*
+*.nupkg
+!*.nupkg.metadata
+
+# Herramientas de Resharper y Rider
+_ReSharper*/
+.idea/
+
+# Archivos de configuración
+appsettings.json
+appsettings.Development.json
+# No ignorar appsettings.Production.json si quieres que tus configuraciones de producción estén en el control de versiones
+
+# Archivos específicos de C# y .NET
+*.csproj.user
+*.csproj
+*.csproj.sln
+
+# Archivos de configuración local de base de datos SQL Server
+*.mdf
+*.ldf
+*.ndf
+
+# Carpetas de salida de TestResults
+TestResults/
+
+# Archivos específicos de proyectos de Visual Studio
+*.dbmdl
+*.jfm
+
+# Herramientas de SQL Server
+*.dacpac
+*.bacpac
+
+# Carpetas y archivos de Node (si utilizas Node.js)
+node_modules/
+npm-debug.log
+
+
+
+
+# Ignorar algunas carpetas estaticas
+Properties/PublishProfiles/
+
+wwwroot/documents/
+wwwroot/Geovisualizador/
+wwwroot/img/
+wwwroot/lib/
+wwwroot/video/
+
+favicon.ico
+
+evaluación_2024.mp4
+Presentación_Energeo.mp4
+Login.mp4
+guia.mp4
+lib
+
+NSIE.sln

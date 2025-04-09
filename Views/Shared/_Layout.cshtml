@@ -1,0 +1,1416 @@
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@using NSIE.Models
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var httpContext = HttpContextAccessor.HttpContext;
+    var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+
+    // Utilizar los datos del usuario para personalizar la vista
+    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["IDUsuario"] = perfilUsuario.IdUsuario;
+    ViewData["Unidad_de_Adscripcion"] = perfilUsuario.Unidad_de_Adscripcion;
+     ViewData["Mercado_ID"] = perfilUsuario.Mercado_ID;
+}
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Meta tags -->
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>@ViewData["Title"] - EnerGeoCRE</title>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NXLZHRMM');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@200;300;400;500;600;700&amp;family=Fira+Sans+Extra+Condensed:wght@200;300;400;500;600;700&amp;family=Montserrat:wght@200;300;400;500;600;700&amp;display=swap">
+    
+    <!-- Core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/NSIE.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/portal.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Geovisualizador CSS -->
+    <link rel="stylesheet" href="~/Geovisualizador/css/qgis2web.css">
+    <link rel="stylesheet" href="~/Geovisualizador/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="~/Geovisualizador/css/leaflet-control-geocoder.Geocoder.css">
+    <link rel="stylesheet" href="~/Geovisualizador/css/leaflet-search.css">
+    <link rel="stylesheet" href="~/Geovisualizador/css/leaflet-measure.css">
+    <link rel="stylesheet" href="~/Geovisualizador/css/MarkerCluster.css">
+    <link rel="stylesheet" href="~/Geovisualizador/css/MarkerCluster.Default.css">
+    <link rel="stylesheet" href="~/Geovisualizador/css/leaflet.css">
+    <link rel="stylesheet" href="~/Geovisualizador/css/L.Control.Layers.Tree.css">
+   
+     
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Geovisualizador/dist/leaflet-routing-machine.css" />
+
+    <!-- Owl Carousel -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <link href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+    <!-- jQuery y plugins -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/maphilight/1.4.0/jquery.maphilight.min.js"></script>
+
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <!-- Highcharts -->
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/modules/treemap.js"></script>
+    <script src="https://code.highcharts.com/modules/treegraph.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
+    <script src="https://code.highcharts.com/modules/price-indicator.js"></script>
+    <script src="https://code.highcharts.com/modules/pictorial.js"></script>
+
+    <!-- HTML2PDF -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+    <!-- Geovisualizador JS -->
+    <script src="~/Geovisualizador/js/qgis2web_expressions.js"></script>
+    <script src="~/Geovisualizador/js/leaflet-svg-shape-markers.min.js"></script>
+    <script src="~/Geovisualizador/js/Autolinker.min.js"></script>
+    <script src="~/Geovisualizador/js/leaflet.rotatedMarker.js"></script>
+    <script src="~/Geovisualizador/js/leaflet-hash.js"></script>
+    <script src="~/Geovisualizador/js/rbush.min.js"></script>
+    <script src="~/Geovisualizador/js/labelgun.min.js"></script>
+    <script src="~/Geovisualizador/js/labels.js"></script>
+    <script src="~/Geovisualizador/js/L.Control.Layers.Tree.min.js"></script>
+    <script src="~/Geovisualizador/js/leaflet.pattern.js"></script>
+    <script src="~/Geovisualizador/js/leaflet-control-geocoder.Geocoder.js"></script>
+    <script src="~/Geovisualizador/js/leaflet-measure.js"></script>
+    <script src="~/Geovisualizador/js/leaflet.markercluster.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-omnivore/0.3.4/leaflet-omnivore.min.js"></script>
+    <script src="~/Geovisualizador/dist/leaflet-routing-machine.js"></script>
+    <script src="~/Geovisualizador/dist/Control.Geocoder.js"></script>
+    <script src="~/Geovisualizador/js/turf.min.js"></script>
+
+    <!-- AmCharts -->
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+    <!-- Lightweight Charts -->
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+    <!-- DOM Observer -->
+    <script>
+        var observer = new MutationObserver(function (mutations) {
+        });
+        var observerOptions = {
+            childList: true,
+            subtree: true
+        };
+        var targetNode = document.documentElement;
+        observer.observe(targetNode, observerOptions);
+    </script>
+
+    <!-- Configuración de Mapas -->
+    <script src="~/js/configura_mapa.js"></script>
+
+</head>
+<body class="app">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXLZHRMM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    <header class="app-header fixed-top">
+        <div class="app-header-inner bg-verde">
+            <div class="container-fluid py-2">
+                <div class="app-header-content">
+                    <div class="row justify-content-between align-items-center">
+
+                        <div class="col-auto">
+                            <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none btn btn-cre-rojo" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"
+                                     role="img">
+                                    <title>Menu</title>
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10"
+                                          stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path>
+                                </svg>
+                            </a>
+                        </div><!--//col-->
+                        <div class="search-mobile-trigger d-sm-none col">
+                            <i class="search-mobile-trigger-icon fa-solid fa-magnifying-glass"></i>
+                        </div><!--//col-->
+                        <div class="app-search-box col">
+                            <img src="~/img/b1.png" alt="" class="img_logo">
+                            @*   <form class="app-search-form">
+                                <input type="text" placeholder="Search..." name="search"
+                                class="form-control search-input">
+                                <button type="submit" class="btn search-btn btn-primary" value="Search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                                </form>*@
+                        </div><!--//app-search-box-->
+                        <div class="app-utilities col-auto">
+                            <style>
+                                .hidden {
+                                    display: none !important;
+                                }
+                                
+                                /* Agregar estos estilos para eliminar el marcador */
+                                .nav-item {
+                                    list-style: none;  /* Elimina los marcadores de lista */
+                                }
+                                
+                                .submenu-list {
+                                    list-style: none;  /* Elimina los marcadores de sublistas */
+                                    padding-left: 0;   /* Elimina el padding izquierdo que puede causar espacios */
+                                }
+                            </style>
+
+                            @if (perfilUsuario.Rol != "0")
+                            {
+                                <div class="app-utility-item app-notifications-dropdown dropdown">
+                                    <a class="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle"
+                                       data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"
+                                       title="Notificaciones">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z"/>
+                                            <path fill-rule="evenodd"
+                                                  d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+                                        </svg>
+                                        <span class="icon-badge hidden" id="notification-count">0</span>
+                                    </a>
+
+                                    <div class="dropdown-menu p-0" aria-labelledby="notifications-dropdown-toggle">
+                                        <div class="dropdown-menu-header p-3">
+                                            <h5 class="dropdown-menu-title mb-0">Avisos Importantes</h5>
+                                            <hr>
+                                        </div>
+                                        <div class="dropdown-menu-content" id="notifications-list">
+                                        </div>
+                                        <div class="dropdown-menu-footer p-2 text-center">
+                                            <a href="@Url.Action("AllNotifications", "Usuarios", new { userId = ViewData["IDUsuario"] })">Ver Todas las Notificaciones</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="app-utility-item app-user-dropdown dropdown">
+                                <a class="dropdown-toggle text-white" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                                   role="button" aria-expanded="false">
+                                    <span>
+                                        @if (perfilUsuario.Rol != "0")
+                                        {
+                                            @:¡Bienvenida/o, @ViewData["NombreUsuario"]!
+                                        }
+                                        else
+                                        {
+                                            @:¡Bienvenida/o a Consulta Pública!
+                                        }
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
+                                    @if (perfilUsuario.Rol != "0")
+                                    {
+                                        <li><a class="dropdown-item" href="@Url.Action("ModeloCuentaCompuesto", "Usuarios", new { id = ViewData["IDUsuario"] })">Cuenta de Usuario</a></li>
+                                        <li><a class="dropdown-item" href="#">Configuraciones</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Acceso" asp-action="CerrarSesion">
+                                            <i class="bi bi-box-arrow-right"></i>
+                                            Salir
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <img src="~/img/logo_cre.png" alt="Logo CRE" class="img_logo">
+                        </div>
+                    </div><!--//row-->
+                </div><!--//app-header-content-->
+            </div><!--//container-fluid-->
+        </div><!--//app-header-inner-->
+
+
+        <div id="app-sidepanel" class="app-sidepanel">
+            <div id="sidepanel-drop" class="sidepanel-drop"></div>
+            <div class="sidepanel-inner d-flex flex-column">
+                <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
+                <div class="app-branding">
+                    <a class="" href="#">
+                        @* <img src="~/img/b1.png" alt="" class="img_logo">*@
+                        @*<img class="img_logo" src="~/img/b1.png"
+                            alt="logo">*@
+                        <span class="subtitulo display-9 fw-bold">Menú</span>
+                    </a>
+
+                </div><!--//app-branding-->
+                <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
+                    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Index" && ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")" title="Ir al inicio">
+                                <span class="nav-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Inicio</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item has-submenu">
+                            <a class="nav-link submenu-toggle @(ViewContext.RouteData.Values["Controller"].ToString() == "PlanMexico" ? "active" : "")" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
+                                <span class="nav-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                        <path d="M3.5 6a4.5 4.5 0 1 1 9 0c0 3.1-4.5 7.5-4.5 7.5S3.5 9.1 3.5 6zM8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Plan México</span>
+                                <span class="badge bg-success ms-2"><i class="fas fa-exclamation-triangle"></i> Nuevo</span>
+                                <span class="submenu-arrow">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                </span>
+                            </a>
+                            <div id="submenu-1" class="collapse submenu submenu-1" data-bs-parent="#menu-accordion">
+                                <ul class="submenu-list list-unstyled">
+                                    <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Plan_Carretero" && ViewContext.RouteData.Values["Controller"].ToString() == "PlanMexico" ? "active" : "")" href="@Url.Action("Plan_Carretero", "PlanMexico")">Plan Carretero</a></li>
+                                    <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Plan_Centrales_EPyPB" && ViewContext.RouteData.Values["Controller"].ToString() == "PlanMexico" ? "active" : "")" href="@Url.Action("Plan_Centrales_EPyPB", "PlanMexico")">Centrales Eléctricas - Polos y Polígonos del Bienestar</a></li>
+                                    <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Plan_GLP" && ViewContext.RouteData.Values["Controller"].ToString() == "PlanMexico" ? "active" : "")" href="@Url.Action("Plan_GLP", "PlanMexico")">Expendios y Ductos de Gas LP - Polos y Polígonos del Bienestar</a></li>
+                                    <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Plan_Generacion" && ViewContext.RouteData.Values["Controller"].ToString() == "PlanMexico" ? "active" : "")" href="@Url.Action("Plan_Generacion", "PlanMexico")">Generación Eléctrica - Polos y Polígonos del Bienestar</a></li>
+                                    <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Plan_Transmision" && ViewContext.RouteData.Values["Controller"].ToString() == "PlanMexico" ? "active" : "")" href="@Url.Action("Plan_Transmision", "PlanMexico")">Nodos y Líneas de Transmisión Eléctrica - Polos y Polígonos del Bienestar</a></li>
+                                    <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Plan_Petroliferos" && ViewContext.RouteData.Values["Controller"].ToString() == "PlanMexico" ? "active" : "")" href="@Url.Action("Plan_Petroliferos", "PlanMexico")">Expendios y Ductos de Petrolíferos - Polos y Polígonos del Bienestar</a></li>
+                                    <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Plan_Polos" && ViewContext.RouteData.Values["Controller"].ToString() == "PlanMexico" ? "active" : "")" href="@Url.Action("Plan_Polos", "PlanMexico")">Polos y Polígonos del Bienestar</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+               
+
+
+
+@* Seccion de Proyectos Estrategicos *@
+      @if (perfilUsuario.Rol == "1" || perfilUsuario.Rol == "3" || (perfilUsuario.Rol == "4" && perfilUsuario.Unidad_de_Adscripcion == "Unidad de Planeación y Vinculación" && perfilUsuario.Mercado_ID == "0") || perfilUsuario.Rol == "5")
+{
+                            <li class="nav-item ">
+
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "MenuPE" && ViewContext.RouteData.Values["Controller"].ToString() == "ProyEstrategicos" ? "active" : "")" href="@Url.Action("MenuPE", "ProyEstrategicos")">
+                                    <span class="nav-icon">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-kanban" viewBox="0 0 16 16">
+                                        <path d="M13.5 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm-11-1a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                        <path d="M6.5 3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1zm-4 0a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1zm8 0a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Proyectos Estratégicos</span>
+                                </a><!--//nav-link-->
+                        </li>
+                        }
+
+@* Extractor de Facturas *@
+         @if (perfilUsuario.Rol == "1" &&  perfilUsuario.IdUsuario=="1")
+                        {
+                            <li class="nav-item ">
+
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "MenuEF" && ViewContext.RouteData.Values["Controller"].ToString() == "Facturas" ? "active" : "")" href="@Url.Action("MenuEF", "Facturas")">
+                                    <span class="nav-icon">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-database-down" viewBox="0 0 16 16">
+                                        <path d="M12.5 9a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7m.354 5.854 1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V10.5a.5.5 0 0 0-1 0v2.793l-.646-.647a.5.5 0 0 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0"/>
+                                        <path d="M12.096 6.223A5 5 0 0 0 13 5.698V7c0 .289-.213.654-.753 1.007a4.5 4.5 0 0 1 1.753.25V4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.5 4.5 0 0 1-.813-.927Q8.378 15 8 15c-1.464 0-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13h.027a4.6 4.6 0 0 1 0-1H8c-1.464 0-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10q.393 0 .774-.024a4.5 4.5 0 0 1 1.102-1.132C9.298 8.944 8.666 9 8 9c-1.464 0-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777M3 4c0-.374.356-.875 1.318-1.313C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4"/>
+                                    </svg>
+                                    </span>
+                                    <span class="nav-link-text">Extractor de Facturas</span>
+                                </a><!--//nav-link-->
+                        </li>
+                        }
+
+
+
+
+
+
+
+                        <li class="nav-item ">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "MapaSPP" && ViewContext.RouteData.Values["Controller"].ToString() == "Indicadores" ? "active" : "")" href="@Url.Action("MapaSPP", "Indicadores")">
+                                <span class="nav-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                        <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
+                                        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Evalúa tu Solicitud de Permiso para Expendio</span>
+                            </a><!--//nav-link-->
+                        </li><!--//nav-item-->
+
+                        <li class="nav-item ">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Infraestructura_SEM" && ViewContext.RouteData.Values["Controller"].ToString() == "Map" ? "active" : "")" href="@Url.Action("Infraestructura_SEM", "Map")">
+                                <span class="nav-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-map" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z" />
+                                        <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Sistema Energético Mexicano</span>
+                                @* <span class="badge badge-warning"> <i class="fas fa-exclamation-triangle"></i>¡Sigue el paso del huracán Beryl!</span> *@
+                            </a><!--//nav-link-->
+                        </li><!--//nav-item-->
+
+
+
+
+                            <li class="nav-item has-submenu">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link submenu-toggle @(ViewContext.RouteData.Values["Controller"].ToString() == "EnergiasLimpias" ? "active" : "")" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#submenu-2" aria-expanded="false" aria-controls="submenu-2">
+                                  <span class="nav-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-globe-americas" viewBox="0 0 16 16">
+                                            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484q-.121.12-.242.234c-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Energías Limpias</span>
+                                    <span class="badge bg-success ms-2"><i class="fas fa-exclamation-triangle"></i> Nuevo</span> <!-- Badge después del texto -->
+                                
+                                    <span class="submenu-arrow">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                        </svg>
+                                    </span><!--//submenu-arrow-->
+                            </a><!--//nav-link-->
+                            <div id="submenu-2" class="collapse submenu submenu-2" data-bs-parent="#menu-accordion">
+                                    <ul class="submenu-list list-unstyled">
+                                        <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Certificados" && ViewContext.RouteData.Values["Controller"].ToString() == "EnergiasLimpias" ? "active" : "")" href="@Url.Action("Certificados", "EnergiasLimpias")">Certificados de Energias Limpias</a></li>
+                                        <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "FactorEmision" && ViewContext.RouteData.Values["Controller"].ToString() == "EnergiasLimpias" ? "active" : "")" href="@Url.Action("FactorEmision", "EnergiasLimpias")">Factor de Emision del SEN</a></li>
+                                              @* <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "ConsultaxCoordenada" && ViewContext.RouteData.Values["Controller"].ToString() == "LaboratoriosyUE" ? "active" : "")" href="@Url.Action("ConsultaxCoordenada", "LaboratoriosyUE")">Consulta Infraestructura por Coordenada</a></li> *@
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <!--//nav-item-->
+
+
+                        <li class="nav-item ">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Menu_Eventos" && ViewContext.RouteData.Values["Controller"].ToString() == "Eventos" ? "active" : "")" href="@Url.Action("Menu_Eventos", "Eventos")"> 
+                            @* <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Huracan_Rafael_2024" && ViewContext.RouteData.Values["Controller"].ToString() == "Map" ? "active" : "")" href="@Url.Action("Huracan_Rafael_2024", "Eventos")">   *@
+                             
+                               <span class="nav-icon">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                                <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
+                                <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                                </svg>
+                                 </span>
+                              <span class="nav-link-text">Eventos Emergentes</span>
+                                  @* <span class="badge badge-info"> <i class="fas fa-exclamation-triangle"></i>¡Sigue los Eventos Emergentes!</span>   *@
+                            </a><!--//nav-link-->
+                        </li><!--//nav-item-->
+
+
+                        <li class="nav-item ">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Electrolineras" && ViewContext.RouteData.Values["Controller"].ToString() == "EstacionesdeCarga" ? "active" : "")" href="@Url.Action("Electrolineras", "EstacionesdeCarga")"> 
+                                <span class="nav-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                        <path d="M12.166 8.94C12.166 10.74 10.173 14.167 8 14.167s-4.167-3.427-4.167-5.227a4.167 4.167 0 1 1 8.333 0z"/>
+                                        <path d="M8 6.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Electrolineras</span>
+                                @* <span class="badge badge-info"> <i class="fas fa-charging-station"></i> Ver Mapa</span>  *@
+                            </a><!--//nav-link-->
+                        </li><!--//nav-item-->
+
+
+
+                        @if (perfilUsuario.Rol == "1" || perfilUsuario.Rol == "3" || perfilUsuario.Rol == "5"|| perfilUsuario.Rol == "7")
+                        {
+                            <li class="nav-item ">
+
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Menu_Mecanismo" && ViewContext.RouteData.Values["Controller"].ToString() == "Indicadores" ? "active" : "")" href="@Url.Action("Menu_Mecanismo", "Indicadores")">
+                                    <span class="nav-icon">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                              d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
+                                            <path fill-rule="evenodd"
+                                              d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z" />
+                                            <circle cx="3.5" cy="5.5" r=".5" />
+                                            <circle cx="3.5" cy="8" r=".5" />
+                                            <circle cx="3.5" cy="10.5" r=".5" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Mecanismo y Evaluación</span>
+                                </a><!--//nav-link-->
+                        </li>
+                        }
+
+
+                        @if (perfilUsuario.Rol == "4"  && perfilUsuario.Unidad_de_Adscripcion != "Unidad de Planeación y Vinculación")
+                        {
+                            <li class="nav-item ">
+
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Menu_Mecanismo" && ViewContext.RouteData.Values["Controller"].ToString() == "Indicadores" ? "active" : "")" href="@Url.Action("Menu_Mecanismo", "Indicadores")">
+                                    <span class="nav-icon">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                              d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
+                                            <path fill-rule="evenodd"
+                                              d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z" />
+                                            <circle cx="3.5" cy="5.5" r=".5" />
+                                            <circle cx="3.5" cy="8" r=".5" />
+                                            <circle cx="3.5" cy="10.5" r=".5" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Ubicación Solicitudes</span>
+                                </a><!--//nav-link-->
+                        </li>
+                        }
+
+
+                            <li class="nav-item">
+
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                               <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Sankey" && ViewContext.RouteData.Values["Controller"].ToString() == "Sankey" ? "active" : "")" href="@Url.Action("Sankey", "Sankey")">
+                                    <span class="nav-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brilliance" viewBox="0 0 16 16">
+                                            <path d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Flujo Físico de la Energía (Balance Nacional de Energía)</span>
+                                </a><!--//nav-link-->
+
+
+                             </li>
+                        
+                            <li class="nav-item">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "TasadeConsumoMetabolico" && ViewContext.RouteData.Values["Controller"].ToString() == "Metabolismo" ? "active" : "")" href="@Url.Action("TasadeConsumoMetabolico", "Metabolismo")">
+                                    <span class="nav-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-battery-charging" viewBox="0 0 16 16">
+                                            <path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h10A1.5 1.5 0 0 1 13 4.5v7A1.5 1.5 0 0 1 11.5 13H1.5A1.5 1.5 0 0 1 0 11.5v-7zM4 0h3v1.5h2a1 1 0 0 1 1 1V5h-1.5v-2h-2V1.5h-1V3H5V1.5H4V5H3V2a1 1 0 0 1 1-1h2V0H4z"/>
+                                            <path d="M5.666 8.333L8 5.667V8h1.5L6.666 12H6v-2H4.5l1.166-1.667z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Tasa de Consumo de Energía</span>
+                                     <span class="badge bg-success ms-2"><i class="fa fa-battery-full" aria-hidden="true"></i> Nuevo</span>
+                                </a><!--//nav-link-->
+                            </li>
+
+
+                       @if (perfilUsuario.Rol == "1" &&  perfilUsuario.IdUsuario=="1")
+                        {
+                        @* Atlas Histórico *@
+                        <li class="nav-item">
+
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Menu_Revistas" && ViewContext.RouteData.Values["Controller"].ToString() == "Revistas" ? "active" : "")" href="@Url.Action("Menu_Revistas", "Revistas")">
+                                    <span class="nav-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.5.5 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103M10 1.91l-4-.8v12.98l4 .8zm1 12.98 4-.8V1.11l-4 .8zm-6-.8V1.11l-4 .8v12.98z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Atlas Histórico de Consumo Final</span>
+                                    <span class="badge bg-info ms-2"><i class="fas fa-exclamation-triangle"></i> Nuevo</span> <!-- Badge después del texto -->
+                                
+                                </a><!--//nav-link-->
+                        </li>
+                        }
+                      
+                       @if (perfilUsuario.Rol == "1" )
+                        {
+                        @* Atlas de Zonas de Potencia *@
+                        <li class="nav-item ">
+
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "AZEL" && ViewContext.RouteData.Values["Controller"].ToString() == "Atlas" ? "active" : "")" href="@Url.Action("AZEL", "Atlas")">
+                                    <span class="nav-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-globe-americas" viewBox="0 0 16 16">
+                                            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Atlas Nacional con Potencial de Energías Renovables e Inventario de Convencionales</span>
+                                    <span class="badge bg-info ms-2"><i class="fas fa-exclamation-triangle"></i> Nuevo</span> <!-- Badge después del texto -->
+                                
+                                </a><!--//nav-link-->
+                        </li>
+                        }
+                      
+
+             
+                        @* Consulta de Parque Vehicular *@
+
+                        <li class="nav-item ">
+
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "BuscarPV" && ViewContext.RouteData.Values["Controller"].ToString() == "PermisosPV" ? "active" : "")" href="@Url.Action("BuscarPV", "PermisosPV")">
+                                    <span class="nav-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
+                                        <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Consulta el Parque Vehicular de Permisos Vigentes</span>
+                                </a><!--//nav-link-->
+                        </li>
+
+
+
+<li class="nav-item has-submenu">
+    <!-- Bootstrap Icons -->
+    <a class="nav-link submenu-toggle @((ViewContext.RouteData.Values["Action"].ToString() == "Precio_Gas_LP" && ViewContext.RouteData.Values["Controller"].ToString() == "Indicadores") || 
+                                         (ViewContext.RouteData.Values["Action"].ToString() == "TarifasMI" && ViewContext.RouteData.Values["Controller"].ToString() == "Tarifas") || 
+                                         (ViewContext.RouteData.Values["Action"].ToString() == "I_Petroliferos" && ViewContext.RouteData.Values["Controller"].ToString() == "Map") ? "active" : "")" 
+                                          
+       href="#" data-bs-toggle="collapse" data-bs-target="#submenu-3" aria-expanded="false" aria-controls="submenu-3">
+        <span class="nav-icon">
+            <!-- Bootstrap Icons -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
+            </svg>
+        </span>
+        <span class="nav-link-text">Economía</span>
+        <span class="badge badge-info">Nuevo!</span> <!-- Badge añadido -->
+        <span class="submenu-arrow">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </span>
+    </a><!--//nav-link-->
+    
+    <div id="submenu-3" class="collapse submenu submenu-3" data-bs-parent="#menu-accordion">
+        <ul class="submenu-list list-unstyled">
+        @if (perfilUsuario.Rol == "1")
+            { 
+            <li class="submenu-item">
+             
+
+                <a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "I_Petroliferos" && ViewContext.RouteData.Values["Controller"].ToString() == "Map" ? "active" : "")" href="@Url.Action("I_Petroliferos", "Map")">Precios Históricos de Estaciones de Servicio</a>
+            </li>
+               } 
+            <li class="submenu-item">
+                <a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Precio_Gas_LP" && ViewContext.RouteData.Values["Controller"].ToString() == "Indicadores" ? "active" : "")" href="@Url.Action("Precio_Gas_LP", "Indicadores")">Precios Históricos de Gas L.P.</a>
+            </li>
+     
+                <li class="submenu-item">
+                    <a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "TarifasMI" && ViewContext.RouteData.Values["Controller"].ToString() == "Tarifas" ? "active" : "")" href="@Url.Action("TarifasMI", "Tarifas")">
+                        <span class="submenu-text">Tarifas Históricas de Electricidad</span>
+                        <span class="badge badge-info"> <i class="fas fa-bolt"></i> ¡Nuevo!</span> 
+                    </a>
+                </li>
+          
+        </ul>
+    </div>
+</li><!--//nav-item-->
+
+                        <li class="nav-item has-submenu">
+                            <a class="nav-link submenu-toggle @(ViewContext.RouteData.Values["Controller"].ToString() == "LaboratoriosyUE" ? "active" : "")" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#submenu-4" aria-expanded="false" aria-controls="submenu-4">
+                                <span class="nav-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-2" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 5 7h2.5V6A1.5 1.5 0 0 1 6 4.5zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5zM3 11.5A1.5 1.5 0 0 1 4.5 10h1A1.5 1.5 0 0 1 7 11.5v1A1.5 1.5 0 0 1 5.5 14h-1A1.5 1.5 0 0 1 3 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1A1.5 1.5 0 0 1 9 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Logística</span>
+                                <span class="submenu-arrow">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                </span>
+                            </a>
+                            <div id="submenu-4" class="collapse submenu submenu-4" data-bs-parent="#menu-accordion">
+                                <ul class="submenu-list list-unstyled">
+                                    <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Ver_LaboratoriosyUE" && ViewContext.RouteData.Values["Controller"].ToString() == "LaboratoriosyUE" ? "active" : "")" href="@Url.Action("Ver_LaboratoriosyUE", "LaboratoriosyUE")">Laboratorios y Unidades de Inspección</a></li>
+                                </ul>
+                            </div>
+                        </li>
+
+
+                     
+
+
+                        @if (perfilUsuario.Rol == "1" &&  perfilUsuario.IdUsuario=="1")
+                        {
+                            <li class="nav-item has-submenu">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link submenu-toggle @(ViewContext.RouteData.Values["Controller"].ToString() == "Chat" ? "active" : "")" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#submenu-5" aria-expanded="false" aria-controls="submenu-5">
+                                    <span class="nav-icon">
+                                        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-robot" viewBox="0 0 16 16">
+                                            <path d="M6 12.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5M3 8.062C3 6.76 4.235 5.765 5.53 5.886a26.58 26.58 0 0 0 4.94 0C11.765 5.765 13 6.76 13 8.062v1.157a.933.933 0 0 1-.765.935c-.845.147-2.34.346-4.235.346-1.895 0-3.39-.2-4.235-.346A.933.933 0 0 1 3 9.219zm4.542-.827a.25.25 0 0 0-.217.068l-.92.9a24.767 24.767 0 0 1-1.871-.183.25.25 0 0 0-.068.495c.55.076 1.232.149 2.02.193a.25.25 0 0 0 .189-.071l.754-.736.847 1.71a.25.25 0 0 0 .404.062l.932-.97a25.286 25.286 0 0 0 1.922-.188.25.25 0 0 0-.068-.495c-.538.074-1.207.145-1.98.189a.25.25 0 0 0-.166.076l-.754.785-.842-1.7a.25.25 0 0 0-.182-.135Z" />
+                                            <path d="M8.5 1.866a1 1 0 1 0-1 0V3h-2A4.5 4.5 0 0 0 1 7.5V8a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1v1a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1v-.5A4.5 4.5 0 0 0 10.5 3h-2zM14 7.5V13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5A3.5 3.5 0 0 1 5.5 4h5A3.5 3.5 0 0 1 14 7.5" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Asistentes</span>
+                                    <span class="submenu-arrow">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                        </svg>
+                                    </span><!--//submenu-arrow-->
+                            </a><!--//nav-link-->
+                            <div id="submenu-5" class="collapse submenu submenu-5" data-bs-parent="#menu-accordion">
+                                    <ul class="submenu-list list-unstyled">
+                                        <li class="submenu-item "><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Asistente" && ViewContext.RouteData.Values["Controller"].ToString() == "Chat" ? "active" : "")" href="@Url.Action("Asistente", "Chat")">General</a></li>
+                                        <li class="submenu-item "><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "ConsultaBD" && ViewContext.RouteData.Values["Controller"].ToString() == "Chat" ? "active" : "")" href="@Url.Action("ConsultaBD", "Chat")">Consulta BD</a></li>
+                                        <li class="submenu-item "><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "ConsultaNatural" && ViewContext.RouteData.Values["Controller"].ToString() == "Chat" ? "active" : "")" href="@Url.Action("ConsultaNatural", "Chat")">Consulta Natural</a></li>
+                                        <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "A_VV" && ViewContext.RouteData.Values["Controller"].ToString() == "Chat" ? "active" : "")" href="@Url.Action("A_VV", "Chat")">Visitas de Verificación</a></li>
+                                        <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "ConsultaPermisos" && ViewContext.RouteData.Values["Controller"].ToString() == "Chat" ? "active" : "")" href="@Url.Action("ConsultaPermisos", "Chat")">Datos sobre Permisos de Hidrocarburos</a></li>
+                                        <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "MarcoRegulatorioH" && ViewContext.RouteData.Values["Controller"].ToString() == "Chat" ? "active" : "")" href="@Url.Action("MarcoRegulatorioH", "Chat")">Marco Regulatorio Otorgamiento de Permisos Hidrocarburos</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <!--//nav-item-->
+                        }
+
+
+
+
+
+
+                     @if (perfilUsuario.Rol == "1" )
+                        {
+                            <li class="nav-item has-submenu">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link submenu-toggle @(ViewContext.RouteData.Values["Controller"].ToString() == "MIM" ? "active" : "")" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#submenu-6" aria-expanded="false" aria-controls="submenu-6">
+                                    <span class="nav-icon">
+                                        <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bar-chart-line"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                              d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Monitor de Mercados</span>
+                                    <span class="submenu-arrow">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                        </svg>
+                                    </span><!--//submenu-arrow-->
+                            </a><!--//nav-link-->
+                            <div id="submenu-6" class="collapse submenu submenu-6" data-bs-parent="#menu-accordion">
+                                    <ul class="submenu-list list-unstyled">
+                                        <li class="submenu-item "><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Reporte_Diario_PMLs" && ViewContext.RouteData.Values["Controller"].ToString() == "MIM" ? "active" : "")" href="@Url.Action("Reporte_Diario_PMLs", "MIM")">MIM - Reporte Diario de PMLs</a></li>
+                                        <li class="submenu-item "><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Reporte_Demanda" && ViewContext.RouteData.Values["Controller"].ToString() == "MIM" ? "active" : "")" href="@Url.Action("Reporte_Demanda", "MIM")">Demanda por GCR diaria</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <!--//nav-item-->
+                        }
+
+                         @* @if (perfilUsuario.Rol == "1" &&  perfilUsuario.IdUsuario=="1") *@
+                         @if (perfilUsuario.Rol == "1" )
+                        {
+                            
+                        <li class="nav-item">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Dasboard" && ViewContext.RouteData.Values["Controller"].ToString() == "Bitacora" ? "active" : "")" href="@Url.Action("Dashboard", "Bitacora")">
+                                <span class="nav-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-speedometer2" viewBox="0 0 16 16">
+                                <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.39.39 0 0 0-.029-.518z"/>
+                                <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3"/>
+                                </svg>
+                                     </span>
+                                <span class="nav-link-text">Dashboard</span>
+                            </a><!--//nav-link-->
+                        </li><!--//nav-item-->
+                        } 
+
+
+                        <li class="nav-item">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Ayuda" && ViewContext.RouteData.Values["Controller"].ToString() == "Usuarios" ? "active" : "")" href="@Url.Action("Ayuda", "Usuarios")">
+                                <span class="nav-icon">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Ayuda</span>
+                            </a><!--//nav-link-->
+                        </li><!--//nav-item-->
+
+
+                        
+
+
+                        <li class="nav-item">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Creditos" && ViewContext.RouteData.Values["Controller"].ToString() == "Usuarios" ? "active" : "")" href="@Url.Action("Creditos", "Usuarios")">
+                                    <span class="nav-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                                        <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Créditos</span>
+                                </a><!--//nav-link-->
+                        </li>
+
+                @* //Encuesta *@
+                      <li class="nav-item">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Encuesta" && ViewContext.RouteData.Values["Controller"].ToString() == "Usuarios" ? "active" : "")" href="@Url.Action("Encuesta", "Usuarios")">
+                                    <span class="nav-icon">
+                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ui-checks-grid" viewBox="0 0 16 16">
+                                            <path d="M2 10h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1m9-9h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 9a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zm0-10a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM2 9a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2zm7 2a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2zM0 2a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.354.854a.5.5 0 1 0-.708-.708L3 3.793l-.646-.647a.5.5 0 1 0-.708.708l1 1a.5.5 0 0 0 .708 0z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">Encuesta</span>
+                                </a><!--//nav-link-->
+                        </li>
+
+
+
+
+
+                        <li class="nav-item">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "CerrarSesion" && ViewContext.RouteData.Values["Controller"].ToString() == "Acceso" ? "active" : "")" href="@Url.Action("CerrarSesion", "Acceso")">
+                                    <span class="nav-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text"> Salir</span>
+                                </a><!--//nav-link-->
+                        </li>
+
+
+         
+                    </ul><!--//app-menu-->
+                </nav><!--//app-nav-->
+
+
+
+                <div class="app-sidepanel-footer">
+                    <nav class="app-nav app-nav-footer">
+                        <ul class="app-menu footer-menu list-unstyled">
+                            @if (perfilUsuario.Rol == "1" &&  perfilUsuario.IdUsuario=="1" || perfilUsuario.IdUsuario == "3")
+                            {
+                                <li class="nav-item has-submenu">
+                                    <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                <a class="nav-link submenu-toggle @(ViewContext.RouteData.Values["Controller"].ToString() == "Usuarios" && ViewContext.RouteData.Values["Action"].ToString() == "AdministrarUsuarios" || ViewContext.RouteData.Values["Controller"].ToString() == "Acceso" || ViewContext.RouteData.Values["Action"].ToString() == "Cargar_SE" && ViewContext.RouteData.Values["Controller"].ToString() == "Indicadores" ? "active" : "")" href="#" data-bs-toggle="collapse"
+                                   data-bs-target="#submenu-7" aria-expanded="false" aria-controls="submenu-7">
+                                        <span class="nav-icon">
+                                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
+                                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
+                                            </svg>
+                                        </span>
+                                        <span class="nav-link-text">Panel de Administración</span>
+                                        <span class="submenu-arrow">
+                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                            </svg>
+                                        </span><!--//submenu-arrow-->
+                                </a><!--//nav-link-->
+                                <div id="submenu-7" class="collapse submenu submenu-7" data-bs-parent="#menu-accordion">
+                                        <ul class="submenu-list list-unstyled">
+                                            <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "AdministrarUsuarios" && ViewContext.RouteData.Values["Controller"].ToString() == "Usuarios" ? "active" : "")" href="@Url.Action("AdministrarUsuarios", "Usuarios")">Administarción de Usuarios</a></li>
+                                            <li class="submenu-item"><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Monitoreo" && ViewContext.RouteData.Values["Controller"].ToString() == "Acceso" ? "active" : "")" href="@Url.Action("Monitoreo", "Acceso")">Monitoreo y Uso</a></li>
+                                            <li class="submenu-item "><a class="submenu-link @(ViewContext.RouteData.Values["Action"].ToString() == "Cargar_SE" && ViewContext.RouteData.Values["Controller"].ToString() == "Indicadores" ? "active" : "")" href="@Url.Action("Cargar_SE", "Indicadores")">Cargar Solicitudes</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+
+                               
+                            }
+
+                             @* @if (perfilUsuario.Rol == "1")
+                            {
+                            <li class="nav-item">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                <a class="nav-link"
+                            
+                                   href="https://heyzine.com/flip-book/ba46dc0c60.html" target="_blank">
+                         
+                                    <span class="nav-icon">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                  d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                            <path fill-rule="evenodd"
+                                                  d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text">¡Consulta la Guía  de Uso General!</span>
+                                </a><!--//nav-link-->
+                            </li><!--//nav-item-->
+                            } *@
+
+                        </ul><!--//footer-menu-->
+                    </nav>
+                </div><!--//app-sidepanel-footer-->
+
+            </div><!--//sidepanel-inner-->
+        </div><!--//app-sidepanel-->
+    </header><!--//app-header-->
+
+
+
+
+    <div>
+        <main role="main" class="pb-25">
+      
+            <div id="page-preloader" style="display:flex;">
+                <div class="spinner"></div>
+                <img src="~/img/lc6.png" alt="Logo de la empresa" class="preloader-logo">
+                <div class="loading-text">Cargando la página, por favor espere<span id="page-dots">...</span></div>
+            </div> 
+        @*  <!-- Preloader para solicitudes AJAX --> *@
+            <div id="ajax-preloader" style="display:none;">
+                <div class="spinner"></div>
+                <img src="~/img/lc6.png" alt="Logo de la empresa" class="preloader-logo">
+                <div class="loading-text">Cargando los datos, por favor espere<span id="ajax-dots">...</span></div>
+            </div>
+
+            @RenderBody()
+        </main>
+
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <footer class="footer text-muted bg-verde-footer ">
+        <div class="container text-white footer-container">
+            &copy; CRE @DateTime.Now.Year - EnerGeoCRE
+            @await Component.InvokeAsync("Visitas")
+        </div>
+        <div class="cinta"></div>
+    </footer>
+
+@* <!-- Modal de advertencia de expiración de sesión --> *@
+<div class="modal fade" id="sessionExpireModal" tabindex="-1" role="dialog" aria-labelledby="sessionExpireModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sessionExpireModalLabel">Advertencia de Expiración de Sesión</h5>
+            </div>
+            <div class="modal-body">
+                Su sesión está a punto de expirar. ¿Desea continuar trabajando o cerrar la sesión?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnCerrarSesion">Cerrar Sesión</button>
+                <button type="button" class="btn btn-primary" id="btnContinuarSesion">Continuar Sesión</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+       // Definir las variables utilizando Razor
+      // Definir las variables utilizando Razor
+        var userId = "@ViewData["IDUsuario"]";
+        var userName = "@ViewData["NombreUsuario"]";
+        var pageName = "@ViewData["Title"]";
+        var controllerName = "@ViewContext.RouteData.Values["controller"]";
+        var actionName = "@ViewContext.RouteData.Values["action"]";
+        var additionalData = "@(ViewData["NombreUsuario"] + " - " + ViewData["Unidad_de_Adscripcion"])";
+
+
+        // Imprimir los datos en la consola antes de enviarlos
+        console.log({
+            userId: userId,
+            userName: userName,
+            pageName: pageName,
+            controllerName: controllerName,
+            actionName: actionName,
+            additionalData: additionalData 
+        });
+        
+        // Verificar que las variables no estén vacías
+        if (userId && userId !== "N/A") {
+            registrarActividad("Sin Dato", "Sin Dato", "Sin Dato", "Sin Dato");  // Registrar la acción de carga de página
+        } else {
+            console.log('No se registró la acción debido a valores faltantes o usuario no autenticado.');
+        }
+
+        // Función de debounce para evitar múltiples registros en base a la escritura del usuario
+        function debounce(func, delay) {
+            let debounceTimer;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+
+        // Función para registrar actividades (acciones e interacciones)
+        function registrarActividad(tipo, elemento, idElemento, valor) {
+            console.log({
+                userId: userId,
+                userName: userName,
+                pageName: pageName,
+                controllerName: controllerName,
+                actionName: actionName,
+                tipo: tipo,
+                elemento: elemento,
+                idElemento: idElemento,
+                valor: valor,
+                additionalData: additionalData 
+            });
+
+            $.ajax({
+                url: '/Bitacora/RegistrarActividad',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    userId: userId,
+                    userName: userName,
+                    pageName: pageName,
+                    controllerName: controllerName,
+                    actionName: actionName,
+                    tipo: tipo,
+                    elemento: elemento,
+                    idElemento: idElemento,
+                    valor: valor,
+                    additionalData: additionalData 
+                }),
+                success: function (response) {
+                    console.log('Actividad registrada exitosamente:', response);
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error al registrar la actividad:', error);
+                }
+            });
+        }
+
+      // Usar delegación de eventos en un contenedor que siempre esté en el DOM
+        $(document).on('click', 'table button', function () {
+            registrarActividad('click', 'button', this.id, $(this).text());
+        });
+
+        $(document).on('blur', 'table input[type="text"]', debounce(function () {
+            registrarActividad('input', 'textbox', this.id, $(this).val());
+        }, 1000));
+
+        $(document).on('change', 'table input[type="checkbox"]', function () {
+            registrarActividad('click', 'checkbox', this.id, this.checked ? 'checked' : 'unchecked');
+        });
+
+        $(document).on('change', 'table input[type="radio"]', function () {
+            registrarActividad('click', 'radio', this.id, $(this).val());
+        });
+
+        $(document).on('change', 'table select', function () {
+            registrarActividad('change', 'dropdown', this.id, $(this).val());
+        });
+
+        // Capturar clics en todos los botones fuera de la tabla
+        $(document).on('click', 'button', function () {
+            if (!$(this).closest('table').length) {
+                registrarActividad('click', 'button', this.id, $(this).text());
+            }
+        });
+
+        // Capturar cuando el usuario deja el campo de texto (blur) con retraso de 1 segundo
+        $(document).on('blur', 'input[type="text"]', function () {
+            if (!$(this).closest('table').length) {
+                var inputElement = this;
+                setTimeout(function() {
+                    registrarActividad('input', 'textbox', inputElement.id, $(inputElement).val());
+                }, 2000);
+            }
+        });
+
+        // Capturar cambios en checkboxes fuera de la tabla
+        $(document).on('change', 'input[type="checkbox"]', function () {
+            if (!$(this).closest('table').length) {
+                registrarActividad('click', 'checkbox', this.id, this.checked ? 'checked' : 'unchecked');
+            }
+        });
+
+        // Capturar cambios en radio buttons fuera de la tabla
+        $(document).on('change', 'input[type="radio"]', function () {
+            if (!$(this).closest('table').length) {
+                registrarActividad('click', 'radio', this.id, $(this).val());
+            }
+        });
+
+        // Capturar selección en dropdowns fuera de la tabla
+        $(document).on('change', 'select', function () {
+            if (!$(this).closest('table').length) {
+                registrarActividad('change', 'dropdown', this.id, $(this).val());
+            }
+        });
+
+    
+    });
+</script>
+
+
+
+    <!-- Tablas -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Obtener referencias a elementos
+            const tableContainer = document.querySelector('.table-container');
+            const table = document.querySelector('.table');
+
+            // Verificar que existan los elementos necesarios
+            if (table && tableContainer) {
+                // Manejar evento de scroll
+                tableContainer.addEventListener('scroll', function() {
+                    // Obtener elementos a fijar
+                    const ths = table.querySelectorAll('thead th');
+                    const tds = table.querySelectorAll('tbody td:first-child'); 
+                    const thFirstColumn = table.querySelector('thead th:first-child');
+
+                    // Aplicar transformaciones
+                    // 1. Fijar encabezados
+                    ths.forEach(th => {
+                        th.style.transform = `translateY(${tableContainer.scrollTop}px)`;
+                    });
+
+                    // 2. Fijar primera columna
+                    tds.forEach(td => {
+                        td.style.transform = `translateX(${tableContainer.scrollLeft}px)`;
+                    });
+
+                    // 3. Fijar esquina superior izquierda
+                    if (thFirstColumn) {
+                        thFirstColumn.style.transform = `translate(${tableContainer.scrollLeft}px, ${tableContainer.scrollTop}px)`;
+                    }
+                });
+            }
+        });
+    </script>
+
+    @*Manda cada min un toque ala BD *@
+  <script>
+ $(document).ready(function () {
+
+    // Inicializar el modal con opciones para evitar el cierre al hacer clic fuera o con la tecla Esc
+    $('#sessionExpireModal').modal({
+        backdrop: 'static', // No permitir cerrar el modal al hacer clic fuera de él
+        keyboard: false,    // No permitir cerrar el modal con la tecla Esc
+        show: false         // No mostrar automáticamente al cargar la página
+    });
+
+    // Función para manejar el Heartbeat
+    setInterval(function() {
+        $.ajax({
+            url: '/Acceso/Heartbeat',
+            method: 'POST',
+            success: function(data) {
+                if (data.expiracionCercana) {
+                    // Mostrar modal de advertencia
+                    $('#sessionExpireModalLabel').text('Advertencia de Expiración de Sesión');
+                    $('#sessionExpireModal .modal-body').text('Su sesión está a punto de expirar. ¿Desea continuar trabajando o cerrar la sesión?');
+                    $('#btnCerrarSesion').show();
+                    $('#btnContinuarSesion').show();
+                    $('#sessionExpireModal').modal('show');
+                }
+            },
+            error: function(xhr, status, error) {
+                if (xhr.status === 401) {
+                    // Mostrar modal de sesión expirada
+                    $('#sessionExpireModalLabel').text('Sesión Expirada');
+                    $('#sessionExpireModal .modal-body').text('Su sesión ha expirado. Será redirigido a la página de inicio de sesión.');
+                    $('#btnCerrarSesion').hide(); // Ocultar botón innecesario
+                    $('#btnContinuarSesion').text('Ir a Login').off('click').on('click', function() {
+                        window.location.href = '/Acceso/Login';
+                    });
+                    $('#sessionExpireModal').modal('show');
+                } else {
+                    console.error("Error en la solicitud Heartbeat:", error);
+                }
+            }
+        });
+    }, 60000); // Cada 60 segundos
+
+    // Cerrar sesión
+    $('#btnCerrarSesion').on('click', function() {
+        window.location.href = '/Acceso/SesionExpirada';
+    });
+
+    // Continuar sesión
+    $('#btnContinuarSesion').on('click', function() {
+        $.ajax({
+            url: '/Acceso/ActualizarInicioSesion',
+            method: 'POST',
+            success: function() {
+                $('#sessionExpireModal').modal('hide');
+                // Se ha actualizado la sesión, el usuario puede continuar trabajando
+            },
+            error: function(xhr, status, error) {
+                console.error("Error al actualizar la sesión:", error);
+            }
+        });
+    });
+});
+
+  </script>
+ <script src="~/js/validacion-formulario.js"></script> 
+    <!-- JavaScript -->
+    @if (perfilUsuario.Rol != "1")
+    {
+        <script src="~/js/seguridad.js"></script>
+    }
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @* <script src="//code.jquery.com/jquery-3.5.1.js"></script> *@
+    <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="//cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="~/js/jquery.maphilight.min.js"></script>
+ 
+    @* <script  src="~/js/jspdf.min.js"></script> *@
+    <script  src="~/js/printThis.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+
+
+
+    <!-- Owl Carousel JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    
+    <script src="~/js/site.js" asp-append-version="true"></script>
+   <!-- Page Specific JS -->
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    @* html2pdf *@
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script> *@
+
+    @*Preloader*@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mostrar el preloader de carga de página
+        document.getElementById('page-preloader').style.display = 'flex';
+
+        // Ocultar el preloader de carga de página cuando la página ha terminado de cargarse
+        window.addEventListener('load', function() {
+            document.getElementById('page-preloader').style.display = 'none';
+        });
+
+        // Animar los puntos de carga para el preloader de página
+        var pageDots = 0;
+        setInterval(function() {
+            var pageDotsElement = document.getElementById('page-dots');
+            if (pageDotsElement) {
+                pageDotsElement.innerHTML = '.'.repeat(pageDots);
+                pageDots = (pageDots + 1) % 4; // Ciclo de 0 a 3 puntos
+            }
+        }, 500);
+
+         // Mostrar el preloader al enviar el formulario
+        $('form').on('submit', function (e) {
+            var form = $(this);
+            if (form.attr('id') === 'form-upload-files' || form.valid()) {
+                $('#page-preloader').show();
+            }
+        });
+
+        // Ocultar el preloader si hay errores de validación en el servidor
+        var validationSummary = document.querySelector('.validation-summary-errors');
+        if (validationSummary && validationSummary.innerHTML.trim().length > 0) {
+            document.getElementById('page-preloader').style.display = 'none';
+            alert('Por favor, complete todos los campos obligatorios.');
+        }
+    });
+   
+        // Preloader para solicitudes AJAX
+        $(document).ajaxStart(function () {
+            $("#ajax-preloader").show();
+        }).ajaxStop(function () {
+            $("#ajax-preloader").hide();
+        });
+
+        // Animar los puntos de carga para el preloader de AJAX
+        var ajaxDots = 0;
+        setInterval(function() {
+            var ajaxDotsElement = document.getElementById('ajax-dots');
+            if (ajaxDotsElement) {
+                ajaxDotsElement.innerHTML = '.'.repeat(ajaxDots);
+                ajaxDots = (ajaxDots + 1) % 4; // Ciclo de 0 a 3 puntos
+            }
+        }, 500);
+   
+</script>
+
+    <!-- Sección de notificaciones -->
+    <script>
+        $(document).ready(function () {
+            function loadNotifications() {
+                $.ajax({
+                    url: '@Url.Action("GetNotifications", "Usuarios")',
+                    type: 'GET',
+                    data: { userId: '@ViewData["IDUsuario"]' },
+                    success: function (data) {
+                        console.log("Tabla de notificaciones: ", data);
+                        var notificationCount = data.totalUnreadCount;
+                        var notifications = data.notifications;
+                        var notificationBadge = $('#notification-count');
+
+                        if (notificationCount > 0) {
+                            notificationBadge.text(notificationCount);
+                            notificationBadge.removeClass('hidden');
+                        } else {
+                            notificationBadge.addClass('hidden');
+                        }
+
+                        var notificationsList = $('#notifications-list');
+                        notificationsList.empty();
+
+                        notifications.forEach(function (notification) {
+                            var maxLength = 100;
+                            var shortMessage = notification.mensaje.length > maxLength 
+                                ? notification.mensaje.substring(0, maxLength) + '...' 
+                                : notification.mensaje;
+
+                            var notificationItem = `
+                                <div class="item p-3" data-id="${notification.id}">
+                                    <div class="row gx-2 justify-content-between align-items-center">
+                                        <div class="col-auto">
+                                            <img class="profile-image" src="/img/notificaciones.png" alt="">
+                                        </div>
+                                        <div class="col">
+                                            <div class="info">
+                                                <div class="title"><strong>${notification.titulo_Notificacion}</strong></div>
+                                                <div class="desc">${shortMessage}</div>
+                                                <div class="meta">${notification.timeAgo}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a class="link-mask" href="@Url.Action("NotificationDetails", "Usuarios")?titulo=${encodeURIComponent(notification.titulo_Notificacion)}&mensaje=${encodeURIComponent(notification.mensaje)}&fecha=${encodeURIComponent(notification.fecha_Notificacion)}&link=${encodeURIComponent(notification.link)}" target="_blank" onclick="markAsRead(${notification.id}, this)"></a>
+                                </div>`;
+                            notificationsList.append(notificationItem);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error al cargar las notificaciones:", error);
+                    }
+                });
+            }
+
+            loadNotifications();
+
+            setInterval(loadNotifications, 60000);
+
+            $('#generate-test-notification').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("GenerateTestNotification", "Usuarios")',
+                    type: 'POST',
+                    data: { userId: '@ViewData["IDUsuario"]' },
+                    success: function (response) {
+                        if (response.success) {
+                            loadNotifications();
+                            alert("Notificación de prueba generada con éxito.");
+                        } else {
+                            alert("Error al generar la notificación de prueba.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error al generar la notificación de prueba:", error);
+                    }
+                });
+            });
+        });
+
+        function markAsRead(notificationId, linkElement) {
+            $.ajax({
+                url: '@Url.Action("MarkNotificationAsRead", "Usuarios")',
+                type: 'POST',
+                data: { notificationId: notificationId },
+                success: function (response) {
+                    if (response.success) {
+                        var notificationItem = $(linkElement).closest('.item');
+                        notificationItem.remove();
+
+                        var notificationBadge = $('#notification-count');
+                        var currentCount = parseInt(notificationBadge.text());
+                        var newCount = currentCount - 1;
+
+                        if (newCount > 0) {
+                            notificationBadge.text(newCount);
+                        } else {
+                            notificationBadge.addClass('hidden');
+                        }
+
+                        loadNotifications();
+
+                        var url = $(linkElement).attr('href');
+                        window.open(url, '_blank');
+                    } else {
+                        console.error("Error al marcar la notificación como leída.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error al marcar la notificación como leída:", error);
+                }
+            });
+        }
+    </script>
+
+    <style>
+    /* Esto bloqueará la selección de texto en todo el documento HTML */
+    body {
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Chrome, Opera y otras versiones de Firefox */
+    }
+</style>
+    @*Rutas*@
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

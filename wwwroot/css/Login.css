@@ -1,0 +1,243 @@
+
+:root {
+    --primary: #ffffff;
+    --rojo: #4c1922;
+    --rojoclaro: #9f2241;
+    --gray: #2a324b;
+    --grayclaro: #9fa1a4;
+    --amarillo: #bd9865;
+    --amarilloclaro: #ddc9a3;
+    --verde: #13322b;
+    --verdeclaro: #235b4e;
+    /* --verdeclaro: #235b4e; Push Off */
+  }
+body,
+html {
+ 
+ 
+    
+   
+  font-family: "Montserrat", sans-serif !important;
+  font-weight: normal;
+  background: white;
+/*  background-image: url('img/LogoLogin.svg');*/
+  /* background-size: cover; */
+  background-repeat: no-repeat;
+  height: 100%;
+
+}
+
+.smaller-font {
+    font-size: 0.8em; /* Tamaño de la fuente más pequeño */
+}
+
+#reset-password-link {
+    /* position: absolute; */
+    bottom: 20px; /* Ajusta la distancia desde abajo según sea necesario */
+    left: 50%; /* Centra horizontalmente el enlace */
+    transform: translateX(-50%); /* Centra horizontalmente el enlace */
+}
+
+
+#myVideo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+}
+
+
+
+
+
+/*#myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%; 
+    min-height: 100%;
+  }
+*/
+
+
+
+.nav-link.active,
+.nav-item.show .nav-link {
+    color: #fafafa !important;
+    background-color: #78968f !important;
+    border: none;
+    
+}
+
+
+.nav-tabs .nav-link {
+   /* color: #3c3c3c !important;*/
+    /*  background-color: #c5c4c4ff !important;*/
+    border: none;
+}
+
+.user_card {
+    height: 500px;
+    width: 350px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: #ffffffcf;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+    transition: transform 0.5s ease; /* Agrega una transición suave al cambio de transformación */
+}
+
+.expanded {
+    transform: scaleY(1.2); /* Aumenta la escala verticalmente */
+}
+
+.brand_logo_container {
+    position: absolute;
+    height: 170px;
+    width: 170px;
+    top: -75px;
+    border-radius: 50%;
+    background: #235b4e8e;
+    padding: 10px;
+    text-align: center;
+}
+.brand_logo {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    border: 2px solid #9f2241;
+}
+.form_container {
+    margin-top: 100px;
+    margin: 10px;    
+
+}
+.login_btn {
+    width: 100%;
+    background: #9f2241 !important;
+    color: white !important;
+}
+.login_btn:focus {
+    box-shadow: none !important;
+    outline: 0px !important;
+}
+.login_container {
+    padding: 0 2rem;
+}
+.input-group-text {
+    background: #9f2241 !important;
+    color: white !important;
+    border: 0 !important;
+    border-radius: 0.25rem 0 0 0.25rem !important;
+}
+.input_user,
+.input_pass:focus {
+    box-shadow: none !important;
+    outline: 0px !important;
+}
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+    background-color: #9f2241 !important;
+}
+
+.titulo {
+    font-family: "Montserrat", sans-serif !important;
+    font-weight: normal;
+    padding: 0px;
+    width: 100%;
+    border-bottom: 3px solid var(--amarilloclaro);
+    color: #2a324b;
+   /* max-width: 90%;*/
+    margin: 0px;
+   /* margin-top: 0px;*/
+    perspective: 1000px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    box-shadow: 1px 13px 5px -6px rgba(0,0,0,0.55) !important;
+    -webkit-box-shadow: 1px 13px 5px -6px rgba(0,0,0,0.55) !important;
+    -moz-box-shadow: 1px 13px 5px -6px rgba(0,0,0,0.55) !important;
+}
+
+.subtitulo {
+    font-family: "Montserrat", sans-serif !important;
+    font-weight: normal;
+    padding: 1%;
+    width: 100%;
+    border-bottom: 3px solid var(--verdeclaro);
+    color: #701c35;
+    max-width: 90%;
+    margin: auto;
+    margin-top: 10px;
+    perspective: 1000px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+} 
+
+
+/*Modal*/
+/* Estilo personalizado para el modal */
+#terms-and-conditions-modal .modal-content {
+    font-family: Fira Sans,Trebuchet MS,Montserrat,sans-serif;
+    border: 1px solid #dee2e6; /* Borde sutil */
+    box-shadow: 0 5px 15px rgba(0,0,0,.05); /* Sombra suave */
+    padding: 20px; /* Espaciado interno */
+    font-size: 12px !important; /* Tamaño de fuente reducido */
+}
+
+#terms-and-conditions-modal .modal-title {
+    font-weight: 600; /* Título en negrita */
+}
+
+#terms-and-conditions-modal .modal-footer {
+    border-top: none; /* Eliminar borde superior del pie de página del modal */
+}
+
+#terms-and-conditions-modal .modal-body ol, .modal-body p {
+    padding-left: 20px; /* Espaciado para la lista numerada */
+    list-style-type: upper-roman; /* Números romanos en mayúscula */
+    text-align: justify; /* Justificar el texto */
+}
+
+    #terms-and-conditions-modal .modal-body ol li{
+        font-size: 12px; /* Tamaño de fuente reducido */
+        text-align: justify; /* Justificar el texto dentro de los elementos de la lista */
+    }
+
+
+/* Estilo específico para dispositivos móviles */
+/*@media (max-width: 768px) {
+    #terms-and-conditions-modal .modal-body {
+        max-height: 300px;
+        height:300px;*//* Puedes ajustar este valor según tus necesidades */
+        /*overflow-y: auto;*/ /* Habilita el desplazamiento vertical cuando el contenido excede la altura máxima */
+    /*}
+}*/
+
+
+.btn-cre-verde {
+    padding-top: 1%;
+    /*    font-family: "Montserrat", sans-serif !important;*/
+    background-color: var(--verdeclaro) !important;
+    color: #ffffff !important;
+    width: 100%;
+}
+
+    .btn-cre-verde:hover {
+        /*   font-family: "Montserrat", sans-serif !important;*/
+        background-color: #97d96d !important;
+        color: #ffffff !important;
+        width: 100%;
+    }

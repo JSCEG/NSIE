@@ -1,0 +1,260 @@
+@using NSIE.Models
+
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var httpContext = HttpContextAccessor.HttpContext;
+    var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+    // Utilizar los datos del usuario para personalizar la vista
+    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
+    ViewData["IDUsuario"] = perfilUsuario.IdUsuario;
+}
+
+@model HomeIndex;
+
+@{
+    ViewData["Title"] = "EnerGeo - Bienvenidos";
+}
+
+
+@*<partial name="_Marquesina"class="display-4 titulo fw-bold " />*@
+<div class="text-center">
+    <h4 class="cp-section cp-grouping-section">
+        <img src="~/img/mexico.png" alt="Icono personalizado" class="iconomenu">
+        Sistema Energético Mexicano
+    </h4>
+
+
+    <partial name="_Marquesina" />
+
+
+
+    @* <p>(Selecciona un elemento del sistema para ver más detalles)</p>*@
+
+    @* <div class="dropdown">
+    <a class="btn btn-rojo-cre dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Selecciona Opción
+    </a>
+
+    <ul class="dropdown-menu">
+
+    <li> <a class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="Información Pública del SEM a
+    Nivel Nacional" asp-controller="Home" asp-action="Map"><i class="bi bi-geo-alt"></i> Explorar Sistema Energético
+    Mexicano</a></li>
+
+    @if (perfilUsuario.Rol != "1")
+    {
+    <li> <a class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="Información Pública del SEM a
+    Nivel Nacional - Sankey" asp-controller="Home" asp-action="EnConstrucción"><i class="bi bi-geo-alt"></i> Sankey del
+    Sistema Energético Mexicano</a></li>
+    }
+    @if (perfilUsuario.Rol == "1")
+    {
+    <li> <a class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="Información Pública del SEM a
+    Nivel Nacional - Sankey" asp-controller="Sankey" asp-action="Sankey"><i class="bi bi-geo-alt"></i> Sankey del
+    Sistema Energético Mexicano</a></li>
+    }
+
+    </ul>
+    </div>*@
+    <br />
+
+</div>
+
+<div class="container">
+
+
+    <div class="owl-carousel owl-theme">
+        <div class="item">
+            <a href="@Url.Action("MapaSPP", "Indicadores")">
+                <img src="~/img/banner/4.png" alt="Evalua tu solicitud de permiso para Expendio">
+                @* <h4>Evalúa tu solicitud de permiso para Expendio</h4> *@
+            </a>
+        </div>
+                <div class="item">
+            <a href="@Url.Action("Ver_LaboratoriosyUE", "LaboratoriosyUE")">
+                <img src="~/img/banner/luv.png" alt="Precios Históricos de Gas L.P.">
+                @* <h4>Precios Históricos de Gas L.P.</h4> *@
+            </a>
+        </div>
+                <div class="item">
+            <a href="@Url.Action("TarifasMI", "Tarifas")">
+                <img src="~/img/banner/tarifas.png" alt="Precios Históricos de Gas L.P.">
+                @* <h4>Precios Históricos de Gas L.P.</h4> *@
+            </a>
+        </div>
+        <div class="item">
+            <a href="@Url.Action("Infraestructura_SEM", "Map")">
+                <img src="~/img/banner/5.png" alt="Sistema Energético Mexicano">
+                @* <h4>Sistema Energético Mexicano</h4> *@
+            </a>
+        </div>
+        <div class="item">
+            <a href="@Url.Action("Menu_Eventos", "Eventos")">
+                <img src="~/img/banner/6.png" alt="Eventos Emergentes">
+                @* <h4>Eventos Emergentes</h4> *@
+            </a>
+        </div>
+        <div class="item">
+            <a href="@Url.Action("Sankey", "Sankey")">
+                <img src="~/img/banner/7.png" alt="Flujo Físico de la Energía">
+                @* <h4>Flujo Físico de la Energía</h4> *@
+            </a>
+        </div>
+        <div class="item">
+            <a href="@Url.Action("BuscarPV", "PermisosPV")">
+                <img src="~/img/banner/8.png" alt="Consulta el Parque Vehicular de Permisos Vigentes">
+                @* <h4>Consulta el Parque Vehicular de Permisos Vigentes</h4> *@
+            </a>
+        </div>
+        <div class="item">
+            <a href="@Url.Action("Precio_Gas_LP", "Indicadores")">
+                <img src="~/img/banner/9.png" alt="Precios Históricos de Gas L.P.">
+                @* <h4>Precios Históricos de Gas L.P.</h4> *@
+            </a>
+        </div>
+
+        <div class="item">
+            <a href="@Url.Action("Certificados", "EnergiasLimpias")">
+                <img src="~/img/banner/12.png" alt="Certificados de Energías Limpias">
+                @* <h4>Precios Históricos de Gas L.P.</h4> *@
+            </a>
+        </div>
+        <div class="item">
+            <a href="@Url.Action("Ayuda", "Usuarios")">
+                <img src="~/img/banner/10.png" alt="Ayuda">
+                @* <h4>Ayuda</h4> *@
+            </a>
+        </div>
+        <div class="item">
+            <a href="@Url.Action("Encuesta", "Usuarios")">
+                <img src="~/img/banner/11.png" alt="Encuesta">
+                @* <h4>Encuesta</h4> *@
+            </a>
+        </div>
+    </div>
+
+
+    @if (perfilUsuario.Rol == "0")
+
+
+
+
+
+
+
+    {
+
+
+
+
+
+
+        <h3 class="subtitulo mb-3 pt-5">Bienvenidos</h3>
+
+        <div class="row gx-5 gy-3">
+            <div class="col-12">
+
+                <div class="alert alert-light " role="alert">
+                    <div class="row">
+                        <div class="col-12" style="text-align:justify !important; font-zise:14px!important">
+
+                            La herramienta EnerGeoCRE se enmarca en las atribuciones de la CRE con respecto al Artículo
+                            42
+                            de la Ley de los
+                            Órganos Reguladores Coordinados en Materia Energética (LORCME). Como todo sistema que
+                            evoluciona
+                            y cambia con el
+                            tiempo, se identifican cambios de estado observables en la sociedad, a través de un conjunto
+                            de
+                            variables que
+                            condicionan la cobertura de energía en el territorio nacional de los elementos estructurales
+                            (infraestructura o
+                            procesos de transformación), y funcionales (funciones o tareas) al interior de las cadenas
+                            de
+                            valor de petrolíferos
+                            y gas LP, para cubrir la demanda de energía secundaria a los usos finales a través de los
+                            permisos.
+                            <br>
+                            <br>
+                            Por lo anterior y con base al <strong><a
+                                    href="https://www.dof.gob.mx/nota_detalle.php?codigo=5717263&fecha=19/02/2024#gsc.tab=0"
+                                    target="_blank" class="href">Acuerdo Núm. A/066/2023</a></strong>, la CRE hace del
+                            conocimiento y pone en servicio al
+                            Público, la herramienta EnerGeoCRE, la cual tiene como finalidad que los interesados en
+                            llevar a
+                            cabo
+                            actividades reguladas por esta Comisión, dispongan de una herramienta tecnológica de uso
+                            gratuito que le
+                            proporcione un elemento adicional, para la toma de decisiones de manera preliminar a una
+                            solicitud de
+                            permiso que requiere una aprobación de esta Comisión previo cumplimiento de requisitos de
+                            ley y
+                            del
+                            procedimiento correspondiente. Asimismo, la consulta de información de datos abiertos de las
+                            cadenas de
+                            valor de hidrocarburos y electricidad, precios de gas LP, mapas desde las fuentes de energía
+                            primaria,
+                            su transformación en energía secundaria y los consumos de energía de los usos finales. Para
+                            visibilizar
+                            este flujo de energía del SEM y el Sistema Económico, podrás observar diagramas Sankey
+                            anuales
+                            desde 1995
+                            a 2022. Finalmente, podrás encontrar información de ayuda.
+                            <br>
+                            <br>
+
+                            <a class="btn btn-cre-verde" href="https://heyzine.com/flip-book/912b2c6eb6.html"
+                                target="_blank" style="display: inline-block; width: 200px; text-align: center;">Ver
+                                Guía de
+                                EnerGeoCRE</a>
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div><!--//col-->
+
+        </div>
+
+        <!--//row-->
+    }
+
+
+    <div id="miDiv" class="">
+        <h3 class="subtitulo mb-3 pt-5">Recursos e Infraestructura</h2>
+    </div>
+    <center>
+
+        <partial name="_DiagramaSEM_N" />
+        @* <partial name="_DiagramaSEM"/>*@
+    </center>
+
+
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $(".owl-carousel").owlCarousel({
+            loop: true,
+            margin: 10,
+            nav: true,
+            items: 1,
+            autoplay: true,        // Activa la reproducción automática
+            autoplayTimeout: 3000, // Tiempo entre diapositivas (3 segundos)
+            autoplayHoverPause: true // Pausa la reproducción automática al pasar el cursor sobre el carrusel
+        });
+    });
+
+</script>
