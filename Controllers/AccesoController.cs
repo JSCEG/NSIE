@@ -90,8 +90,9 @@ namespace NSIE.Controllers
 
             using (SqlConnection cn = new SqlConnection(_connectionString))
             {
-                SqlCommand cmd = new SqlCommand("sp_ValidarUsuario", cn);
-                cmd.Parameters.AddWithValue("Correo", oUsuario.Correo);
+                // Modificar el stored procedure para buscar por correo o RFC
+                SqlCommand cmd = new SqlCommand("sp_ValidarUsuarioRFCEmail", cn);
+                cmd.Parameters.AddWithValue("CorreoRFC", oUsuario.Correo); // Este campo ahora puede ser correo o RFC
                 cmd.Parameters.AddWithValue("Clave", oUsuario.Clave);
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -103,6 +104,7 @@ namespace NSIE.Controllers
             {
                 using (SqlConnection cn = new SqlConnection(_connectionString))
                 {
+                    // Modificar la consulta para buscar por IdUsuario
                     bool esVigente = cn.QuerySingleOrDefault<bool>(
                         "SELECT Vigente FROM USUARIO WHERE IdUsuario = @IdUsuario",
                         new { IdUsuario = oUsuario.IdUsuario }
@@ -117,7 +119,12 @@ namespace NSIE.Controllers
 
                     if (registrarAcceso)
                     {
-                        RegistrarAcceso(oUsuario.Correo, "Inicio de sesión funcionario CRE");
+                        // Obtener el correo real del usuario para el registro
+                        var correoUsuario = cn.QuerySingleOrDefault<string>(
+                            "SELECT Correo FROM USUARIO WHERE IdUsuario = @IdUsuario",
+                            new { IdUsuario = oUsuario.IdUsuario }
+                        );
+                        RegistrarAcceso(correoUsuario, "Inicio de sesión funcionario CRE");
                     }
 
                     cn.Execute(
@@ -706,6 +713,20 @@ namespace NSIE.Controllers
             ViewBag.AccesosPorCargoJson = JsonConvert.SerializeObject(accesosPorCargo);
 
             return View(viewModel);
+        }
+
+        public IActionResult Registro()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ProcesarRegistro(IFormCollection form, IFormFileCollection files)
+        {
+            // Aquí iría la lógica de procesamiento del registro
+            // Por ahora solo redirigimos con un mensaje de éxito
+            TempData["RegistroExitoso"] = "Registro enviado correctamente. En breve recibirá un correo de confirmación.";
+            return RedirectToAction("Login");
         }
     }
 }

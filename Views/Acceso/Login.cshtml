@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable"="yes">
     <title>SNIE</title>
 
     <!-- CSS -->
@@ -68,7 +68,6 @@
                     </li>
                 </ul>
 
-                <!-- Tab Content -->
                 <div class="tab-content">
                     <!-- Public Access Tab -->
                     <div id="consultaPublica"
@@ -100,13 +99,13 @@
                             </div>
 
                             <form action="@Url.Action("Login", "Acceso")" method="post">
-                                <!-- Email Input -->
+                                <!-- Email/RFC Input Group -->
                                 <div class="input-group mb-2">
                                     <div class="input-group-append">
-                                        <span class="input-group-text nsie-bg"><i class="fas fa-envelope"></i></span>
+                                        <span class="input-group-text nsie-bg"><i class="fas fa-user"></i></span>
                                     </div>
-                                    <input id="Correo" type="email" name="Correo" class="form-control input_user"
-                                        placeholder="Correo" required>
+                                    <input id="Correo" type="text" name="Correo" class="form-control input_user"
+                                        placeholder="Correo o RFC" required>
                                 </div>
 
                                 <!-- Password Input -->
@@ -135,10 +134,14 @@
                                 </div>
                             </form>
 
-                            <!-- Password Reset Link -->
+                            <!-- Password Reset & Registration Links -->
                             <div class="mt-3 text-center">
-                                <a href="@Url.Action("ForgotPassword", "Acceso")" class="smaller-font">
-                                    ¿Olvidaste tu contraseña? Restablécela aquí
+                                <a href="@Url.Action("ForgotPassword", "Acceso")">¿Olvidaste tu contraseña?
+                                    Restablécela aquí</a>
+                            </div>
+                            <div class="mt-2 text-center ">
+                                <a class="btn btn-snie-verde" href="@Url.Action("Registro", "Acceso")">
+                                    <i class="fas fa-user-plus "></i> Registrarse como nuevo usuario
                                 </a>
                             </div>
                         </div>
@@ -152,21 +155,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="~/js/validacion-formulario.js"></script>
+    @* <script src="~/js/seguridad.js"></script>*@
 
-    <script>
-        function togglePassword() {
-            const input = document.getElementById("claveInput");
-            const icono = document.getElementById("iconoClave");
-            input.type = input.type === "password" ? "text" : "password";
-            icono.classList.toggle("bi-eye");
-            icono.classList.toggle("bi-eye-slash");
-        }
-    </script>
-
-
-    <scipt src="~/js/validacion-formulario.js">
-        </script>
-        @* <script src="~/js/seguridad.js"></script>*@
 </body>
 
 </html>

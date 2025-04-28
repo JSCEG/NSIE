@@ -64,6 +64,7 @@ builder.Services.AddTransient<IRepositorioFacturas, RepositorioFacturas>();
 builder.Services.AddTransient<IRepositorioEnergiasLimpias, RepositorioEnergiasLimpias>();
 builder.Services.AddTransient<IRepositorioTarifas, RepositorioTarifas>();
 builder.Services.AddTransient<FacturaExtractorService>();
+builder.Services.AddTransient<IRepositorioInscripcion, RepositorioInscripcion>();
 
 builder.Services.AddTransient<IUserStore<UsuarioApp>, UsuarioStore>();
 builder.Services.AddIdentityCore<UsuarioApp>();
