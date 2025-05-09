@@ -14,26 +14,36 @@
     ViewData["IDUsuario"] = perfilUsuario.IdUsuario;
     bool isAdmin = perfilUsuario.Rol == "1";
 
-    // Configuración de módulos
-    var energiaModules = new[] {
-        new { Controller="SNIE", Action="AltaColaboradores", Title="Alta de Colaboradores", Desc="Agrega a los responsables que subirán información energética.", Img="alta_colaboradores.png", Btn="Administrar" },
-        new { Controller="SNIE", Action="CargaInformacion", Title="Carga de Información", Desc="Los colaboradores registran datos clave para el Balance Nacional.", Img="carga_info.png", Btn="Subir Archivos" },
-        new { Controller="SNIE", Action="ValidacionFirma", Title="Validación y Firma", Desc="Valida lo enviado y simula el timbrado con e.firma generando un acuse.", Img="firma.png", Btn="Firmar Información" },
-        new { Controller="SNIE", Action="Semaforo", Title="Semáforo de Carga", Desc="Visualiza el estado por dependencia (Verde, Amarillo, Rojo).", Img="semaforo.png", Btn="Ver Semáforo" },
-        new { Controller="SNIE", Action="BuzonNotificaciones", Title="Buzón de Notificaciones", Desc="Revisa las notificaciones del SNIE", Img="notificaciones.png", Btn="Ver Notificaciones" },
-        new { Controller="SNIE", Action="BalanceNacional", Title="Balance Nacional de Energía", Desc="Consulta el Tablero del Balance Nacional de Energía", Img="sankey.png", Btn="Ver Balance Nacional de Energía" }
+    var secciones = new[] {
+        "🔐 SECCIÓN 1: Gobernanza y Seguridad",
+        "🧾 SECCIÓN 2: Carga, Validación y CRM",
+        "📊 SECCIÓN 3: Indicadores y Datos Públicos",
+        "⚖️ SECCIÓN 4: Obligaciones y Cumplimiento",
+        "🚧 SECCIÓN 5: Proyectos Estratégicos y Analítica",
+        "🌍 SECCIÓN 6: Análisis Geoespacial",
+        "🔧 SECCIÓN 7: Interoperabilidad y Configuración"
     };
 
-    var adminModules = new[] {
-        new { Controller="Usuarios", Action="AdministrarUsuarios", Title="Gestión de Perfiles y Usuarios", Desc="Administra los perfiles y usuarios del sistema.", Img="usuarios_scel.png", Btn="Administrar" },
-        new { Controller="Bitacora", Action="Dashboard", Title="Seguridad y Alertas", Desc="Revisa las alertas de seguridad del sistema.", Img="seguridad_alertas_scel.png", Btn="Ver Acciones" },
-        new { Controller="Home", Action="EnConstruccion", Title="Modificación de Variables Operativas", Desc="Administra las variables operativas del sistema.", Img="modificacion_variables_scel.png", Btn="Modificar Variables" }
-    };
+    var modulosSnie = new[] {
+        new { Seccion=secciones[0], Controller="Usuarios", Action="AdministrarUsuarios", Title="Gestión de Perfiles y Usuarios", Desc="Administra los perfiles y usuarios del sistema.", Img="usuarios_scel.png", Btn="Administrar" },
+        new { Seccion=secciones[0], Controller="Bitacora", Action="Dashboard", Title="Seguridad y Alertas", Desc="Revisa las alertas de seguridad del sistema.", Img="seguridad_alertas_scel.png", Btn="Ver Acciones" },
 
-    var publicModules = new[] {
-        new { Controller="Inscripcion", Action="PreRegistro", Title="Inscripción e Ingreso al S-CEL", Desc="Solicitud de Inscripción de nuevos participantes.", Img="inscripcion_scel.png", Btn="Realizar Solicitud" },
-        new { Controller="EnergiasLimpias", Action="Certificados", Title="Reportes y Boletín", Desc="Consulta los reportes y boletines sobre los CEL.", Img="reportes_scel.png", Btn="Consultar" }
-        
+        new { Seccion=secciones[1], Controller="SNIE", Action="CargaInformacion", Title="Carga de Información", Desc="Los colaboradores registran datos clave para el Balance Nacional.", Img="carga_info.png", Btn="Subir Archivos" },
+        new { Seccion=secciones[1], Controller="SNIE", Action="ValidacionFirma", Title="Validación y Firma", Desc="Valida lo enviado y simula el timbrado con e.firma generando un acuse.", Img="firma.png", Btn="Firmar Información" },
+        new { Seccion=secciones[1], Controller="SNIE", Action="BuzonNotificaciones", Title="Buzón de Notificaciones", Desc="Revisa las notificaciones del SNIE", Img="notificaciones.png", Btn="Ver Notificaciones" },
+
+        new { Seccion=secciones[2], Controller="EnergiasLimpias", Action="Certificados", Title="Reportes y Boletín CELs", Desc="Consulta los reportes y boletines sobre los CEL.", Img="reportes_scel.png", Btn="Consultar" },
+        new { Seccion=secciones[2], Controller="SNIE", Action="BalanceNacional", Title="Balance Nacional de Energía", Desc="Consulta el Tablero del Balance Nacional de Energía", Img="sankey.png", Btn="Ver Balance Nacional de Energía" },
+
+        new { Seccion=secciones[3], Controller="SNIE", Action="Semaforo", Title="Semáforo de Carga", Desc="Visualiza el estado por dependencia (Verde, Amarillo, Rojo).", Img="semaforo.png", Btn="Ver Semáforo" },
+
+        new { Seccion=secciones[4], Controller="Home", Action="EnConstruccion", Title="Seguimiento de Proyectos", Desc="Monitorea el avance de proyectos estratégicos del sector.", Img="seguimiento_proyectos.png", Btn="Ver Proyectos" },
+        new { Seccion=secciones[4], Controller="Home", Action="EnConstruccion", Title="Analítica y Transición Energética", Desc="Consulta modelos predictivos, metas y escenarios.", Img="analitica.png", Btn="Ver Analítica" },
+
+        new { Seccion=secciones[5], Controller="Map", Action="Infraestructura_SEM", Title="Análisis Geoespacial", Desc="Consulta mapas, capas estratégicas y riesgos.", Img="geo.png", Btn="Explorar Mapa" },
+
+        new { Seccion=secciones[6], Controller="Home", Action="EnConstruccion", Title="Interoperabilidad y Conectividad", Desc="Consulta las integraciones con otros sistemas.", Img="interoperabilidad.png", Btn="Ver Conexiones" },
+        new { Seccion=secciones[6], Controller="Home", Action="EnConstruccion", Title="Modificación de Variables Operativas", Desc="Administra las variables operativas del sistema.", Img="modificacion_variables_scel.png", Btn="Modificar Variables" }
     };
 }
 
@@ -44,11 +54,7 @@
     </h3>
 </div>
 
-
 <div class="container pe- ps-5">
-    
-
-    <!-- Carrusel de imágenes -->
     <div class="owl-carousel owl-theme mb-5">
         @foreach (var banner in new[] {
             new { Controller="EnergiasLimpias", Action="Certificados", Img="12.png", Alt="Certificados de Energías Limpias" },
@@ -64,59 +70,68 @@
         }
     </div>
 
+    <h3 class="text-center subtitulobus mt-5 mb-4">Módulos Funcionales del SNIEr</h3>
 
-    <h3 class="text-center subtitulobus mt-5 mb-4">Módulo de Información Energética (SNIE)</h3>
+    @foreach (var seccion in secciones)
+    {
+        var numeroModulo = secciones.ToList().IndexOf(seccion) + 1;
+        var modulosVisibles = modulosSnie.Where(m =>
+            m.Seccion == seccion &&
+            (
+                ViewData["IDUsuario"].ToString() == "1" ||
+                (ViewData["IDUsuario"].ToString() == "10" &&
+                    (m.Title.Contains("Reportes y Boletín") || m.Title.Contains("Balance Nacional"))) ||
+                (ViewData["IDUsuario"].ToString() == "46" && !m.Title.Contains("Carga de Información")) ||
+                (ViewData["IDUsuario"].ToString() == "58" &&
+                    (m.Title.Contains("Carga") || m.Title.Contains("Validación") || m.Title.Contains("Balance") ||
+                     m.Title.Contains("Semáforo") || m.Title.Contains("Buzón") || m.Title.Contains("Proyectos") ||
+                     m.Title.Contains("Analítica") || m.Title.Contains("Geoespacial")))
+            )
+        ).ToList();
 
-    <div class="row g-4">
-        @if (isAdmin)
+        if (modulosVisibles.Any())
         {
-  
-            @foreach (var mod in energiaModules)
-            {
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <img src="~/img/@mod.Img" alt="@mod.Title" class="iconomenu mb-3" />
-                            <h5>@mod.Title</h5>
-                            <p>@mod.Desc</p>
-                            <a asp-controller="@mod.Controller" asp-action="@mod.Action" class="btn btn-snie">@mod.Btn</a>
+            <div class="row g-4 mt-4">
+                <div class="col-12">
+                    <h4 class="subtitulobus">@($"Módulo {numeroModulo}: {seccion.Substring(seccion.IndexOf(':') + 1).Trim()}")</h4>
+                    <div class="alert alert-info small">
+                        @{
+                            string descripcion = numeroModulo switch
+                            {
+                                1 => "Roles, perfiles, clasificación de datos, firma digital, biometría y auditoría.",
+                                2 => "Carga masiva, validación automática, control de versiones y asignación por perfil.",
+                                3 => "Validación de datos, errores, advertencias, soporte técnico y reglas.",
+                                4 => "Acceso público a tableros, datasets y visualizaciones energéticas.",
+                                5 => "Balance energético, CELs, precios, tarifas y matriz energética.",
+                                6 => "Alertas, obligaciones, sanciones y semáforos de cumplimiento regulatorio.",
+                                7 => "Oficios internos, acuses, workflow, trazabilidad y notificaciones.",
+                                8 => "Proyectos, seguimiento por etapas, riesgos y evidencias.",
+                                9 => "Modelos predictivos, IA, metas energéticas y escenarios.",
+                                10 => "Infraestructura, capas estratégicas, riesgo y análisis geoespacial.",
+                                11 => "Integración vía API, conectores, ETLs y sincronización externa.",
+                                12 => "Configuración de reglas, evolución de módulos y adaptabilidad normativa.",
+                                _ => ""
+                            };
+                            @descripcion
+                        }
+                    </div>
+                </div>
+                @foreach (var mod in modulosVisibles)
+                {
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <img src="~/img/@mod.Img" alt="@mod.Title" class="iconomenu mb-3" />
+                                <h5>@mod.Title</h5>
+                                <p>@mod.Desc</p>
+                                <a asp-controller="@mod.Controller" asp-action="@mod.Action" class="btn btn-snie">@mod.Btn</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
-
-            <div class="col-12 text-center mt-5">
-                <h3>Módulo de Administración Interna</h3>
-            </div>
-            @foreach (var mod in adminModules)
-            {
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <img src="~/img/@mod.Img" alt="@mod.Title" class="iconomenu mb-3" />
-                            <h5>@mod.Title</h5>
-                            <p>@mod.Desc</p>
-                            <a asp-controller="@mod.Controller" asp-action="@mod.Action" class="btn btn-snie">@mod.Btn</a>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-
-        @foreach (var mod in publicModules)
-        {
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <img src="~/img/@mod.Img" alt="@mod.Title" class="iconomenu mb-3" />
-                        <h5>@mod.Title</h5>
-                        <p>@mod.Desc</p>
-                        <a asp-controller="@mod.Controller" asp-action="@mod.Action" class="btn btn-snie">@mod.Btn</a>
-                    </div>
-                </div>
+                }
             </div>
         }
-    </div>
+    }
 </div>
 
 @section Scripts {

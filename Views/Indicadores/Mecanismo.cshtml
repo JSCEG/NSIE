@@ -29,7 +29,7 @@
     @for (int i = 0; i < 50; i++)  /* Cambiamos el número 3 por 9 para tener más marcas de agua */
     {
         <div class="watermark">
-            CRE-@DateTime.Now.AddHours(-6).ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
+            SENER-@DateTime.Now.AddHours(-6).ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
         </div>
     }
 </div>

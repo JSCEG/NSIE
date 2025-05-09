@@ -29,7 +29,7 @@
         <!-- Clase modal-dialog-centered para centrar -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title subtitulo">EnerGeoCRE-Mensaje</h5>
+                <h5 class="modal-title subtitulo">SNIE-Mensaje</h5>
                 <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close"
                     onclick="cerraModal()">
                     <span aria-hidden="true">&times;</span>
@@ -67,7 +67,7 @@
         @for (int i = 0; i < 30; i++) /* Cambiamos el número 3 por 9 para tener más marcas de agua */
         {
             <div class="watermark">
-                CRE-@DateTime.Now.AddHours(-6).ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
+                SNIE-@DateTime.Now.AddHours(-6).ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
             </div>
         }
     </div>
@@ -75,7 +75,7 @@
     <div class="container">
         @*Sección de Info*@
 
-        <partial name="_InfoEP" />
+        @* <partial name="_InfoEP" /> *@
     </div>
 
     <div class="container">
@@ -1657,11 +1657,11 @@
                 var textoAdicional = "";
                 if (mercadoSelect === "petroliferos") {
 
-                    textoAdicional = "La ubicación elegida para el mercado de '<strong>" + mercadoSelectText + "</strong>' actualmente es '<strong>" + evaluacionFinal + "</strong>', en términos de los indicadores de atención al usuario final, densidad vehicular, densidad en expendios de combustibles, eventual saturación de la cadena de valor en los elementos adyacentes al eslabón de expendios(especialmente distribución) o los indicadores asociados a las políticas públicas vigentes.De no contar con un resultado Factible puede realizar una nueva consulta en otra ubicación o año.<br><br>Te recordamos que, para conseguir el otorgamiento de un permiso de expendio en una ubicación factible, debes cumplir con todos los requisitos estipulados en las Disposiciones Administrativas de Carácter General (DACG).<br><br>Por lo que, cualquier resultado en cuanto a la ubicación constituye sólo parte de la evaluación emitida por el proponente, debido a que la otra parte corresponde a los atributos de la CRE que involucran el cumplimiento del Art. 42 de la LORCME, fundamentalmente basada en un conjunto de criterios estratégicos para completar la evaluación del otorgamiento del permiso.<br><br><strong>Nota:</strong> la valoración de una factibilidad positiva está restringida exclusivamente a criterios asociados al sector de energía y se entiende que el usuario elige una ubicación, para localizar expendios, con el propósito de realizar dicha actividad en lugares que no incumplen los requisitos de seguridad o uso de suelo locales (visualmente hay restricciones lógicas acerca de las ubicaciones seleccionadas).";
+                    textoAdicional = "La ubicación elegida para el mercado de '<strong>" + mercadoSelectText + "</strong>' actualmente es '<strong>" + evaluacionFinal + "</strong>', en términos de los indicadores de atención al usuario final, densidad vehicular, densidad en expendios de combustibles, eventual saturación de la cadena de valor en los elementos adyacentes al eslabón de expendios(especialmente distribución) o los indicadores asociados a las políticas públicas vigentes.De no contar con un resultado Factible puede realizar una nueva consulta en otra ubicación o año.<br><br>Te recordamos que, para conseguir el otorgamiento de un permiso de expendio en una ubicación factible, debes cumplir con todos los requisitos estipulados en las Disposiciones Administrativas de Carácter General (DACG).<br><br>Por lo que, cualquier resultado en cuanto a la ubicación constituye sólo parte de la evaluación emitida por el proponente, debido a que la otra parte corresponde a los atributos de la SNIE que involucran el cumplimiento del Art. 42 de la SENER, fundamentalmente basada en un conjunto de criterios estratégicos para completar la evaluación del otorgamiento del permiso.<br><br><strong>Nota:</strong> la valoración de una factibilidad positiva está restringida exclusivamente a criterios asociados al sector de energía y se entiende que el usuario elige una ubicación, para localizar expendios, con el propósito de realizar dicha actividad en lugares que no incumplen los requisitos de seguridad o uso de suelo locales (visualmente hay restricciones lógicas acerca de las ubicaciones seleccionadas).";
                 }
                 else {
 
-                    textoAdicional = "La ubicación elegida para el mercado de '<strong>" + mercadoSelectText + "</strong>' actualmente es '<strong>" + evaluacionFinal + "</strong>', en términos de los indicadores de atención al usuario final, densidad vehicular, densidad de expendios de gas LP, cuotas de mercado de gas LP por tipos de recipiente, mediciones de eventual saturación de la cadena de valor, especialmente en los elementos adyacentes al eslabón de expendios (especialmente distribución) o los indicadores asociados a las políticas públicas vigentes. De no contar con un resultado Factible puede realizar una nueva consulta en otra ubicación o año.<br><br>Te recordamos que, para conseguir el otorgamiento de un permiso de expendio en una ubicación factible, debes cumplir con todos los requisitos estipulados en las Disposiciones Administrativas de Carácter General (DACG).<br><br>Por lo que, cualquier resultado en cuanto a la ubicación constituye sólo parte de la evaluación emitida por el proponente, debido a que la otra parte corresponde a los atributos de la CRE que involucran el cumplimiento del Art. 42 de la LORCME, fundamentalmente basada en un conjunto de criterios estratégicos para completar la evaluación del otorgamiento del permiso.<br><br><br><strong>Nota:</strong> la valoración de una factibilidad positiva está restringida exclusivamente a criterios asociados al sector de energía y se entiende que el usuario elige una ubicación, para localizar expendios, con el propósito de realizar dicha actividad en lugares que no incumplen los requisitos de seguridad o uso de suelo locales (visualmente hay restricciones lógicas acerca de las ubicaciones seleccionadas).";
+                    textoAdicional = "La ubicación elegida para el mercado de '<strong>" + mercadoSelectText + "</strong>' actualmente es '<strong>" + evaluacionFinal + "</strong>', en términos de los indicadores de atención al usuario final, densidad vehicular, densidad de expendios de gas LP, cuotas de mercado de gas LP por tipos de recipiente, mediciones de eventual saturación de la cadena de valor, especialmente en los elementos adyacentes al eslabón de expendios (especialmente distribución) o los indicadores asociados a las políticas públicas vigentes. De no contar con un resultado Factible puede realizar una nueva consulta en otra ubicación o año.<br><br>Te recordamos que, para conseguir el otorgamiento de un permiso de expendio en una ubicación factible, debes cumplir con todos los requisitos estipulados en las Disposiciones Administrativas de Carácter General (DACG).<br><br>Por lo que, cualquier resultado en cuanto a la ubicación constituye sólo parte de la evaluación emitida por el proponente, debido a que la otra parte corresponde a los atributos de la SNIE que involucran el cumplimiento del Art. 42 de la SENER, fundamentalmente basada en un conjunto de criterios estratégicos para completar la evaluación del otorgamiento del permiso.<br><br><br><strong>Nota:</strong> la valoración de una factibilidad positiva está restringida exclusivamente a criterios asociados al sector de energía y se entiende que el usuario elige una ubicación, para localizar expendios, con el propósito de realizar dicha actividad en lugares que no incumplen los requisitos de seguridad o uso de suelo locales (visualmente hay restricciones lógicas acerca de las ubicaciones seleccionadas).";
 
                 }
 
