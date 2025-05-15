@@ -8,17 +8,11 @@
     var httpContext = HttpContextAccessor.HttpContext;
     var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
-
-    // Utilizar los datos del usuario para personalizar la vista
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
     ViewData["RolUsuario"] = perfilUsuario.Rol;
     ViewData["IDUsuario"] = perfilUsuario.IdUsuario;
-}
-
-@{
     ViewData["Title"] = "Ayuda";
 }
-
 
 <div class="text-center">
     <h4 class="cp-section cp-grouping-section">
@@ -26,474 +20,155 @@
         @ViewData["Title"]
     </h4>
 </div>
+
 <!-- Miga de Pan -->
 <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
     aria-label="breadcrumb" style="padding-left:15px">
     <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
     </ol>
 </nav>
 
-<div class="container">
+<div class="container pt-3 p-md-3 p-lg-4">
+    <h1 class="app-page-title">Preguntas Frecuentes</h1>
 
-
-    <div class=" pt-3 p-md-3 p-lg-4">
-
-
-
-
-        <h1 class="app-page-title">Pregutas Frecuentes</h1>
-
-
-        @* Qué es EnerGeoCRE *@
-        <div class="app-card app-card-accordion shadow-sm mb-4">
-            <div class="app-card-header p-4 pb-2  border-0">
-                <h4 class="app-card-title">EnerGeoCRE - Guía de Uso</h4>
-            </div><!--//app-card-header-->
-            <div class="app-card-body p-4 pt-0">
-                <div id="faq1-accordion" class="faq1-accordion faq-accordion accordion">
-
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faq1-heading-1">
-                            <button class="accordion-button btn btn-link" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#faq1-1" aria-expanded="true" aria-controls="faq1-1">
-                                ¿Qué es EnerGeoCRE?
-                            </button>
-                            <hr>
-                        </h2>
-                        <div id="faq1-1" class="accordion-collapse border-0 collapse show"
-                            aria-labelledby="faq1-heading-1" style="">
-                            <div class="accordion-body text-start p4">
-                                <video width="100%" height="auto" controls="">
-                                    <source src="/video/Presentación_Energeo.mp4" type="video/mp4">
-                                    ¡Tu navegador no soporta este video!
-                                </video>
-
-
-
-                            </div>
-                        </div><!--//accordion-item-->
-
-
-
-                    </div><!--//faq1-accordion-->
-                </div><!--//app-card-body-->
-            </div><!--//app-card-->
+    <!-- ¿Qué es el SNIE? -->
+    <div class="app-card app-card-accordion shadow-sm mb-4">
+        <div class="app-card-header p-4 pb-2 border-0">
+            <h4 class="app-card-title">Sistema Nacional de Información Energética (SNIE)</h4>
         </div>
-
-
- 
-
-        @* Guía de Consulta Pública *@
-        <div class="app-card app-card-accordion shadow-sm mb-4">
-            <div class="app-card-header p-4 pb-2  border-0">
-                <h4 class="app-card-title">EnerGeoCRE - Consulta Pública</h4>
-
-            </div><!--//app-card-header-->
-            <div class="app-card-body p-4 pt-0">
-                <div id="faq1-accordion" class="faq1-accordion faq-accordion accordion">
-
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faq1-heading-1">
-                            <button class="accordion-button btn btn-link" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#faq1-1" aria-expanded="true" aria-controls="faq1-1">
-                                ¿Cómo evaluar mi solicitud de expendio?
-                            </button>
-                            <hr>
-                        </h2>
-                        <div id="faq1-1" class="accordion-collapse border-0 collapse show"
-                            aria-labelledby="faq1-heading-1" style="">
-                            <div class="accordion-body text-justify p4 ">
-                                <div class="alert alert-light" role="alert">
-                                    <div class="row">
-                                        <div class="col-12" style="text-align:justify !important;">
-                                            <strong> ¡Estimado Ciudadano/Permisionario!</strong><br><br>
-                                            En EnerGeoCRE, entendemos la importancia de
-                                            evaluar adecuadamente su solicitud para establecer un expendio. Conforme a
-                                            lo
-                                            establecido en el Artículo 42 de la Ley de los Órganos Reguladores
-                                            Coordinados en
-                                            Materia Energética (LORCME), hemos implementado un proceso integral para
-                                            asistirle
-                                            en esta evaluación.
-                                            <br><br>
-
-                                            Nuestro enfoque se basa en el Proceso de Análisis Jerárquico (PAJ) y el
-                                            Análisis
-                                            MultiCriterio (AM), que consideran diversos factores como condiciones
-                                            económicas,
-                                            sociales, de infraestructura, políticas públicas y condiciones biofísicas
-                                            del
-                                            territorio. Gracias a estos análisis, apoyados en sistemas de información
-                                            geográfica
-                                            (SIG), determinamos las ubicaciones más viables para nuevas estaciones de
-                                            servicio
-                                            en función de sus necesidades y del mercado energético actual.
-
-
-
-                                            <br>
-                                            <br>
-                                        </div>
-                                        <strong>Para entender como realizar el proceso de evaluación de su solicitud,
-                                            compartimos el siguiente video:</strong>
-                                        <div class="accordion-body text-start p4">
-                                            <video width="100%" height="auto" controls="">
-                                                <source src="/video/evaluación_2024.mp4" type="video/mp4">
-                                                ¡Tu navegador no soporta este video!
-                                            </video>
-
-
-
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-                                <div class="alert alert-light" role="alert">
-                                    <div class="row">
-                                        <div class="col-12" style="text-align:justify !important;">
-                                            <strong>Importante:</strong> La valoración de viabilidad positiva o negativa
-                                            en
-                                            EnerGeoCRE se refiere exclusivamente a los criterios e indicadores definidos
-                                            para
-                                            las escalas de Entidad Federativa y Municipal. Estos han sido asociados a la
-                                            metodología para los usuarios finales y el mercado de hidrocarburos en
-                                            relación con
-                                            el Sector de Energía.
-                                            <br><br>
-                                            El alcance de EnerGeoCRE permite al usuario elegir ubicaciones para
-                                            localizar
-                                            expendios con el propósito de realizar dicha actividad en lugares lícitos a
-                                            nivel de
-                                            escala de barrios o colonias. Esto incluye el uso de suelo permitido,
-                                            programa de
-                                            desarrollo urbano local, aspectos de protección civil, vulnerabilidades,
-                                            entre
-                                            otros.
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div><!--//accordion-item-->
-
-
-
-                    </div><!--//faq1-accordion-->
-                </div><!--//app-card-body-->
-            </div><!--//app-card-->
-        </div>
-
-
-        @* Mecanismo de Evaluación Interno *@
-        @if (perfilUsuario.Rol != "0")
-        {
-            <div class="app-card app-card-accordion shadow-sm mb-4">
-                <div class="app-card-header p-4 pb-2  border-0">
-                    <h4 class="app-card-title">EnerGeoCRE - Mecanismo de Evaluación</h4>
-
-                </div><!--//app-card-header-->
-                <div class="app-card-body p-4 pt-0">
-                    <div id="faq1-accordion" class="faq1-accordion faq-accordion accordion">
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="faq1-heading-1">
-                                <button class="accordion-button btn btn-link" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#faq1-1" aria-expanded="true" aria-controls="faq1-1">
-                                    ¿Cómo ejecutar el Mecanismo de Evaluación?
-                                </button>
-                                <hr>
-                            </h2>
-                            <div id="faq1-1" class="accordion-collapse border-0 collapse show"
-                                aria-labelledby="faq1-heading-1" style="">
-                                <div class="accordion-body text-justify p4 ">
-                                    <div class="alert alert-light" role="alert">
-                                        <div class="row">
-                                            <div class="col-12" style="text-align:justify !important;">
-                                                <strong> ¡Estimado Servidor!</strong><br><br>
-                                                En EnerGeoCRE, entendemos la importancia de evaluar adecuadamente
-                                                su solicitud para establecer un expendio. Conforme a lo establecido en el
-                                                Artículo
-                                                42 de la Ley de los Órganos Reguladores Coordinados en Materia Energética
-                                                (LORCME),
-                                                hemos implementado un proceso integral para asistirle en esta evaluación.
-                                                <br><br>
-
-
-                                                Por favor consulte el Manual de Operación
-                                                <hr>
-                                                @if (perfilUsuario.Mercado_ID == "1" || perfilUsuario.Rol == "1")
-                                                {
-
-                                                    <iframe allowfullscreen="allowfullscreen" scrolling="no" class="fp-iframe"
-                                                        src="https://heyzine.com/flip-book/5df6fc6867.html"
-                                                        style="border: 1px solid lightgray; width: 100%; height: 400px;"></iframe>
-
-                                                }
-                                                @if (perfilUsuario.Mercado_ID == "2" || perfilUsuario.Rol == "1")
-                                                {
-                                                    <iframe allowfullscreen="allowfullscreen" scrolling="no" class="fp-iframe"
-                                                        src="https://heyzine.com/flip-book/ca6dbc2a74.html"
-                                                        style="border: 1px solid lightgray; width: 100%; height: 400px;"></iframe>
-                                                }
-                                                <br>
-                                                <br>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-
-
-
-                                </div>
-                            </div><!--//accordion-item-->
-
-
-
-                        </div><!--//faq1-accordion-->
-                    </div><!--//app-card-body-->
-                </div><!--//app-card-->
-            </div>
-        }
-
-        <div class="app-card app-card-accordion shadow-sm mb-4">
-            <div class="row">
-                <div class="col-md-6">
-
-                    <div class="app-card-header p-3 border-bottom-0">
-                        <div class="row align-items-center gx-3">
-                            <div class="col-auto">
-                                <div class="app-icon-holder icon-holder-mono">
-                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-headset"
-                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M8 1a5 5 0 0 0-5 5v4.5H2V6a6 6 0 1 1 12 0v4.5h-1V6a5 5 0 0 0-5-5z" />
-                                        <path
-                                            d="M11 8a1 1 0 0 1 1-1h2v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V8zM5 8a1 1 0 0 0-1-1H2v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1V8z" />
-                                        <path fill-rule="evenodd"
-                                            d="M13.5 8.5a.5.5 0 0 1 .5.5v3a2.5 2.5 0 0 1-2.5 2.5H8a.5.5 0 0 1 0-1h3.5A1.5 1.5 0 0 0 13 12V9a.5.5 0 0 1 .5-.5z" />
-                                        <path d="M6.5 14a1 1 0 0 1 1-1h1a1 1 0 1 1 0 2h-1a1 1 0 0 1-1-1z" />
-                                    </svg>
-                                </div><!--//icon-holder-->
-
-                            </div><!--//col-->
-                            <div class="col-auto">
-                                <h4 class="app-card-title">¿Necesitas Ayuda?</h4>
-                                <hr>
-                            </div><!--//col-->
-                        </div><!--//row-->
-                    </div><!--//app-card-header-->
-
-                    <div class="app-card-body px-4">
-
-
-                        <!-- Contenido de contacto aquí -->
-                        <div class="intro mb-3"> <strong>¡Contáctanos!</strong>
-                            <br>
-                            Consulta nuestro <a
-                                href="https://www.gob.mx/cre/documentos/directorio-de-la-comision-reguladora-de-energia?state=published"
-                                target="_blank">directorio</a> para más información.
+        <div class="app-card-body p-4 pt-0">
+            <div class="accordion" id="faqAccordion1">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq-heading-1">
+                        <button class="accordion-button btn btn-link" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq1" aria-expanded="true" aria-controls="faq1">
+                            ¿Qué es el SNIE?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" aria-labelledby="faq-heading-1">
+                        <div class="accordion-body text-justify p-4">
+                            <p>
+                                El <strong>SNIE</strong> es la plataforma oficial de la Secretaría de Energía (SENER)
+                                para registrar, actualizar, difundir y administrar toda la información energética del
+                                país. Permite coordinar a las entidades sectorizadas, promover la transparencia,
+                                monitorear sistemas públicos y privados y asegurar la planeación vinculante.
+                            </p>
+                            <p>
+                                A continuación, se muestra una presentación general del sistema:
+                            </p>
+                            <video width="100%" height="auto" controls>
+                                <source src="/video/snie_presentacion.mp4" type="video/mp4">
+                                ¡Tu navegador no soporta este video!
+                            </video>
                         </div>
-                        <ul class="list-unstyled">
-
-                            <li><strong>Dirección:</strong> Blvd. Adolfo López Mateos 172 Merced Gómez 03930 Ciudad de
-                                México</li>
-                            <li><strong>Teléfono:</strong> (+52) 55 5283 1500</li>
-                            <li><strong>Atención Ciudadana:</strong>(+52) 55 5283 1515</li>
-                            <li><strong>Email:</strong> <a href="mailto:energeo@cre.gob.mx">energeo@cre.gob.mx</a></li>
-                        </ul>
-
-
-
-                    </div><!--//app-card-body-->
-
-
-
+                    </div>
                 </div>
-                <div class="col-md-6">
+            </div>
+        </div>
+    </div>
 
-                    <div class="app-card-header p-3 border-bottom-0">
-                        <!-- Contenido del mapa aquí -->
-                        <div id="mapi" style="height:400px; width:100%"></div>
-                    </div><!--//app-card-header-->
+    <!-- Guía por Rol Interno (si aplica) -->
+    @if (perfilUsuario.Rol != "0")
+    {
+        <div class="app-card app-card-accordion shadow-sm mb-4">
+            <div class="app-card-header p-4 pb-2 border-0">
+                <h4 class="app-card-title">Guía de Usuario Interno - SNIEr</h4>
+            </div>
+            <div class="app-card-body p-4 pt-0">
+                <div class="accordion" id="faqAccordion2">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq-heading-2">
+                            <button class="accordion-button btn btn-link" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq2" aria-expanded="true" aria-controls="faq2">
+                                ¿Cómo utilizar los subsistemas del SNIEr?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse show" aria-labelledby="faq-heading-2">
+                            <div class="accordion-body text-justify p-4">
+                                <p>
+                                    Los usuarios internos pueden consultar el manual de operación que detalla cómo registrar
+                                    información energética, subir archivos, realizar validaciones y emitir reportes conforme
+                                    al reglamento del SNIEr (arts. 66 al 77).
+                                </p>
+                                <p>Consulta el manual según tu perfil:</p>
+                                @if (perfilUsuario.Mercado_ID == "1" || perfilUsuario.Rol == "1")
+                                {
+                                    <iframe allowfullscreen scrolling="no" class="fp-iframe"
+                                        src="https://heyzine.com/flip-book/snie_manual_electricidad.html"
+                                        style="border: 1px solid lightgray; width: 100%; height: 400px;"></iframe>
+                                }
+                                @if (perfilUsuario.Mercado_ID == "2" || perfilUsuario.Rol == "1")
+                                {
+                                    <iframe allowfullscreen scrolling="no" class="fp-iframe"
+                                        src="https://heyzine.com/flip-book/snie_manual_hidrocarburos.html"
+                                        style="border: 1px solid lightgray; width: 100%; height: 400px;"></iframe>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Sección de contacto -->
+    <div class="app-card app-card-accordion shadow-sm mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="app-card-header p-3 border-bottom-0">
+                    <div class="row align-items-center gx-3">
+                        <div class="col-auto">
+                            <div class="app-icon-holder icon-holder-mono">
+                                <i class="bi bi-headset" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h4 class="app-card-title">¿Necesitas Ayuda?</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="app-card-body px-4">
+                    <div class="intro mb-3"><strong>Contáctanos:</strong><br>
+                        Consulta el <a href="https://www.gob.mx/sener/acciones-y-programas/directorio"
+                            target="_blank">directorio</a> oficial para más información.
+                    </div>
+                    <ul class="list-unstyled">
+                        <li><strong>Dirección:</strong> Av. Insurgentes Sur 890, Col. del Valle, CDMX</li>
+                        <li><strong>Teléfono:</strong> (+52) 55 5000 6000</li>
+                        <li><strong>Email:</strong> <a href="mailto:energia@sener.gob.mx">energia@sener.gob.mx</a></li>
+                    </ul>
                 </div>
             </div>
 
-
-            <div class="app-card-footer p-4 mt-auto">
-                <a class="btn app-btn-secondary" href="#">Usa nuestro Asistente</a>
-            </div><!--//app-card-footer-->
-
+            <div class="col-md-6">
+                <div class="app-card-header p-3 border-bottom-0">
+                    <div id="mapi" style="height:400px; width:100%"></div>
+                </div>
+            </div>
         </div>
+        <div class="app-card-footer p-4 mt-auto">
+            <a class="btn app-btn-secondary" href="#">Usa nuestro Asistente Virtual</a>
+        </div>
+    </div>
+</div>
 
-
-    </div><!--//container-fluid-->
-
-</div><!--//app-content-->
 @section scripts {
-    @*Campos Visbles del popup*@
-
-    <script src="~/Geovisualizador/data/aguascalientes_4326.js"></script>
-    <script src="~/Geovisualizador/data/carreteras_aguas_4326.js"></script>
-
     <script>
-        var mapa = L.map("map").setView([21.88234, -102.28259], 10);
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {}).addTo(mapa);
-
-        // Añadir el polígono de Aguascalientes
-        L.geoJSON(aguascalientes_4326, {
-            style: function (feature) {
-                return {
-                    color: "red",
-                    weight: 2,
-                    fillOpacity: 0
-                };
-            }
-        }).addTo(mapa);
-
-        // Función para obtener el color según el tipo de carretera y la descripción para la leyenda
-        function getColorAndLegendDescription(tipo) {
-            switch(tipo) {
-                case 'Estatal libre': return { color: 'rgb(205,72,226)', legend: 'Red Estatal Libre' };
-                case 'Federal libre': return { color: 'rgb(227,26,28)', legend: 'Red Federal Libre' };
-                case 'Estatal cuota': return { color: 'rgb(234,234,60)', legend: 'Red Estatal Cuota' };
-                case 'Federal Integrada por Tramos Libres y de Cuota': return { color: 'rgb(31,120,180)', legend: 'Red Federal Integrada por Tramos Libres y de Cuota' };
-                case 'Federal cuota': return { color: 'rgb(51,160,44)', legend: 'Red Federal Cuota' };
-                case 'Carreteras Integradas por Tramos Federales y Estatales': return { color: 'rgb(166,206,227)', legend: 'Carreteras Integradas por Tramos Federales y Estatales' };
-                default: return { color: 'black', legend: 'Desconocido' }; // Por si acaso hay tipos no especificados
-            }
-        }
-
-        // Añadir las carreteras de Aguascalientes y configurar leyenda
-        var legend = L.control({ position: 'bottomright' });
-
-        legend.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'legend');
-            div.innerHTML += '<h4>Simbología</h4>';
-
-            // Añadir leyenda para cada tipo de carretera definido
-            var types = [
-                'Estatal libre',
-                'Federal libre',
-                'Estatal cuota',
-                'Federal Integrada por Tramos Libres y de Cuota',
-                'Federal cuota',
-                'Carreteras Integradas por Tramos Federales y Estatales'
-            ];
-
-            types.forEach(function(type) {
-                var info = getColorAndLegendDescription(type);
-                div.innerHTML +=
-                    '<div><i style="background:' + info.color + '; border-radius: 50%; width: 20px; height: 20px; display: inline-block; margin-right: 10px;"></i>' + info.legend + '</div>';
-            });
-
-            // Establecer fondo blanco y otros estilos
-            div.style.backgroundColor = 'white';
-            div.style.padding = '10px';
-            div.style.border = '2px solid grey';
-
-            return div;
-        };
-
-        legend.addTo(mapa);
-
-        // Función para formatear los valores numéricos
-        function formatNumber(value) {
-            return parseFloat(value).toFixed(2);
-        }
-
-        // Añadir las carreteras de Aguascalientes y configurar interactividad
-        var carreterasLayer = L.geoJSON(carreteras_aguas_4326, {
-            style: function (feature) {
-                var info = getColorAndLegendDescription(feature.properties.tipo);
-                return {
-                    color: info.color,
-                    weight: 2
-                };
-            },
-            onEachFeature: function (feature, layer) {
-                layer.on({
-                    mouseover: function (e) {
-                        var properties = e.target.feature.properties;
-                        var popupContent = `<b>Carretera:</b> ${properties.carretera}<br>`
-                                        + `<b>Número de motocicletas:</b> ${formatNumber(properties.motos)}<br>`
-                                        + `<b>Número de automóviles:</b> ${formatNumber(properties.autos)}<br>`
-                                        + `<b>Número de autobúses:</b> ${formatNumber(properties.bus)}<br>`
-                                        + `<b>Tránsito diario promedio anual:</b> ${properties.tdpa}`;
-                        layer.bindPopup(popupContent).openPopup();
-                        layer.setStyle({
-                            weight: 5
-                        });
-                    },
-                    mouseout: function (e) {
-                        layer.unbindPopup();
-                        layer.setStyle({
-                            weight: 2
-                        });
-                    }
-                });
-            }
-        }).addTo(mapa);
-
-        // Asegurarse de que los popups estén por encima de otras capas
-        mapa.on('popupopen', function() {
-            var popups = document.querySelectorAll('.leaflet-popup');
-            popups.forEach(function(popup) {
-                popup.style.zIndex = 10000;
-            });
-        });
-    </script>
-    <script>
-        var map = L.map('mapi').setView([19.3635996459921, -99.1904745697866], 17);
-
+        var map = L.map('mapi').setView([19.3635996, -99.1904745], 17);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
-
-        var marker = L.marker([19.3635996459921, -99.1904745697866]).addTo(map);
-
-        var contenido = "<style>" +
-            ".popup-content {" +
-            "    width: 280px;" +
-            "    max-height: 180px;" +
-            "    overflow-y: auto;" +
-            "    padding: 10px;" +
-            "}" +
-            "h2, h3, h4, p, li {" +
-            "    margin: 0 0 10px 0;" +
-            "}" +
-            "ul {" +
-            "    padding-left: 20px;" +
-            "}" +
-            "img {" +
-            "    vertical-align: middle;" +
-            "    margin-right: 10px;" +
-            "}" +
-            "</style>";
-
-        contenido += "<div class='popup-content'>" +
-            "<img src='/img/evaluar.png' style='width: 36px; height: 36px;'>" +
-            "<h6>Comisión Reguladora de Energía - CRE</h6>" +
-            "<hr>" +
-            "<p>Blvd. Adolfo López Mateos 172</p>" +
-            "<a class='btn btn-cre-verde' href='https://www.google.com/maps/?q=19.3635996459921,-99.1904745697866' target='_blank'>Ver Vista de Calle</a>" +
-            // Agrega más contenido aquí según sea necesario
-            "</div>";
-
-        // Asegúrate de vincular este contenido con tu marcador
-        var marker = L.marker([19.3635996459921, -99.1904745697866]).addTo(map);
+        var marker = L.marker([19.3635996, -99.1904745]).addTo(map);
+        var contenido = `
+                    <div class='popup-content'>
+                        <h6>Secretaría de Energía - SENER</h6>
+                        <hr>
+                        <p>Av. Insurgentes Sur 890<br>Col. del Valle, CDMX</p>
+                        <a class='btn btn-outline-primary' href='https://www.google.com/maps/?q=19.3635996,-99.1904745' target='_blank'>Ver en Google Maps</a>
+                    </div>`;
         marker.bindPopup(contenido).openPopup();
-
-
-        marker.bindPopup(popupContent).openPopup();
     </script>
-
-
 }
