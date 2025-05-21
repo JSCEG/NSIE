@@ -26,14 +26,18 @@ html {
 }
 
 .smaller-font {
-    font-size: 0.8em; /* Tamaño de la fuente más pequeño */
+    font-size: 0.8em;
+    /* Tamaño de la fuente más pequeño */
 }
 
 #reset-password-link {
     /* position: absolute; */
-    bottom: 20px; /* Ajusta la distancia desde abajo según sea necesario */
-    left: 50%; /* Centra horizontalmente el enlace */
-    transform: translateX(-50%); /* Centra horizontalmente el enlace */
+    bottom: 20px;
+    /* Ajusta la distancia desde abajo según sea necesario */
+    left: 50%;
+    /* Centra horizontalmente el enlace */
+    transform: translateX(-50%);
+    /* Centra horizontalmente el enlace */
 }
 
 /* ====================
@@ -59,7 +63,7 @@ html {
     width: 350px;
     margin-top: auto;
     margin-bottom: auto;
-   background: rgba(248, 249, 250, 0.95);
+    background: rgba(248, 249, 250, 0.95);
     position: relative;
     display: flex;
     justify-content: center;
@@ -92,6 +96,13 @@ html {
     margin-left: -41px;
     height: 100%;
     width: auto;
+}
+
+.bienvenidos {
+    width: 80%;
+    height: auto;
+    z-index: 100;
+    text-shadow: #13322b 0px 0px 5px;
 }
 
 /* ====================
@@ -197,7 +208,7 @@ html {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    box-shadow: 1px 13px 5px -6px rgba(0,0,0,0.55) !important;
+    box-shadow: 1px 13px 5px -6px rgba(0, 0, 0, 0.55) !important;
 }
 
 .subtitulo {
@@ -232,9 +243,9 @@ html {
    10. Modal Styles
    ==================== */
 #terms-and-conditions-modal .modal-content {
-    font-family: Fira Sans,Trebuchet MS,Montserrat,sans-serif;
+    font-family: Fira Sans, Trebuchet MS, Montserrat, sans-serif;
     border: 1px solid #dee2e6;
-    box-shadow: 0 5px 15px rgba(0,0,0,.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .05);
     padding: 20px;
     font-size: 12px !important;
 }
@@ -247,7 +258,8 @@ html {
     border-top: none;
 }
 
-#terms-and-conditions-modal .modal-body ol, .modal-body p {
+#terms-and-conditions-modal .modal-body ol,
+.modal-body p {
     padding-left: 20px;
     list-style-type: upper-roman;
     text-align: justify;
@@ -419,7 +431,38 @@ html {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
+/* ====================
+   13. Estilos  y Mensajes de Error
+   ==================== */
+/* Estilo para mensajes de error */
+.error-message {
+    color: #dc3545;
+    /* Color rojo para errores */
+    font-size: 0.8rem;
+    /* Tamaño de fuente más pequeño */
+    margin-top: 0.25rem;
+    /* Espacio superior */
+    margin-bottom: 0.5rem;
+    /* Espacio inferior */
+}
+
+/* Estilo para campos con error */
+.is-invalid {
+    border-color: #dc3545 !important;
+    /* Borde rojo */
+}
+
+/* Estilo para el focus de campos con error */
+.is-invalid:focus {
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    /* Sombra roja al focus */
+}

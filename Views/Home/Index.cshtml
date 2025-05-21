@@ -12,6 +12,8 @@
     ViewData["RolUsuario"] = perfilUsuario.Rol;
     ViewData["IDUsuario"] = perfilUsuario.IdUsuario;
 
+
+
     var secciones = new[] {
         new { Titulo = "🔐 Gobernanza y Seguridad", Articulos = "Art. 70, 71, 76", Descripcion = "Control de usuarios, roles, trazabilidad, firma digital y clasificación de datos." },
         new { Titulo = "🧾 Carga, Validación y CRM", Articulos = "Art. 70, 71, 73, 76", Descripcion = "Carga masiva, validación, notificaciones, oficios institucionales y firma digital." },
@@ -27,62 +29,72 @@
         new { Titulo = "📢 Difusión y Fuente Oficial", Articulos = "Art. 77", Descripcion = "Mecanismo de difusión oficial y citación obligatoria del SNIEr como fuente de información." }
     };
 
-    var modulosSnie = new[] {
-
+    var modulosSnie = new List<ModuloSNIER>
+    {
     // Nuevos módulos derivados del Reglamento
-
-    new { Seccion = secciones[0].Titulo, Controller = "Usuarios", Action = "AdministrarUsuarios", Title = "Gestión de Usuarios y Perfiles", Desc = "Administra perfiles, roles y accesos.", Img = "usuarios_scel.png", Btn = "Administrar" },
-    new { Seccion = secciones[0].Titulo, Controller = "Bitacora", Action = "Dashboard", Title = "Seguridad y Auditoría", Desc = "Supervisa acciones del sistema y alertas.", Img = "seguridad_alertas_scel.png", Btn = "Ver Acciones" },
-    new { Seccion = secciones[0].Titulo, Controller = "SNIE", Action = "SubsistemasExternos", Title = "Subsistemas Externos Integrados", Desc = "Consulta la integración de entidades federativas, municipios y privados (Art. 69).", Img = "subsistemas.png", Btn = "Consultar" },
-
+   new ModuloSNIER { Seccion = secciones[0].Titulo, Controller = "Usuarios", Action = "AdministrarUsuarios", Title = "Gestión de Usuarios y Perfiles", Desc = "Administra perfiles, roles y accesos.", Img = "usuarios_scel.png", Btn = "Administrar", Roles = "1" },
+        new ModuloSNIER { Seccion = secciones[0].Titulo, Controller = "Bitacora", Action = "Dashboard", Title = "Seguridad y Auditoría", Desc = "Supervisa acciones del sistema y alertas.", Img = "seguridad_alertas_scel.png", Btn = "Ver Acciones", Roles = "1,7" },
+        new ModuloSNIER { Seccion = secciones[0].Titulo, Controller = "SNIE", Action = "SubsistemasExternos", Title = "Subsistemas Externos Integrados", Desc = "Consulta la integración de entidades federativas, municipios y privados (Art. 69).", Img = "subsistemas.png", Btn = "Consultar", Roles = "1,7,8" },
+        new ModuloSNIER { Seccion = secciones[0].Titulo, Controller = "Consejo", Action = "FirmaActas", Title = "Firma de Actas del Consejo", Desc = "Firma digital de acuerdos y resoluciones colegiadas.", Img = "firma_actas.png", Btn = "Firmar Acta", Roles = "1,7" },
+    
     // 1.-Carga, Validación y CRM
-    new { Seccion = secciones[1].Titulo, Controller = "SNIE", Action = "CargaInformacion", Title = "Carga de Información", Desc = "Colaboradores registran datos clave.", Img = "carga_info.png", Btn = "Subir Archivos" },
-    new { Seccion = secciones[1].Titulo, Controller = "SNIE", Action = "ValidacionFirma", Title = "Validación y Firma", Desc = "Valida registros y genera acuse con e.firma.", Img = "firma.png", Btn = "Firmar" },
-    new { Seccion = secciones[1].Titulo, Controller = "SNIE", Action = "BuzonNotificaciones", Title = "Notificaciones y Oficios", Desc = "Consulta notificaciones internas y acuses.", Img = "notificaciones.png", Btn = "Consultar" },
+    new ModuloSNIER { Seccion = secciones[1].Titulo, Controller = "SNIE", Action = "CargaInformacion", Title = "Carga de Información", Desc = "Colaboradores registran datos clave.", Img = "carga_info.png", Btn = "Subir Archivos", Roles = "1,8" },
+    new ModuloSNIER { Seccion = secciones[1].Titulo, Controller = "SNIE", Action = "ValidacionFirma", Title = "Validación y Firma", Desc = "Valida registros y genera acuse con e.firma.", Img = "firma.png", Btn = "Firmar", Roles = "1,8" },
+    new ModuloSNIER { Seccion = secciones[1].Titulo, Controller = "SNIE", Action = "BuzonNotificaciones", Title = "Notificaciones y Oficios", Desc = "Consulta notificaciones internas y acuses.", Img = "notificaciones.png", Btn = "Consultar", Roles = "1,7,8" },
 
     // 2.-Datos Públicos
-    new { Seccion = secciones[2].Titulo, Controller = "EnergiasLimpias", Action = "Certificados", Title = "Boletín de CELs", Desc = "Consulta los reportes sobre certificados de energías limpias.", Img = "cel.png", Btn = "Ver CELs" },
-    new { Seccion = secciones[2].Titulo, Controller = "EnergiasLimpias", Action = "FactorEmision", Title = "Factor de Emisión", Desc = "Consulta indicadores de emisión del SEN.", Img = "emision.png", Btn = "Consultar" },
-    new { Seccion = secciones[2].Titulo, Controller = "Sankey", Action = "Sankey", Title = "Balance Nacional de Energía", Desc = "Visualiza el flujo energético nacional.", Img = "sankey.png", Btn = "Explorar" },
-    new { Seccion = secciones[2].Titulo, Controller = "Map", Action = "I_Petroliferos", Title = "Precios de Estaciones", Desc = "Consulta precios actualizados por zona.", Img = "gasolinera.png", Btn = "Ver Precios" },
-    new { Seccion = secciones[2].Titulo, Controller = "Indicadores", Action = "Precio_Gas_LP", Title = "Precios de Gas L.P.", Desc = "Consulta precios históricos de Gas L.P.", Img = "precio.png", Btn = "Ver Históricos" },
-    new { Seccion = secciones[2].Titulo, Controller = "Tarifas", Action = "TarifasMI", Title = "Tarifas Eléctricas", Desc = "Consulta tarifas de electricidad a nivel nacional.", Img = "precio.png", Btn = "Consultar Tarifas" },
+    new ModuloSNIER { Seccion = secciones[2].Titulo, Controller = "EnergiasLimpias", Action = "Certificados", Title = "Boletín de CELs", Desc = "Consulta los reportes sobre certificados de energías limpias.", Img = "cel.png", Btn = "Ver CELs", Roles = "0,1,7,8" },
+    new ModuloSNIER { Seccion = secciones[2].Titulo, Controller = "EnergiasLimpias", Action = "FactorEmision", Title = "Factor de Emisión", Desc = "Consulta indicadores de emisión del SEN.", Img = "emision.png", Btn = "Consultar", Roles = "0,1,7,8" },
+    new ModuloSNIER { Seccion = secciones[2].Titulo, Controller = "Sankey", Action = "Sankey", Title = "Balance Nacional de Energía", Desc = "Visualiza el flujo energético nacional.", Img = "sankey.png", Btn = "Explorar", Roles = "0,1,7,8" },
+    new ModuloSNIER { Seccion = secciones[2].Titulo, Controller = "Map", Action = "I_Petroliferos", Title = "Precios de Estaciones", Desc = "Consulta precios actualizados por zona.", Img = "gasolinera.png", Btn = "Ver Precios", Roles = "0,1,7,8" },
+    new ModuloSNIER { Seccion = secciones[2].Titulo, Controller = "Indicadores", Action = "Precio_Gas_LP", Title = "Precios de Gas L.P.", Desc = "Consulta precios históricos de Gas L.P.", Img = "precio.png", Btn = "Ver Históricos", Roles = "0,1,7,8" },
+    new ModuloSNIER { Seccion = secciones[2].Titulo, Controller = "Tarifas", Action = "TarifasMI", Title = "Tarifas Eléctricas", Desc = "Consulta tarifas de electricidad a nivel nacional.", Img = "precio.png", Btn = "Consultar Tarifas", Roles = "0,1,7,8" },
+// 3.-Indicadores
+new ModuloSNIER { Seccion = secciones[3].Titulo, Controller = "Indicadores", Action = "IndicadoresInstitucionales", Title = "Indicadores de Eficiencia por Área", Desc = "Monitorea el desempeño estratégico, operativo y de gestión institucional.", Img = "indicadores.png", Btn = "Ver Indicadores", Roles = "1,7,8" },
 
-    // 3.-Indicadores
-    new { Seccion = secciones[3].Titulo, Controller = "Indicadores", Action = "IndicadoresInstitucionales", Title = "Indicadores de Eficiencia por Área", Desc = "Monitorea el desempeño estratégico, operativo y de gestión institucional.", Img = "indicadores.png", Btn = "Ver Indicadores" },
+// 4.-Obligaciones y Cumplimiento
+new ModuloSNIER { Seccion = secciones[4].Titulo, Controller = "SNIE", Action = "VerificadorDatos", Title = "Verificador de Datos", Desc = "Valida incongruencias en la información registrada por los subsistemas (Art. 112).", Img = "verificador.png", Btn = "Verificar", Roles = "1,7,8" },
+new ModuloSNIER { Seccion = secciones[4].Titulo, Controller = "SNIE", Action = "Semaforo", Title = "Semáforo de Carga", Desc = "Visualiza el estado por dependencia (Verde, Amarillo, Rojo).", Img = "semaforo.png", Btn = "Ver Semáforo", Roles = "1,7,8" },
+new ModuloSNIER { Seccion = secciones[4].Titulo, Controller = "SNIE", Action = "ObligacionesEntrega", Title = "Control de Entregas SNIEr", Desc = "Consulta el cumplimiento de entrega de información por subsistema (Art. 74).", Img = "entregas.png", Btn = "Revisar", Roles = "1,7,8" },
 
-    // 4.-Obligaciones y Cumplimiento
-    new { Seccion = secciones[4].Titulo, Controller = "SNIE", Action = "VerificadorDatos", Title = "Verificador de Datos", Desc = "Valida incongruencias en la información registrada por los subsistemas (Art. 112).", Img = "verificador.png", Btn = "Verificar" },
-    new { Seccion = secciones[4].Titulo, Controller = "SNIE", Action = "Semaforo", Title = "Semáforo de Carga", Desc = "Visualiza el estado por dependencia (Verde, Amarillo, Rojo).", Img = "semaforo.png", Btn = "Ver Semáforo" },
-    new { Seccion = secciones[4].Titulo, Controller = "SNIE", Action = "ObligacionesEntrega", Title = "Control de Entregas SNIEr", Desc = "Consulta el cumplimiento de entrega de información por subsistema (Art. 74).", Img = "entregas.png", Btn = "Revisar" },
+// 5.-Proyectos Estratégicos y Analítica
+new ModuloSNIER { Seccion = secciones[5].Titulo, Controller = "Proyectos", Action = "FOTEASE", Title = "FOTEASE", Desc = "Fondo para Transición Energética y el Aprovechamiento Sustentable de la Energía.", Img = "fotease.png", Btn = "Consultar", Roles = "1,7" },
 
-    // 5.-Proyectos Estratégicos y Analítica
-    new { Seccion = secciones[5].Titulo, Controller = "Proyectos", Action = "FOTEASE", Title = "FOTEASE", Desc = "Fondo para Transición Energética y el Aprovechamiento Sustentable de la Energía.", Img = "fotease.png", Btn = "Consultar" },
-    new { Seccion = secciones[5].Titulo, Controller = "Proyectos", Action = "FSUE", Title = "FSUE (tentativo)", Desc = "Fondo del Servicio Universal Eléctrico (nombre por confirmar).", Img = "fsue.png", Btn = "Consultar" },
-    new { Seccion = secciones[5].Titulo, Controller = "Proyectos", Action = "FondoPetroleo", Title = "Fondo Mexicano del Petróleo (tentativo)", Desc = "Instrumento financiero relacionado con los ingresos derivados del petróleo.", Img = "fondopetroleo.png", Btn = "Consultar" },
-    new { Seccion = secciones[5].Titulo, Controller = "Home", Action = "EnConstruccion", Title = "Seguimiento de Proyectos", Desc = "Monitorea el avance de proyectos estratégicos del sector.", Img = "seguimiento_proyectos.png", Btn = "Ver Proyectos" },
+new ModuloSNIER { Seccion = secciones[5].Titulo, Controller = "Proyectos", Action = "FSUE", Title = "FSUE (tentativo)", Desc = "Fondo del Servicio Universal Eléctrico (nombre por confirmar).", Img = "fsue.png", Btn = "Consultar", Roles = "1,7" },
 
-    // 6.-Análisis Geoespacial
-    new { Seccion = secciones[6].Titulo, Controller = "Home", Action = "EnConstruccion", Title = "Analítica y Transición Energética", Desc = "Consulta modelos predictivos, metas y escenarios.", Img = "analitica.png", Btn = "Ver Analítica" },
-    new { Seccion = secciones[6].Titulo, Controller = "Map", Action = "Infraestructura_SEM", Title = "Análisis Geoespacial", Desc = "Consulta mapas, capas estratégicas y riesgos.", Img = "geo.png", Btn = "Explorar Mapa" },
+new ModuloSNIER { Seccion = secciones[5].Titulo, Controller = "Proyectos", Action = "FondoPetroleo", Title = "Fondo Mexicano del Petróleo (tentativo)", Desc = "Instrumento financiero relacionado con los ingresos derivados del petróleo.", Img = "fondopetroleo.png", Btn = "Consultar", Roles = "1,7" },
 
-    // 7.-Interoperabilidad y Configuración
-    new { Seccion = secciones[7].Titulo, Controller = "Home", Action = "EnConstruccion", Title = "Interoperabilidad y Conectividad", Desc = "Consulta las integraciones con otros sistemas.", Img = "interoperabilidad.png", Btn = "Ver Conexiones" },
-    new { Seccion = secciones[7].Titulo, Controller = "Home", Action = "EnConstruccion", Title = "Modificación de Variables Operativas", Desc = "Administra las variables operativas del sistema.", Img = "modificacion_variables_scel.png", Btn = "Modificar Variables" },
+new ModuloSNIER { Seccion = secciones[5].Titulo, Controller = "Home", Action = "EnConstruccion", Title = "Seguimiento de Proyectos", Desc = "Monitorea el avance de proyectos estratégicos del sector.", Img = "seguimiento_proyectos.png", Btn = "Ver Proyectos", Roles = "1,7,8" },
 
-    // 8.-Normatividad y Disposiciones
-    new { Seccion = secciones[8].Titulo, Controller = "Normatividad", Action = "Formatos", Title = "Gestión de Reglas y Formatos", Desc = "Visualiza políticas, normas técnicas, lineamientos e instructivos oficiales.", Img = "normas.png", Btn = "Consultar" },
-    new { Seccion = secciones[8].Titulo, Controller = "Normatividad", Action = "RepositorioFormularios", Title = "Repositorio de Formularios del Sector Energético", Desc = "Consulta formatos estandarizados relacionados con trámites energéticos (Art. 73).", Img = "formularios.png", Btn = "Consultar" },
+// 6.-Análisis Geoespacial
+new ModuloSNIER { Seccion = secciones[6].Titulo, Controller = "Home", Action = "EnConstruccion", Title = "Analítica y Transición Energética", Desc = "Consulta modelos predictivos, metas y escenarios.", Img = "analitica.png", Btn = "Ver Analítica", Roles = "1,7" },
 
-    // 9.-Planeación Vinculante
-    new { Seccion = secciones[9].Titulo, Controller = "Repositorio", Action = "Documentos", Title = "Repositorio Estratégico", Desc = "Consulta documentos vinculantes y estrategias energéticas.", Img = "repositorio.png", Btn = "Acceder" },
+new ModuloSNIER { Seccion = secciones[6].Titulo, Controller = "Map", Action = "Infraestructura_SEM", Title = "Análisis Geoespacial", Desc = "Consulta mapas, capas estratégicas y riesgos.", Img = "geo.png", Btn = "Explorar Mapa", Roles = "0,1,7,8" },
 
-    // 10.-Programa del Consejo
-    new { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "ProgramaAnual", Title = "Programa de Trabajo del Consejo", Desc = "Consulta metas, recursos y actividades del SNIEr.", Img = "consejo.png", Btn = "Consultar" },
-    new { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "AvanceMetas", Title = "Avance de Metas y Líneas de Acción", Desc = "Monitorea el cumplimiento del Programa Anual del Consejo (Art. 76).", Img = "metas.png", Btn = "Ver Avance" },
+// 7.-Interoperabilidad y Configuración
+new ModuloSNIER { Seccion = secciones[7].Titulo, Controller = "Home", Action = "EnConstruccion", Title = "Interoperabilidad y Conectividad", Desc = "Consulta las integraciones con otros sistemas.", Img = "interoperabilidad.png", Btn = "Ver Conexiones", Roles = "1" },
 
-    // 11.-Difusión y Fuente Oficial
-    new { Seccion = secciones[11].Titulo, Controller = "Difusion", Action = "Citas", Title = "Difusión Oficial y Citación", Desc = "Revisa cómo debe citarse oficialmente la información del SNIEr.", Img = "difusion.png", Btn = "Ver Detalles" }
+new ModuloSNIER { Seccion = secciones[7].Titulo, Controller = "Home", Action = "EnConstruccion", Title = "Modificación de Variables Operativas", Desc = "Administra las variables operativas del sistema.", Img = "modificacion_variables_scel.png", Btn = "Modificar Variables", Roles = "1" },
+
+// 8.-Normatividad y Disposiciones
+new ModuloSNIER { Seccion = secciones[8].Titulo, Controller = "Normatividad", Action = "Formatos", Title = "Gestión de Reglas y Formatos", Desc = "Visualiza políticas, normas técnicas, lineamientos e instructivos oficiales.", Img = "normas.png", Btn = "Consultar", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[8].Titulo, Controller = "Normatividad", Action = "RepositorioFormularios", Title = "Repositorio de Formularios del Sector Energético", Desc = "Consulta formatos estandarizados relacionados con trámites energéticos (Art. 73).", Img = "formularios.png", Btn = "Consultar", Roles = "1,7" },
+
+// 9.-Planeación Vinculante
+new ModuloSNIER { Seccion = secciones[9].Titulo, Controller = "Repositorio", Action = "Documentos", Title = "Repositorio Estratégico", Desc = "Consulta documentos vinculantes y estrategias energéticas.", Img = "repositorio.png", Btn = "Acceder", Roles = "1,7" },
+
+// 10.-Programa del Consejo
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "ProgramaAnual", Title = "Programa de Trabajo del Consejo", Desc = "Consulta metas, recursos y actividades del SNIEr.", Img = "consejo.png", Btn = "Consultar", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "AvanceMetas", Title = "Avance de Metas y Líneas de Acción", Desc = "Monitorea el cumplimiento del Programa Anual del Consejo (Art. 76).", Img = "metas.png", Btn = "Ver Avance", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "OrdenDelDia", Title = "Orden del Día y Convocatorias", Desc = "Consulta o emite convocatorias y temas del Consejo.", Img = "orden_dia.png", Btn = "Consultar", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "Votaciones", Title = "Votaciones Colegiadas", Desc = "Consulta temas a votar y emite tu voto digital.", Img = "votacion.png", Btn = "Votar", Roles = "1,7" },
+
+// 11.-Difusión y Fuente Oficial
+new ModuloSNIER { Seccion = secciones[11].Titulo, Controller = "Difusion", Action = "Citas", Title = "Difusión Oficial y Citación", Desc = "Revisa cómo debe citarse oficialmente la información del SNIEr.", Img = "difusion.png", Btn = "Ver Detalles", Roles = "0,1,7,8" }
 };
 }
 
@@ -96,36 +108,38 @@
 
 <!-- Contenido por secciones -->
 <div class="container pe-5 ps-5">
-    @foreach (var seccion in secciones)
-    {
-        var modulos = modulosSnie.Where(m => m.Seccion == seccion.Titulo).ToList();
-        if (modulos.Any())
-        {
-            <div class="row g-4 mt-4">
-                <div class="col-12">
-                    <h4 class="subtitulobus mb-3">@seccion.Titulo</h4>
-<div class="alert alert-success mt-2" role="alert">
-    <strong>¿Qué hace?</strong> @seccion.Descripcion <br />
-    <strong>Fundamento legal:</strong> @seccion.Articulos
-</div>
+@foreach (var seccion in secciones)
+{
+    var modulos = modulosSnie.Where(m => m.Seccion == seccion.Titulo).ToList();
+    var modulosVisibles = modulos.Where(m => string.IsNullOrEmpty(m.Roles) || m.Roles.Split(',').Contains(perfilUsuario.Rol)).ToList();
 
+    if (modulosVisibles.Any())
+    {
+        <div class="row g-4 mt-4">
+            <div class="col-12">
+                <h4 class="subtitulobus mb-3">@seccion.Titulo</h4>
+                <div class="alert alert-success mt-2" role="alert">
+                    <strong>¿Qué hace?</strong> @seccion.Descripcion <br />
+                    <strong>Fundamento legal:</strong> @seccion.Articulos
                 </div>
-                @foreach (var mod in modulos)
-                {
-                    <div class="col-md-4">
-                        <div class="card h-100">
-                            <div class="card-body text-center">
-                                <img src="~/img/@mod.Img" alt="@mod.Title" class="iconomenu mb-3" />
-                                <h5>@mod.Title</h5>
-                                <p>@mod.Desc</p>
-                                <a asp-controller="@mod.Controller" asp-action="@mod.Action" class="btn btn-snie">@mod.Btn</a>
-                            </div>
+            </div>
+            @foreach (var mod in modulosVisibles)
+            {
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <img src="~/img/@mod.Img" alt="@mod.Title" class="iconomenu mb-3" />
+                            <h5>@mod.Title</h5>
+                            <p>@mod.Desc</p>
+                            <a asp-controller="@mod.Controller" asp-action="@mod.Action" class="btn btn-snie">@mod.Btn</a>
                         </div>
                     </div>
-                }
-            </div>
-        }
+                </div>
+            }
+        </div>
     }
+}
+
 </div>
 
 <!-- Diagrama adicional -->

@@ -10,7 +10,7 @@ namespace NSIE.Servicios
     public interface IRepositorioAcceso
     {
 
-        //Monitore y Uso de EnergeoCRE
+        //Monitore y Uso de 
         Task<List<AccesoDetalle>> GetDetallesAccesoAsync(DateTime fechaInicio, DateTime fechaFin);
         Task<List<AccesoDetalle>> GetDetallesAccesoPorUsuarioAsync(string nombreUsuario, DateTime fechaInicio, DateTime fechaFin);
 
