@@ -219,7 +219,7 @@ namespace NSIE.Controllers
 
         #region En construcción
 
-        public IActionResult EnConstrucción()
+        public IActionResult EnConstruccion()
         {
             return View();
         }
