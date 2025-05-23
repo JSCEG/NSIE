@@ -97,7 +97,7 @@ new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action
 new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "Votaciones", Title = "Votaciones Colegiadas", Desc = "Consulta temas a votar y emite tu voto digital.", Img = "votacion.png", Btn = "Votar", Roles = "1,7" },
 new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "Acuerdos", Title = "Acuerdos de Coordinación", Desc = "Consulta los acuerdos aprobados por el Consejo y da seguimiento a su cumplimiento.", Img = "acuerdos.png", Btn = "Ver Acuerdos", Roles = "1,7" },
 new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "BuzonAsuntos", Title = "Buzón de Asuntos del Consejo", Desc = "Registra temas a tratar en sesiones conforme a los lineamientos del SNIEr.", Img = "buzon_asuntos.png", Btn = "Registrar Asunto", Roles = "1,7" },
-new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "Indicadores", Title = "Indicadores del Consejo", Desc = "Visualiza métricas sobre sesiones, acuerdos, cumplimiento y participación.", Img = "indicadores_consejo.png", Btn = "Ver Indicadores", Roles = "1,7"},
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "IndicadoresConsejo", Title = "Indicadores del Consejo", Desc = "Visualiza métricas sobre sesiones, acuerdos, cumplimiento y participación.", Img = "modulos/indicadoresconsejo.png", Btn = "Ver Indicadores", Roles = "1,7"},
 
 // 11.-Difusión y Fuente Oficial
 new ModuloSNIER { Seccion = secciones[11].Titulo, Controller = "Difusion", Action = "Citas", Title = "Difusión Oficial y Citación", Desc = "Revisa cómo debe citarse oficialmente la información del SNIEr.", Img = "difusion.png", Btn = "Ver Detalles", Roles = "0,1,7,8" }
@@ -128,10 +128,12 @@ new ModuloSNIER { Seccion = secciones[11].Titulo, Controller = "Difusion", Actio
     <!-- End Google Tag Manager -->
 
     <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@200;300;400;500;600;700&amp;family=Fira+Sans+Extra+Condensed:wght@200;300;400;500;600;700&amp;family=Montserrat:wght@200;300;400;500;600;700&amp;display=swap">
     <link rel="preload" href="/fonts/Noto Sans ENERGIA/NotoSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="preload" href="/fonts/Patria ENERGIA/Patria_Regular.otf" as="font" type="font/otf" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <!-- Core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -197,6 +199,10 @@ new ModuloSNIER { Seccion = secciones[11].Titulo, Controller = "Difusion", Actio
     <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
     <script src="https://code.highcharts.com/modules/price-indicator.js"></script>
     <script src="https://code.highcharts.com/modules/pictorial.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+    <script src="https://code.highcharts.com/gantt/modules/gantt.js"></script>
+
 
     <!-- HTML2PDF -->
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -246,6 +252,8 @@ new ModuloSNIER { Seccion = secciones[11].Titulo, Controller = "Difusion", Actio
     <script src="~/js/configura_mapa.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- Estilos existentes -->
+    @RenderSection("Styles", required: false)
 </head>
 
 <body class="app">
@@ -313,7 +321,7 @@ new ModuloSNIER { Seccion = secciones[11].Titulo, Controller = "Difusion", Actio
                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z" />
                                             <path fill-rule="evenodd"
-                                                d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
+                                                d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742.16.767.376 1.566.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
                                         </svg>
                                         <span class="icon-badge hidden" id="notification-count">0</span>
                                     </a>
@@ -407,6 +415,8 @@ new ModuloSNIER { Seccion = secciones[11].Titulo, Controller = "Difusion", Actio
                         </li>
 
                     </ul>
+
+@* 
 @foreach (var seccion in secciones)
 {
     var modulos = modulosSnie.Where(m => m.Seccion == seccion.Titulo).ToList();
@@ -451,7 +461,7 @@ new ModuloSNIER { Seccion = secciones[11].Titulo, Controller = "Difusion", Actio
 
 
 
-                    
+                     *@
 
 
 

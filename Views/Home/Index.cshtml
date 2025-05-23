@@ -35,7 +35,7 @@
    new ModuloSNIER { Seccion = secciones[0].Titulo, Controller = "Usuarios", Action = "AdministrarUsuarios", Title = "Gestión de Usuarios y Perfiles", Desc = "Administra perfiles, roles y accesos.", Img = "usuarios_scel.png", Btn = "Administrar", Roles = "1" },
         new ModuloSNIER { Seccion = secciones[0].Titulo, Controller = "Bitacora", Action = "Dashboard", Title = "Seguridad y Auditoría", Desc = "Supervisa acciones del sistema y alertas.", Img = "seguridad_alertas_scel.png", Btn = "Ver Acciones", Roles = "1,7" },
         new ModuloSNIER { Seccion = secciones[0].Titulo, Controller = "SNIE", Action = "SubsistemasExternos", Title = "Subsistemas Externos Integrados", Desc = "Consulta la integración de entidades federativas, municipios y privados (Art. 69).", Img = "subsistemas.png", Btn = "Consultar", Roles = "1,7,8" },
-        new ModuloSNIER { Seccion = secciones[0].Titulo, Controller = "Consejo", Action = "FirmaActas", Title = "Firma de Actas del Consejo", Desc = "Firma digital de acuerdos y resoluciones colegiadas.", Img = "firma_actas.png", Btn = "Firmar Acta", Roles = "1,7" },
+        
     
     // 1.-Carga, Validación y CRM
     new ModuloSNIER { Seccion = secciones[1].Titulo, Controller = "SNIE", Action = "CargaInformacion", Title = "Carga de Información", Desc = "Colaboradores registran datos clave.", Img = "carga_info.png", Btn = "Subir Archivos", Roles = "1,8" },
@@ -67,7 +67,7 @@ new ModuloSNIER { Seccion = secciones[5].Titulo, Controller = "Proyectos", Actio
 new ModuloSNIER { Seccion = secciones[5].Titulo, Controller = "Home", Action = "EnConstruccion", Title = "Seguimiento de Proyectos", Desc = "Monitorea el avance de proyectos estratégicos del sector.", Img = "seguimiento_proyectos.png", Btn = "Ver Proyectos", Roles = "1,7,8" },
 
 // 6.-Análisis Geoespacial
-new ModuloSNIER { Seccion = secciones[6].Titulo, Controller = "Home", Action = "EnConstruccion", Title = "Analítica y Transición Energética", Desc = "Consulta modelos predictivos, metas y escenarios.", Img = "analitica.png", Btn = "Ver Analítica", Roles = "1,7" },
+new ModuloSNIER { Seccion = secciones[6].Titulo, Controller = "Indicadores", Action = "Menu_Mecanismo", Title = "Analítica y Transición Energética", Desc = "Consulta modelos predictivos, metas y escenarios.", Img = "analitica.png", Btn = "Ver Analítica", Roles = "1,7" },
 
 new ModuloSNIER { Seccion = secciones[6].Titulo, Controller = "Map", Action = "Infraestructura_SEM", Title = "Análisis Geoespacial", Desc = "Consulta mapas, capas estratégicas y riesgos.", Img = "geo.png", Btn = "Explorar Mapa", Roles = "0,1,7,8" },
 
@@ -84,16 +84,32 @@ new ModuloSNIER { Seccion = secciones[8].Titulo, Controller = "Normatividad", Ac
 // 9.-Planeación Vinculante
 new ModuloSNIER { Seccion = secciones[9].Titulo, Controller = "Repositorio", Action = "Documentos", Title = "Repositorio Estratégico", Desc = "Consulta documentos vinculantes y estrategias energéticas.", Img = "repositorio.png", Btn = "Acceder", Roles = "1,7" },
 
-// 10.-Programa del Consejo
-new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "ProgramaAnual", Title = "Programa de Trabajo del Consejo", Desc = "Consulta metas, recursos y actividades del SNIEr.", Img = "consejo.png", Btn = "Consultar", Roles = "1,7" },
-new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "AvanceMetas", Title = "Avance de Metas y Líneas de Acción", Desc = "Monitorea el cumplimiento del Programa Anual del Consejo (Art. 76).", Img = "metas.png", Btn = "Ver Avance", Roles = "1,7" },
-new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "OrdenDelDia", Title = "Orden del Día y Convocatorias", Desc = "Consulta o emite convocatorias y temas del Consejo.", Img = "orden_dia.png", Btn = "Consultar", Roles = "1,7" },
-new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "Votaciones", Title = "Votaciones Colegiadas", Desc = "Consulta temas a votar y emite tu voto digital.", Img = "votacion.png", Btn = "Votar", Roles = "1,7" },
-new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "Acuerdos", Title = "Acuerdos de Coordinación", Desc = "Consulta los acuerdos aprobados por el Consejo y da seguimiento a su cumplimiento.", Img = "acuerdos.png", Btn = "Ver Acuerdos", Roles = "1,7" },
-new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "BuzonAsuntos", Title = "Buzón de Asuntos del Consejo", Desc = "Registra temas a tratar en sesiones conforme a los lineamientos del SNIEr.", Img = "buzon_asuntos.png", Btn = "Registrar Asunto", Roles = "1,7" },
-new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "Indicadores", Title = "Indicadores del Consejo", Desc = "Visualiza métricas sobre sesiones, acuerdos, cumplimiento y participación.", Img = "indicadores_consejo.png", Btn = "Ver Indicadores", Roles = "1,7"},
-// 11.-Difusión y Fuente Oficial
-new ModuloSNIER { Seccion = secciones[11].Titulo, Controller = "Difusion", Action = "Citas", Title = "Difusión Oficial y Citación", Desc = "Revisa cómo debe citarse oficialmente la información del SNIEr.", Img = "difusion.png", Btn = "Ver Detalles", Roles = "0,1,7,8" }
+// 10.-Programa del Consejo - Reorganizado según el orden definido
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "ProgramaAnual", Title = "Programa de Trabajo del Consejo", Desc = "Consulta los objetivos, metas, recursos y actividades anuales del Consejo.", Img = "modulos/programa_anual.png", Btn = "Consultar", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "AvanceMetas", Title = "Avance de Metas y Líneas de Acción", Desc = "Monitorea el cumplimiento del Programa Anual con base en metas trazadas.", Img = "modulos/metas_consejo.png", Btn = "Ver Avance", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "OrdenDelDia", Title = "Orden del Día y Convocatorias", Desc = "Consulta las convocatorias, orden del día y documentos de sesiones.", Img = "modulos/convocatorias.png", Btn = "Consultar", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "Votaciones", Title = "Votaciones Colegiadas", Desc = "Permite al Consejo emitir votos sobre asuntos en agenda colegiada.", Img = "modulos/votaciones_consejo.png", Btn = "Votar", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "FirmaActas", Title = "Firma de Actas del Consejo", Desc = "Visualiza y firma electrónicamente las actas de sesiones y acuerdos.", Img = "modulos/firma_actas.png", Btn = "Firmar Acta", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "AcuerdosCoordinacion", Title = "Acuerdos de Coordinación", Desc = "Consulta los acuerdos formales del Consejo y su estatus de cumplimiento.", Img = "modulos/acuerdos_coordinacion.png", Btn = "Ver Acuerdos", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "BuzonAsuntos", Title = "Buzón de Asuntos del Consejo", Desc = "Permite a las unidades y miembros registrar propuestas formales de asuntos a tratar en sesión.", Img = "modulos/buzon_consejo.png", Btn = "Registrar Asunto", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "IndicadoresConsejo", Title = "Indicadores del Consejo", Desc = "Visualiza métricas sobre sesiones, acuerdos, participación y cumplimiento.", Img = "modulos/indicadoresconsejo.png", Btn = "Ver Indicadores", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "TrazabilidadAcuerdos", Title = "Trazabilidad de Acuerdos", Desc = "Consulta la línea del tiempo normativa y operativa de cada asunto deliberado.", Img = "modulos/trazabilidad.png", Btn = "Ver Trazabilidad", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "RepositorioSesiones", Title = "Repositorio de Sesiones", Desc = "Consulta actas, acuerdos y documentación histórica de sesiones previas.", Img = "modulos/repositorio_sesiones.png", Btn = "Ver Repositorio", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "ConsultasPublicas", Title = "Consultas Públicas", Desc = "Visualiza los acuerdos y votaciones que son públicos.", Img = "modulos/consultas_publicas.png", Btn = "Ver Público", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "IntegrantesRoles", Title = "Integrantes y Roles", Desc = "Consulta a los integrantes del Consejo y su participación.", Img = "modulos/integrantes_roles.png", Btn = "Ver Integrantes", Roles = "1,7" },
+
+new ModuloSNIER { Seccion = secciones[10].Titulo, Controller = "Consejo", Action = "AsesoriaTecnica", Title = "Asesoría Técnica y Documentación", Desc = "Accede a documentos de apoyo y análisis técnico que respaldan decisiones.", Img = "modulos/asesoria.png", Btn = "Ver Documentos", Roles = "1,7" }
 };
 }
 
