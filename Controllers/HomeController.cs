@@ -76,7 +76,7 @@ namespace NSIE.Controllers
 
         /// </returns>
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string section = null, string module = null)
         {
             var perfilUsuarioJson = HttpContext.Session.GetString("PerfilUsuario");
             var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
@@ -119,6 +119,12 @@ namespace NSIE.Controllers
                 PerfilUsuario = perfilUsuario,
                 Secciones = seccionesFiltradas
             };
+
+            if (!string.IsNullOrEmpty(section))
+            {
+                ViewData["ActiveSection"] = section;
+                ViewData["ActiveModule"] = module;
+            }
 
             return View(modelo);
         }

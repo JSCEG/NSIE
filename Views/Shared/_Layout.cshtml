@@ -1005,7 +1005,9 @@
     @*Rutas*@
     @await RenderSectionAsync("Scripts", required: false)
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    @section Scripts {
+    <script src="~/js/module-help.js"></script>
+}
 </body>
 
 </html>

@@ -124,8 +124,12 @@
 </div>
 
 
-            <a asp-controller="@mod.Controller" asp-action="@mod.Action"
-                class="btn btn-snie w-100 rounded-pill mt-auto">@mod.Btn</a>
+            <a asp-controller="@mod.Controller" 
+               asp-action="@mod.Action"
+               class="btn btn-snie w-100 rounded-pill mt-auto"
+               onclick="saveCurrentPosition('@seccion.Titulo', '@mod.Title', '@mod.AyudaVista')">
+               @mod.Btn
+            </a>
         </div>
     </div>
 </div>
@@ -203,6 +207,16 @@
     transition: all 0.3s ease-in-out;
 }
 
+/* Agregar al final de los estilos existentes */
+@@keyframes highlightAnimation {
+    0% { transform: translateY(-6px); box-shadow: 0 6px 18px rgba(0, 123, 255, 0.3); }
+    50% { transform: translateY(-6px); box-shadow: 0 6px 18px rgba(0, 123, 255, 0.6); }
+    100% { transform: translateY(-6px); box-shadow: 0 6px 18px rgba(0, 123, 255, 0.3); }
+}
+
+.highlight {
+    animation: highlightAnimation 1.5s ease-in-out;
+}
 </style>
 
 <script>
@@ -222,4 +236,134 @@
             });
         });
     });
+
+    function centerCard(card) {
+        const container = card.closest('.cards-scroll-container');
+        const containerWidth = container.offsetWidth;
+        const cardRect = card.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        
+        // Calcular la posición central
+        const scrollPosition = (cardRect.left - containerRect.left) - 
+            (containerWidth / 2) + (cardRect.width / 2);
+        
+        // Scroll suave al centro
+        container.querySelector('.cards-wrapper').scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+        });
+    }
+
+    function saveCurrentPosition(seccionTitulo, moduloTitulo) {
+        const section = seccionTitulo.replace(' ', '-');
+        const module = moduloTitulo.replace(' ', '-');
+        
+        // Guardar en sessionStorage
+        sessionStorage.setItem('lastSection', seccionTitulo);
+        sessionStorage.setItem('lastModule', moduloTitulo);
+        
+        // Actualizar la URL sin recargar la página
+        const newUrl = `${window.location.pathname}?section=${section}&module=${module}`;
+        window.history.pushState({ section, module }, '', newUrl);
+    }
+
+    // Agregar manejador para el evento popstate (cuando se usa el botón atrás)
+    window.addEventListener('popstate', function(event) {
+        if (event.state) {
+            const { section, module } = event.state;
+            const sectionPill = document.querySelector(`.section-pill[data-section="${section}"]`);
+            if (sectionPill) {
+                setTimeout(() => {
+                    sectionPill.click();
+                    if (module) {
+                        const moduleCard = Array.from(document.querySelectorAll('.card')).find(
+                            card => card.querySelector('h5').textContent.trim() === module.replace(/-/g, ' ')
+                        );
+                        if (moduleCard) {
+                            const scrollCard = moduleCard.closest('.scroll-card');
+                            centerCard(scrollCard);
+                            moduleCard.classList.add('highlight');
+                            setTimeout(() => moduleCard.classList.remove('highlight'), 2000);
+                        }
+                    }
+                }, 100);
+            }
+        }
+    });
+
+    // Restaurar la posición al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        const lastSection = sessionStorage.getItem('lastSection');
+        if (lastSection) {
+            const sectionPill = document.querySelector(`.section-pill[data-section="${lastSection.replace(' ', '-')}"]`);
+            if (sectionPill) {
+                setTimeout(() => {
+                    sectionPill.click();
+                    
+                    // Encontrar y resaltar el módulo
+                    const lastModule = sessionStorage.getItem('lastModule');
+                    if (lastModule) {
+                        const moduleCard = Array.from(document.querySelectorAll('.card')).find(
+                            card => card.querySelector('h5').textContent.trim() === lastModule
+                        );
+                        if (moduleCard) {
+                            const scrollCard = moduleCard.closest('.scroll-card');
+                            centerCard(scrollCard);
+                            moduleCard.classList.add('highlight');
+                            setTimeout(() => moduleCard.classList.remove('highlight'), 2000);
+                        }
+                    }
+                }, 100);
+            }
+        }
+    });
+
+    // Activar sección desde parámetros URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const section = urlParams.get('section');
+    const module = urlParams.get('module');
+
+    if (section) {
+        const sectionPill = document.querySelector(`.section-pill[data-section="${section}"]`);
+        if (sectionPill) {
+            setTimeout(() => {
+                sectionPill.click();
+                
+                if (module) {
+                    const moduleCard = Array.from(document.querySelectorAll('.card')).find(
+                        card => card.querySelector('h5').textContent.trim() === module.replace(/-/g, ' ')
+                    );
+                    if (moduleCard) {
+                        moduleCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        moduleCard.classList.add('highlight');
+                        setTimeout(() => moduleCard.classList.remove('highlight'), 2000);
+                    }
+                }
+            }, 100);
+        }
+    }
+
+    // Manejar el retorno desde la miga de pan
+    const returnTo = urlParams.get('returnTo');
+    if (returnTo) {
+        const sectionPill = document.querySelector(`.section-pill[data-section="${returnTo.replace(' ', '-')}"]`);
+        if (sectionPill) {
+            setTimeout(() => {
+                sectionPill.click();
+                
+                const module = urlParams.get('module');
+                if (module) {
+                    const moduleCard = Array.from(document.querySelectorAll('.card')).find(
+                        card => card.querySelector('h5').textContent.trim() === module.replace(/-/g, ' ')
+                    );
+                    if (moduleCard) {
+                        const scrollCard = moduleCard.closest('.scroll-card');
+                        centerCard(scrollCard);
+                        moduleCard.classList.add('highlight');
+                        setTimeout(() => moduleCard.classList.remove('highlight'), 2000);
+                    }
+                }
+            }, 100);
+        }
+    }
 </script>
