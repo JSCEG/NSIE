@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using NSIE.Models;
 using NSIE.Servicios;
+using NSIE.Servicios.Interfaces;  // Actualizar este using
 using Newtonsoft.Json.Linq;
 using System.Net;
 using Newtonsoft.Json;
@@ -13,25 +14,29 @@ namespace NSIE.Controllers
     [ServiceFilter(typeof(ValidacionInputFiltro))]
     [AutorizacionFiltro]
     public class HomeController : Controller
-
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IRepositorioProyectos repositorioProyectos;
-        private readonly IServicioEmail servicioEmail;
-        private readonly string connectionString;
+        private readonly IRepositorioProyectos _repositorioProyectos; // Usar _ consistentemente
+        private readonly IServicioEmail _servicioEmail;               // Usar _ consistentemente
+        private readonly string _connectionString;                    // Usar _ consistentemente
         private readonly HttpClient _client;
-        private readonly IRepositorioHome repositorioHome;
+        private readonly IRepositorioHome _repositorioHome;
 
 
 
-        public HomeController(ILogger<HomeController> logger, IRepositorioProyectos repositorioProyectos, IConfiguration configuration, IServicioEmail servicioEmail, IRepositorioHome repositorioHome)
+        public HomeController(
+            ILogger<HomeController> logger,
+            IRepositorioProyectos repositorioProyectos,
+            IConfiguration configuration,
+            IServicioEmail servicioEmail,
+            IRepositorioHome repositorioHome)
         {
             _logger = logger;
-            this.repositorioProyectos = repositorioProyectos;
-            this.servicioEmail = servicioEmail;
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            _repositorioProyectos = repositorioProyectos;           // Sin this
+            _servicioEmail = servicioEmail;                         // Sin this
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
             _client = new HttpClient();
-            this.repositorioHome = repositorioHome;
+            _repositorioHome = repositorioHome;                     // Sin this
         }
 
 
@@ -45,7 +50,7 @@ namespace NSIE.Controllers
 
                 //string cadena = "Data Source=cre-db-srv-1.cre.gob.mx;Initial Catalog=cre-db-2;Persist Security Info=True; User ID=dgpe;Password=059ff$5k-zPWksW*";
                 //string cadenap = "Data Source=DESKTOP-9F04CH6;Initial Catalog=cre-db-2;Persist Security Info=True;User ID=sa;Password=Javiereg32";
-                SqlConnection con = new SqlConnection(connectionString);//cadenap
+                SqlConnection con = new SqlConnection(_connectionString);//cadenap
                 string consulta = "SELECT [id],[Usuario],[Email],[EmailNormalizado],[PasswordHash] FROM[cre-db-2].[dbo].[Usuarios]";
                 SqlDataAdapter da = new SqlDataAdapter(consulta, con);
 
@@ -71,23 +76,52 @@ namespace NSIE.Controllers
 
         /// </returns>
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-
-
             var perfilUsuarioJson = HttpContext.Session.GetString("PerfilUsuario");
             var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+            var rolUsuario = perfilUsuario?.Rol?.ToString() ?? "";
 
-            // Utilizar los datos del usuario para personalizar la vista
-            ViewData["NombreUsuario"] = perfilUsuario.Nombre;
-            ViewData["RolUsuario"] = perfilUsuario.Rol;
+            // Log para depuración
+            Console.WriteLine($"Rol que se manda al filtro: '{rolUsuario}'");
 
+            // Trae todas las secciones y módulos activos (sin filtrar por rol)
+            var secciones = await _repositorioHome.ObtenerSeccionesConModulos();
 
-            return View();
+            // Filtra los módulos por el rol del usuario usando la columna Roles (IDs)
+            foreach (var seccion in secciones)
+            {
+                var modulosFiltrados = new List<ModuloSNIER>();
+                foreach (var m in seccion.Modulos)
+                {
+                    var rolesModulo = m.Roles ?? "";
+                    var rolesArray = rolesModulo.Split(',').Select(r => r.Trim()).ToList();
+                    Console.WriteLine($"Comparando módulo '{m.Title}' (Roles: '{rolesModulo}') con rol usuario '{rolUsuario}'");
 
+                    if (string.IsNullOrEmpty(rolesModulo) || rolesArray.Contains(rolUsuario))
+                    {
+                        Console.WriteLine($"--> El módulo '{m.Title}' SÍ es visible para el usuario.");
+                        modulosFiltrados.Add(m);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"--> El módulo '{m.Title}' NO es visible para el usuario.");
+                    }
+                }
+                seccion.Modulos = modulosFiltrados;
+            }
+
+            // Solo deja secciones con al menos un módulo visible
+            var seccionesFiltradas = secciones.Where(s => s.Modulos.Any()).ToList();
+
+            var modelo = new HomeViewModel
+            {
+                PerfilUsuario = perfilUsuario,
+                Secciones = seccionesFiltradas
+            };
+
+            return View(modelo);
         }
-
-
 
         #region API Indicadores Financieros
 
@@ -128,10 +162,10 @@ namespace NSIE.Controllers
         public IActionResult Map()
         {
 
-            var Usuarios = repositorioProyectos.ObtenerU().Take(3).ToList();
+            //  var Usuarios = repositorioProyectos.ObtenerU().Take(3).ToList();
             var modelin = new HomeIndex()
             {
-                AccesosLocales = Usuarios,
+                //     AccesosLocales = Usuarios,
             };
 
             return View(modelin);
@@ -220,6 +254,10 @@ namespace NSIE.Controllers
         #region En construcción
 
         public IActionResult EnConstruccion()
+        {
+            return View();
+        }
+        public IActionResult Senier_Secciones()
         {
             return View();
         }

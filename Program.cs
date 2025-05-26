@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using NSIE.Componentes;
 using NSIE.Models;
 using NSIE.Servicios;
+using NSIE.Servicios.Interfaces;  // Actualizar este using
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;

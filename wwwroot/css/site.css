@@ -1,80 +1,4 @@
 /* ====================
-   1. Font Declarations
-==================== */
-@font-face {
-    font-family: 'Noto Sans ENERGIA';
-    src: url('/fonts/Noto Sans ENERGIA/NotoSans-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Noto Sans ENERGIA';
-    src: url('/fonts/Noto Sans ENERGIA/NotoSans-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Noto Sans ENERGIA';
-    src: url('/fonts/Noto Sans ENERGIA/NotoSans-Italic.ttf') format('truetype');
-    font-weight: normal;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Noto Sans ENERGIA';
-    src: url('/fonts/Noto Sans ENERGIA/NotoSans-BoldItalic.ttf') format('truetype');
-    font-weight: bold;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Patria ENERGIA';
-    src: url('/fonts/Patria ENERGIA/Patria_Regular.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Patria ENERGIA';
-    src: url('/fonts/Patria ENERGIA/Patria_Bold.otf') format('opentype');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Patria ENERGIA';
-    src: url('/fonts/Patria ENERGIA/Patria_Light.otf') format('opentype');
-    font-weight: 300;
-    font-style: normal;
-}
-
-/* ====================
-   1. Root Variables
-==================== */
-:root {
-    /* Font Families */
-    --font-headings: 'Red Hat Display', sans-serif;
-    --font-body: 'Nunito', sans-serif;
-
-    /* Colors */
-    --color-primary: #009DC4;
-    --color-heading: #1B3C6A;
-    --color-subheading: #2C5282;
-    --color-text: #2D3748;
-
-    /* Font Sizes */
-    --text-xs: 0.75rem;
-    --text-sm: 0.875rem;
-    --text-base: 1rem;
-    --text-lg: 1.125rem;
-    --text-xl: 1.375rem;
-    --text-2xl: 1.75rem;
-    --text-3xl: 2.25rem;
-}
-
-/* ====================
    2. Base Styles
 ==================== */
 html {
@@ -86,8 +10,7 @@ body {
     margin-bottom: 60px;
     font-family: var(--font-primary);
     font-weight: normal;
-    /* background-color: #efefee; */
-    background-color: #ffffff;
+    background-color: #efefee;
 }
 
 /* ====================
@@ -114,72 +37,6 @@ h6 {
     font-weight: bold;
     letter-spacing: 0;
     line-height: 1.125;
-}
-
-/* Modern Heading Styles */
-h1,
-.h1 {
-    font-family: var(--font-headings);
-    font-size: var(--text-4xl);
-    font-weight: 600;
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-heading);
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
-}
-
-h2,
-.h2 {
-    font-family: var(--font-headings);
-    font-size: var(--text-3xl);
-    font-weight: 600;
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-heading);
-    line-height: 1.3;
-    margin-bottom: 1.25rem;
-}
-
-h3,
-.h3 {
-    font-family: var(--font-headings);
-    font-size: var(--text-2xl);
-    font-weight: 500;
-    color: var(--color-subheading);
-    line-height: 1.4;
-    margin-bottom: 1rem;
-}
-
-/* Section Titles with Modern Style */
-.section-title {
-    font-family: var(--font-headings);
-    font-size: var(--text-2xl);
-    font-weight: 600;
-    letter-spacing: var(--tracking-wide);
-    color: var(--color-heading);
-    position: relative;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.section-title::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, var(--color-heading), var(--color-subheading));
-    border-radius: 2px;
-}
-
-/* Card Titles with Modern Style */
-.card-title {
-    font-family: var(--font-headings);
-    font-size: var(--text-lg);
-    font-weight: 500;
-    color: var(--color-subheading);
-    margin-bottom: 0.75rem;
-    letter-spacing: var(--tracking-normal);
 }
 
 /* ====================
@@ -233,8 +90,6 @@ h3,
 
 .btn-snie:hover {
     background-color: #216d92 !important;
-    color: #ffffff !important;
-    width: 100%;
 }
 
 /* ====================
@@ -362,7 +217,6 @@ mark {
 /* Pantallas grandes / Laptops grandes */
 @media (min-width: 1201px) and (max-width: 1440px) {
     main {
-        /* padding-left: 250px; */
         padding-left: 250px;
     }
 }
@@ -588,21 +442,21 @@ p {
     width: 100%;
     height: 1px;
     background-color: #e1e1e1;
-    /* Cambia el valor a un gris m�s claro, como #e1e1e1 */
+    /* Cambia el valor a un gris m s claro, como #e1e1e1 */
 }
 
 .subtitulo::before {
     content: "";
     position: absolute;
     bottom: -13px;
-    /* Ajusta el valor para colocar el cuadro debajo de la l�nea gris */
+    /* Ajusta el valor para colocar el cuadro debajo de la l nea gris */
     left: 0px;
     width: 55px;
     /* Ancho del cuadro de color */
     height: 8px;
     /* Alto del cuadro de color */
     background-color: #bd9865;
-    /* Cambia el valor a un color espec�fico, como #f00 (rojo) */
+    /* Cambia el valor a un color espec fico, como #f00 (rojo) */
 }
 
 .subtitulocanvas {
@@ -623,21 +477,21 @@ p {
     width: 100%;
     height: 1px;
     background-color: #e1e1e1;
-    /* Cambia el valor a un gris m�s claro, como #e1e1e1 */
+    /* Cambia el valor a un gris m s claro, como #e1e1e1 */
 }
 
 .subtitulocanvas::before {
     content: "";
     position: absolute;
     bottom: -13px;
-    /* Ajusta el valor para colocar el cuadro debajo de la l�nea gris */
+    /* Ajusta el valor para colocar el cuadro debajo de la l nea gris */
     left: 15px;
     width: 55px;
     /* Ancho del cuadro de color */
     height: 8px;
     /* Alto del cuadro de color */
     background-color: #bd9865;
-    /* Cambia el valor a un color espec�fico, como #f00 (rojo) */
+    /* Cambia el valor a un color espec fico, como #f00 (rojo) */
 }
 
 /*Subtitulo1*/
@@ -657,21 +511,21 @@ p {
     width: 100%;
     height: 1px;
     background-color: #e1e1e1;
-    /* Cambia el valor a un gris m�s claro, como #e1e1e1 */
+    /* Cambia el valor a un gris m s claro, como #e1e1e1 */
 }
 
 .subtitulo1::before {
     content: "";
     position: absolute;
     bottom: -13px;
-    /* Ajusta el valor para colocar el cuadro debajo de la l�nea gris */
+    /* Ajusta el valor para colocar el cuadro debajo de la l nea gris */
     left: 0;
     width: 55px;
     /* Ancho del cuadro de color */
     height: 8px;
     /* Alto del cuadro de color */
     background-color: #4c1922;
-    /* Cambia el valor a un color espec�fico, como #f00 (rojo) */
+    /* Cambia el valor a un color espec fico, como #f00 (rojo) */
 }
 
 .search-container {
@@ -869,7 +723,7 @@ p {
 .card-title {
     position: relative;
     z-index: 1;
-    /* color: #fff; */
+    color: #fff;
     /* Color inicial del texto */
     padding: 10px;
     text-align: center;
@@ -1197,10 +1051,10 @@ p {
     /* Color del pulgar de la barra de desplazamiento en estado hover */
 }
 
-/* Cuando la pantalla es peque�a, mostramos la barra de desplazamiento */
+/* Cuando la pantalla es peque a, mostramos la barra de desplazamiento */
 @media (max-width: 768px) {
 
-    /* Cambia 768px a tu punto de interrupci�n deseado */
+    /* Cambia 768px a tu punto de interrupci n deseado */
     .section-scroll {
         overflow-x: scroll;
     }
@@ -1208,14 +1062,14 @@ p {
 
 .card_t h3 {
     text-align: center;
-    /* Centrar t�tulo horizontalmente */
+    /* Centrar t tulo horizontalmente */
     font-size: 36px;
     font-weight: bold;
 }
 
 .card_t h2 {
     text-align: center;
-    /* Centrar t�tulo horizontalmente */
+    /* Centrar t tulo horizontalmente */
     font-size: 36px;
     font-weight: bold;
 }
@@ -1225,7 +1079,7 @@ p {
     font-weight: bold;
     margin-top: 20px;
     text-align: center;
-    /* Centrar n�mero horizontalmente */
+    /* Centrar n mero horizontalmente */
 }
 
 /*Tabs*/
@@ -1511,12 +1365,12 @@ mapid,
 
 .form-check-label {
     transition: color 0.3s ease-in-out;*/
-/* Aseg�rate de que los cambios de color sean suaves */
+/* Aseg rate de que los cambios de color sean suaves */
 /*}
 
 .form-check-label:hover {
     color: #9f2241;*/
-/* Cambia el color del texto al pasar el rat�n por encima */
+/* Cambia el color del texto al pasar el rat n por encima */
 /*font-style: oblique;
     font-weight: bold;*/
 /* Hace que el texto sea negrita */
@@ -1540,9 +1394,9 @@ mapid,
     width: 10px;
     height: 10px;
     background-color: #e1e1e1;
-    /* Cambia el valor a un gris m�s claro, como #e1e1e1 */
+    /* Cambia el valor a un gris m s claro, como #e1e1e1 */
     transition: background-color 0.2s ease-in-out;
-    /* Agrega una transici�n suave para el cambio de color */
+    /* Agrega una transici n suave para el cambio de color */
 }
 
 .nav-pills .nav-link.active::after {
@@ -1594,7 +1448,7 @@ mapid,
     width: 100%;
     /* Ajusta este valor al ancho que desees */
     font-size: 12px;
-    /* Ajusta este valor al tama�o que desees */
+    /* Ajusta este valor al tama o que desees */
     text-align: center;
     /* Centra el texto */
     font-weight: bold;
@@ -1605,7 +1459,7 @@ mapid,
     width: 100%;
     /* Ajusta este valor al ancho que desees */
     font-size: 120px;
-    /* Ajusta este valor al tama�o que desees */
+    /* Ajusta este valor al tama o que desees */
     text-align: center;
     /* Centra el texto */
     font-weight: bold;
@@ -1642,7 +1496,7 @@ mapid,
     background-color: #00000000;
 }
 
-/*Mapa sidev�bar active*/
+/*Mapa sidev bar active*/
 .list-group-item.active {
     z-index: 2;
     color: #fff;
@@ -1658,33 +1512,33 @@ mapid,
 
 .icono-responsivo {
     max-width: 24px;
-    /* Establecer el ancho m�ximo al 100% del contenedor */
+    /* Establecer el ancho m ximo al 100% del contenedor */
     height: auto;
-    /* Permitir que la altura se ajuste autom�ticamente */
+    /* Permitir que la altura se ajuste autom ticamente */
 }
 
 .lateral-mapa {
     width: 50px;
-    /* Establecer el ancho m�ximo al 100% del contenedor */
+    /* Establecer el ancho m ximo al 100% del contenedor */
     height: 90%;
     min-width: 300px;
     overflow: auto;
     /* Agrega scroll cuando el contenido exceda el tamaño del contenedor */
-    /* Permitir que la altura se ajuste autom�ticamente */
+    /* Permitir que la altura se ajuste autom ticamente */
 }
 
 .icono-lateral {
     max-width: 100%;
-    /* Establecer el ancho m�ximo al 100% del contenedor */
+    /* Establecer el ancho m ximo al 100% del contenedor */
     height: auto;
-    /* Permitir que la altura se ajuste autom�ticamente */
+    /* Permitir que la altura se ajuste autom ticamente */
 }
 
 .iconomenu {
     width: 56px !important;
-    /* Establecer el ancho m�ximo al 100% del contenedor */
+    /* Establecer el ancho m ximo al 100% del contenedor */
     height: auto;
-    /* Permitir que la altura se ajuste autom�ticamente */
+    /* Permitir que la altura se ajuste autom ticamente */
 }
 
 .tab .tablinks {
@@ -1694,6 +1548,7 @@ mapid,
     position: relative;
     color: #333;
     font-size: 24px;
+    padding-right: 3%;
 }
 
 .tab .tablinks::after {
@@ -1858,20 +1713,20 @@ mapid,
     width: 100%;
     height: 1px;
     background-color: #e1e1e1;
-    /* Cambia el valor a un gris m�s claro, como #e1e1e1 } */
+    /* Cambia el valor a un gris m s claro, como #e1e1e1 } */
 
 .subtituloaco::before {
     content: "";
     position: absolute;
     bottom: 5px;
-    /* Ajusta el valor para colocar el cuadro debajo de la l�nea gris */
+    /* Ajusta el valor para colocar el cuadro debajo de la l nea gris */
     left: 0px;
     width: 20px;
     /* Ancho del cuadro de color */
     height: 20px;
     /* Alto del cuadro de color */
     background-color: #9f2241;
-    /* Cambia el valor a un color espec�fico, como #f00 (rojo) */
+    /* Cambia el valor a un color espec fico, como #f00 (rojo) */
 }
 
 .accordion-button:not(.collapsed) {
@@ -2006,7 +1861,7 @@ mapid,
 .cp-grouping-section {
     background-color: #022336;
     color: #fff;
-    color: #c99855 !important;
+    color: #bd9865;
     box-shadow: 3px 12px 8px -4px rgba(0, 0, 0, 0.34) !important;
 }
 
@@ -2034,7 +1889,7 @@ mapid,
 }
 
 .cp-section {
-    color: var(--amarillox);
+    color: var(--amarillo);
     padding: 1.5rem !important;
     /* padding: var(--gutter-md);*/
     overflow: hidden;
@@ -2166,6 +2021,7 @@ mapid,
     background-color: #6c757d;
     /* Un gris más oscuro y elegante */
     color: #f0f0f0;
+    font-weight: bold;
 }
 
 /* @* Gris *@ */
@@ -3304,7 +3160,7 @@ legend h4 {
     /* Cambia la dirección del flex a vertical */
 }
 
-.navbarmapag a {
+*/ .navbarmapag a {
     display: block;
     width: 100%;
     /* Hace que los enlaces ocupen todo el ancho */
@@ -3326,9 +3182,9 @@ legend h4 {
         margin-right: 10px;
         /* Ajustar el margen derecho de la imagen */
         width: 32px !important;
-        /* Establecer el ancho m�ximo al 100% del contenedor */
+        /* Establecer el ancho m ximo al 100% del contenedor */
         height: auto;
-        /* Permitir que la altura se ajuste autom�ticamente */
+        /* Permitir que la altura se ajuste autom ticamente */
     }
 
     .breadcrumb {
@@ -3404,6 +3260,7 @@ legend h4 {
     }
 
     /* Ajustes adicionales si es necesario */
+    /* Por ejemplo, puedes querer ajustar los márgenes, el padding, etc. */
 }
 
 .scrollable-container {
@@ -4073,1126 +3930,3 @@ html:-ms-fullscreen {
     color: #ffffff !important;
     width: 100%;
 }
-
-/* Typography System */
-:root {
-    /* Font Families */
-    --font-primary: 'Montserrat', sans-serif;
-    --font-secondary: 'Roboto', sans-serif;
-
-    /* Colors */
-    --color-primary: #007bff;
-    --color-secondary: #6c757d;
-    --color-success: #28a745;
-    --color-info: #17a2b8;
-    --color-warning: #ffc107;
-    --color-danger: #dc3545;
-    --color-light: #f8f9fa;
-    --color-dark: #343a40;
-    --color-white: #ffffff;
-    --color-black: #000000;
-
-    /* Font Sizes */
-    --text-xs: 0.75rem;
-    /* 12px */
-    --text-sm: 0.875rem;
-    /* 14px */
-    --text-base: 1rem;
-    /* 16px */
-    --text-lg: 1.125rem;
-    /* 18px */
-    --text-xl: 1.25rem;
-    /* 20px */
-    --text-2xl: 1.5rem;
-    /* 24px */
-    --text-3xl: 1.875rem;
-    /* 30px */
-    --text-4xl: 2.25rem;
-    /* 36px */
-
-    /* Line Heights */
-    --leading-tight: 1.25;
-    --leading-normal: 1.5;
-    --leading-relaxed: 1.625;
-
-    /* Font Weights */
-    --font-light: 300;
-    --font-normal: 400;
-    --font-medium: 500;
-    --font-semibold: 600;
-    --font-bold: 700;
-}
-
-/* Base Typography */
-body {
-    font-family: var(--font-primary);
-    font-size: var(--text-base);
-    line-height: var(--leading-normal);
-    color: #333;
-}
-
-/* Heading Styles */
-h1,
-.h1 {
-    font-family: var(--font-headings);
-    font-size: var(--text-4xl);
-    font-weight: 600;
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-heading);
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
-}
-
-h2,
-.h2 {
-    font-family: var(--font-headings);
-    font-size: var(--text-3xl);
-    font-weight: 600;
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-heading);
-    line-height: 1.3;
-    margin-bottom: 1.25rem;
-}
-
-h3,
-.h3 {
-    font-family: var(--font-headings);
-    font-size: var(--text-2xl);
-    font-weight: 500;
-    color: var(--color-subheading);
-    line-height: 1.4;
-    margin-bottom: 1rem;
-}
-
-/* Section Titles with Modern Style */
-.section-title {
-    font-family: var(--font-headings);
-    font-size: var(--text-2xl);
-    font-weight: 600;
-    letter-spacing: var(--tracking-wide);
-    color: var(--color-heading);
-    position: relative;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.section-title::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, var(--color-heading), var(--color-subheading));
-    border-radius: 2px;
-}
-
-/* Card Titles with Modern Style */
-.card-title {
-    font-family: var(--font-headings);
-    font-size: var(--text-lg);
-    font-weight: 500;
-    color: var(--color-heading);
-    margin-bottom: 0.75rem;
-    letter-spacing: var(--tracking-normal);
-}
-
-/* ====================
-   4. Layout Components
-==================== */
-.container {
-    width: 100%;
-    padding: 20px;
-}
-
-/* Header */
-.navbar {
-    background-color: var(--verde);
-    color: #dcc8a3;
-}
-
-/* Navigation */
-.nav-link {
-    font-family: var(--font-primary);
-    font-weight: 400;
-    color: white;
-    font-size: 12px;
-}
-
-/* ====================
-   5. Cards
-==================== */
-.card {
-    position: relative;
-    transition: transform 0.3s ease;
-    border-radius: 10px;
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
-}
-
-.stat-card {
-    transition: all 0.3s ease;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-}
-
-/* ====================
-   6. Buttons
-==================== */
-.btn-snie {
-    padding-top: 1%;
-    background-color: #81c3c9 !important;
-    color: #ffffff !important;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-.btn-snie:hover {
-    background-color: #216d92 !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-/* ====================
-   7. Forms
-==================== */
-.form-control:focus,
-.form-select:focus {
-    border-color: #80bdff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-/* ====================
-   8. Tables
-==================== */
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table-responsive {
-    overflow-x: auto;
-    border-radius: 0.25rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-/* ====================
-   9. Utilities
-==================== */
-.text-center {
-    text-align: center;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* ====================
-   10. Media Queries
-==================== */
-@media (max-width: 768px) {
-    .nav-link {
-        font-size: 14px;
-    }
-
-    .container {
-        padding: 10px;
-    }
-}
-
-@media (min-width: 769px) {
-    html {
-        background-color: #ffffff;
-    }
-}
-
-/* ====================
-   11. Animations
-==================== */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-.animate-fade-in {
-    animation: fadeIn 0.3s ease;
-}
-
-/* Definimos las propiedades básicas para el elemento HTML y aseguramos que el contenido siempre se ajuste a la altura mínima de la pantalla */
-html {
-    /* font-size: 14px;*/
-    position: relative;
-    min-height: 100%;
-}
-
-mark {
-    background-color: #9f22416b !important;
-    color: white !important;
-    border-radius: 16px;
-    padding: 3%;
-}
-
-/* CandlestickChart */
-
-/* Teléfonos móviles pequeños */
-@media (max-width: 320px) {
-    main {
-        padding-left: 0;
-    }
-}
-
-/* Teléfonos móviles grandes */
-@media (min-width: 321px) and (max-width: 480px) {
-    main {
-        padding-left: 0;
-    }
-}
-
-/* Tabletas en modo retrato */
-@media (min-width: 481px) and (max-width: 768px) {
-    main {
-        padding-left: 0;
-    }
-}
-
-/* Tabletas en modo paisaje / Pantallas pequeñas */
-@media (min-width: 769px) and (max-width: 1024px) {
-    main {
-        padding-left: 0px;
-        /* Ajustar según el ancho del sidebar */
-    }
-}
-
-/* Pantallas medianas / Laptops pequeñas */
-@media (min-width: 1025px) and (max-width: 1200px) {
-    main {
-        padding-left: 0px;
-    }
-}
-
-/* Pantallas grandes / Laptops grandes */
-@media (min-width: 1201px) and (max-width: 1440px) {
-    main {
-        /* padding-left: 250px; */
-        padding-left: 250px;
-    }
-}
-
-/* Pantallas extra grandes / Monitores de escritorio */
-@media (min-width: 1441px) {
-    main {
-        padding-left: 250px;
-    }
-}
-
-footer {
-    padding-left: 250px;
-    /* Ajusta este valor según el ancho de tu sidebar */
-}
-
-/* Ajustes para pantallas más pequeñas */
-@media (max-width: 767.98px) {
-    footer {
-        padding-left: 0;
-    }
-}
-
-/*Menu SEM*/
-.icon-btn {
-    margin: 5px;
-    padding: 10px;
-    border: none;
-    background-color: transparent;
-    display: flex;
-    /* Asegura que el contenido se centre */
-    justify-content: center;
-    /* Centra horizontalmente el ícono */
-    align-items: center;
-    /* Centra verticalmente el ícono */
-    transition: background-color 0.3s, transform 0.3s;
-    /* Animaciones suaves para el hover y el active */
-}
-
-.icon-btn:hover .icon-circle {
-    background-color: #e0e0e0;
-    /* Color de fondo al pasar el ratón por encima */
-    transform: scale(1.05);
-    /* Ligeramente más grande al pasar el ratón por encima */
-}
-
-.icon-btn:active .icon-circle,
-.icon-btn.active .icon-circle {
-    background-color: #d0d0d0;
-    /* Color de fondo al hacer clic */
-    transform: scale(0.95);
-    /* Ligeramente más pequeño al hacer clic */
-}
-
-.icon-circle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60px;
-    /* O el tamaño que prefieras para el círculo */
-    height: 60px;
-    /* Debe ser igual al width para ser un círculo */
-    border-radius: 50%;
-    /* Esto hace que sea un círculo */
-    background-color: #f0f0f0;
-    /* O el color de fondo que prefieras */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    /* Un ligero sombreado para dar profundidad */
-    transition: background-color 0.3s, transform 0.3s;
-    /* Animaciones suaves para el hover y el active */
-}
-
-/* Opcional: si deseas eliminar el borde del botón activo, puedes comentar o eliminar la regla de abajo. */
-.icon-btn.active {
-    border: solid 2px blue;
-    /* O el color que prefieras para el botón activo */
-}
-
-/* Definimos diferentes clases para los colores de fondo */
-.bg-verde-footer {
-    padding-left: 250px;
-    /* Ajusta este valor según el ancho de tu sidebar */
-    background-color: #161c2c !important;
-}
-
-/* Ajustes para pantallas más pequeñas */
-@media (max-width: 767.98px) {
-    .bg-verde-footer {
-        padding-left: 0;
-    }
-}
-
-/* Aumentamos el tamaño de la fuente para pantallas con un ancho mínimo de 768px */
-@media (min-width: 768px) {
-    html {
-        /* background-color: #efefee; */
-        background-color: #ffffff;
-        /*       font-size: 16px;*/
-    }
-}
-
-/* Establecemos las propiedades básicas para el cuerpo de la página */
-body {
-    margin-bottom: 60px;
-    /* font-family: "Montserrat", sans-serif;*/
-    font-family: var(--font-primary);
-    font-weight: normal;
-    /* background-color: #efefee; */
-    background-color: #ffffff !important
-}
-
-h1,
-h2,
-h3,
-h4,
-p {
-    font-family: var(--font-primary);
-    font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.125;
-}
-
-/* Definimos diferentes clases para los colores de fondo */
-.bg-verde {
-    background-color: #161c2c !important;
-    box-shadow: 0 0 5px rgba(33, 109, 146, 0.4);
-}
-
-.bg-rojo {
-    background-color: #4c1922;
-}
-
-.bg-rojo:hover {
-    background-color: #9f2241;
-}
-
-.bg-amarilloclaro {
-    background-color: var(--amarilloclaro);
-}
-
-/* Configuramos las propiedades de la barra de navegación */
-.navbar {
-    background-color: var(--verde);
-    color: #dcc8a3;
-    /*border-bottom: 3px solid var(--amarilloclaro) !important;*/
-    /*box-shadow: 3px 12px 8px -4px rgba(0, 0, 0, 0.34) !important;*/
-}
-
-.navbar-brand {
-    color: white;
-}
-
-.nav-link {
-    font-family: var(--font-primary);
-    font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.125;
-    color: white;
-    font-size: 12px;
-}
-
-.nav-link:hover {
-    color: white;
-    background-color: var(--amarillo);
-    /* Este es un color de fondo comentado para el hover de los links de navegación */
-}
-
-.navbar-nav .nav-item.active .nav-link {
-    border-bottom: 2px solid var(--amarillo) !important;
-    /* Ajusta el estilo de subrayado según tus preferencias */
-    /*color: #dcc8a3;*/
-    /* Color del texto para el enlace activo */
-    /* background-color: #1e3143 !important;*/
-    /* Color de fondo para el enlace activo */
-}
-
-/* Definimos las propiedades de los diferentes títulos y subtítulos */
-.titulo {
-    color: #333;
-    font-size: 36px;
-    margin-top: 20px;
-    font-family: var(--font-secondary);
-    position: relative;
-}
-
-/* Definimos pseudoelementos para agregar detalles de diseño debajo de los títulos */
-.titulo::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: #bd9865;
-}
-
-.titulo::before {
-    content: "";
-    position: absolute;
-    bottom: -13px;
-    left: 0;
-    width: 55px;
-    height: 8px;
-    background-color: #235b4e;
-}
-
-.subtitulo {
-    color: #2a324b;
-    font-size: 1.75rem;
-    padding: 0%;
-    /* margin-top: 20px;*/
-    /* font-family: "Montserrat", sans-serif;*/
-    font-family: var(--font-secondary);
-    position: relative;
-    text-transform: uppercase;
-}
-
-.subtitulo::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: #e1e1e1;
-    /* Cambia el valor a un gris m�s claro, como #e1e1e1 */
-}
-
-.subtitulo::before {
-    content: "";
-    position: absolute;
-    bottom: -13px;
-    /* Ajusta el valor para colocar el cuadro debajo de la l�nea gris */
-    left: 0px;
-    width: 55px;
-    /* Ancho del cuadro de color */
-    height: 8px;
-    /* Alto del cuadro de color */
-    background-color: #bd9865;
-    /* Cambia el valor a un color espec�fico, como #f00 (rojo) */
-}
-
-.subtitulocanvas {
-    color: #2a324b;
-    font-size: 24px;
-    padding: 0%;
-    /* margin-top: 20px;*/
-    /* font-family: "Montserrat", sans-serif;*/
-    position: relative;
-    text-transform: uppercase;
-}
-
-.subtitulocanvas::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: #e1e1e1;
-    /* Cambia el valor a un gris m�s claro, como #e1e1e1 */
-}
-
-.subtitulocanvas::before {
-    content: "";
-    position: absolute;
-    bottom: -13px;
-    /* Ajusta el valor para colocar el cuadro debajo de la l�nea gris */
-    left: 15px;
-    width: 55px;
-    /* Ancho del cuadro de color */
-    height: 8px;
-    /* Alto del cuadro de color */
-    background-color: #bd9865;
-    /* Cambia el valor a un color espec�fico, como #f00 (rojo) */
-}
-
-/*Subtitulo1*/
-.subtitulo1 {
-    color: #333;
-    font-size: 20px;
-    margin-top: 20px;
-    font-family: "Montserrat", sans-serif;
-    position: relative;
-}
-
-.subtitulo1::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: #e1e1e1;
-    /* Cambia el valor a un gris m�s claro, como #e1e1e1 */
-}
-
-.subtitulo1::before {
-    content: "";
-    position: absolute;
-    bottom: -13px;
-    /* Ajusta el valor para colocar el cuadro debajo de la l�nea gris */
-    left: 0;
-    width: 55px;
-    /* Ancho del cuadro de color */
-    height: 8px;
-    /* Alto del cuadro de color */
-    background-color: #4c1922;
-    /* Cambia el valor a un color espec�fico, como #f00 (rojo) */
-}
-
-.search-container {
-    display: flex;
-    align-items: center;
-    /* Alinea verticalmente los elementos en el centro */
-    gap: 10px;
-    /* Añade un espacio entre los elementos */
-}
-
-/* Clase para una cinta de imagen de fondo */
-.cinta {
-    position: absolute;
-    left: 0;
-    width: 100vw;
-    /* Para asegurarte de que ocupe el 100% del ancho de la ventana */
-    height: 40px;
-    background-image: url("/img/cintafooter.png");
-    background-size: cover;
-    /* Para ajustar la imagen al tamaño del contenedor */
-    background-repeat: no-repeat;
-    margin: 0;
-    padding: 0;
-}
-
-.footer-container {
-    display: flex;
-    align-items: center;
-    /* Alinea verticalmente los elementos */
-    justify-content: space-between;
-    /* Espaciado entre los elementos */
-}
-
-.btn-cre-azul {
-    padding-top: 1%;
-    /*    font-family: "Montserrat", sans-serif !important;*/
-    background-color: #008CBA !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-.btn-cre-azul:hover {
-    /*    font-family: "Montserrat", sans-serif !important;*/
-    background-color: #05556b !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-/* Definimos diferentes clases para los botones con diferentes colores de fondo y comportamientos en el hover */
-.btn-cre-rojo {
-    padding-top: 1%;
-    /*    font-family: "Montserrat", sans-serif !important;*/
-    background-color: #81c3c9 !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-.btn-cre-rojo:hover {
-    /*    font-family: "Montserrat", sans-serif !important;*/
-    background-color: #81c3c9 !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-.btn-cre-rojo-home {
-    font-family: "Montserrat", sans-serif !important;
-    background-color: var(--gray) !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-.btn-cre-rojo-home:hover {
-    font-family: "Montserrat", sans-serif !important;
-    background-color: var(--grayclaro) !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-.btn-cre-verde {
-    padding-top: 1%;
-    /*    font-family: "Montserrat", sans-serif !important;*/
-    background-color: var(--verdeclaro) !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-.btn-cre-verde:hover {
-    /*   font-family: "Montserrat", sans-serif !important;*/
-    background-color: #97d96d !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-.btn-cre-verdeclaro {
-    padding-top: 1%;
-    font-family: "Montserrat", sans-serif !important;
-    background-color: var(--verdeclaro) !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-.btn-cre-rojoclaro {
-    padding-top: 1%;
-    font-family: "Montserrat", sans-serif !important;
-    background-color: var(--rojoclaro) !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-.btn-cre-amarillo {
-    padding-top: 1%;
-    font-family: "Montserrat", sans-serif !important;
-    background-color: var(--amarillo) !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-.btn-cre-amarillo:hover {
-    font-family: "Montserrat", sans-serif !important;
-    background-color: #fdb876 !important;
-    color: #ffffff !important;
-    width: 100%;
-}
-
-/* Establecemos las propiedades básicas para un árbol de listas, removiendo estilos por defecto y aplicando márgenes y rellenos */
-.tree ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.tree li {
-    margin-left: 0%;
-    padding: 1% 1rem;
-    line-height: 1.5rem;
-    position: relative;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/***************/
-.card {
-    position: relative;
-    transition: transform 0.3s ease;
-    overflow: hidden;
-    height: 250px;
-    /* Modifica este valor según tus necesidades */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    /* Modifica este valor para ajustar el redondeo del borde */
-}
-
-.card:hover {
-    transform: scale(1.05);
-}
-
-.card-link {
-    display: block;
-}
-
-.card-img {
-    display: block;
-    max-width: 100%;
-    max-height: 100%;
-    filter: brightness(95%);
-    /* Aplica un filtro oscuro a la imagen */
-    transition: transform 0.3s ease;
-    /* Agrega una transición suave para el zoom */
-}
-
-.card:hover .card-img {
-    transform: scale(1.1);
-    /* Zoom en la imagen al hacer hover */
-}
-
-.card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.6) 100%);
-    /* Modifica los colores del gradiente según tus preferencias */
-    opacity: 1;
-    /* Cambia la opacidad a 1 para que el overlay sea siempre visible */
-}
-
-.card-title {
-    position: relative;
-    z-index: 1;
-    /* color: #fff; */
-    /* Color inicial del texto */
-    padding: 10px;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    /* Agrega el efecto de sombra al texto */
-    transition: color 0.3s ease;
-    /* Agrega transición de color */
-    font-family: var(--font-secondary);
-}
-
-.card-title2 {
-    position: relative;
-    z-index: 1;
-    color: #13322b;
-    /* Color inicial del texto */
-    padding: 10px;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    /* Agrega el efecto de sombra al texto */
-    transition: color 0.3s ease;
-    /* Agrega transición de color */
-}
-
-.card:hover .card-title {
-    color: #dcc8a3;
-    /* Color del texto al hacer hover */
-}
-
-/* Propiedades para la sección 'i' */
-.section_i {
-    padding-top: 0%;
-}
-
-/* Propiedades para la tabla. Primera celda tiene una posición fija y un fondo de color. Todas las celdas tienen espacios blancos y no se ajustan al contenido. */
-/* Propiedades para la tabla */
-.table-container {
-    max-width: 100%;
-    /* Asegura que el contenedor ocupe el ancho total disponible */
-    margin: 0 auto;
-    /* Centra horizontalmente el contenedor */
-    overflow: auto;
-    /* Permite el desplazamiento horizontal y vertical si el contenido es demasiado grande */
-}
-
-.table {
-    border-collapse: collapse;
-    /* Combina bordes adyacentes */
-    width: 100%;
-    /* Asegura que la tabla ocupe todo el ancho disponible */
-}
-
-.table td,
-.table th {
-    padding: 8px;
-    border: 1px solid #76ABAE;
-    /* Bordes de las celdas con verde azulado claro */
-    white-space: nowrap;
-    /* Evita que el contenido de las celdas se ajuste a múltiples líneas */
-}
-
-.table th {
-    font-family: var(--font-secondary);
-    font-weight: bold;
-}
-
-.table td {
-    font-family: var(--font-primary);
-}
-
-/* Estilo para la cabecera de la tabla */
-.table thead th {
-    position: sticky;
-    /* Hace que la cabecera sea fija al hacer scroll vertical */
-    top: 0;
-    /* Fija la posición desde la parte superior */
-    z-index: 3;
-    /* Asegura que el encabezado esté por encima de las celdas del cuerpo de la tabla */
-    background-color: #31363F;
-    /* Fondo gris oscuro para la cabecera */
-    color: #EEEEEE;
-    /* Texto gris muy claro para la cabecera */
-    text-align: center;
-}
-
-/* Estilo específico para la cabecera de la primera columna */
-.table th:first-child {
-    position: sticky;
-    /* Hace que la cabecera sea fija al hacer scroll horizontal */
-    top: 0;
-    /* Fija la posición desde la parte superior para la cabecera */
-    left: 0;
-    /* Fija la posición desde la parte izquierda */
-    z-index: 4;
-    /* Más alto que el encabezado general para estar sobre las celdas */
-    background-color: #161c2c;
-    /* Fondo negro profundo para la cabecera de la primera columna */
-    color: #EEEEEE;
-    /* Texto gris muy claro */
-    text-align: center;
-}
-
-/* Estilo específico para las celdas de la primera columna */
-.table td:first-child {
-    position: sticky;
-    /* Hace que la columna sea fija al hacer scroll horizontal */
-    left: 0;
-    /* Fija la posición desde la parte izquierda */
-    background-color: #31363F;
-    /* Fondo gris oscuro para las celdas de la primera columna */
-    color: #EEEEEE;
-    /* Texto gris muy claro */
-    text-align: justify;
-    z-index: 2;
-    /* Más bajo que la cabecera pero sobre el resto del contenido */
-}
-
-/* Estilo para el cuerpo de la tabla (filas) */
-.table tbody td {
-    background-color: #EEEEEE;
-    /* Fondo gris muy claro para las celdas del cuerpo */
-    color: #222831;
-    /* Texto negro profundo */
-}
-
-/* Propiedades para el pie de página */
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 100px;
-    line-height: 60px;
-    background-color: #222831;
-    /* Fondo negro profundo para el pie de página */
-    color: #EEEEEE;
-    /* Texto gris muy claro */
-    text-align: center;
-}
-
-/* Propiedades para la imagen del mapa */
-.image_map {
-    max-width: 100%;
-    position: relative;
-}
-
-.imagenmapa_popup {
-    max-width: 100px;
-    max-height: 100px;
-}
-
-.image_map img {
-    display: block;
-    max-width: none;
-}
-
-/* Propiedades para los elementos seleccionados en el mapa */
-.selected {
-    fill: #13538a !important;
-}
-
-/* Propiedades para las áreas rectangulares en el mapa */
-.area-rect {
-    box-shadow: 1px 13px 5px -6px rgba(0, 0, 0, 0.55) !important;
-    -webkit-box-shadow: 1px 13px 5px -6px rgba(0, 0, 0, 0.55) !important;
-    -moz-box-shadow: 1px 13px 5px -6px rgba(0, 0, 0, 0.55) !important;
-}
-
-.esquema img {
-    max-width: 1250px;
-    /* Ancho máximo de 560 píxeles */
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.esquema figcaption {
-    font-style: italic;
-    text-align: center;
-}
-
-/*.map-container {
-    position: relative;
-}
-
-    .map-container img {
-        display: block;
-    }
-
-.highlight-box {
-    border: 2px solid red;*/
-/* Cambia esto a lo que quieras */
-/*position: absolute;
-    pointer-events: none;*/
-/* Esto permite que los clics pasen a través del div */
-/*transition: background-color 0.3s ease;*/
-/* Suaviza la transición del color de fondo */
-/*}
-
-    .highlight-box:hover {
-        background-color: #235b4e!important;*/
-/* Color de fondo rojo semi-transparente en hover */
-/*}*/
-
-/*Pop-UP-----------------------------------------------------------------------------------------------*/
-.tooltip-inner {
-    background-color: #4c1922;
-    /* Cambia el color de fondo del tooltip */
-    color: #fff;
-    /* Cambia el color del texto del tooltip */
-}
-
-.tooltip.bs-tooltip-top .arrow::before,
-.bs-tooltip-auto[x-placement^="top"] .arrow::before {
-    border-top-color: #f00;
-    /* Cambia el color de la flecha del tooltip */
-}
-
-/*------------------------------------------------------------------------------------------------------*/
-/* Propiedades para la ventana emergente de información */
-/*.tooltip {
-    position: absolute;
-    z-index: 9999;
-    background-color: #333;
-    color: #fff;
-    padding: 5px;
-    font-size: 12px;
-}*/
-/*Tarjetas Totales*/
-.flex-container {
-    display: flex;
-    justify-content: center;
-}
-
-.flex-item {
-    margin: 0 10px;
-}
-
-.fecha-corte {
-    font-size: 0.8em;
-    margin-top: 10px;
-    color: #666;
-    /* Esto es opcional para darle un tono gris y que no resalte tanto */
-    text-align: center;
-}
-
-.card_t {
-    width: 100%;
-    height: 200px;
-    min-width: 260px;
-    margin: 10px;
-    padding: 20px;
-    background-color: #f1f3f4;
-    border-radius: 5px;
-    box-sizing: border-box;
-    text-align: center;
-    box-shadow: 1px 13px 5px -6px rgba(0, 0, 0, 0.55) !important;
-    -webkit-box-shadow: 1px 13px 5px -6px rgba(0, 0, 0, 0.55) !important;
-    -moz-box-shadow: 1px 13px 5px -6px rgba(0, 0, 0, 0.55) !important;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    /* Apila los elementos verticalmente */
-    justify-content: center;
-    /* Centra los elementos verticalmente */
-    align-items: center;
-    /* Centra los elementos horizontalmente */
-}
-
-.card_t p {
-    margin-top: 15px;
-    margin-left: 15px;
-    padding-right: 2%;
-}
-
-.card_t input {
-    font-size: 36px;
-    background-color: none;
-    border: none;
-}
-
-.card_t:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 15px 10px -10px rgba(0, 0, 0, 0.3);
-}
-
-.card_content {
-    display: flex;
-    align-items: center;
-    /* Centrar verticalmente los elementos dentro de card_content */
-}
-
-.iconomenu {
-    margin-right: 10px;
-    /* Ajustar el margen derecho de la imagen */
-}
-
-.section-scroll {
-    padding: 0%;
-    overflow-x: auto;
-    /* Cambiado a "auto" para mostrar la barra de desplazamiento solo si es necesario */
-    display: flex;
-    scrollbar-width: thin;
-    scroll-behavior: smooth;
-    /* Agregado desplazamiento suave */
-}
-
-.section-scroll::-webkit-scrollbar {
-    width: 6px;
-    /* Ancho de la barra de desplazamiento */
-}
-
-.section-scroll::-webkit-scrollbar-track
