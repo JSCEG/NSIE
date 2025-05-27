@@ -1,4 +1,14 @@
 function mostrarAyudaModulo(moduleInfo) {
+    // Verificar si moduleInfo es una cadena JSON
+    if (typeof moduleInfo === 'string') {
+        try {
+            moduleInfo = JSON.parse(moduleInfo);
+        } catch (e) {
+            console.error('Error al parsear moduleInfo:', e);
+            return;
+        }
+    }
+
     Swal.fire({
         title: moduleInfo.title,
         html: `
@@ -29,9 +39,9 @@ function mostrarAyudaModulo(moduleInfo) {
                         <i class="fas fa-users-cog"></i> Roles
                     </h6>
                     <ul class="list-unstyled">
-                        ${moduleInfo.roles.map(role => 
-                            `<li><i class="fas fa-${role.icon}"></i> ${role.text}</li>`
-                        ).join('')}
+                        ${moduleInfo.roles.map(role =>
+            `<li><i class="fas fa-${role.icon}"></i> ${role.text}</li>`
+        ).join('')}
                     </ul>
                 </div>
 
@@ -46,7 +56,30 @@ function mostrarAyudaModulo(moduleInfo) {
                 </div>
             </div>
         `,
-        width: '400px',
-        confirmButtonText: 'Entendido'
+        width: '600px',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#28a745',
+        customClass: {
+            container: 'text-start',
+            popup: 'swal-help-popup',
+            htmlContainer: 'swal-help-content'
+        }
     });
 }
+
+// Agregar el botón de ayuda automáticamente
+document.addEventListener('DOMContentLoaded', function () {
+    const header = document.querySelector('.app-header-content');
+    if (header) {
+        const helpButton = document.createElement('button');
+        helpButton.className = 'btn btn-outline-light ms-2';
+        helpButton.innerHTML = '<i class="fas fa-question-circle"></i> Ayuda';
+        helpButton.onclick = function () {
+            const moduleInfo = document.querySelector('[data-module-info]');
+            if (moduleInfo) {
+                mostrarAyudaModulo(moduleInfo.dataset.moduleInfo);
+            }
+        };
+        header.appendChild(helpButton);
+    }
+});

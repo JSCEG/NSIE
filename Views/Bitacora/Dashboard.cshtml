@@ -12,29 +12,38 @@
 }
 
 @{
-    ViewData["Title"] = "Dashboard de Actividad en Tiempo Real";
+    var header = new HeaderViewModel
+    {
+        Title = "Seguridad y Auditoría",
+        IconPath = "seguridad_alertas_scel.png",
+        Description = "Registra acciones críticas y auditorías.",
+        Section = "Gobernanza y Seguridad",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Seguridad y Auditoría",
+            description = "Sistema de monitoreo y auditoría de actividades del SNIEr.",
+            functionality = "Monitoriza actividades del sistema con alertas.",
+            stage = "Inicialización",
+            roles = new[] {
+                new { icon = "building", text = "SENER: Supervisión general" },
+                new { icon = "shield-alt", text = "Unidad SNIEr: Control operativo" },
+                new { icon = "user-shield", text = "TICs: Monitoreo técnico" },
+                new { icon = "user-tie", text = "Secretaría Técnica: Validación" },
+                new { icon = "users-cog", text = "Coordinadores Técnicos: Seguimiento" }
+            },
+            order = new { step = 2, description = "Supervisión de acciones y cumplimiento (Art. 76)" }
+        }),
+        LegalDescription = "Sistema de monitoreo y auditoría conforme al Art. 76 del Reglamento para garantizar la seguridad y trazabilidad.",
+        Fundamentos = new List<FundamentoLegal> {
+            new() { Reference = "Art. 76 Reglamento", Description = "Establece los mecanismos de auditoría y control" }
+        }
+    };
 }
 
-<div class="text-center">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="~/img/chat.png" alt="Icono personalizado" class="iconomenu">
-        @ViewData["Title"]
-    </h3>
-</div>
-
-<!-- Miga de Pan -->
-<div class="alert alert-light" role="alert">
-    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-        aria-label="breadcrumb" style="padding-left:15px">
-        <ol class="breadcrumb lp-5">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
-            <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-        </ol>
-    </nav>
-</div>
+@await Html.PartialAsync("_ViewHeader", header)
 
 <div class="container">
-
+    @* Aquí va el contenido existente del dashboard *@
 
     <br>
     <h3 class="subtitulo">Accesos en "EnerGeoCRE"</h1>
@@ -744,20 +753,20 @@
 
                     data.forEach(function (usuario) {
                         var estadoClase = usuario.estado === 'activo' ? 'usuario-activo-encendido' : 'usuario-activo-apagado';
-var card = `
-    <div class="col-12 col-md-4 col-lg-3">
-        <div class="usuario-activo-card">
-            <i class="fas fa-user usuario-activo-icono"></i>
-            <div class="usuario-activo-info">
-                <div class="usuario-activo-nombre">${usuario.nombre}</div>
-                <div class="usuario-activo-cargo">${usuario.cargo}</div>
-                <div class="usuario-activo-area">${usuario.area}</div>
-                <div class="usuario-activo-hora-conexion">Conectado el: ${usuario.horaConexion}</div>
+                        var card = `
+            <div class="col-12 col-md-4 col-lg-3">
+                <div class="usuario-activo-card">
+                    <i class="fas fa-user usuario-activo-icono"></i>
+                    <div class="usuario-activo-info">
+                        <div class="usuario-activo-nombre">${usuario.nombre}</div>
+                        <div class="usuario-activo-cargo">${usuario.cargo}</div>
+                        <div class="usuario-activo-area">${usuario.area}</div>
+                        <div class="usuario-activo-hora-conexion">Conectado el: ${usuario.horaConexion}</div>
+                    </div>
+                    <div class="usuario-activo-estado ${estadoClase}"></div>
+                </div>
             </div>
-            <div class="usuario-activo-estado ${estadoClase}"></div>
-        </div>
-    </div>
-`;
+        `;
 
 
 

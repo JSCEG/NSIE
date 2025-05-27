@@ -15,31 +15,41 @@
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
     ViewData["RolUsuario"] = perfilUsuario.Rol;
     ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
-}
-
-
-
-@{
     ViewData["Title"] = "Infraestructura del Sector Energético Mexicano";
 }
 
-<div class="text-center">
-    <h4 class="cp-section cp-grouping-section">
-        <img src="/img/mexicoi.png" alt="Icono personalizado" class="iconomenu" />
-        @ViewData["Title"]
-    </h4>
-</div>
+@{
+    var header = new HeaderViewModel
+    {
+        Title = "Mapa de Infraestructura",
+        IconPath = "geo.png",
+        Description = "Mapa interactivo de activos",
+        Section = "📊 Datos Públicos",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Mapa de Infraestructura",
+            description = "Sistema de visualización geográfica de infraestructura energética.",
+            functionality = "Permite explorar y analizar la distribución territorial de activos.",
+            stage = "Consulta Visual",
+            roles = new[] {
+                new { icon = "building", text = "SENER: Coordinación general" },
+                new { icon = "bolt", text = "CFE: Infraestructura eléctrica" },
+                new { icon = "chart-line", text = "CENACE: Control operativo" },
+                new { icon = "map-marked-alt", text = "Estados: Información local" },
+                new { icon = "city", text = "Municipios: Datos territoriales" },
+                new { icon = "industry", text = "Empresas: Activos privados" }
+            },
+            order = new { step = 12, description = "Georreferenciación de activos" }
+        }),
+        LegalDescription = "Visualización de infraestructura conforme al Art. 77 del Reglamento.",
+        Fundamentos = new List<FundamentoLegal> {
+            new() { Reference = "Art. 77 Reglamento", Description = "Establece los lineamientos para la georreferenciación de infraestructura" }
+        }
+    };
+}
 
+@await Html.PartialAsync("_ViewHeader", header)
 
-<!-- Miga de Pan -->
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-    aria-label="breadcrumb" style="padding-left:15px">
-    <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
-        @* <li class="breadcrumb-item"><a href="@Url.Action("Hidrocarburos", "Home" )">Sector Petróleo y Gas</a></li>*@
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-    </ol>
-</nav>
 
 @*Sección que Despliega el Mapa Inicial*@
 <div class="container">

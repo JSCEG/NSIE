@@ -16,7 +16,7 @@
     var header = new HeaderViewModel
     {
         Title = "Votaciones Colegiadas",
-        IconPath = "modulos/votaciones_consejo.png",
+        IconPath = "votaciones_consejo.png",
         Description = "Sistema de votación digital para la toma de decisiones colegiada del Consejo.",
         Section = "Consejo",
         ModuleInfo = JsonConvert.SerializeObject(new
@@ -41,6 +41,7 @@ new() { Reference = "Art. 32 Lineamientos", Description = "Define el procedimien
 
 @await Html.PartialAsync("_ViewHeader", header)
 
+@* 
 <div class="text-center mb-4">
     <h3 class="cp-section cp-grouping-section">
         <img src="~/img/modulos/votaciones_consejo.png" alt="Votaciones" class="iconomenu">
@@ -63,11 +64,11 @@ new() { Reference = "Art. 32 Lineamientos", Description = "Define el procedimien
             <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
         </ol>
     </nav>
-</div>
+</div> *@
 
 
 <div class="container ps-5 pe-5">
-    <div class="alert alert-success mb-4" role="alert">
+    @* <div class="alert alert-success mb-4" role="alert">
         <div class="row align-items-center">
             <div class="col-md-2 text-center">
                 <img src="~/img/iconos/legal_foundations.png" alt="Fundamento Legal" class="img-fluid">
@@ -94,7 +95,7 @@ new() { Reference = "Art. 32 Lineamientos", Description = "Define el procedimien
                 </p>
             </div>
         </div>
-    </div>
+    </div> *@
 
     <!-- Resumen de Votaciones -->
     <div class="row mb-4">
@@ -1036,23 +1037,23 @@ new() { Reference = "Art. 32 Lineamientos", Description = "Define el procedimien
             Swal.fire({
                 title: 'Procesando firma digital...',
                 html: `
-                                                                                                                                                            <div class="progress mb-3">
-                                                                                                                                                                <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                                                                                                                                                                     role="progressbar" style="width: 0%">
-                                                                                                                                                                </div>
-                                                                                                                                                            </div>
-                                                                                                                                                            <div class="text-start mt-3">
-                                                                                                                                                                <p class="step-validating">
-                                                                                                                                                                    <i class="fas fa-spinner fa-spin"></i> Validando certificados...
-                                                                                                                                                                </p>
-                                                                                                                                                                <p class="step-signing text-muted">
-                                                                                                                                                                    <i class="fas fa-clock"></i> Firmando voto...
-                                                                                                                                                                </p>
-                                                                                                                                                                <p class="step-saving text-muted">
-                                                                                                                                                                    <i class="fas fa-clock"></i> Registrando voto...
-                                                                                                                                                                </p>
-                                                                                                                                                            </div>
-                                                                                                                                                        `,
+                                                                                                                                                                            <div class="progress mb-3">
+                                                                                                                                                                                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                                                                                                                                                                     role="progressbar" style="width: 0%">
+                                                                                                                                                                                </div>
+                                                                                                                                                                            </div>
+                                                                                                                                                                            <div class="text-start mt-3">
+                                                                                                                                                                                <p class="step-validating">
+                                                                                                                                                                                    <i class="fas fa-spinner fa-spin"></i> Validando certificados...
+                                                                                                                                                                                </p>
+                                                                                                                                                                                <p class="step-signing text-muted">
+                                                                                                                                                                                    <i class="fas fa-clock"></i> Firmando voto...
+                                                                                                                                                                                </p>
+                                                                                                                                                                                <p class="step-saving text-muted">
+                                                                                                                                                                                    <i class="fas fa-clock"></i> Registrando voto...
+                                                                                                                                                                                </p>
+                                                                                                                                                                            </div>
+                                                                                                                                                                        `,
                 showConfirmButton: false,
                 allowOutsideClick: false,
                 didOpen: async () => {
@@ -1083,18 +1084,18 @@ new() { Reference = "Art. 32 Lineamientos", Description = "Define el procedimien
                         icon: 'success',
                         title: '¡Voto registrado exitosamente!',
                         html: `
-                                                                                                                                                                    <div class="text-start">
-                                                                                                                                                                        <div class="alert alert-success">
-                                                                                                                                                                            <h6><i class="fas fa-check-circle"></i> Acuse de voto</h6>
-                                                                                                                                                                            <hr>
-                                                                                                                                                                            <p><strong>Folio:</strong> SNIER-2024-${folio}</p>
-                                                                                                                                                                            <p><strong>Fecha y hora:</strong> ${new Date().toLocaleString()}</p>
-                                                                                                                                                                            <p><strong>Sentido del voto:</strong> ${sentidoVoto.toUpperCase()}</p>
-                                                                                                                                                                            <p><strong>Sello digital:</strong></p>
-                                                                                                                                                                            <small class="text-muted">hQIMA0yVHZKhN8ELAQf9H8...</small>
-                                                                                                                                                                        </div>
-                                                                                                                                                                    </div>
-                                                                                                                                                                `,
+                                                                                                                                                                                    <div class="text-start">
+                                                                                                                                                                                        <div class="alert alert-success">
+                                                                                                                                                                                            <h6><i class="fas fa-check-circle"></i> Acuse de voto</h6>
+                                                                                                                                                                                            <hr>
+                                                                                                                                                                                            <p><strong>Folio:</strong> SNIER-2024-${folio}</p>
+                                                                                                                                                                                            <p><strong>Fecha y hora:</strong> ${new Date().toLocaleString()}</p>
+                                                                                                                                                                                            <p><strong>Sentido del voto:</strong> ${sentidoVoto.toUpperCase()}</p>
+                                                                                                                                                                                            <p><strong>Sello digital:</strong></p>
+                                                                                                                                                                                            <small class="text-muted">hQIMA0yVHZKhN8ELAQf9H8...</small>
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                    </div>
+                                                                                                                                                                                `,
                         showCancelButton: true,
                         confirmButtonText: '<i class="fas fa-file-pdf"></i> Descargar Acuse',
                         cancelButtonText: 'Cerrar'
@@ -1133,19 +1134,19 @@ new() { Reference = "Art. 32 Lineamientos", Description = "Define el procedimien
             // Actualizar datos de ejemplo en la tabla
             const tbody = document.querySelector('#modalResultados tbody');
             tbody.innerHTML = `
-                                                                                                                                                        <tr>
-                                                                                                                                                            <td>Juan Pérez</td>
-                                                                                                                                                            <td><span class="badge bg-success">A Favor</span></td>
-                                                                                                                                                            <td>21/05/2024 10:30</td>
-                                                                                                                                                            <td>Sin reservas</td>
-                                                                                                                                                        </tr>
-                                                                                                                                                        <tr>
-                                                                                                                                                            <td>María García</td>
-                                                                                                                                                            <td><span class="badge bg-danger">En Contra</span></td>
-                                                                                                                                                            <td>21/05/2024 11:15</td>
-                                                                                                                                                            <td>Art. 2 y 3</td>
-                                                                                                                                                        </tr>
-                                                                                                                                                    `;
+                                                                                                                                                                        <tr>
+                                                                                                                                                                            <td>Juan Pérez</td>
+                                                                                                                                                                            <td><span class="badge bg-success">A Favor</span></td>
+                                                                                                                                                                            <td>21/05/2024 10:30</td>
+                                                                                                                                                                            <td>Sin reservas</td>
+                                                                                                                                                                        </tr>
+                                                                                                                                                                        <tr>
+                                                                                                                                                                            <td>María García</td>
+                                                                                                                                                                            <td><span class="badge bg-danger">En Contra</span></td>
+                                                                                                                                                                            <td>21/05/2024 11:15</td>
+                                                                                                                                                                            <td>Art. 2 y 3</td>
+                                                                                                                                                                        </tr>
+                                                                                                                                                                    `;
 
             modal.show();
         }
@@ -1154,17 +1155,17 @@ new() { Reference = "Art. 32 Lineamientos", Description = "Define el procedimien
             Swal.fire({
                 title: 'Agregar Reserva',
                 html: `
-                                                                                                                                                            <form id="formReserva">
-                                                                                                                                                                <div class="mb-3">
-                                                                                                                                                                    <label class="form-label">Artículo o sección</label>
-                                                                                                                                                                    <input type="text" class="form-control" required>
-                                                                                                                                                                </div>
-                                                                                                                                                                <div class="mb-3">
-                                                                                                                                                                    <label class="form-label">Comentarios</label>
-                                                                                                                                                                    <textarea class="form-control" rows="3" required></textarea>
-                                                                                                                                                                </div>
-                                                                                                                                                            </form>
-                                                                                                                                                        `,
+                                                                                                                                                                            <form id="formReserva">
+                                                                                                                                                                                <div class="mb-3">
+                                                                                                                                                                                    <label class="form-label">Artículo o sección</label>
+                                                                                                                                                                                    <input type="text" class="form-control" required>
+                                                                                                                                                                                </div>
+                                                                                                                                                                                <div class="mb-3">
+                                                                                                                                                                                    <label class="form-label">Comentarios</label>
+                                                                                                                                                                                    <textarea class="form-control" rows="3" required></textarea>
+                                                                                                                                                                                </div>
+                                                                                                                                                                            </form>
+                                                                                                                                                                        `,
                 showCancelButton: true,
                 confirmButtonText: 'Guardar',
                 cancelButtonText: 'Cancelar',
@@ -1218,18 +1219,18 @@ new() { Reference = "Art. 32 Lineamientos", Description = "Define el procedimien
                 resultado: '<span class="badge bg-success">Aprobado por Mayoría</span>',
                 sello: 'hQIMA0yVHZKhN8ELAQf9H8... Firmado el 15/05/2024 a las 10:30:15 GMT-6',
                 comentarios: `
-                                                                                                                                    <div class="mb-2">
-                                                                                                                                        <strong>Comentario:</strong>
-                                                                                                                                        <p>Se aprueba en lo general con las siguientes observaciones...</p>
-                                                                                                                                    </div>
-                                                                                                                                    <div>
-                                                                                                                                        <strong>Reservas:</strong>
-                                                                                                                                        <ul>
-                                                                                                                                            <li>Artículo 2: Sobre los mecanismos de evaluación...</li>
-                                                                                                                                            <li>Artículo 5: Respecto a los plazos establecidos...</li>
-                                                                                                                                        </ul>
-                                                                                                                                    </div>
-                                                                                                                                `
+                                                                                                                                                    <div class="mb-2">
+                                                                                                                                                        <strong>Comentario:</strong>
+                                                                                                                                                        <p>Se aprueba en lo general con las siguientes observaciones...</p>
+                                                                                                                                                    </div>
+                                                                                                                                                    <div>
+                                                                                                                                                        <strong>Reservas:</strong>
+                                                                                                                                                        <ul>
+                                                                                                                                                            <li>Artículo 2: Sobre los mecanismos de evaluación...</li>
+                                                                                                                                                            <li>Artículo 5: Respecto a los plazos establecidos...</li>
+                                                                                                                                                        </ul>
+                                                                                                                                                    </div>
+                                                                                                                                                `
             };
 
             // Actualizar modal con los datos
@@ -1262,62 +1263,62 @@ new() { Reference = "Art. 32 Lineamientos", Description = "Define el procedimien
             Swal.fire({
                 title: 'Votaciones Colegiadas',
                 html: `
-                                                <div class="text-start">
-                                                    <div class="mb-4">
-                                                        <h6 class="border-bottom pb-2">
-                                                            <i class="fas fa-info-circle"></i> Descripción
-                                                        </h6>
-                                                        <p>Sistema digital para la emisión y registro de votos del Consejo.</p>
-                                                    </div>
+                                                                <div class="text-start">
+                                                                    <div class="mb-4">
+                                                                        <h6 class="border-bottom pb-2">
+                                                                            <i class="fas fa-info-circle"></i> Descripción
+                                                                        </h6>
+                                                                        <p>Sistema digital para la emisión y registro de votos del Consejo.</p>
+                                                                    </div>
 
-                                                    <div class="mb-4">
-                                                        <h6 class="border-bottom pb-2">
-                                                            <i class="fas fa-tasks"></i> Funcionalidad
-                                                        </h6>
-                                                        <p>Permite emitir votos sobre los asuntos en agenda de forma digital y segura.</p>
-                                                    </div>
+                                                                    <div class="mb-4">
+                                                                        <h6 class="border-bottom pb-2">
+                                                                            <i class="fas fa-tasks"></i> Funcionalidad
+                                                                        </h6>
+                                                                        <p>Permite emitir votos sobre los asuntos en agenda de forma digital y segura.</p>
+                                                                    </div>
 
-                                                    <div class="mb-4">
-                                                        <h6 class="border-bottom pb-2">
-                                                            <i class="fas fa-sync-alt"></i> Etapa del Ciclo
-                                                        </h6>
-                                                        <p>Deliberación colegiada</p>
-                                                    </div>
+                                                                    <div class="mb-4">
+                                                                        <h6 class="border-bottom pb-2">
+                                                                            <i class="fas fa-sync-alt"></i> Etapa del Ciclo
+                                                                        </h6>
+                                                                        <p>Deliberación colegiada</p>
+                                                                    </div>
 
-                                                    <div class="mb-4">
-                                                        <h6 class="border-bottom pb-2">
-                                                            <i class="fas fa-users-cog"></i> Interacción entre Roles
-                                                        </h6>
-                                                        <ul class="list-unstyled">
-                                                            <li><i class="fas fa-vote-yea text-primary"></i> Consejeros: Emiten voto digital</li>
-                                                            <li><i class="fas fa-clipboard-check text-success"></i> Secretaría Técnica: Registra resultados</li>
-                                                        </ul>
-                                                    </div>
+                                                                    <div class="mb-4">
+                                                                        <h6 class="border-bottom pb-2">
+                                                                            <i class="fas fa-users-cog"></i> Interacción entre Roles
+                                                                        </h6>
+                                                                        <ul class="list-unstyled">
+                                                                            <li><i class="fas fa-vote-yea text-primary"></i> Consejeros: Emiten voto digital</li>
+                                                                            <li><i class="fas fa-clipboard-check text-success"></i> Secretaría Técnica: Registra resultados</li>
+                                                                        </ul>
+                                                                    </div>
 
-                                                    <div class="mb-4">
-                                                        <h6 class="border-bottom pb-2">
-                                                            <i class="fas fa-star"></i> Importancia
-                                                        </h6>
-                                                        <p class="mb-0">
-                                                            Facilita la toma de decisiones colegiada de manera eficiente y transparente, 
-                                                            siendo clave para la operación del Consejo.
-                                                        </p>
-                                                    </div>
+                                                                    <div class="mb-4">
+                                                                        <h6 class="border-bottom pb-2">
+                                                                            <i class="fas fa-star"></i> Importancia
+                                                                        </h6>
+                                                                        <p class="mb-0">
+                                                                            Facilita la toma de decisiones colegiada de manera eficiente y transparente, 
+                                                                            siendo clave para la operación del Consejo.
+                                                                        </p>
+                                                                    </div>
 
-                                                    <div>
-                                                        <h6 class="border-bottom pb-2">
-                                                            <i class="fas fa-check-double"></i> Orden en el Ciclo
-                                                        </h6>
-                                                        <p class="mb-0">
-                                                            <span class="badge bg-warning">Paso 4</span>
-                                                            <span class="ms-2">
-                                                                Permite la emisión de votos digitales sobre los puntos del orden del día,
-                                                                materializando la toma de decisiones del Consejo.
-                                                            </span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            `,
+                                                                    <div>
+                                                                        <h6 class="border-bottom pb-2">
+                                                                            <i class="fas fa-check-double"></i> Orden en el Ciclo
+                                                                        </h6>
+                                                                        <p class="mb-0">
+                                                                            <span class="badge bg-warning">Paso 4</span>
+                                                                            <span class="ms-2">
+                                                                                Permite la emisión de votos digitales sobre los puntos del orden del día,
+                                                                                materializando la toma de decisiones del Consejo.
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            `,
                 width: 'auto',
                 maxWidth: '400px',
                 customClass: {

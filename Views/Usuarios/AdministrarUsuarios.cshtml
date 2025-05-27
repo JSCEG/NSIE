@@ -4,39 +4,57 @@
 @using Microsoft.AspNetCore.Http
 @using Newtonsoft.Json
 
-
 @{
     var httpContext = HttpContextAccessor.HttpContext;
     var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
-
-    // Utilizar los datos del usuario para personalizar la vista
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
     ViewData["RolUsuario"] = perfilUsuario.Rol;
     ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
     ViewData["IDUsuario"] = perfilUsuario.IdUsuario;
-    ViewData["Title"] = "Panel de Administración";
+    ViewData["Title"] = "Gestión de Usuarios y Perfiles";
 }
 
+@{
+    var header = new HeaderViewModel
+    {
+        Title = "Gestión de Usuarios y Perfiles",
+        IconPath = "usuarios_scel.png",
+        Description = "Gestiona perfiles, roles y accesos según normativa.",
+        Section = "Gobernanza y Seguridad",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Gestión de Usuarios y Perfiles",
+            description = "Sistema de administración de usuarios y control de accesos del SNIEr.",
+            functionality = "Permite gestionar usuarios, asignar roles y mantener la trazabilidad de accesos.",
+            stage = "Inicialización",
+            roles = new[] {
+                new { icon = "building", text = "Secretaría de Energía: Administración general" },
+                new { icon = "users-cog", text = "Unidad SNIEr: Gestión de perfiles" },
+                new { icon = "user-shield", text = "Dirección TICs: Control técnico" },
+                new { icon = "user-tie", text = "Consejo: Supervisión de accesos" }
+            },
+            order = new { step = 1, description = "Control de accesos desde el inicio (Art. 70)" }
+        }),
+        LegalDescription = "Gestión de accesos y perfiles conforme a los lineamientos establecidos en el Art. 70 del Reglamento.",
+        Fundamentos = new List<FundamentoLegal> {
+            new() { Reference = "Art. 70 Reglamento", Description = "Establece los controles de acceso y gestión de usuarios" },
+            new() { Reference = "Art. 71 Reglamento", Description = "Define la administración de perfiles" },
+            new() { Reference = "Art. 76 Reglamento", Description = "Establece la trazabilidad y seguridad" }
+        }
+    };
+}
 
-
-
-
-<div class="text-center">
-    <h3 class="cp-section cp-grouping-section"> <img src="~/img/mexicoi.png" alt="Icono personalizado" class="iconomenu">@ViewData["Title"]</h3>
-</div>
-<!-- Miga de Pan -->
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb" style="padding-left:15px">
-    <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-    </ol>
-</nav>
-<br />
+@await Html.PartialAsync("_ViewHeader", header)
 
 <div class="container">
-    <h6 class="display-6 fw-bold subtitulo pl-3%">Lista de Usuarios</h6>
-    <a asp-controller="Usuarios" asp-action="NuevoUsuario" class="btn btn-primary">Agregar Nuevo Usuario</a>
+    <div class="row mb-4">
+        <div class="col">
+            <a asp-controller="Usuarios" asp-action="NuevoUsuario" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Agregar Nuevo Usuario
+            </a>
+        </div>
+    </div>
 
     <div class="table-responsive">
         <table id="usuariosTabla" class="table table-hover table-responsive table-bordered">

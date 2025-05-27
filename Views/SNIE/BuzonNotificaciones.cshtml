@@ -1,7 +1,51 @@
 @model dynamic
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@using NSIE.Models
+@inject IHttpContextAccessor HttpContextAccessor
+
 @{
-    ViewData["Title"] = "Buzón de Notificaciones SNIE";
+    var httpContext = HttpContextAccessor.HttpContext;
+    var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["Title"] = "Buzón y Gestión de Oficios";
 }
+
+@{
+    var header = new HeaderViewModel
+    {
+        Title = "Buzón y Gestión de Oficios",
+        IconPath = "crm_buzon.png",
+        Description = "Emite, recibe y da seguimiento a oficios institucionales.",
+        Section = "🧾 Carga de Información, Validación y Oficios",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Buzón y Gestión de Oficios",
+            description = "Sistema centralizado de comunicación oficial entre dependencias.",
+            functionality = "Gestiona oficios con trazabilidad y acuses de recibo.",
+            stage = "Comunicación Interna",
+            roles = new[] {
+                new { icon = "building", text = "SENER: Coordinación general" },
+                new { icon = "shield-alt", text = "Unidad SNIEr: Control documental" },
+                new { icon = "industry", text = "PEMEX: Gestión petrolera" },
+                new { icon = "bolt", text = "CFE: Sector eléctrico" },
+                new { icon = "lightbulb", text = "CONUEE: Eficiencia energética" },
+                new { icon = "chart-line", text = "SHCP: Control financiero" },
+                new { icon = "leaf", text = "SEMARNAT: Gestión ambiental" },
+                new { icon = "users", text = "Enlaces Institucionales: Coordinación" }
+            },
+            order = new { step = 3, description = "Coordina actividades entre entidades (Art. 76)" }
+        }),
+        LegalDescription = "Sistema de comunicación oficial conforme al Art. 76 del Reglamento para garantizar la trazabilidad documental.",
+        Fundamentos = new List<FundamentoLegal> {
+            new() { Reference = "Art. 76 Reglamento", Description = "Establece los mecanismos de comunicación institucional" }
+        }
+    };
+}
+
+@await Html.PartialAsync("_ViewHeader", header)
 
     <style>
         /* Estilos mejorados */
@@ -67,20 +111,7 @@
             font-size: 1.2em;
         }
     </style>
-<div class="text-center">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="~/img/mexicoi.png" alt="Icono personalizado" class="iconomenu">@ViewData["Title"]
-    </h3>
-</div>
 
-<!-- Miga de Pan -->
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
-        <li class="breadcrumb-item">SNIE</li>
-        <li class="breadcrumb-item active">@ViewData["Title"]</li>
-    </ol>
-</nav>
 
 <div class="container py-4">
     <!-- Estadísticas -->

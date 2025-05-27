@@ -19,7 +19,7 @@
     color: var(--text-light) !important;
 }
 
-.btn-cre-rojo {
+/* .btn-cre-rojo {
     background-color: var(--accent) !important;
     color: var(--text-light) !important;
 }
@@ -27,7 +27,7 @@
 .btn-cre-verde {
     background-color: var(--verdeclaro) !important;
     color: var(--text-light) !important;
-}
+} */
 
 .btn-d-sectores {
     background-color: #05556b !important;

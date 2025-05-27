@@ -16,7 +16,6 @@
     ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
 }
 
-@* Pull O *@
 @{
     ViewData["Title"] = "Detalle del Permisionario";
 }
@@ -25,7 +24,7 @@
     @for (int i = 0; i < 50; i++) /* Cambiamos el número 3 por 9 para tener más marcas de agua */
     {
         <div class="watermark">
-            CRE-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
+            SENER-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
         </div>
     }
 </div>
@@ -36,7 +35,8 @@
         @ViewData["Title"]
     </h4>
 </div>
-<div class="container">
+
+<div class="container ps-5 pe-5">
 
 
     <div class="text-center pb-3">
@@ -111,6 +111,8 @@
     @* Mostrar la sección del tablero solo si el mercado es Electricidad *@
     @if (Model.Mercado == "Electricidad" && perfilUsuario.Rol != "0")
     {
+
+        <partial name="_MigracionProyecto" />
         <div class="row">
             <div class="col-12">
                 <h3 class="display-6 subtitulo fw-bold">
@@ -154,11 +156,11 @@
 
             L.marker([latitude, longitude]).addTo(map)
                 .bindPopup(`
-                                                <div>
-                                                    <p>@Model.Razón_social</p>
-                                                    <a class="street-view-link btn btn-cre-verde" href="http://maps.google.com/maps?q=&layer=c&cbll=${latitude},${longitude}&cbp=11,0,0,0,0" target="_blank"><b>Ver vista de calle</b></a>
-                                                </div>
-                                            `)
+                                                                            <div>
+                                                                                <p>@Model.Razón_social</p>
+                                                                                <a class="street-view-link btn btn-cre-verde" href="http://maps.google.com/maps?q=&layer=c&cbll=${latitude},${longitude}&cbp=11,0,0,0,0" target="_blank"><b>Ver vista de calle</b></a>
+                                                                            </div>
+                                                                        `)
                 .openPopup();
 
             map.on('click', function (e) {

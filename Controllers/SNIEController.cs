@@ -52,7 +52,11 @@ namespace NSIE.Controllers
             // desde tu base de datos o servicio
             return View();
         }
+        public IActionResult SubsistemasExternos()
+        {
 
+            return View();
+        }
 
     }
 

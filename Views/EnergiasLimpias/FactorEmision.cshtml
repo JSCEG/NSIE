@@ -8,36 +8,42 @@
     var httpContext = HttpContextAccessor.HttpContext;
     var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
-    // Utilizar los datos del usuario para personalizar la vista
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
     ViewData["RolUsuario"] = perfilUsuario.Rol;
-}
-
-@{
     ViewData["Title"] = "Factor de Emisión";
 }
 
-<div class="text-center">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="~/img/emisiones.png" alt="Icono personalizado" class="iconomenu">
-        @ViewData["Title"]
-    </h3>
-</div>
+@{
+    var header = new HeaderViewModel
+    {
+        Title = "Factor de Emisión",
+        IconPath = "emision.png",
+        Description = "Consulta indicadores de emisión del SEN",
+        Section = "📊 Datos Públicos",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Factor de Emisión",
+            description = "Sistema de consulta de indicadores ambientales del SEN.",
+            functionality = "Permite análisis de huella ambiental y eficiencia del sistema.",
+            stage = "Indicadores Ambientales",
+            roles = new[] {
+new { icon = "building", text = "SENER: Validación oficial" },
+new { icon = "graduation-cap", text = "Universidades: Investigación" },
+new { icon = "chart-bar", text = "INEGI: Estadísticas" },
+new { icon = "users", text = "OSC: Monitoreo" },
+new { icon = "microscope", text = "Investigadores: Análisis" },
+new { icon = "newspaper", text = "Medios: Difusión" }
+},
+            order = new { step = 1, description = "Mide eficiencia ambiental del SEN" }
+        }),
+        LegalDescription = "Indicadores ambientales conforme al Art. 70 del Reglamento para monitoreo de emisiones.",
+        Fundamentos = new List<FundamentoLegal> {
+new() { Reference = "Art. 70 Reglamento", Description = "Establece los indicadores ambientales del sector" }
+}
+    };
+}
 
-
-<!-- Miga de Pan -->
-<div class="alert alert-light" role="alert">
-    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-        aria-label="breadcrumb" style="padding-left:15px">
-        <ol class="breadcrumb lp-5">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
-            @* <li class="breadcrumb-item"><a href="@Url.Action("Menu_Eventos", "Eventos" )">Certificados de Energías
-            Limpias</a></li> *@
-            <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-        </ol>
-    </nav>
-</div>
-
+@await Html.PartialAsync("_ViewHeader", header)
 
 <div class="container ps-5 pe-5">
     <div class="text-center">
@@ -97,13 +103,13 @@
                 series: [{
                     name: 'Factor de Emisión (2017-2023)',
                     data: [
-        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2017).Select(f => (double?)f.Valor).FirstOrDefault())),
-        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2018).Select(f => (double?)f.Valor).FirstOrDefault())),
-        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2019).Select(f => (double?)f.Valor).FirstOrDefault())),
-        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2020).Select(f => (double?)f.Valor).FirstOrDefault())),
-        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2021).Select(f => (double?)f.Valor).FirstOrDefault())),
-        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2022).Select(f => (double?)f.Valor).FirstOrDefault())),
-        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2023).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2017).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2018).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2019).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2020).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2021).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2022).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2023).Select(f => (double?)f.Valor).FirstOrDefault())),
                         null, null, null, null, null, null, null
                     ],
                     color: '#7cb5ec', // Azul para los datos reales
@@ -112,14 +118,14 @@
                     name: 'Pronóstico (2024-2030)',
                     data: [
                         null, null, null, null, null, null, null,
-        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2024).Select(f => (double?)f.Valor).FirstOrDefault()))
-     //   @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2025).Select(f => (double?)f.Valor).FirstOrDefault())),
-       // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2027).Select(f => (double?)f.Valor).FirstOrDefault())),
-       // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2028).Select(f => (double?)f.Valor).FirstOrDefault())),
-       // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2026).Select(f => (double?)f.Valor).FirstOrDefault())),
-       // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2029).Select(f => (double?)f.Valor).FirstOrDefault())),
-       // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2030).Select(f => (double?)f.Valor).FirstOrDefault()))
-                                        ],
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2024).Select(f => (double?)f.Valor).FirstOrDefault()))
+                 //   @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2025).Select(f => (double?)f.Valor).FirstOrDefault())),
+                   // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2027).Select(f => (double?)f.Valor).FirstOrDefault())),
+                   // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2028).Select(f => (double?)f.Valor).FirstOrDefault())),
+                   // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2026).Select(f => (double?)f.Valor).FirstOrDefault())),
+                   // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2029).Select(f => (double?)f.Valor).FirstOrDefault())),
+                   // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2030).Select(f => (double?)f.Valor).FirstOrDefault()))
+                                                    ],
                     color: '#ff5733', // Naranja/Rojo para el pronóstico
                     dashStyle: 'Dash'
                 }]

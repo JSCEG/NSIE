@@ -7,30 +7,41 @@
     var httpContext = HttpContextAccessor.HttpContext;
     var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
-
-    // Utilizar los datos del usuario para personalizar la vista
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
     ViewData["RolUsuario"] = perfilUsuario.Rol;
-    ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
+    ViewData["Title"] = "Balance Nacional de Energía";
 }
 
 @{
-    ViewData["Title"] = "Flujo Físico de la Energía del Sistema Energético Mexicano";
+    var header = new HeaderViewModel
+    {
+        Title = "Balance Nacional de Energía",
+        IconPath = "sankey.png",
+        Description = "Visualiza flujo energético nacional",
+        Section = "📊 Datos Públicos",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Balance Nacional de Energía",
+            description = "Sistema de visualización del flujo energético nacional mediante diagramas Sankey.",
+            functionality = "Permite analizar la transformación y flujo de energía en el sistema nacional.",
+            stage = "Visualización Estratégica",
+            roles = new[] {
+new { icon = "building", text = "SENER: Validación oficial" },
+new { icon = "graduation-cap", text = "Universidades: Investigación" },
+new { icon = "microscope", text = "Centros de Investigación: Análisis" },
+new { icon = "chart-bar", text = "INEGI: Datos estadísticos" }
+},
+            order = new { step = 2, description = "Sintetiza flujo energético nacional" }
+        }),
+        LegalDescription = "Visualización del balance energético conforme al Art. 70 del Reglamento.",
+        Fundamentos = new List<FundamentoLegal> {
+new() { Reference = "Art. 70 Reglamento", Description = "Establece los lineamientos para el balance energético nacional"
+}
+}
+    };
 }
 
-<div class="text-center">
-    <h3 class="cp-section cp-grouping-section"> <img src="~/img/sankey.png" alt="Icono personalizado"
-            class="iconomenu">@ViewData["Title"]</h3>
-</div>
-<!-- Miga de Pan -->
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-    aria-label="breadcrumb" style="padding-left:15px">
-    <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-    </ol>
-</nav>
-
+@await Html.PartialAsync("_ViewHeader", header)
 
 
 <div class="ps-2 pe-2 pt-5">
@@ -86,22 +97,22 @@
             <div class="col-4 ">
                 <button id="btnPantallaCompleta" class="btn btn-cre-rojo">Ver en Pantalla Completa</button>
             </div>
-            
-            
+
+
         </div>
 
-            <br>
-            <br>
+        <br>
+        <br>
 
-            <div class="alert alert-light" role="alert">
-                <center>
+        <div class="alert alert-light" role="alert">
+            <center>
                 <h3 class="alert-heading">Totales</h3>
-                </center>
-               
-                <div id="tarjetas-totales" class="row g-4 mt-4 mb-4 ps-2 pe-2">
-                    <!-- Las tarjetas se generarán aquí dinámicamente -->
-                </div>
+            </center>
+
+            <div id="tarjetas-totales" class="row g-4 mt-4 mb-4 ps-2 pe-2">
+                <!-- Las tarjetas se generarán aquí dinámicamente -->
             </div>
+        </div>
 
 
         <!-- Gráfico SVG -->

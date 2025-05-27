@@ -607,7 +607,7 @@ p {
 .btn-cre-verde {
     padding-top: 1%;
     /*    font-family: "Montserrat", sans-serif !important;*/
-    background-color: var(--verdeclaro) !important;
+    background-color: #4b9f16 !important;
     color: #ffffff !important;
     width: 100%;
 }
