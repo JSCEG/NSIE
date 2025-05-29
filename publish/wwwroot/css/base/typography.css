@@ -1,0 +1,110 @@
+/* ====================
+   1. Font Declarations
+==================== */
+@font-face {
+    font-family: 'Noto Sans ENERGIA';
+    src: url('/fonts/Noto Sans ENERGIA/NotoSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Noto Sans ENERGIA';
+    src: url('/fonts/Noto Sans ENERGIA/NotoSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Noto Sans ENERGIA';
+    src: url('/fonts/Noto Sans ENERGIA/NotoSans-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Noto Sans ENERGIA';
+    src: url('/fonts/Noto Sans ENERGIA/NotoSans-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Patria ENERGIA';
+    src: url('/fonts/Patria ENERGIA/Patria_Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Patria ENERGIA';
+    src: url('/fonts/Patria ENERGIA/Patria_Bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Patria ENERGIA';
+    src: url('/fonts/Patria ENERGIA/Patria_Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* Base Typography */
+body {
+    font-family: var(--font-primary);
+    font-weight: normal;
+    line-height: 1.6;
+    color: var(--text-dark);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-secondary);
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-md);
+}
+
+.titulo {
+    color: var(--text-dark);
+    font-size: 36px;
+    margin-top: 20px;
+    font-family: var(--font-secondary);
+    position: relative;
+}
+
+.subtitulo {
+    color: var(--gris);
+    font-size: 1.75rem;
+    font-family: var(--font-secondary);
+    position: relative;
+    text-transform: uppercase;
+}
+
+/* Decorative Elements */
+.titulo::after,
+.subtitulo::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--border-color);
+}
+
+.titulo::before,
+.subtitulo::before {
+    content: "";
+    position: absolute;
+    bottom: -13px;
+    left: 0;
+    width: 55px;
+    height: 8px;
+    background-color: var(--amarillo);
+}

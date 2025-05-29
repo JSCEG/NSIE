@@ -90,9 +90,9 @@ namespace NSIE.Controllers
 
             using (SqlConnection cn = new SqlConnection(_connectionString))
             {
-                // Modificar el stored procedure para buscar por correo o RFC
+                // Validar usuario por correo o RFC
                 SqlCommand cmd = new SqlCommand("sp_ValidarUsuarioRFCEmail", cn);
-                cmd.Parameters.AddWithValue("CorreoRFC", oUsuario.Correo); // Este campo ahora puede ser correo o RFC
+                cmd.Parameters.AddWithValue("CorreoRFC", oUsuario.Correo);
                 cmd.Parameters.AddWithValue("Clave", oUsuario.Clave);
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -104,7 +104,7 @@ namespace NSIE.Controllers
             {
                 using (SqlConnection cn = new SqlConnection(_connectionString))
                 {
-                    // Modificar la consulta para buscar por IdUsuario
+                    // Verificar si el usuario está vigente
                     bool esVigente = cn.QuerySingleOrDefault<bool>(
                         "SELECT Vigente FROM USUARIO WHERE IdUsuario = @IdUsuario",
                         new { IdUsuario = oUsuario.IdUsuario }
@@ -119,7 +119,6 @@ namespace NSIE.Controllers
 
                     if (registrarAcceso)
                     {
-                        // Obtener el correo real del usuario para el registro
                         var correoUsuario = cn.QuerySingleOrDefault<string>(
                             "SELECT Correo FROM USUARIO WHERE IdUsuario = @IdUsuario",
                             new { IdUsuario = oUsuario.IdUsuario }
@@ -127,11 +126,13 @@ namespace NSIE.Controllers
                         RegistrarAcceso(correoUsuario, "Inicio de sesión funcionario CRE");
                     }
 
+                    // Activar sesión
                     cn.Execute(
                         "UPDATE USUARIO SET SesionActiva = 1, UltimaActualizacion = GETDATE(), HoraInicioSesion = GETDATE() WHERE IdUsuario = @IdUsuario",
                         new { IdUsuario = oUsuario.IdUsuario }
                     );
 
+                    // Obtener perfil del usuario
                     PerfilUsuario perfilUsuario = cn.QuerySingleOrDefault<PerfilUsuario>(
                         "sp_ObtenerUsuarioSession",
                         new { IdUsuario = oUsuario.IdUsuario },
@@ -142,6 +143,36 @@ namespace NSIE.Controllers
                     {
                         var perfilUsuarioJson = JsonConvert.SerializeObject(perfilUsuario);
                         HttpContext.Session.SetString("PerfilUsuario", perfilUsuarioJson);
+
+                        // Obtener secciones y módulos permitidos agrupados correctamente
+                        var seccionesDict = new Dictionary<int, SeccionSNIER>();
+
+                        cn.Query<SeccionSNIER, ModuloSNIER, int>(
+                            "sp_ObtenerSeccionesYModulosPorUsuario",
+                            (seccion, modulo) =>
+                            {
+                                if (!seccionesDict.TryGetValue(seccion.Id, out var seccionExistente))
+                                {
+                                    seccionExistente = seccion;
+                                    seccionExistente.Modulos = new List<ModuloSNIER>();
+                                    seccionesDict[seccion.Id] = seccionExistente;
+                                }
+
+                                if (modulo != null && modulo.ModuloId != 0)
+                                {
+                                    seccionExistente.Modulos.Add(modulo);
+                                }
+
+                                return seccionExistente.Id;
+                            },
+                            new { IdUsuario = oUsuario.IdUsuario },
+                            splitOn: "ModuloId",
+                            commandType: CommandType.StoredProcedure
+                        );
+
+                        var seccionesAgrupadas = seccionesDict.Values.ToList();
+                        var seccionesUsuarioJson = JsonConvert.SerializeObject(seccionesAgrupadas);
+                        HttpContext.Session.SetString("SeccionesUsuario", seccionesUsuarioJson);
 
                         return RedirectToAction("Index", "Home");
                     }

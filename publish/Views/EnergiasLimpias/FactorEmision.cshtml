@@ -1,0 +1,135 @@
+@model NSIE.Models.FactorEmisionViewModel
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@using NSIE.Models
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var httpContext = HttpContextAccessor.HttpContext;
+    var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["Title"] = "Factor de Emisión";
+}
+
+@{
+    var header = new HeaderViewModel
+    {
+        Title = "Factor de Emisión",
+        IconPath = "emision.png",
+        Description = "Consulta indicadores de emisión del SEN",
+        Section = "📊 Datos Públicos",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Factor de Emisión",
+            description = "Sistema de consulta de indicadores ambientales del SEN.",
+            functionality = "Permite análisis de huella ambiental y eficiencia del sistema.",
+            stage = "Indicadores Ambientales",
+            roles = new[] {
+new { icon = "building", text = "SENER: Validación oficial" },
+new { icon = "graduation-cap", text = "Universidades: Investigación" },
+new { icon = "chart-bar", text = "INEGI: Estadísticas" },
+new { icon = "users", text = "OSC: Monitoreo" },
+new { icon = "microscope", text = "Investigadores: Análisis" },
+new { icon = "newspaper", text = "Medios: Difusión" }
+},
+            order = new { step = 1, description = "Mide eficiencia ambiental del SEN" }
+        }),
+        LegalDescription = "Indicadores ambientales conforme al Art. 70 del Reglamento para monitoreo de emisiones.",
+        Fundamentos = new List<FundamentoLegal> {
+new() { Reference = "Art. 70 Reglamento", Description = "Establece los indicadores ambientales del sector" }
+}
+    };
+}
+
+@await Html.PartialAsync("_ViewHeader", header)
+
+<div class="container ps-5 pe-5">
+    <div class="text-center">
+        <img src="~/img/banner/12.png" alt="Factor de Emisión SEN" class="img-fluid"
+            style="max-width: 100%; height: auto; margin-bottom: 20px;">
+    </div>
+
+    <div id="grafico-factor" style="width:100%; height:400px;"></div>
+
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Tendencia de Factores de Emisión</h4>
+        <p>El gráfico muestra la tendencia de los factores de emisión del Sistema Eléctrico Nacional desde 2017 hasta
+            2023. La línea discontinua de color <span style="color: #ff5733;">naranja</span> representa un pronóstico
+            para el año 2024.</p>
+        <hr>
+        <p class="mb-0">Este pronóstico se ha calculado utilizando una regresión lineal simple basada en los valores de
+            los años anteriores. La regresión lineal es una técnica estadística que permite estimar el valor futuro
+            basándose en la relación lineal observada entre las variables del tiempo (años) y el factor de emisión. El
+            valor pronosticado para 2024 es un estimado basado en esta tendencia media y debe interpretarse con
+            precaución.</p>
+    </div>
+
+    <div class="mt-4">
+        <h4>Enlaces a Avisos en PDFs:</h4>
+        <ul>
+            @foreach (var factor in Model.FactoresEmision)
+            {
+                <li>
+                    <a href="@factor.PdfUrl" target="_blank">Factor de Emisión @factor.Anio - @factor.Valor tCO2e/MWh</a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const categories = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
+
+            Highcharts.chart('grafico-factor', {
+                chart: {
+                    type: 'line',
+                    backgroundColor: '#efefee'
+                },
+                title: {
+                    text: 'Tendencia de Factores de Emisión (2017-2030)'
+                },
+                xAxis: {
+                    categories: categories
+                },
+                yAxis: {
+                    title: {
+                        text: 'Factor de Emisión (tCO2e/MWh)'
+                    }
+                },
+                series: [{
+                    name: 'Factor de Emisión (2017-2023)',
+                    data: [
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2017).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2018).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2019).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2020).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2021).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2022).Select(f => (double?)f.Valor).FirstOrDefault())),
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2023).Select(f => (double?)f.Valor).FirstOrDefault())),
+                        null, null, null, null, null, null, null
+                    ],
+                    color: '#7cb5ec', // Azul para los datos reales
+                    dashStyle: 'Solid'
+                }, {
+                    name: 'Pronóstico (2024-2030)',
+                    data: [
+                        null, null, null, null, null, null, null,
+                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2024).Select(f => (double?)f.Valor).FirstOrDefault()))
+                 //   @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2025).Select(f => (double?)f.Valor).FirstOrDefault())),
+                   // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2027).Select(f => (double?)f.Valor).FirstOrDefault())),
+                   // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2028).Select(f => (double?)f.Valor).FirstOrDefault())),
+                   // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2026).Select(f => (double?)f.Valor).FirstOrDefault())),
+                   // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2029).Select(f => (double?)f.Valor).FirstOrDefault())),
+                   // @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2030).Select(f => (double?)f.Valor).FirstOrDefault()))
+                                                    ],
+                    color: '#ff5733', // Naranja/Rojo para el pronóstico
+                    dashStyle: 'Dash'
+                }]
+            });
+        });
+    </script>
+}

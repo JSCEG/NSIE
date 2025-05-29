@@ -1,0 +1,50 @@
+/* Card Base */
+.card {
+    position: relative;
+    transition: transform var(--transition-normal);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--text-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+/* Stats Cards */
+.app-card-stat {
+    border-radius: 10px;
+    transition: transform var(--transition-normal);
+}
+
+.app-card-stat:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Card Colors */
+.bg-tverde {
+    color: #155724 !important;
+    background-color: #d4edda !important;
+    border-color: #c3e6cb !important;
+}
+
+.bg-tazul {
+    color: #0c5460 !important;
+    background-color: #d1ecf1 !important;
+    border-color: #bee5eb !important;
+}
+
+.bg-tamarillo {
+    color: #856404 !important;
+    background-color: #fff3cd !important;
+    border-color: #ffeeba !important;
+}
+
+.bg-trojo {
+    color: #721c24 !important;
+    background-color: #f8d7da !important;
+    border-color: #f5c6cb !important;
+}

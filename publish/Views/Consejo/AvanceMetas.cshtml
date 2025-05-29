@@ -1,0 +1,246 @@
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@using NSIE.Models
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var httpContext = HttpContextAccessor.HttpContext;
+    var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["Title"] = "Avance de Metas y Líneas de Acción";
+}
+
+<div class="text-center mb-4">
+    <h3 class="cp-section cp-grouping-section">
+        <img src="~/img/modulos/metas_consejo.png" alt="Avance Metas" class="iconomenu">
+        @ViewData["Title"]
+        <button class="btn btn-link text-info" onclick="mostrarAyudaModulo()" data-bs-toggle="tooltip"
+            title="¿Qué es este módulo?">
+            <i class="fas fa-question-circle fa-lg"></i>
+        </button>
+    </h3>
+    <div class="text-muted mt-2 text-justify px-5">
+        <i class="fas fa-info-circle text-primary"></i>
+        <em>Evalúa resultados frente al Programa Anual, facilitando el seguimiento de compromisos.</em>
+    </div>
+</div>
+
+<div class="alert alert-light mb-4" role="alert">
+    <nav aria-label="breadcrumb" style="padding-left:15px">
+        <ol class="breadcrumb lp-5">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="container-fluid ps-5 pe-5">
+    <!-- Fundamento Legal -->
+    <div class="alert alert-success mb-4" role="alert">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <img src="~/img/iconos/legal_foundations.png" alt="Fundamento Legal" class="img-fluid">
+            </div>
+            <div class="col-md-10">
+                <h5 class="alert-heading mb-2">
+                    <i class="fas fa-book-reader"></i> Fundamento Legal
+                </h5>
+                <p class="mb-1 text-justify">
+                    <span class="badge bg-primary" data-bs-toggle="tooltip"
+                        title="El Consejo evaluará el cumplimiento del Programa Anual">
+                        Art. 76 RLPT
+                    </span>
+                    <span class="badge bg-info ms-2" data-bs-toggle="tooltip"
+                        title="Seguimiento obligatorio a través del Informe Anual">
+                        Art. 45 Lineamientos
+                    </span>
+                </p>
+                <hr>
+                <p class="mb-0 small text-justify">
+                    <i class="fas fa-info-circle"></i>
+                    El seguimiento y evaluación del Programa Anual permite medir el cumplimiento de objetivos y
+                    metas establecidas, siendo fundamental para la rendición de cuentas del Consejo.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros de período -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label class="form-label">
+                <i class="fas fa-filter"></i> Filtrar por Trimestre
+            </label>
+            <select class="form-select" id="selectTrimestre">
+                <option value="1">Primer Trimestre 2024</option>
+                <option value="2">Segundo Trimestre 2024</option>
+                <option value="3">Tercer Trimestre 2024</option>
+                <option value="4">Cuarto Trimestre 2024</option>
+            </select>
+        </div>
+        <div class="col-md-8 text-end">
+            <button class="btn btn-primary" onclick="exportarInforme()">
+                <i class="fas fa-file-export"></i> Exportar Informe
+            </button>
+        </div>
+    </div>
+
+    <!-- KPIs directos -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="d-flex justify-content-between align-items-center bg-white p-4 rounded shadow-sm">
+                <div>
+                    <div class="h2 mb-0">60%</div>
+                    <div class="text-muted">Avance General</div>
+                </div>
+                <i class="fas fa-tachometer-alt fa-2x text-primary"></i>
+            </div>
+        </div>
+        <!-- Otros KPIs similares -->
+    </div>
+
+    <!-- Gráficos de avance -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="mb-3">
+                <i class="fas fa-chart-line"></i> Avance por Línea de Acción
+            </h5>
+            <div id="graficoLineasAccion" class="bg-white p-3 rounded" style="height: 400px"></div>
+        </div>
+    </div>
+
+    <!-- Tabla de seguimiento -->
+    <div class="row">
+        <div class="col-12">
+            <h5 class="mb-3">
+                <i class="fas fa-tasks"></i> Detalle de Avances
+            </h5>
+            <div class="table-responsive bg-white rounded p-3">
+                <table class="table mb-0">
+                    <!-- Contenido de la tabla -->
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+        function mostrarAyudaModulo() {
+            Swal.fire({
+                title: 'Avance de Metas y Líneas de Acción',
+                html: `
+                                    <div class="text-start">
+                                        <div class="mb-4">
+                                            <h6 class="border-bottom pb-2">
+                                                <i class="fas fa-info-circle"></i> Descripción
+                                            </h6>
+                                            <p>Monitorea el cumplimiento del Programa Anual del Consejo.</p>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <h6 class="border-bottom pb-2">
+                                                <i class="fas fa-tasks"></i> Funcionalidad
+                                            </h6>
+                                            <p>Permite monitorear el cumplimiento del Programa Anual con base en metas trazadas.</p>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <h6 class="border-bottom pb-2">
+                                                <i class="fas fa-sync-alt"></i> Etapa del Ciclo
+                                            </h6>
+                                            <p>Seguimiento y evaluación</p>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <h6 class="border-bottom pb-2">
+                                                <i class="fas fa-users-cog"></i> Interacción entre Roles
+                                            </h6>
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-check-circle text-success"></i> Secretaría Técnica: Presenta resultados</li>
+                                                <li><i class="fas fa-check-circle text-info"></i> Consejo: Analiza avances</li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <h6 class="border-bottom pb-2">
+                                                <i class="fas fa-puzzle-piece"></i> Elementos
+                                            </h6>
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-chart-line text-primary"></i> KPIs de avance</li>
+                                                <li><i class="fas fa-chart-bar text-success"></i> Gráficas por línea de acción</li>
+                                                <li><i class="fas fa-traffic-light text-warning"></i> Semáforos normativos</li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <h6 class="border-bottom pb-2">
+                                                <i class="fas fa-balance-scale"></i> Fundamento Legal
+                                            </h6>
+                                            <p>
+                                                <span class="badge bg-primary">Art. 76 RLPT</span>
+                                                <span class="badge bg-info ms-2">Art. 45 Lineamientos</span>
+                                            </p>
+                                            <small class="text-muted">Seguimiento obligatorio en el Informe Anual.</small>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <h6 class="border-bottom pb-2">
+                                                <i class="fas fa-star"></i> Importancia
+                                            </h6>
+                                            <p class="mb-0">
+                                                Módulo fundamental que evalúa la efectividad del Consejo, siendo el segundo paso 
+                                                del ciclo normativo. Permite medir el impacto real de las acciones planificadas 
+                                                y facilita la toma de decisiones basada en evidencia.
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <h6 class="border-bottom pb-2">
+                                                <i class="fas fa-check-double"></i> Orden en el Ciclo
+                                            </h6>
+                                            <p class="mb-0">
+                                                <span class="badge bg-success">Paso 2</span>
+                                                <span class="ms-2">
+                                                    Evalúa resultados frente al Programa Anual, facilitando el seguimiento de 
+                                                    compromisos y asegurando la mejora continua del SNIEr.
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                `,
+                width: 'auto',
+                maxWidth: '400px',
+                customClass: {
+                    container: 'text-start',
+                    popup: 'swal-responsive',
+                    htmlContainer: 'swal-scrollable'
+                },
+                confirmButtonText: 'Entendido'
+            });
+        }
+
+        // Resto de funciones JavaScript...
+    </script>
+}
+
+<style>
+    /* Estilos para el modal de ayuda responsivo */
+    .swal-responsive {
+        margin: 1rem !important;
+        max-height: 90vh !important;
+        max-width: 400px !important;
+    }
+
+    .swal-scrollable {
+        max-height: calc(90vh - 200px) !important;
+        overflow-y: auto !important;
+        padding-right: 10px !important;
+    }
+
+    /* ...existing scrollbar styles... */
+</style>
