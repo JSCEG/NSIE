@@ -16,12 +16,12 @@ namespace NSIE.Controllers
 {
     [ServiceFilter(typeof(ValidacionInputFiltro))]
     [AutorizacionFiltro]
-    public class ProyEstrategicosController : Controller
+    public class ProyectosController : Controller
     {
         private readonly IRepositorioProyEstrategicos repositorioProyEstrategicos;
 
 
-        public ProyEstrategicosController(IRepositorioProyEstrategicos repositorioProyEstrategicos)
+        public ProyectosController(IRepositorioProyEstrategicos repositorioProyEstrategicos)
         {
 
             this.repositorioProyEstrategicos = repositorioProyEstrategicos;
@@ -33,6 +33,11 @@ namespace NSIE.Controllers
         }
 
         public IActionResult FOTEASE()
+        {
+            return View();
+        }
+
+        public IActionResult FondoPetroleo()
         {
             return View();
         }
@@ -272,7 +277,80 @@ namespace NSIE.Controllers
             return Redirect(refererUrl);
         }
 
+        public IActionResult Dashboard()
+        {
+            var estadisticas = new ProyectoFOTEASE.EstadisticasProyectos
+            {
+                ProyectosTerminados = 180,
+                ProyectosEnCurso = 90,
+                ProyectosCancelados = 30
+            };
 
+            var proyectosGantt = new List<ProyectoFOTEASE.ProyectoGantt>
+            {
+                new ProyectoFOTEASE.ProyectoGantt
+                {
+                    Id = "P1",
+                    Nombre = "Diseño del Sistema",
+                    Inicio = new DateTime(2025, 5, 1),
+                    Fin = new DateTime(2025, 5, 10),
+                    Progreso = 1.0
+                },
+                new ProyectoFOTEASE.ProyectoGantt
+                {
+                    Id = "P2",
+                    Nombre = "Desarrollo Backend",
+                    Dependencias = new[] { "P1" },
+                    Inicio = new DateTime(2025, 5, 11),
+                    Fin = new DateTime(2025, 5, 25),
+                    Progreso = 0.6
+                },
+                new ProyectoFOTEASE.ProyectoGantt
+                {
+                    Id = "P3",
+                    Nombre = "Integración Frontend",
+                    Dependencias = new[] { "P2" },
+                    Inicio = new DateTime(2025, 5, 26),
+                    Fin = new DateTime(2025, 6, 5),
+                    Progreso = 0.3
+                },
+                new ProyectoFOTEASE.ProyectoGantt
+                {
+                    Id = "P4",
+                    Nombre = "Pruebas y QA",
+                    Dependencias = new[] { "P3" },
+                    Inicio = new DateTime(2025, 6, 6),
+                    Fin = new DateTime(2025, 6, 15),
+                    Progreso = 0.0
+                },
+                new ProyectoFOTEASE.ProyectoGantt
+                {
+                    Id = "P5",
+                    Nombre = "Implementación",
+                    Dependencias = new[] { "P4" },
+                    Inicio = new DateTime(2025, 6, 16),
+                    Fin = new DateTime(2025, 6, 25),
+                    Progreso = 0.0
+                }
+            };
+
+            var perfilUsuarioJson = HttpContext.Session.GetString("PerfilUsuario");
+            var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+
+            int idUsuarioParsed = 0;
+            int.TryParse(perfilUsuario.IdUsuario, out idUsuarioParsed);
+
+            var model = new DashboardViewModel
+            {
+                Estadisticas = estadisticas,
+                ProyectosGantt = proyectosGantt,
+                NombreUsuario = perfilUsuario.Nombre,
+                RolUsuario = perfilUsuario.Rol,
+                IdUsuario = idUsuarioParsed
+            };
+
+            return View(model);
+        }
 
     }
 }
