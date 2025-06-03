@@ -22,7 +22,8 @@
             <li class="breadcrumb-item">
                 <a href="@Url.Action("Index", "Home")">Inicio</a>
             </li>
-            @if (!string.IsNullOrEmpty(Model.Section))
+            @if (!string.IsNullOrEmpty(Model.Section) && !Model.Section.Equals("Inicio",
+                        StringComparison.OrdinalIgnoreCase))
             {
                 <li class="breadcrumb-item">
                     <a href="javascript:history.back()">@Model.Section</a>

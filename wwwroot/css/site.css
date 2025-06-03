@@ -1860,8 +1860,8 @@ mapid,
 /*Prueba*/
 .cp-grouping-section {
     background-color: #022336;
-    color: #fff;
-    color: #bd9865;
+
+    color: #ffff !important;
     box-shadow: 3px 12px 8px -4px rgba(0, 0, 0, 0.34) !important;
 }
 
@@ -1891,10 +1891,18 @@ mapid,
 .cp-section {
     color: var(--amarillo);
     padding: 1.5rem !important;
-    /* padding: var(--gutter-md);*/
     overflow: hidden;
     height: auto;
     text-transform: uppercase;
+    font-family: 'Montserrat', 'Inter', 'Segoe UI', Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-size: 2rem;
+}
+
+.cp-section::first-letter {
+    font-size: 2.5rem;
+    color: var(--snier-primary, #189c90);
 }
 
 .cp-section2 {
