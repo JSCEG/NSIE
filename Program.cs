@@ -54,6 +54,7 @@ builder.Services.AddTransient<IRepositorioIndicadores, RepositorioIndicadores>()
 builder.Services.AddTransient<IRepositorioHidrocarburos, RepositorioHidrocarburos>();
 builder.Services.AddTransient<IRepositorioProyectos, RepositorioProyectos>();
 builder.Services.AddTransient<IRepositorioUsuarios, RepositorioUsuarios>();
+builder.Services.AddTransient<IRepositorioSecciones, RepositorioSecciones>();
 builder.Services.AddTransient<IRepositorioAcceso, RepositorioAcceso>();
 builder.Services.AddTransient<VisitasViewComponent>();
 builder.Services.AddTransient<IRepositorioHome, RepositorioHome>();

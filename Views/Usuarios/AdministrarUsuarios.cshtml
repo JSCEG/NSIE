@@ -47,7 +47,9 @@
 
 @await Html.PartialAsync("_ViewHeader", header)
 
-<div class="container">
+
+
+<div class="container-fluid px-3 px-md-5">
     <div class="row mb-4">
         <div class="col">
             <a asp-controller="Usuarios" asp-action="NuevoUsuario" class="btn btn-primary">
@@ -56,82 +58,84 @@
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table id="usuariosTabla" class="table table-hover table-responsive table-bordered">
-            <thead>
+<div class="table-responsive table-scroll-vertical shadow-sm rounded">
+    <table id="usuariosTabla" class="table table-bordered table-hover align-middle table-striped text-nowrap w-100">
+        <thead class="table-dark text-white">
+            <tr class="text-center sticky-top z-3">
+                <th scope="col">Acciones</th>
+                <th scope="col">IdUsuario</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Cargo</th>
+                <th scope="col">Unidad de Adscripción</th>
+                <th scope="col">Sesión Activa</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Clave</th>
+                <th scope="col">Última Actualización</th>
+                <th scope="col">RFC</th>
+                <th scope="col">Vigente</th>
+                <th scope="col">Clave Empleado</th>
+                <th scope="col">Hora Inicio Sesión</th>
+                <th scope="col">Rol</th>
+                <th scope="col">Mercado ID</th>
+                <th scope="col">Rol Usuario Vigente</th>
+                <th scope="col">Rol Usuario Quien Registro</th>
+                <th scope="col">Rol Usuario Fecha Modificación</th>
+                <th scope="col">Rol Usuario Comentarios</th>
+                <th scope="col">Rol Nombre</th>
+                <th scope="col">Rol Vigente</th>
+                <th scope="col">Rol Fecha Modificación</th>
+                <th scope="col">Rol Comentario</th>
+                <th scope="col">Mercado Nombre</th>
+                <th scope="col">Mercado Vigente</th>
+                <th scope="col">Mercado Fecha Modificación</th>
+                <th scope="col">Mercado Comentario</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
                 <tr>
-                    <th>Acciones</th>
-                    <th>IdUsuario</th>
-                    <th>Nombre</th>
-                    <th>Cargo</th>
-                    <th>Unidad de Adscripción</th>
-                    <th>Sesión Activa</th>
-                    <th>Correo</th>
-                    <th>Clave</th>
-                    <th>Última Actualización</th>
-                    <th>RFC</th>
-                    <th>Vigente</th>
-                    <th>Clave Empleado</th>
-                    <th>Hora Inicio Sesión</th>
-                    <th>Rol</th>
-                    <th>Mercado ID</th>
-                    <th>Rol Usuario Vigente</th>
-                    <th>Rol Usuario Quien Registro</th>
-                    <th>Rol Usuario Fecha Modificación</th>
-                    <th>Rol Usuario Comentarios</th>
-                    <th>Rol Nombre</th>
-                    <th>Rol Vigente</th>
-                    <th>Rol Fecha Modificación</th>
-                    <th>Rol Comentario</th>
-                    <th>Mercado Nombre</th>
-                    <th>Mercado Vigente</th>
-                    <th>Mercado Fecha Modificación</th>
-                    <th>Mercado Comentario</th>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-primary me-1" href="@Url.Action("Edit", "Usuarios", new { id = user.IdUsuario })">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="@Url.Action("Eliminar", "Usuarios", new { id = user.IdUsuario })" class="btn btn-sm btn-danger delete-link">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                    <td>@user.IdUsuario</td>
+                    <td>@user.Nombre</td>
+                    <td>@user.Cargo</td>
+                    <td>@user.Unidad_de_Adscripcion</td>
+                    <td>@user.SesionActiva</td>
+                    <td>@user.Correo</td>
+                    <td>@user.Clave</td>
+                    <td>@user.UltimaActualizacion</td>
+                    <td>@user.RFC</td>
+                    <td>@user.Vigente</td>
+                    <td>@user.ClaveEmpleado</td>
+                    <td>@user.HoraInicioSesion</td>
+                    <td>@user.Rol</td>
+                    <td>@user.Mercado_ID</td>
+                    <td>@user.RolUsuario_Vigente</td>
+                    <td>@user.RolUsuario_QuienRegistro</td>
+                    <td>@user.RolUsuario_FechaMod</td>
+                    <td>@user.RolUsuario_Comentarios</td>
+                    <td>@user.Rol_Nombre</td>
+                    <td>@user.Rol_Vigente</td>
+                    <td>@user.Rol_FechaMod</td>
+                    <td>@user.Rol_Comentario</td>
+                    <td>@user.Mercado_Nombre</td>
+                    <td>@user.Mercado_Vigente</td>
+                    <td>@user.Mercado_FechaMod</td>
+                    <td>@user.Mercado_Comentario</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model)
-                {
-                    <tr>
-                        <td>
-                            @*Acciones*@
-                            <a class="btn btn-primary" href="@Url.Action("Edit", "Usuarios", new { id = user.IdUsuario })">Editar</a>
-                            <a href="@Url.Action("Eliminar", "Usuarios", new { id = user.IdUsuario })" class="btn btn-danger delete-link">Eliminar</a>
-                        </td>
+            }
+        </tbody>
+    </table>
+</div>
 
 
-                        <td>@user.IdUsuario</td>
-                        <td>@user.Nombre</td>
-                        <td>@user.Cargo</td>
-                        <td>@user.Unidad_de_Adscripcion</td>
-                        <td>@user.SesionActiva</td>
-                        <td>@user.Correo</td>
-                        <td>@user.Clave</td>
-                        <td>@user.UltimaActualizacion</td>
-                        <td>@user.RFC</td>
-                        <td>@user.Vigente</td>
-                        <td>@user.ClaveEmpleado</td>
-                        <td>@user.HoraInicioSesion</td>
-                        <td>@user.Rol</td>
-                        <td>@user.Mercado_ID</td>
-                        <td>@user.RolUsuario_Vigente</td>
-                        <td>@user.RolUsuario_QuienRegistro</td>
-                        <td>@user.RolUsuario_FechaMod</td>
-                        <td>@user.RolUsuario_Comentarios</td>
-                        <td>@user.Rol_Nombre</td>
-                        <td>@user.Rol_Vigente</td>
-                        <td>@user.Rol_FechaMod</td>
-                        <td>@user.Rol_Comentario</td>
-                        <td>@user.Mercado_Nombre</td>
-                        <td>@user.Mercado_Vigente</td>
-                        <td>@user.Mercado_FechaMod</td>
-                        <td>@user.Mercado_Comentario</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-    </div>
     @*Modal para Confirmar la Eliminación*@
     <!-- Modal HTML -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
@@ -228,10 +232,14 @@
 
 <script>
     $(document).ready(function () {
-
         var table = $('#usuariosTabla').DataTable({
             lengthMenu: [[10, 50, 100, -1], [10, 50, 100, "Todos"]],
             dom: 'Blfrtip',
+            responsive: true,
+            scrollY: '60vh',           // ✅ Altura del área de scroll
+            scrollCollapse: true,      // ✅ Colapsa si hay pocas filas
+            scrollX: true,             // Scroll horizontal para muchas columnas
+            fixedHeader: true,         // Fija el encabezado al hacer scroll
             buttons: [
                 {
                     extend: 'copyHtml5',
@@ -249,25 +257,15 @@
                     extend: 'pdfHtml5',
                     title: 'Energeo Lista de Usuarios de la Plataforma',
                     customize: function (doc) {
-                        // Cambia el color de la línea de encabezado a rojo
                         doc.styles.tableHeader.color = '#9fa1a4';
-                        // Centra la tabla
                         doc.defaultStyle.alignment = 'center';
-                        // Cambia el color de fondo del encabezado
-                        doc.styles.tableHeader.fillColor = '#4c1922'; // Cambia a tu color preferido
+                        doc.styles.tableHeader.fillColor = '#4c1922';
                     }
                 }
             ],
         });
-
-
     });
-
-
-
-
-
-
 </script>
+
 
   }

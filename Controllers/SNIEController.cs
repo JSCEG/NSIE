@@ -58,6 +58,50 @@ namespace NSIE.Controllers
             return View();
         }
 
+        public IActionResult OrigenyDestinoE()
+        {
+            return View();
+        }
+
+        public IActionResult InformacionIntegralProyectos()
+        {
+            return View();
+        }
+        public IActionResult InformacionTecnicaEconomica()
+        {
+            return View();
+        }
+
+        public IActionResult Combustibles()
+        {
+            return View();
+        }
+
+        public IActionResult Equipos()
+        {
+            return View();
+        }
+
+        public IActionResult Instalaciones()
+        {
+            return View();
+        }
+
+        public IActionResult Ahorros()
+        {
+            return View();
+        }
+
+
+        public IActionResult EscenariosMLP()
+        {
+            return View();
+        }
+
+        public IActionResult CatalogoTG()
+        {
+            return View();
+        }
     }
 
 

@@ -28,8 +28,175 @@
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
     </ol>
 </nav>
-<center>
+<div class="container ps-5 pe-5">
+    <!-- Carrusel de imágenes -->
+    <div class="owl-carousel owl-theme">
+        <div class="item">
+            <a href="@Url.Action("EnConstrucción", "Home")">
+                <img src="~/img/banner/10.png" alt="Ayuda">
 
-    <partial name="_DiagramaSEM_N" />
-    @* <partial name="_DiagramaSEM"/>*@
-</center>
+            </a>
+        </div>
+        <div class="item">
+            <a href="@Url.Action("Encuesta", "Usuarios")">
+                <img src="~/img/banner/11.png" alt="Encuesta">
+
+            </a>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- Título con alert -->
+    <div class="alert alert-success text-center" role="alert">
+        <h3>¡Bienvenid@s!</h3>
+        <hr>
+        <p>El Sistema Nacional de Información Energética (SNIEr) de la Secretaría de Energía - SNER</p>
+    </div>
+
+
+    <div class="row">
+
+
+    <h4>¿Qué es el SNIEr?</h4>
+    <p>
+        El Sistema Nacional de Información Energética (SNIEr) es la plataforma oficial de la Secretaría de Energía que
+        <strong>organiza, actualiza, difunde y pone a disposición del público la información estratégica y geoespacial
+            del sector energético en México</strong>.
+        Está compuesto por registros provenientes de diversas unidades administrativas y organismos sectorizados, y su
+        propósito es apoyar la Planeación Vinculante y la toma de decisiones en el sector.
+    </p>
+
+    <h4>Objetivo</h4>
+    <p>
+        Consolidar un repositorio confiable, accesible y actualizado de datos energéticos, que facilite el seguimiento a
+        los planes y estrategias nacionales,
+        fortalezca la transparencia y promueva la innovación tecnológica y la justicia energética.
+    </p>
+
+    <hr>
+
+    <h4>🔎 ¿Qué información puedes consultar en el SNIEr?</h4>
+    <ul>
+        <li><strong>Inventarios y Recursos</strong>
+            <ul>
+                <li>Potencial de fuentes renovables</li>
+                <li>Reservas y producción de hidrocarburos</li>
+                <li>Recursos contingentes y prospectivos</li>
+            </ul>
+        </li>
+        <li><strong>Estadísticas del Sector Energético</strong>
+            <ul>
+                <li>Origen y destino de la energía por tipo y proceso</li>
+                <li>Mercado Eléctrico Mayorista: corto plazo, balance de potencia, CEL</li>
+            </ul>
+        </li>
+        <li><strong>Planeación y Evaluación</strong>
+            <ul>
+                <li>Avance de proyectos estratégicos</li>
+                <li>Indicadores de cumplimiento de metas sectoriales</li>
+                <li>Escenarios y línea base a mediano y largo plazo</li>
+            </ul>
+        </li>
+        <li><strong>Tecnología y Eficiencia</strong>
+            <ul>
+                <li>Catálogo de tecnologías de generación eléctrica</li>
+                <li>Eficiencia energética por sector y equipo</li>
+            </ul>
+        </li>
+        <li><strong>Información Técnica y Social</strong>
+            <ul>
+                <li>Proyectos de innovación y justicia energética</li>
+                <li>Datos económicos, sociales y técnicos</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr>
+
+    <h4>🧭 Estructura y Coordinación</h4>
+    <p>
+        El SNIEr está conformado por:
+    </p>
+    <ul>
+        <li><strong>Consejo de Planeación Energética</strong>: órgano de coordinación técnica</li>
+        <li><strong>Subsistemas de Información</strong>: operados por SENER y organismos sectorizados como PEMEX, CFE,
+            CENACE, CNH, CONUEE</li>
+        <li><strong>Comités Técnicos</strong>: integrados por instituciones públicas, académicas y privadas</li>
+    </ul>
+
+    <hr>
+
+    <h4>📜 Fundamento Legal</h4>
+    <p>El SNIEr se encuentra regulado por:</p>
+    <ul>
+        <li>Ley de Planeación y Transición Energética</li>
+        <li>Reglamento de la Ley de Planeación y Transición Energética</li>
+        <li>Lineamientos del Consejo de Planeación Energética</li>
+        <li>Disposiciones administrativas y técnicas emitidas por el Consejo</li>
+    </ul>
+
+    <hr>
+
+    <h4>📂 Accesos y Participación</h4>
+    <p>
+        El SNIEr permite:
+    </p>
+    <ul>
+        <li><strong>Carga y consulta de información</strong> por entidades públicas y privadas autorizadas</li>
+        <li><strong>Visualización pública</strong> de registros, reportes técnicos y documentos estratégicos</li>
+    </ul>
+
+</div>
+
+    @if (perfilUsuario.Rol != "0") @*Distinto de Consulta Pública *@
+    {
+        <!-- Tarjeta 1: Nuevo S-CEL -->
+        <div class="col-md-4">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <center>
+                        <img src="~/img/logo_scel.png" alt="Icono Nuevo S-CEL" class="iconosubmenu" style="width: 180px;">
+                        <h5 class="card-title">Nuevo S-CEL</h5>
+                        <a href="http://10.92.1.6/" target="_blank" class="btn btn-primary">Ir al Portal</a>
+                    </center>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 2: Sistema de Regulaciones -->
+        <div class="col-md-4">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <center>
+                        <img src="~/img/regulacion.png" alt="Icono Sistema de Regulaciones" class="iconosubmenu" style="width: 140px;">
+                        <h5 class="card-title">Sistema de Regulaciones</h5>
+                        <a href="http://10.92.1.6:90/" target="_blank" class="btn btn-primary">Ir al Portal</a>
+                    </center>
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".owl-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                items: 1,
+                autoplay: true,
+                autoplayTimeout: 3000,
+                autoplayHoverPause: true
+            });
+        });
+    </script>
+    @* Gráfico *@
+
+
+}
