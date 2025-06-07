@@ -37,187 +37,98 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
 }
 
 @await Html.PartialAsync("_ViewHeader", header)
+@{
+    ViewData["Title"] = "Inicio";
+    var idUsuario = Convert.ToInt32(ViewData["IDUsuario"]);
+    var rolUsuario = perfilUsuario?.Rol;
+    var nombreUsuario = perfilUsuario?.Nombre?.ToLower();
+    var esConsultaPublica = (rolUsuario == "10" || nombreUsuario.Contains("consult"));
+}
+
 
 <!-- HERO PRINCIPAL -->
-<section class="py-5 bg-light position-relative overflow-hidden">
-    <div class="container">
+<section id="hero" class="py-5 bg-light text-center text-lg-start position-relative overflow-hidden">
+    <div class="container d-flex flex-column align-items-center justify-content-center text-center" data-aos="zoom-in">
+        <img src="~/img/login/logo_snier.png" class="img-fluid mb-4" alt="Sistema Energético Mexicano"
+            style="max-height: 300px;">
+        <h1 class="display-5 fw-bold">
+            @if (esConsultaPublica)
+            {
+                <text>Bienvenido a la Consulta Pública</text>
+            }
+            else if (idUsuario == 46)
+            {
+                <text>Bienvenido, Usuario del Consejo</text>
+            }
+            else if (idUsuario == 58)
+            {
+                <text>Bienvenido, Usuario del Sector</text>
+            }
+            else
+            {
+                <text>Bienvenido, @nombreUsuario</text>
+            }
+        </h1>
+        <p class="lead mt-3 mb-4">El SNIEr es la fuente oficial de información del sector energético en México.</p>
+    </div>
+</section>
+
+<!-- QUE ES EL SNIER -->
+<section class="py-5 bg-white">
+    <div class="container" data-aos="fade-up">
         <div class="row align-items-center">
-            <div class="col-lg-6 text-center text-lg-start">
-                @{
-                    var idUsuario = Convert.ToInt32(ViewData["IDUsuario"]);
-                    var rolUsuario = perfilUsuario?.Rol;
-                    var nombreUsuario = perfilUsuario?.Nombre?.ToLower();
-                    var esConsultaPublica = (rolUsuario == "10" || nombreUsuario.Contains("consult"));
-                }
-
-                @if (esConsultaPublica)
-                {
-                    <h1 class="display-5 fw-bold mb-3">Bienvenido a la Consulta Pública</h1>
-                    <p class="lead mb-4">Accede a módulos abiertos con información energética relevante para toda la
-                        ciudadanía.</p>
-                }
-                else if (idUsuario == 46)
-                {
-                    <h1 class="display-5 fw-bold mb-3">Bienvenido, Usuario del Consejo</h1>
-                    <p class="lead mb-4">Consulta y da seguimiento a las acciones estratégicas del Consejo del SNIEr.</p>
-                }
-                else if (idUsuario == 58)
-                {
-                    <h1 class="display-5 fw-bold mb-3">Bienvenido, Usuario del Sector</h1>
-                    <p class="lead mb-4">Accede a datos estratégicos, reportes y módulos orientados al sector energético
-                        nacional.</p>
-                }
-                else
-                {
-                    <h1 class="display-5 fw-bold mb-3">Bienvenido, @perfilUsuario?.Nombre</h1>
-                    <p class="lead mb-4">Explora el ecosistema energético de México con datos en tiempo real, mapas
-                        interactivos y análisis avanzados.</p>
-                }
-
-                <a href="#panel-acceso" class="btn btn-primary btn-lg shadow">
-                    <i class="bi bi-lightning-charge-fill me-2"></i>Explorar módulos
-                </a>
+            <div class="col-md-6">
+                <h2 class="fw-bold">¿Qué es el SNIEr?</h2>
+                <p class="text-muted">El Sistema Nacional de Información Energética (SNIEr) integra, organiza y difunde
+                    datos técnicos, económicos, sociales y geoespaciales sobre el sector energético nacional. Es
+                    coordinado por el Consejo y administrado por la CNE.</p>
+                <ul class="list-unstyled mt-3">
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Planeación Vinculante</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Subsistemas interinstitucionales</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Información técnica y geoespacial</li>
+                </ul>
             </div>
-            <div class="col-lg-6 d-flex justify-content-center">
-                <img src="~/img/login/logo_snier.png" class="img-fluid" alt="Hero SNIEr" style="max-height: 320px;">
-            </div>
-        </div>
-    </div>
-
-    <svg class="position-absolute bottom-0 start-0 w-100" height="100" preserveAspectRatio="none" viewBox="0 0 1200 120"
-        fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: scaleX(-1); opacity: .2;">
-        <path
-            d="M0 0L1200 0V46.29C1034.66 86.8119 869.32 100.813 703.967 88.2956C538.613 75.7781 373.267 37.7419 207.9 29.6985C138.6 26.5178 69.2998 29.6524 0 38.0928V0Z"
-            fill="url(#grad1)" />
-        <defs>
-            <linearGradient id="grad1" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#1e7e8c" />
-                <stop offset="100%" stop-color="#294a95" />
-            </linearGradient>
-        </defs>
-    </svg>
-</section>
-
-<!-- TARJETAS PRINCIPALES -->
-<section id="panel-acceso" class="container py-5">
-    <div class="row g-4">
-        <!-- Indicadores -->
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow border-0 h-100 text-center">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-graph-up-arrow display-6 text-primary mb-3"></i>
-                    <h5 class="card-title">Indicadores Clave</h5>
-                    <p class="card-text small">Consulta los KPIs del sector en tiempo real.</p>
-                    <a href="#indicadores" class="stretched-link"></a>
-                </div>
-            </div>
-        </div>
-        <!-- Mapa -->
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow border-0 h-100 text-center">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-map-fill display-6 text-success mb-3"></i>
-                    <h5 class="card-title">Mapa Geoespacial</h5>
-                    <p class="card-text small">Visualiza infraestructura y potencial energético.</p>
-                    <a href="#mapa" class="stretched-link"></a>
-                </div>
-            </div>
-        </div>
-        <!-- Reportes -->
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow border-0 h-100 text-center">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-file-earmark-bar-graph-fill display-6 text-warning mb-3"></i>
-                    <h5 class="card-title">Reportes &amp; Documentos</h5>
-                    <p class="card-text small">Descarga informes energéticos oficiales.</p>
-                    <a href="#reportes" class="stretched-link"></a>
-                </div>
-            </div>
-        </div>
-        <!-- Soporte -->
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow border-0 h-100 text-center">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-people-fill display-6 text-danger mb-3"></i>
-                    <h5 class="card-title">Comunidad &amp; Soporte</h5>
-                    <p class="card-text small">Conecta con especialistas, manuales y FAQs.</p>
-                    <a href="/Soporte" class="stretched-link"></a>
-                </div>
+            <div class="col-md-6 text-center">
+                <img src="~/img/iconos/pregunta.png" class="img-fluid" alt="Explicación SNIEr"
+                    style="max-height: 280px;">
             </div>
         </div>
     </div>
 </section>
 
-
-<!-- TARJETAS PÚBLICAS CLAVE -->
-<section id="acceso-publico" class="container py-5">
-    <div class="row g-4">
-        <!-- Balance Nacional de Energía -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow border-0 h-100 text-center">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-bar-chart-fill display-6 text-primary mb-3"></i>
-                    <h5 class="card-title">Balance Nacional de Energía</h5>
-                    <p class="card-text small">Consulta cifras de oferta y demanda energética.</p>
-                    <a href="@Url.Action("Index", "BalanceEnergiaPublico")" class="stretched-link"></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Certificados de Energía Limpia -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow border-0 h-100 text-center">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-award-fill display-6 text-success mb-3"></i>
-                    <h5 class="card-title">Certificados de Energía Limpia</h5>
-                    <p class="card-text small">Trazabilidad de CELs emitidos y vigentes.</p>
-                    <a href="@Url.Action("Index", "CELPublico")" class="stretched-link"></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tarifas Eléctricas -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow border-0 h-100 text-center">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-currency-dollar display-6 text-warning mb-3"></i>
-                    <h5 class="card-title">Tarifas Eléctricas</h5>
-                    <p class="card-text small">Consulta tarifas vigentes por región y periodo.</p>
-                    <a href="@Url.Action("Index", "TarifasPublico")" class="stretched-link"></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Asistente Inteligente -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow border-0 h-100 text-center bg-light">
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="bi bi-robot display-6 text-dark mb-3"></i>
-                    <h5 class="card-title">Asistente Inteligente</h5>
-                    <p class="card-text small">Consulta dudas con el bot oficial del SNIEr.</p>
-                    <a href="#" onclick="window.botpressWebChat.sendEvent({ type: 'show' })" class="stretched-link"></a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- INDICADORES (Highcharts) -->
-<section id="indicadores" class="bg-white py-5">
+<!-- MODULOS DESTACADOS -->
+<section id="modulos" class="py-5 bg-light">
     <div class="container">
-        <h4 class="mb-4 text-center">Indicadores de Producción Energética</h4>
-        <div class="row">
-            <div class="col-lg-6 mb-4">
-                <div class="card shadow-sm border-0">
+        <h2 class="fw-bold text-center mb-4" data-aos="fade-up">Contenido del SNIEr</h2>
+        <div class="row g-4" data-aos="fade-up">
+            <div class="col-md-4">
+                <div class="card h-100 text-center border-0 shadow-sm">
                     <div class="card-body">
-                        <div id="chart-produccion" style="height: 320px;"></div>
+                        <i class="bi bi-database fs-1 text-primary"></i>
+                        <h5 class="mt-3">Información Energética</h5>
+                        <p class="text-muted">Origen, destino y consumo final de la energía.</p>
+                        <a href="@Url.Action("Energia", "SNIE")" class="btn btn-sm btn-outline-primary mt-2">Ver más</a>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card shadow-sm border-0">
+            <div class="col-md-4">
+                <div class="card h-100 text-center border-0 shadow-sm">
                     <div class="card-body">
-                        <div id="chart-mix" style="height: 320px;"></div>
+                        <i class="bi bi-map fs-1 text-success"></i>
+                        <h5 class="mt-3">Georreferenciación</h5>
+                        <p class="text-muted">Mapa de permisos y proyectos energéticos.</p>
+                        <a href="@Url.Action("Mapa", "SNIE")" class="btn btn-sm btn-outline-success mt-2">Explorar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-gear-wide fs-1 text-warning"></i>
+                        <h5 class="mt-3">Catálogos y Tecnologías</h5>
+                        <p class="text-muted">Tecnologías para generación y uso final de energía.</p>
+                        <a href="@Url.Action("Catalogos", "SNIE")"
+                            class="btn btn-sm btn-outline-warning mt-2">Consultar</a>
                     </div>
                 </div>
             </div>
@@ -225,61 +136,106 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
     </div>
 </section>
 
-<!-- MAPA -->
-<section id="mapa" class="py-5 bg-light">
-    <div class="container">
-        <h4 class="mb-4 text-center">Mapa de Infraestructura Energética</h4>
-        <div class="card shadow border-0">
-            <div class="card-body p-0">
-                <div id="leaflet-map" style="height: 400px;"></div>
-            </div>
-        </div>
+<!-- GRÁFICO DE INDICADORES -->
+<section id="indicadores" class="py-5 bg-white">
+    <div class="container" data-aos="fade-up">
+        <h2 class="fw-bold text-center mb-4">Indicadores Energéticos</h2>
+        <div id="chartContainer" style="height: 400px;"></div>
     </div>
 </section>
 
-<!-- BANNERS -->
-<section class="bg-white py-5">
-    <div class="container">
-        <div class="owl-carousel owl-theme">
-            <div class="item"><img src="~/img/banner/10.png" alt="Ayuda" class="img-fluid rounded-3"></div>
-            <div class="item"><img src="~/img/banner/11.png" alt="Encuesta" class="img-fluid rounded-3"></div>
-        </div>
-    </div>
-</section>
-
-@section Scripts {
-    <script>
-        $(".owl-carousel").owlCarousel({ loop: true, margin: 20, nav: false, items: 1, autoplay: true, autoplayTimeout: 4000, autoplayHoverPause: true });
-
-        Highcharts.chart('chart-produccion', {
-            chart: { type: 'column' },
-            title: { text: 'Producción por Fuente (GWh)' },
-            xAxis: { categories: ['Hidro', 'Eólica', 'Solar', 'Geotérmica', 'Térmica'] },
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        Highcharts.chart('chartContainer', {
+            chart: { type: 'line' },
+            title: { text: 'Producción Energética Anual (GWh)' },
+            xAxis: { categories: ['2018', '2019', '2020', '2021', '2022'] },
             yAxis: { title: { text: 'GWh' } },
-            series: [{ name: '2024', data: [28000, 12000, 9000, 5000, 45000] }]
-        });
-
-        Highcharts.chart('chart-mix', {
-            chart: { type: 'pie' },
-            title: { text: 'Mix de Generación Eléctrica' },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    dataLabels: { enabled: true, format: '<b>{point.name}</b>: {point.percentage:.1f} %' }
-                }
-            },
             series: [{
-                name: 'Share',
-                colorByPoint: true,
-                data: [{ name: 'Renovable', y: 47.5 }, { name: 'Térmica', y: 52.5 }]
+                name: 'Energía Eléctrica',
+                data: [32000, 34000, 31000, 36000, 39000]
+            }, {
+                name: 'Hidrocarburos',
+                data: [28000, 29000, 27500, 30000, 31000]
             }]
         });
+    });
+</script>
 
-        const map = L.map('leaflet-map').setView([23.6345, -102.5528], 5);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
-        L.marker([19.4326, -99.1332]).addTo(map).bindPopup('Ciudad de México');
-    </script>
+<!-- CARRUSEL DE VISUALIZACIONES (con imágenes en línea) -->
+<section class="py-5 bg-light">
+    <div class="container" data-aos="fade-up">
+        <h2 class="fw-bold text-center mb-4">Visualizaciones Destacadas</h2>
+        <div id="carouselVisual" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselVisual" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Visual 1"></button>
+                <button type="button" data-bs-target="#carouselVisual" data-bs-slide-to="1"
+                    aria-label="Visual 2"></button>
+                <button type="button" data-bs-target="#carouselVisual" data-bs-slide-to="2"
+                    aria-label="Visual 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://images.pexels.com/photos/414837/pexels-photo-414837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                        class="d-block w-100" alt="Visual 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://images.pexels.com/photos/32399131/pexels-photo-32399131/free-photo-of-complejo-industrial-en-botlek-rotterdam.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                        class="d-block w-100" alt="Visual 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://images.pexels.com/photos/9703551/pexels-photo-9703551.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                        class="d-block w-100" alt="Visual 3">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselVisual" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselVisual" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+    </div>
+</section>
 
-    <script src="https://cdn.botpress.cloud/webchat/v1/inject.js"></script>
-    <script src="https://mediafiles.botpress.cloud/05d67bd6-3da1-4606-a343-f439fdc660dc/webchat/config.js" defer></script>
-}
+
+<!-- MAPA DE TRAZABILIDAD CON LEAFLET -->
+<section class="py-5 bg-white">
+    <div class="container" data-aos="fade-up">
+        <h2 class="fw-bold text-center mb-4">Trazabilidad Geoespacial</h2>
+        <div id="map" class="rounded shadow-sm" style="height: 500px;"></div>
+    </div>
+</section>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var map = L.map('map').setView([23.6345, -102.5528], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        L.marker([19.4326, -99.1332]).addTo(map).bindPopup("CDMX - Proyecto Energético").openPopup();
+    });
+</script>
+<!-- BLOQUE DE AYUDA -->
+<section id="ayuda" class="py-5 bg-light">
+    <div class="container" data-aos="fade-up">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h3 class="fw-bold">¿Necesitas apoyo para usar la plataforma?</h3>
+                <p class="text-muted">Consulta nuestras guías de uso o contáctanos para obtener asistencia técnica del
+                    SNIEr.</p>
+                <a href="#" class="btn btn-outline-primary rounded-pill mt-3">Ir al Centro de Ayuda</a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="~/img/energia/ayuda-sn.svg" alt="Ayuda" class="img-fluid" style="max-height: 260px;">
+            </div>
+        </div>
+    </div>
+</section>

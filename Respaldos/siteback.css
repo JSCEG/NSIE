@@ -1,4 +1,98 @@
 /* ====================
+   2. Base Styles
+==================== */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    font-family: var(--font-primary);
+    font-weight: normal;
+    background-color: #efefee;
+}
+
+/* ====================
+   3. Typography
+==================== */
+h1,
+h2,
+h3,
+h4,
+p {
+    font-family: var(--font-primary);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.125;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-secondary);
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 1.125;
+}
+
+/* ====================
+   4. Layout Components
+==================== */
+.container {
+    width: 100%;
+    padding: 20px;
+}
+
+/* Header */
+.navbar {
+    background-color: var(--verde);
+    color: #dcc8a3;
+}
+
+/* Navigation */
+.nav-link {
+    font-family: var(--font-primary);
+    font-weight: 400;
+    color: white;
+    font-size: 12px;
+}
+
+/* ====================
+   5. Cards
+==================== */
+.card {
+    position: relative;
+    transition: transform 0.3s ease;
+    border-radius: 10px;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+.stat-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+/* ====================
+   6. Buttons
+==================== */
+.btn-snie {
+    padding-top: 1%;
+    background-color: #81c3c9 !important;
+    color: #ffffff !important;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.btn-snie:hover {
+    background-color: #216d92 !important;
+}
+
+/* ====================
    7. Forms
 ==================== */
 .form-control:focus,
@@ -7,7 +101,19 @@
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
+/* ====================
+   8. Tables
+==================== */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
+.table-responsive {
+    overflow-x: auto;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
 /* ====================
    9. Utilities
@@ -203,8 +309,35 @@ footer {
     }
 }
 
+/* Aumentamos el tamaño de la fuente para pantallas con un ancho mínimo de 768px */
+@media (min-width: 768px) {
+    html {
+        /* background-color: #efefee; */
+        background-color: #ffffff;
+        /*       font-size: 16px;*/
+    }
+}
 
+/* Establecemos las propiedades básicas para el cuerpo de la página */
+body {
+    margin-bottom: 60px;
+    /* font-family: "Montserrat", sans-serif;*/
+    font-family: var(--font-primary);
+    font-weight: normal;
+    background-color: #efefee;
+    /* background-color: #ffffff !important */
+}
 
+h1,
+h2,
+h3,
+h4,
+p {
+    font-family: var(--font-primary);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.125;
+}
 
 /* Definimos diferentes clases para los colores de fondo */
 .bg-verde {
@@ -536,12 +669,36 @@ footer {
 }
 
 /***************/
-/*  */
+.card {
+    position: relative;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    height: 250px;
+    /* Modifica este valor según tus necesidades */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    /* Modifica este valor para ajustar el redondeo del borde */
+}
 
 .card:hover {
     transform: scale(1.05);
 }
 
+.card-link {
+    display: block;
+}
+
+.card-img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    filter: brightness(95%);
+    /* Aplica un filtro oscuro a la imagen */
+    transition: transform 0.3s ease;
+    /* Agrega una transición suave para el zoom */
+}
 
 .card:hover .card-img {
     transform: scale(1.1);
@@ -563,7 +720,19 @@ footer {
     /* Cambia la opacidad a 1 para que el overlay sea siempre visible */
 }
 
-
+.card-title {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    /* Color inicial del texto */
+    padding: 10px;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    /* Agrega el efecto de sombra al texto */
+    transition: color 0.3s ease;
+    /* Agrega transición de color */
+    font-family: var(--font-secondary);
+}
 
 .card-title2 {
     position: relative;
@@ -3519,7 +3688,6 @@ html:-ms-fullscreen {
 }
 
 .stats-figure {
-    color: black;
     font-size: 2.5rem;
     font-weight: 700;
     margin-top: 10px;
