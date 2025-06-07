@@ -289,138 +289,113 @@
         });
     </script>
     <!-- Sidebar para móviles (Offcanvas) -->
-<!-- Sidebar para móviles (Offcanvas) -->
-<div class="offcanvas offcanvas-start offcanvas-custom d-lg-none" tabindex="-1" id="sidebarMobile">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title text-dark">
-            <i class="bi bi-speedometer2 me-2"></i>Menú Principal
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-    </div>
+   <!-- SIDEBAR PARA MÓVILES -->
+    <div class="offcanvas offcanvas-start offcanvas-custom d-lg-none" tabindex="-1" id="sidebarMobile">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title text-dark">
+                <i class="bi bi-speedometer2 me-2"></i>Menú Principal
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
 
-    <div class="offcanvas-body p-0 custom-scroll">
-        <nav class="nav flex-column py-3">
+        <div class="offcanvas-body p-0 custom-scroll">
+            <nav class="nav flex-column py-3">
 
-            @* <div class="px-3 pb-2">
-                <small class="section-header">Navegación</small>
-            </div> *@
+                <a class="nav-link @(currentController == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">
+                    <i class="bi bi-house me-3"></i>Inicio
+                </a>
 
-            <a class="nav-link @(currentController == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">
-                <i class="bi bi-house me-3"></i>Inicio
-            </a>
+                @if (seccionesUsuario != null && seccionesUsuario.Any())
+                {
+                    <hr class="my-3 mx-3 border-secondary" />
+                    <div class="px-3 pb-2">
+                        <small class="section-header">Secciones Especializadas</small>
+                    </div>
 
-            @* Secciones Especializadas *@
-            @if (seccionesUsuario != null && seccionesUsuario.Any())
-            {
+                    <ul class="list-unstyled" id="menu-accordion-mobile">
+                        @foreach (var seccion in seccionesUsuario)
+                        {
+                            var modulosVisibles = seccion.Modulos
+                                .Where(m => string.IsNullOrEmpty(m.Roles) || m.Roles.ToString().Split(',').Contains((string)perfilUsuario.Rol))
+                                .ToList();
+
+                            var isActiveSection = modulosVisibles.Any(m => currentController == m.Controller && currentAction == m.Action);
+                            var submenuId = "submenu-mobile-" + seccion.Titulo.GetHashCode();
+                            var sectionId = seccion.Titulo.Replace(" ", "-").ToLowerInvariant();
+
+                            if (modulosVisibles.Any())
+                            {
+                                <li class="nav-item has-submenu">
+                                    <a class="nav-link submenu-toggle d-flex align-items-center justify-content-between @(isActiveSection ? "active-section" : "collapsed")"
+                                       href="#" data-bs-toggle="collapse" data-bs-target="#@submenuId"
+                                       aria-expanded="@(isActiveSection.ToString().ToLower())" aria-controls="@submenuId"
+                                       data-section="@sectionId">
+                                        <span class="d-flex align-items-center">
+                                            <span class="nav-icon me-2">@seccion.Titulo.Substring(0, 2)</span>
+                                            <span class="nav-link-text">@seccion.Titulo.Substring(2)</span>
+                                        </span>
+                                        <span class="submenu-arrow"><i class="bi bi-chevron-down"></i></span>
+                                    </a>
+                                    <div id="@submenuId" class="collapse submenu @(isActiveSection ? "show" : "")"
+                                         data-bs-parent="#menu-accordion-mobile">
+                                        <ul class="submenu-list list-unstyled">
+                                            @foreach (var mod in modulosVisibles)
+                                            {
+                                                <li class="submenu-item">
+                                                    <a class="submenu-link @(currentAction == mod.Action && currentController == mod.Controller ? "active" : "")"
+                                                       href="@Url.Action((string)mod.Action, (string)mod.Controller)">
+                                                        @mod.Title
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                }
+
                 <hr class="my-3 mx-3 border-secondary" />
+
                 <div class="px-3 pb-2">
-                    <small class="section-header">Secciones Especializadas</small>
+                    <small class="section-header">Sistema</small>
                 </div>
 
-                <ul class="list-unstyled" id="menu-accordion-mobile">
-                    @foreach (var seccion in seccionesUsuario)
-                    {
-                        var modulosVisibles = seccion.Modulos
-                            .Where(m => string.IsNullOrEmpty(m.Roles) || m.Roles.Split(',').Contains(perfilUsuario.Rol))
-                            .ToList();
+                <a class="nav-link" href="#">
+                    <i class="bi bi-gear me-3"></i>Configuración
+                </a>
+                <a class="nav-link snier-link" href="#">
+                    <i class="bi bi-question-circle me-3"></i>Ayuda
+                </a>
 
-                        var isActiveSection = modulosVisibles.Any(m => currentController == m.Controller && currentAction == m.Action);
-                        var submenuId = "submenu-mobile-" + seccion.Titulo.GetHashCode();
-                        var sectionId = seccion.Titulo.Replace(" ", "-").ToLowerInvariant();
-
-                        if (modulosVisibles.Any())
-                        {
-                            <li class="nav-item has-submenu">
-                                <a class="nav-link submenu-toggle d-flex align-items-center justify-content-between @(isActiveSection ? "active-section" : "collapsed")"
-                                   href="#" data-bs-toggle="collapse" data-bs-target="#@submenuId"
-                                   aria-expanded="@(isActiveSection.ToString().ToLower())" aria-controls="@submenuId"
-                                   data-section="@sectionId">
-                                    <span class="d-flex align-items-center">
-                                        <span class="nav-icon me-2">@seccion.Titulo.Substring(0, 2)</span>
-                                        <span class="nav-link-text">@seccion.Titulo.Substring(2)</span>
-                                    </span>
-                                    <span class="submenu-arrow"><i class="bi bi-chevron-down"></i></span>
-                                </a>
-                                <div id="@submenuId" class="collapse submenu @(isActiveSection ? "show" : "")"
-                                     data-bs-parent="#menu-accordion-mobile">
-                                    <ul class="submenu-list list-unstyled">
-                                        @foreach (var mod in modulosVisibles)
-                                        {
-                                            <li class="submenu-item">
-                                                <a class="submenu-link @(currentAction == mod.Action && currentController == mod.Controller ? "active" : "")"
-                                                   href="@Url.Action(mod.Action, mod.Controller)">
-                                                    @mod.Title
-                                                </a>
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
-                            </li>
-                        }
-                    }
-                </ul>
-            }
-
-            <hr class="my-3 mx-3 border-secondary" />
-
-            <div class="px-3 pb-2">
-                <small class="section-header">Sistema</small>
-            </div>
-
-            <a class="nav-link" href="#">
-                <i class="bi bi-gear me-3"></i>Configuración
-            </a>
-            <a class="nav-link snier-link" href="#">
-                <i class="bi bi-question-circle me-3"></i>Ayuda
-            </a>
-
-        </nav>
+            </nav>
+        </div>
     </div>
-</div>
 
 
-    <!-- Sidebar para escritorio -->
-    <aside id="sidebarDesktop"
-        class="sidebar-desktop position-fixed top-0 start-0 d-none d-lg-block vh-100 custom-scroll pb-7"
-        style="padding-top: var(--header-height);">
+    <!-- SIDEBAR PARA ESCRITORIO -->
+    <aside id="sidebarDesktop" class="sidebar-desktop position-fixed top-0 start-0 d-none d-lg-block vh-100 custom-scroll pb-7" style="padding-top: var(--header-height);">
         <div class="p-0 h-100">
             <nav class="nav flex-column py-4">
-                @* <div class="px-3 pb-3">
-                    <small class="section-header">Navegación Principal</small>
-                </div> *@
-
                 <a class="nav-link @(currentController == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">
                     <i class="bi bi-house"></i>Inicio
                 </a>
-                @* <a class="nav-link @(currentController == "Dashboard" ? "active" : "")" href="#">
-                    <i class="bi bi-bar-chart"></i>Dashboard
-                </a>
-                <a class="nav-link @(currentController == "Reportes" ? "active" : "")" href="#">
-                    <i class="bi bi-file-earmark-text"></i>Reportes
-                </a>
-                <a class="nav-link @(currentController == "Mapa" ? "active" : "")" href="#">
-                    <i class="bi bi-geo-alt"></i>Geovisualizador
-                </a>
-                <a class="nav-link @(currentController == "Analisis" ? "active" : "")" href="#">
-                    <i class="bi bi-graph-up"></i>Análisis
-                </a> *@
                 @foreach (var seccion in seccionesUsuario)
                 {
                     var modulosVisibles = seccion.Modulos
-                    .Where(m => string.IsNullOrEmpty(m.Roles) || m.Roles.Split(',').Contains(perfilUsuario.Rol))
-                    .ToList();
-                    var isActiveSection = modulosVisibles.Any(m => currentController == m.Controller && currentAction ==
-                    m.Action);
-                    var submenuId = "submenu-mobile-" + seccion.Titulo.GetHashCode();
-                    var sectionId = seccion.Titulo.Replace(" ", "-").ToLowerInvariant(); // <-- Asegura el mismo formato
-
+                        .Where(m => string.IsNullOrEmpty(m.Roles) || m.Roles.ToString().Split(',').Contains((string)perfilUsuario.Rol))
+                        .ToList();
+                    var isActiveSection = modulosVisibles.Any(m => currentController == m.Controller && currentAction == m.Action);
+                    var submenuId = "submenu-desktop-" + seccion.Titulo.GetHashCode();
+                    var sectionId = seccion.Titulo.Replace(" ", "-").ToLowerInvariant();
                     if (modulosVisibles.Any())
                     {
                         <li class="nav-item has-submenu">
                             <a class="nav-link submenu-toggle d-flex align-items-center justify-content-between @(isActiveSection ? "active-section" : "collapsed")"
-                                href="#" data-bs-toggle="collapse" data-bs-target="#@submenuId"
-                                aria-expanded="@(isActiveSection.ToString().ToLower())" aria-controls="@submenuId"
-                                data-section="@sectionId"> <!-- <-- AQUÍ -->
+                               href="#" data-bs-toggle="collapse" data-bs-target="#@submenuId"
+                               aria-expanded="@(isActiveSection.ToString().ToLower())" aria-controls="@submenuId"
+                               data-section="@sectionId">
                                 <span class="d-flex align-items-center">
                                     <span class="nav-icon me-2">@seccion.Titulo.Substring(0, 2)</span>
                                     <span class="nav-link-text">@seccion.Titulo.Substring(2)</span>
@@ -428,13 +403,13 @@
                                 <span class="submenu-arrow"><i class="bi bi-chevron-down"></i></span>
                             </a>
                             <div id="@submenuId" class="collapse submenu @(isActiveSection ? "show" : "")"
-                                data-bs-parent="#menu-accordion-mobile">
+                                 data-bs-parent="#sidebarDesktop">
                                 <ul class="submenu-list list-unstyled">
                                     @foreach (var mod in modulosVisibles)
                                     {
                                         <li class="submenu-item">
                                             <a class="submenu-link @(currentAction == mod.Action && currentController == mod.Controller ? "active" : "")"
-                                                href="@Url.Action(mod.Action, mod.Controller)">
+                                               href="@Url.Action((string)mod.Action, (string)mod.Controller)">
                                                 @mod.Title
                                             </a>
                                         </li>
@@ -444,7 +419,6 @@
                         </li>
                     }
                 }
-
                 <div class="px-3 pb-3">
                     <small class="section-header">Sistema</small>
                 </div>
@@ -456,19 +430,16 @@
                 </a>
             </nav>
         </div>
-
-      
     </aside>
 
-    <!-- Contenido principal -->
-    <main class="main-content p-0">
 
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content p-0">
         <div id="page-preloader" style="display:flex;">
             <div class="spinner"></div>
             <img src="~/img/lc6.png" alt="Logo de la empresa" class="preloader-logo">
             <div class="loading-text">Cargando la página, por favor espere<span id="page-dots">...</span></div>
         </div>
-        @*  <!-- Preloader para solicitudes AJAX --> *@
         <div id="ajax-preloader" style="display:none;">
             <div class="spinner"></div>
             <img src="~/img/lc6.png" alt="Logo de la empresa" class="preloader-logo">
@@ -476,60 +447,50 @@
         </div>
 
         @RenderBody()
-      
-        
-            <!-- Footer -->
-<footer class="footer-snier text-white pt-4 pb-0" style="background: linear-gradient(to right, #022336, #043B4A); position: relative;">
-    <div class="container-fluid px-5">
-        <div class="row">
 
-            <!-- Logo y contacto -->
-            <div class="col-md-4 mb-4">
-                <img src="~/img/logo_sener_blanco.png" alt="Logo SENER" class="mb-2" style="max-height: 60px;">
-                <p class="small mb-1">Av. Insurgentes Sur 890, Col. Del Valle Centro,<br> Benito Juárez, C.P. 03100, Ciudad de México</p>
-                <p class="small mb-0">Tel: 55 5000 6000</p>
-                <p class="small mb-2">&copy; 2025 Secretaría de Energía - Gobierno de México</p>
-                <p class="small">@await Component.InvokeAsync("Visitas")</p>
-            </div>
-
-            <!-- Enlaces -->
-            <div class="col-md-4 mb-4">
-                <h6 class="fw-bold mb-3 text-white">Enlaces</h6>
-                <ul class="list-unstyled small">
-                    <li><a href="/Publico/MarcoJuridico" class="footer-link">Marco Jurídico</a></li>
-                    <li><a href="/Publico/Publicaciones" class="footer-link">Publicaciones Oficiales</a></li>
-                    <li><a href="https://www.gob.mx/plataformadetransparencia" target="_blank" class="footer-link">Transparencia</a></li>
-                    <li><a href="/Contacto" class="footer-link">Contacto</a></li>
-                </ul>
-            </div>
-
-            <!-- Gobierno y redes -->
-            <div class="col-md-4 mb-4"style="margin-bottom: 70px;">
-                <h6 class="fw-bold mb-3 text-white">¿Qué es gob.mx?</h6>
-                <p class="small text-white">Portal único de trámites, información y participación ciudadana.</p>
-                <ul class="list-unstyled small">
-                    <li><a href="https://datos.gob.mx" target="_blank" class="footer-link">Datos Abiertos</a></li>
-                    <li><a href="#" class="footer-link">Términos y Condiciones</a></li>
-                    <li><a href="#" class="footer-link">Aviso de Privacidad</a></li>
-                </ul>
-                <div class="mt-2">
-                    <span class="me-2 text-white">Síguenos:</span>
-                    <a href="https://facebook.com/SENERmx" target="_blank" class="footer-social"><i class="bi bi-facebook"></i></a>
-                    <a href="https://x.com/SENER_mx" target="_blank" class="footer-social"><i class="bi bi-twitter-x"></i></a>
-                    <a href="https://instagram.com/sener_mx" target="_blank" class="footer-social"><i class="bi bi-instagram"></i></a>
-                    <a href="https://www.youtube.com/SENERMexico" target="_blank" class="footer-social"><i class="bi bi-youtube"></i></a>
+        <!-- Footer -->
+        <footer class="footer-snier text-white pt-4 pb-0" style="background: linear-gradient(to right, #022336, #043B4A); position: relative;">
+            <div class="container-fluid px-5">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <img src="~/img/logo_sener_blanco.png" alt="Logo SENER" class="mb-2" style="max-height: 60px;">
+                        <p class="small mb-1">Av. Insurgentes Sur 890, Col. Del Valle Centro,<br> Benito Juárez, C.P. 03100, Ciudad de México</p>
+                        <p class="small mb-0">Tel: 55 5000 6000</p>
+                        <p class="small mb-2">&copy; 2025 Secretaría de Energía - Gobierno de México</p>
+                        <p class="small">@await Component.InvokeAsync("Visitas")</p>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <h6 class="fw-bold mb-3 text-white">Enlaces</h6>
+                        <ul class="list-unstyled small">
+                            <li><a href="/Publico/MarcoJuridico" class="footer-link">Marco Jurídico</a></li>
+                            <li><a href="/Publico/Publicaciones" class="footer-link">Publicaciones Oficiales</a></li>
+                            <li><a href="https://www.gob.mx/plataformadetransparencia" target="_blank" class="footer-link">Transparencia</a></li>
+                            <li><a href="/Contacto" class="footer-link">Contacto</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mb-4" style="margin-bottom: 100px;">
+                        <h6 class="fw-bold mb-3 text-white">¿Qué es gob.mx?</h6>
+                        <p class="small text-white">Portal único de trámites, información y participación ciudadana.</p>
+                        <ul class="list-unstyled small">
+                            <li><a href="https://datos.gob.mx" target="_blank" class="footer-link">Datos Abiertos</a></li>
+                            <li><a href="#" class="footer-link">Términos y Condiciones</a></li>
+                            <li><a href="#" class="footer-link">Aviso de Privacidad</a></li>
+                        </ul>
+                        <div class="mt-2"style="margin-bottom: 50px;">
+                            <span class="me-2 text-white">Síguenos:</span>
+                            <a href="https://facebook.com/SENERmx" target="_blank" class="footer-social"><i class="bi bi-facebook"></i></a>
+                            <a href="https://x.com/SENER_mx" target="_blank" class="footer-social"><i class="bi bi-twitter-x"></i></a>
+                            <a href="https://instagram.com/sener_mx" target="_blank" class="footer-social"><i class="bi bi-instagram"></i></a>
+                            <a href="https://www.youtube.com/SENERMexico" target="_blank" class="footer-social"><i class="bi bi-youtube"></i></a>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
                 </div>
             </div>
-
-        </div>
-    </div>
-
-    <div class="cinta"></div>
-</footer>
-
+            <div class="cinta"></div>
+        </footer>
     </main>
-
-
 
 
     @* <!-- Modal de advertencia de expiración de sesión --> *@

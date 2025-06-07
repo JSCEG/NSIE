@@ -1,4 +1,5 @@
 @{
+    ViewData["Title"] = "Acceso al Sistema Nacional de Información Energética";
     Layout = null;
 }
 
@@ -6,158 +7,168 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable"="yes">
-    <title>SNIER</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <link href="~/css/LoginModern.css" rel="stylesheet" />
+    <style>
+        body.login-body {
+            background: #000;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
-    <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true">
+        #video-bg {
+            position: fixed;
+            @* top: 0;
+            left: 0; *@
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
 
-    <!-- Google Tag Manager -->
-    <script>
-        (function (w, d, s, l, i) {
-            w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-            var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-NXLZHRMM');
-    </script>
+        .login-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-primary {
+            background-color: #81c3c9 !important;
+            border-color: #81c3c9 !important;
+            color: #ffffff !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #5ba5aa !important;
+            border-color: #5ba5aa !important;
+            color: #ffffff !important;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: #81c3c9 !important;
+            color: #ffffff !important;
+        }
+
+        .nav-pills .nav-link {
+            color: #216d92;
+        }
+    </style>
 </head>
 
-<body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXLZHRMM" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe>
-    </noscript>
-
-    <!-- Video Background -->
-    <video autoplay muted loop id="myVideo">
+<body class="login-body">
+    <video autoplay muted loop id="video-bg">
         <source src="/video/Login_n.mp4" type="video/mp4">
     </video>
 
-    <!-- Main Content -->
-    <div class="d-flex justify-content-center h-100">
-        <div class="user_card">
-            <!-- Logo -->
-            <div class="d-flex justify-content-center">
-                <div class="brand_logo_container">
-                    <img src="/img/login/logo_snier.png" class="brand_logo" alt="Logo SNIER">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="login-card shadow-sm p-4 rounded-4" data-aos="zoom-in">
+            <div class="text-center mb-4">
+                <img src="/img/login/logo_snier.png" class="img-fluid mb-2" style="max-width: 100px;">
+                <h4 class="fw-bold" style="color: #81c3c9;">Bienvenido</h4>
+                <p class="text-muted">Accede al Sistema Nacional de Información Energética</p>
+            </div>
+
+            <ul class="nav nav-pills nav-fill mb-3" id="loginTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(ViewData["Mensaje"] == null ? "active" : "")" id="consulta-tab"
+                        data-bs-toggle="pill" data-bs-target="#consultaPublica" type="button" role="tab">Consulta
+                        Pública</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(ViewData["Mensaje"] != null ? "active" : "")" id="acceso-tab"
+                        data-bs-toggle="pill" data-bs-target="#accesoSENER" type="button" role="tab">Acceso</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="loginTabContent">
+                <div class="tab-pane fade @(ViewData["Mensaje"] == null ? "show active" : "")" id="consultaPublica"
+                    role="tabpanel">
+                    <div class="alert alert-info text-center">
+                        <strong>Consulta pública</strong><br />Haz clic en el botón para ingresar sin cuenta.
+                    </div>
+                    <a class="btn btn-primary w-100" href="@Url.Action("AccesoComoInvitado", "Acceso")">Entrar como
+                        Invitado</a>
                 </div>
-            </div>
 
-            <!-- Welcome Message -->
-            <div class="d-flex justify-content-center mt-4">
-                <img src="/img/login/bienvenido.png" class="bienvenidos" alt="Bienvenido">
-                @* <h4 class="subtitulo" id="Bienvenido"><strong>¡Bienvenido!</strong></h4> *@
-            </div>
-
-            <!-- Navigation Tabs -->
-            <div class="container">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link @(ViewData["Mensaje"] == null ? "active" : "")" data-toggle="tab"
-                            href="#consultaPublica">Consulta Pública</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(ViewData["Mensaje"] != null ? "active" : "")" data-toggle="tab"
-                            href="#accesoSENER">Acceso</a>
-                    </li>
-                </ul>
-
-                <div class="tab-content">
-                    <!-- Public Access Tab -->
-                    <div id="consultaPublica"
-                        class="container tab-pane fade @(ViewData["Mensaje"] == null ? "show active" : "")">
-                        <div class="mt-4">
-                            <div class="alert alert-custom" role="alert">
-                                <p class="text-center m-0">
-                                    <i class="bi bi-info-circle-fill me-2"></i>
-                                    Haz clic en <strong>"¡Ingresa a Consulta Pública!"</strong> para acceder.
-                                </p>
-                            </div>
-                            <div class="d-flex justify-content-center links">
-                                <a class="btn btn-snie-verde" href="@Url.Action("AccesoComoInvitado", "Acceso")">
-                                    ¡Ingresa a Consulta Pública!
-                                </a>
+                <div class="tab-pane fade @(ViewData["Mensaje"] != null ? "show active" : "")" id="accesoSENER"
+                    role="tabpanel">
+                    <form action="@Url.Action("Login", "Acceso")" method="post">
+                        <div class="mb-3">
+                            <label for="Correo" class="form-label">Correo o RFC</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" id="Correo" name="Correo"
+                                    placeholder="ejemplo@correo.com" required />
                             </div>
                         </div>
-                    </div>
 
-                    <!-- SENER Access Tab -->
-                    <div id="accesoSENER"
-                        class="container tab-pane fade @(ViewData["Mensaje"] != null ? "show active" : "")">
-                        <div class="mt-4">
-                            <div class="alert alert-custom" role="alert">
-                                <p class="text-center m-0">
-                                    <i class="bi bi-info-circle-fill me-2"></i>
-                                    Acceso exclusivo para Usuarios SNIER.
-                                </p>
-                            </div>
-
-                            <form action="@Url.Action("Login", "Acceso")" method="post">
-                                <!-- Email/RFC Input Group -->
-                                <div class="input-group mb-2">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text nsie-bg"><i class="fas fa-user"></i></span>
-                                    </div>
-                                    <input id="Correo" type="text" name="Correo" class="form-control input_user"
-                                        placeholder="Correo o RFC" required>
-                                </div>
-
-                                <!-- Password Input -->
-                                <div class="input-group mb-2">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text nsie-bg"><i class="fas fa-key"></i></span>
-                                    </div>
-                                    <input type="password" name="Clave" class="form-control input_pass" id="claveInput"
-                                        placeholder="Contraseña" required>
-                                    <span class="input-group-text nsie-bg" onclick="togglePassword()">
-                                        <i class="bi bi-eye" id="iconoClave"></i>
-                                    </span>
-                                </div>
-
-                                <!-- Error Message -->
-                                @if (ViewData["Mensaje"] != null)
-                                {
-                                    <div class="alert alert-danger">
-                                        <i class="bi bi-exclamation-circle-fill me-2"></i> @ViewData["Mensaje"]
-                                    </div>
-                                }
-
-                                <!-- Submit Button -->
-                                <div class="d-flex justify-content-center mt-3 login_container">
-                                    <button type="submit" class="btn btn-snie-verde">Iniciar Sesión</button>
-                                </div>
-                            </form>
-
-                            <!-- Password Reset & Registration Links -->
-                            <div class="mt-3 text-center">
-                                <a href="@Url.Action("ForgotPassword", "Acceso")">¿Olvidaste tu contraseña?
-                                    Restablécela aquí</a>
-                            </div>
-                            <div class="mt-2 text-center ">
-                                <a class="btn btn-snie-verde" href="@Url.Action("Registro", "Acceso")">
-                                    <i class="fas fa-user-plus "></i> Registrarse como nuevo usuario
-                                </a>
+                        <div class="mb-3">
+                            <label for="claveInput" class="form-label">Contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="claveInput" name="Clave"
+                                    placeholder="••••••••" required />
+                                <span class="input-group-text" onclick="togglePassword()">
+                                    <i class="bi bi-eye" id="iconoClave"></i>
+                                </span>
                             </div>
                         </div>
-                    </div>
+
+                        @if (ViewData["Mensaje"] != null)
+                        {
+                            <div class="alert alert-danger text-center">
+                                <i class="bi bi-exclamation-circle me-2"></i>@ViewData["Mensaje"]
+                            </div>
+                        }
+
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                        </div>
+                        <div class="text-center mb-2">
+                            <a href="@Url.Action("ForgotPassword", "Acceso")">¿Olvidaste tu contraseña?</a>
+                        </div>
+                        <div class="text-center">
+                            <span>¿No tienes cuenta? <a href="@Url.Action("Registro", "Acceso")">Regístrate
+                                    aquí</a></span>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="~/js/validacion-formulario.js"></script>
-    @* <script src="~/js/seguridad.js"></script>*@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
 
+        function togglePassword() {
+            const input = document.getElementById("claveInput");
+            const icon = document.getElementById("iconoClave");
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace("bi-eye", "bi-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.replace("bi-eye-slash", "bi-eye");
+            }
+        }
+    </script>
 </body>
 
 </html>

@@ -5,22 +5,24 @@
 }
 
 <!-- HEADER FIJO con título, ayuda y migas -->
-<div class="header-fijo cp-section py-3 px-4 pb-4">
+<div class="header-fijo cp-section py-3 px-4 pb-4" data-aos="fade-down" data-aos-delay="150">
     <!-- Línea superior: ícono, título y botón de ayuda -->
-    <div class="d-flex align-items-center justify-content-center gap-3 mb-2 flex-wrap text-center">
+    <div class="d-flex align-items-center justify-content-center gap-3 mb-2 flex-wrap text-center" data-aos="zoom-in"
+        data-aos-delay="200">
         <img src="~/img/modulos/@Model.IconPath" alt="@Model.Title" class="iconomenu" />
         <h2 class="m-0"
             style="font-family: var(--font-family-display); font-weight: 700; font-size: var(--font-size-2xl); color: var(--gray-700); letter-spacing: 0.03em;">
             @Model.Title
         </h2>
         <button class="btn p-0 border-0 bg-transparent help-trigger"
-            title="Haz clic para conocer la funcionalidad del módulo" onclick='mostrarAyudaModulo(@moduleInfoJson)'>
+            title="Haz clic para conocer la funcionalidad del módulo" onclick='mostrarAyudaModulo(@moduleInfoJson)'
+            data-aos="fade-left" data-aos-delay="300">
             <i class="fas fa-circle-question fa-lg text-info animated-help-icon"></i>
         </button>
     </div>
 
     <!-- Migas de pan -->
-    <nav aria-label="breadcrumb" class="text-center">
+    <nav aria-label="breadcrumb" class="text-center" data-aos="fade-up" data-aos-delay="400">
         <ol class="breadcrumb bg-transparent justify-content-center mb-0">
             <li class="breadcrumb-item">
                 <a href="@Url.Action("Index", "Home")">Inicio</a>
