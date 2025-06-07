@@ -29,19 +29,12 @@
             functionality = "Permite gestionar usuarios, asignar roles y mantener la trazabilidad de accesos.",
             stage = "Inicialización",
             roles = new[] {
-                new { icon = "building", text = "Secretaría de Energía: Administración general" },
-                new { icon = "users-cog", text = "Unidad SNIEr: Gestión de perfiles" },
-                new { icon = "user-shield", text = "Dirección TICs: Control técnico" },
-                new { icon = "user-tie", text = "Consejo: Supervisión de accesos" }
+                new { icon = "user-cog", text = "Administrador: Control total de perfiles y accesos" },
+                new { icon = "user-lock", text = "Supervisor: Revisión y asignación de roles" }
             },
-            order = new { step = 1, description = "Control de accesos desde el inicio (Art. 70)" }
-        }),
-        LegalDescription = "Gestión de accesos y perfiles conforme a los lineamientos establecidos en el Art. 70 del Reglamento.",
-        Fundamentos = new List<FundamentoLegal> {
-            new() { Reference = "Art. 70 Reglamento", Description = "Establece los controles de acceso y gestión de usuarios" },
-            new() { Reference = "Art. 71 Reglamento", Description = "Define la administración de perfiles" },
-            new() { Reference = "Art. 76 Reglamento", Description = "Establece la trazabilidad y seguridad" }
-        }
+            order = new { step = 1, description = "Primera configuración tras el registro del usuario" },
+            manualUrl = "/Documentos/ManualUsuarios.pdf"
+        })
     };
 }
 

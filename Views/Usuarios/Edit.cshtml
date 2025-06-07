@@ -23,7 +23,8 @@
 
 
 <div class="text-center">
-    <h3 class="cp-section cp-grouping-section"> <img src="~/img/mexicoi.png" alt="Icono personalizado" class="iconomenu">@ViewData["Title"]</h3>
+    <h3 class="cp-section cp-grouping-section"> <img src="~/img/mexicoi.png" alt="Icono personalizado"
+            class="iconomenu">@ViewData["Title"]</h3>
 </div>
 
 <br />
@@ -31,7 +32,7 @@
 <div class="container mt-5">
 
     <form asp-action="Edit" method="post" class="mt-4">
-    <h6 class="display-6 fw-bold subtitulo pl-3%">Información del Usuario</h6>
+        <h6 class="display-6 fw-bold subtitulo pl-3%">Información del Usuario</h6>
         <input type="hidden" asp-for="IdUsuario" />
         <div class="row p-3">
             <div class="col-md-6 form-group">
@@ -71,18 +72,19 @@
                 <input asp-for="Vigente" type="checkbox" class="form-check-input" />
             </div>
 
-     
+
         </div>
-     
-  
+
+
 
         <h6 class="display-6 fw-bold subtitulo pl-3%">Roles del Usuario</h6>
         <div class="row p-3">
-          @* <input asp-for="Rol_ID" />*@
+            @* <input asp-for="Rol_ID" />*@
             <div class="col-md-6 form-group">
                 <label asp-for="Rol_Nombre">Rol actual:</label>
                 <input id="currentRole" asp-for="Rol_Nombre" class="form-control" readonly />
-                <select id="roleSelector" class="form-control" style="display: none;" asp-for="Rol_ID" asp-items="@(ViewBag.Roles as IEnumerable<SelectListItem>)">
+                <select id="roleSelector" class="form-control" style="display: none;" asp-for="Rol_ID"
+                    asp-items="@(ViewBag.Roles as IEnumerable<SelectListItem>)">
                 </select>
 
             </div>
@@ -91,10 +93,11 @@
             <div class="col-md-6 form-group">
                 <label asp-for="Mercado_Nombre">Mercado actual:</label>
                 <input id="currentMarket" asp-for="Mercado_Nombre" class="form-control" readonly />
-                <select id="marketSelector" class="form-control" style="display: none;" asp-for="Mercado_ID"  asp-items="@(ViewBag.Mercados as IEnumerable<SelectListItem>)">
+                <select id="marketSelector" class="form-control" style="display: none;" asp-for="Mercado_ID"
+                    asp-items="@(ViewBag.Mercados as IEnumerable<SelectListItem>)">
                 </select>
             </div>
-          
+
             <div class="col-md-12 form-group">
                 <label asp-for="RolUsuario_Comentarios">Comentarios:</label>
                 <input asp-for="RolUsuario_Comentarios" class="form-control" />
@@ -103,21 +106,21 @@
 
         <div class="mt-4 pb-4">
             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                    
+
             <a asp-controller="Usuarios" asp-action="AdministrarUsuarios" class="btn btn-secondary">Cancelar</a>
         </div>
     </form>
 
-    </div>
+</div>
 
 
 @section Scripts {
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $("#Correo").on("focusout", function () {
                 var correoUsuario = $(this).val();
                 if (!correoUsuario.includes("@@")) { // Escapar el "arroba" aquí
-                    $(this).val(correoUsuario + "@@cre.gob.mx"); // Y aquí
+                    $(this).val(correoUsuario + "@@energia.gob.mx"); // Y aquí
                 }
             });
 
@@ -125,37 +128,37 @@
                 var inputValue = $(this).val();
                 $(this).val($.trim(inputValue));
             });
-      
-                // Cuando el usuario hace clic en el campo de texto...
-                $("#currentRole").click(function () {
-                    // Ocultamos el campo de texto y mostramos el dropdown
-                    $(this).hide();
-                    $("#roleSelector").show();
-                });
 
-                // Cuando el usuario selecciona una nueva opción del dropdown...
-                $("#roleSelector").change(function () {
-                    // Actualizamos el campo de texto con el nuevo valor y volvemos a mostrarlo
-                    $("#currentRole").val($("#roleSelector option:selected").text());
-                    $("#currentRole").show();
+            // Cuando el usuario hace clic en el campo de texto...
+            $("#currentRole").click(function () {
+                // Ocultamos el campo de texto y mostramos el dropdown
+                $(this).hide();
+                $("#roleSelector").show();
+            });
 
-                    // Ocultamos nuevamente el dropdown
-                    $(this).hide();
-                });
-            
-                // Para los mercados...
-                $("#currentMarket").click(function () {
-                    $(this).hide();
-                    $("#marketSelector").show();
-                });
+            // Cuando el usuario selecciona una nueva opción del dropdown...
+            $("#roleSelector").change(function () {
+                // Actualizamos el campo de texto con el nuevo valor y volvemos a mostrarlo
+                $("#currentRole").val($("#roleSelector option:selected").text());
+                $("#currentRole").show();
 
-                $("#marketSelector").change(function () {
-                    $("#currentMarket").val($("#marketSelector option:selected").text());
-                    $("#currentMarket").show();
-                    $(this).hide();
-                });
+                // Ocultamos nuevamente el dropdown
+                $(this).hide();
+            });
 
-           });
+            // Para los mercados...
+            $("#currentMarket").click(function () {
+                $(this).hide();
+                $("#marketSelector").show();
+            });
+
+            $("#marketSelector").change(function () {
+                $("#currentMarket").val($("#marketSelector option:selected").text());
+                $("#currentMarket").show();
+                $(this).hide();
+            });
+
+        });
 
         document.getElementById('roleSelector').addEventListener('change', function () {
             console.log('Valor seleccionado:', this.value);

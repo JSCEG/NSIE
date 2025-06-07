@@ -357,7 +357,7 @@
 
     .btn-primary {
         background: var(--gradient-snier);
-        color: var(--white);
+        color: var(--white) !important;
         box-shadow: var(--shadow-subtle);
     }
 
@@ -1578,37 +1578,7 @@
         }
     }
 
-    .cp-section {
-        position: sticky;
-        color: #6c757d;
-        top: 0;
-        z-index: 999;
-        /* asegúrate de que esté encima de todo */
-        padding: 2rem;
-        backdrop-filter: blur(10px);
-        font-family: var(--font-family, 'Montserrat', sans-serif);
-        font-size: var(--font-size-3xl, 2rem);
-        font-weight: 800;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        /* text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); */
 
-        overflow: hidden;
-        transition: all 0.4s ease-in-out;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    .cp-section::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        background: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.05), transparent 40%),
-            radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05), transparent 40%);
-        background-size: 200% 200%;
-        animation: ondasBrillantes 14s ease-in-out infinite;
-        pointer-events: none;
-    }
 
     @keyframes ondasBrillantes {
         0% {
@@ -1624,12 +1594,119 @@
         }
     }
 
-    .cp-section>* {
-        position: relative;
-        z-index: 1;
+
+
+    /* seccion del header de vistas  */
+    .header-fijo {
+        position: sticky;
+        top: 70px;
+        z-index: 1020;
+
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.671);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease-in-out;
     }
 
-    .cp-section:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    .animated-help-icon {
+        transition: transform 0.25s ease, color 0.25s ease;
+        cursor: pointer;
+    }
+
+    .animated-help-icon:hover {
+        color: var(--snier-accent);
+        transform: scale(1.25);
+    }
+
+    /* Fondo al hacer scroll */
+    .header-fijo.scrolled {
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.801);
+        /* azul institucional con transparencia */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        color: white;
+        transition: all 0.3s ease-in-out;
+    }
+
+    @media (max-width: 767.98px) {
+        .header-fijo {
+            position: static !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+    }
+
+    /* Tipografías */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-family-display);
+        font-weight: var(--font-weight-bold);
+        color: var(--gray-700);
+        letter-spacing: 0.03em;
+        margin-bottom: 0.5rem;
+    }
+
+    p,
+    span,
+    label,
+    li,
+    td,
+    th {
+        font-family: var(--font-family);
+        font-weight: var(--font-weight-normal);
+        font-size: var(--font-size-base);
+        /* color: var(--gray-800); */
+    }
+
+    .btn,
+    button {
+        font-family: var(--font-family);
+        color: #ffffff !important;
+    }
+
+    input,
+    select,
+    textarea {
+        font-family: var(--font-family);
+    }
+
+    table,
+    thead,
+    tbody,
+    tr,
+    td,
+    th {
+        font-family: var(--font-family);
+        font-size: var(--font-size-sm);
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+
+    #bp-web-widget {
+        z-index: 99999 !important;
+    }
+
+    .cinta {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 40px;
+        background-image: url("/img/cintafooter.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: bottom;
+        margin: 0;
+        padding: 0;
+        z-index: 2;
     }

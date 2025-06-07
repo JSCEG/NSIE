@@ -273,7 +273,16 @@
             </div>
         </div>
     </header>
-
+    <script>
+        window.addEventListener('scroll', function () {
+            const header = document.querySelector('.header-fijo');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
     <!-- Sidebar para móviles (Offcanvas) -->
     <div class="offcanvas offcanvas-start offcanvas-custom d-lg-none" tabindex="-1" id="sidebarMobile">
         <div class="offcanvas-header border-bottom">
@@ -288,10 +297,10 @@
                     <small class="section-header">Navegación</small>
                 </div>
 
-                @* <a class="nav-link @(currentController == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">
+                <a class="nav-link @(currentController == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">
                     <i class="bi bi-house me-3"></i>Inicio
                 </a>
-                <a class="nav-link @(currentController == "Dashboard" ? "active" : "")" href="#">
+                @*  <a class="nav-link @(currentController == "Dashboard" ? "active" : "")" href="#">
                     <i class="bi bi-bar-chart me-3"></i>Dashboard
                 </a>
                 <a class="nav-link @(currentController == "Reportes" ? "active" : "")" href="#">
@@ -378,10 +387,10 @@
                     <small class="section-header">Navegación Principal</small>
                 </div>
 
-                @* <a class="nav-link @(currentController == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">
+                <a class="nav-link @(currentController == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">
                     <i class="bi bi-house"></i>Inicio
                 </a>
-                <a class="nav-link @(currentController == "Dashboard" ? "active" : "")" href="#">
+                @* <a class="nav-link @(currentController == "Dashboard" ? "active" : "")" href="#">
                     <i class="bi bi-bar-chart"></i>Dashboard
                 </a>
                 <a class="nav-link @(currentController == "Reportes" ? "active" : "")" href="#">
@@ -471,26 +480,66 @@
 
     <!-- Footer -->
 
-    <footer class="footer-custom position-fixed bottom-0 w-100 d-flex align-items-center justify-content-center"
-        style="background:#022336;">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="mb-0 small text-light small mb-1">
-                        &copy; 2025 SNIER - Sistema Nacional de Información Energética
-                        @await Component.InvokeAsync("Visitas")
-                    </p>
+    <footer class="footer-snier text-white pt-4 pb-0" style="background-color: #022336; position: relative;">
+        <div class="container-fluid px-5">
+            <div class="row">
+                <!-- Logo y contacto -->
+                <div class="col-md-4 mb-4">
+                    <img src="~/img/logo_sener_blanco.png" alt="Logo SENER" class="mb-2" style="max-height: 60px;">
+                    <p class="small mb-1">Av. Insurgentes Sur 890, Col. Del Valle Centro,<br> Benito Juárez, C.P. 03100,
+                        Ciudad de México</p>
+                    <p class="small mb-0">Tel: 55 5000 6000</p>
+                    <p class="small mb-2">&copy; 2025 Secretaría de Energía - Gobierno de México</p>
+                    <p class="small">@await Component.InvokeAsync("Visitas")</p>
+                </div>
 
+                <!-- Enlaces -->
+                <div class="col-md-4 mb-4">
+                    <h6 class="fw-bold mb-2">Enlaces</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="/Publico/MarcoJuridico" class="text-white text-decoration-none">Marco Jurídico</a>
+                        </li>
+                        <li><a href="/Publico/Publicaciones" class="text-white text-decoration-none">Publicaciones
+                                Oficiales</a></li>
+                        <li><a href="https://www.gob.mx/plataformadetransparencia" target="_blank"
+                                class="text-white text-decoration-none">Transparencia</a></li>
+                        <li><a href="/Contacto" class="text-white text-decoration-none">Contacto</a></li>
+                    </ul>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0 small text-muted">
-                        Secretaría de Energía - Gobierno de México
-                    </p>
+
+                <!-- Gobierno y redes -->
+                <div class="col-md-4 mb-4">
+                    <h6 class="fw-bold mb-2">¿Qué es gob.mx?</h6>
+                    <p class="small">Portal único de trámites, información y participación ciudadana.</p>
+                    <ul class="list-unstyled small">
+                        <li><a href="https://datos.gob.mx" target="_blank" class="text-white text-decoration-none">Datos
+                                Abiertos</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Términos y Condiciones</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Aviso de Privacidad</a></li>
+                    </ul>
+                    <div class="mt-2">
+                        <span class="me-2">Síguenos:</span>
+                        <a href="https://facebook.com/SENERmx" target="_blank" class="text-white me-2"><i
+                                class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/SENER_mx" target="_blank" class="text-white me-2"><i
+                                class="bi bi-twitter-x"></i></a>
+                        <a href="https://instagram.com/sener_mx" target="_blank" class="text-white me-2"><i
+                                class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/SENERMexico" target="_blank" class="text-white"><i
+                                class="bi bi-youtube"></i></a>
+
+                    </div>
                 </div>
-                @* <div class="cinta"></div> *@
             </div>
+            <br>
+            <br>
         </div>
+
+        <!-- Cinta decorativa -->
+        <div class="cinta"></div>
     </footer>
+
+
 
     @* <!-- Modal de advertencia de expiración de sesión --> *@
     <div class="modal fade" id="sessionExpireModal" tabindex="-1" role="dialog"
@@ -1036,6 +1085,7 @@
             });
         });
     </script>
+
 
 
 </body>
