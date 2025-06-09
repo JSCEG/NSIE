@@ -1,6 +1,4 @@
 @model Mep
-
-
 @using Microsoft.AspNetCore.Http
 @using Newtonsoft.Json
 @using NSIE.Models
@@ -18,28 +16,34 @@
 }
 
 
+@{
+    var header = new HeaderViewModel
+    {
+        Title = "Infraestructura Petrolíferos",
+        IconPath = "gasolinera.png",
+        Description = "Visualiza la infraestructura nacional de petrolíferos y consulta información relevante de permisos y precios.",
+        Section = "🗺️ Mapas Públicos",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Infraestructura Petrolíferos",
+            description = "Mapa interactivo de infraestructura y permisos de petrolíferos en México.",
+            functionality = "Permite buscar, filtrar y visualizar información geográfica y de permisos.",
+            stage = "Consulta y Visualización",
+            roles = new[] {
+                new { icon = "building", text = "SENER: Regulación y control" },
+                new { icon = "search", text = "Usuarios: Consulta pública" }
+            },
+            order = new { step = 1, description = "Visualización geográfica y de permisos" }
+        })
+    };
+}
+
+@await Html.PartialAsync("_ViewHeader", header)
 
 @{
     ViewData["Title"] = "Infraestructura Petrolíferos";
 }
 
-<div class="text-center">
-    <h4 class="cp-section cp-grouping-section">
-        <img src="/img/mexicoi.png" alt="Icono personalizado" class="iconomenu" />
-        @ViewData["Title"]
-    </h4>
-</div>
-
-
-<!-- Miga de Pan -->
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-    aria-label="breadcrumb" style="padding-left:15px">
-    <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
-        @* <li class="breadcrumb-item"><a href="@Url.Action("Hidrocarburos", "Home" )">Sector Petróleo y Gas</a></li>*@
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-    </ol>
-</nav>
 
 @*Sección que Despliega el Mapa Inicial*@
 <div class="container">
@@ -68,62 +72,63 @@
 
 
             <!-- Nuevo Div para Conteo de Tipos de Permisos -->
-                <div id="conteo_tipos_permisos" class="conteo-permisos">
-                    <!-- Aquí se mostrarán los conteos de tipos de permisos -->
-                </div> 
+            <div id="conteo_tipos_permisos" class="conteo-permisos">
+                <!-- Aquí se mostrarán los conteos de tipos de permisos -->
+            </div>
 
-<br>
+            <br>
 
             <div id="main-container">
 
-            <div class="row g-4 mb-4">
-                <div class="col">
-                    <div class="app-card app-card-chart h-100 shadow-sm">
+                <div class="row g-4 mb-4">
+                    <div class="col">
+                        <div class="app-card app-card-chart h-100 shadow-sm">
 
-                        <div class="search-container p-3" id="search-container">
-                            <label class="form-label">Buscar en el Mapa:</label>
-                            <input type="text" id="busquedaGeneralInput" class="form-control"
-                                placeholder="Número de Permiso, Entidad Federativa o Municipio">
-                            <div id="autocomplete-list" class="autocomplete-items"></div>
-                            <!-- El resto de tu código -->
+                            <div class="search-container p-3" id="search-container">
+                                <label class="form-label">Buscar en el Mapa:</label>
+                                <input type="text" id="busquedaGeneralInput" class="form-control"
+                                    placeholder="Número de Permiso, Entidad Federativa o Municipio">
+                                <div id="autocomplete-list" class="autocomplete-items"></div>
+                                <!-- El resto de tu código -->
 
-                            <button class="btn btn-cre-rojo-home" onclick="buscarGeneral()"
-                                style="width:10% !important"><i class="bi bi-search"></i></button>
-                        </div>
+                                <button class="btn btn-cre-rojo-home" onclick="buscarGeneral()"
+                                    style="width:10% !important"><i class="bi bi-search"></i></button>
+                            </div>
 
-                        @*Menu de Botones*@
-                        <div class="container-fluid">
-                        </div>
-                        <div class="app-card-body p-4">
-                            <div class="chart-container">
-                                <div id="" class="app-card-body p-4">
-                                    <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
-                                    <div id="map" class="p-3 bg"></div>
-                                    <div class="leyenda pt-3">
-                                        <p>Mayor Concentración</p>
-                                        <p>Concentración Promedio</p>
-                                        <p>Menor Concentración</p>
-                                        <p> Ductos</p>
+                            @*Menu de Botones*@
+                            <div class="container-fluid">
+                            </div>
+                            <div class="app-card-body p-4">
+                                <div class="chart-container">
+                                    <div id="" class="app-card-body p-4">
+                                        <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
+                                        <div id="map" class="p-3 bg"></div>
+                                        <div class="leyenda pt-3">
+                                            <p>Mayor Concentración</p>
+                                            <p>Concentración Promedio</p>
+                                            <p>Menor Concentración</p>
+                                            <p> Ductos</p>
+                                        </div>
+                                        <br />
+                                        <div class="" id="grafico"></div>
+                                        @* <div class="" id="grafico2"></div> *@
+
+                                        @* Precios de Gasolina  *@
+                                        @if (Convert.ToInt32(ViewData["RolUsuario"]) == 1)
+                                        {
+                                            <div id="graficoPrecios" style="width: 100%; height: 400px; margin-top: 20px;">
+                                            </div>
+                                        }
+
+
+                                        <br />
                                     </div>
-                                    <br />
-                                    <div class="" id="grafico"></div>
-                                    @* <div class="" id="grafico2"></div> *@
-
-                                    @* Precios de Gasolina  *@
-@if (Convert.ToInt32(ViewData["RolUsuario"]) == 1)
-{
-    <div id="graficoPrecios" style="width: 100%; height: 400px; margin-top: 20px;"></div>
-}
-
-
-                                    <br />
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
             </div>
         </div>
     </section>
@@ -136,7 +141,8 @@
         #fullscreen-elements {
             display: flex;
             flex-direction: column;
-            height: auto; /* Valor inicial para cuando no esté en pantalla completa */
+            height: auto;
+            /* Valor inicial para cuando no esté en pantalla completa */
         }
 
         #fullscreen-last-update,
@@ -249,41 +255,41 @@
         // Solo cargar el gráfico si el usuario tiene rol 1
         if (userRole === 1) {
             // Datos sintéticos
-// Generar datos sintéticos
-var preciosPorEF = [
-    { EfNombre: "CIUDAD DE MÉXICO", PrecioRegular: 19.87, PrecioPremium: 21.95, PrecioDiesel: 20.45 },
-    { EfNombre: "GUANAJUATO", PrecioRegular: 20.12, PrecioPremium: 22.34, PrecioDiesel: 19.78 },
-    { EfNombre: "VERACRUZ DE IGNACIO DE LA LLAVE", PrecioRegular: 19.92, PrecioPremium: 21.50, PrecioDiesel: 20.30 },
-    { EfNombre: "CHIAPAS", PrecioRegular: 20.40, PrecioPremium: 22.10, PrecioDiesel: 20.00 },
-    { EfNombre: "JALISCO", PrecioRegular: 20.25, PrecioPremium: 22.45, PrecioDiesel: 20.12 },
-    { EfNombre: "MÉXICO", PrecioRegular: 20.05, PrecioPremium: 22.00, PrecioDiesel: 20.25 },
-    { EfNombre: "QUINTANA ROO", PrecioRegular: 19.95, PrecioPremium: 21.75, PrecioDiesel: 20.10 },
-    { EfNombre: "TABASCO", PrecioRegular: 20.10, PrecioPremium: 22.30, PrecioDiesel: 19.85 },
-    { EfNombre: "PUEBLA", PrecioRegular: 19.89, PrecioPremium: 21.95, PrecioDiesel: 20.20 },
-    { EfNombre: "MICHOACÁN DE OCAMPO", PrecioRegular: 20.20, PrecioPremium: 22.50, PrecioDiesel: 19.95 },
-    { EfNombre: "TAMAULIPAS", PrecioRegular: 20.30, PrecioPremium: 22.40, PrecioDiesel: 20.00 },
-    { EfNombre: "NUEVO LEÓN", PrecioRegular: 20.50, PrecioPremium: 22.80, PrecioDiesel: 20.25 },
-    { EfNombre: "GUERRERO", PrecioRegular: 20.15, PrecioPremium: 22.35, PrecioDiesel: 20.10 },
-    { EfNombre: "BAJA CALIFORNIA", PrecioRegular: 20.45, PrecioPremium: 22.75, PrecioDiesel: 20.20 },
-    { EfNombre: "HIDALGO", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.15 },
-    { EfNombre: "MORELOS", PrecioRegular: 20.05, PrecioPremium: 22.00, PrecioDiesel: 19.90 },
-    { EfNombre: "COAHUILA", PrecioRegular: 20.35, PrecioPremium: 22.65, PrecioDiesel: 20.30 },
-    { EfNombre: "SONORA", PrecioRegular: 20.25, PrecioPremium: 22.50, PrecioDiesel: 20.15 },
-    { EfNombre: "YUCATÁN", PrecioRegular: 19.85, PrecioPremium: 21.75, PrecioDiesel: 20.00 },
-    { EfNombre: "DURANGO", PrecioRegular: 20.10, PrecioPremium: 22.25, PrecioDiesel: 20.05 },
-    { EfNombre: "ZACATECAS", PrecioRegular: 20.20, PrecioPremium: 22.35, PrecioDiesel: 20.10 },
-    { EfNombre: "COLIMA", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.20 },
-    { EfNombre: "CHIHUAHUA", PrecioRegular: 20.35, PrecioPremium: 22.60, PrecioDiesel: 20.10 },
-    { EfNombre: "BAJA CALIFORNIA SUR", PrecioRegular: 20.50, PrecioPremium: 22.75, PrecioDiesel: 20.30 },
-    { EfNombre: "SINALOA", PrecioRegular: 20.15, PrecioPremium: 22.40, PrecioDiesel: 20.05 },
-    { EfNombre: "NAYARIT", PrecioRegular: 20.25, PrecioPremium: 22.50, PrecioDiesel: 19.95 },
-    { EfNombre: "QUERÉTARO", PrecioRegular: 20.05, PrecioPremium: 22.20, PrecioDiesel: 20.10 },
-    { EfNombre: "OAXACA", PrecioRegular: 20.00, PrecioPremium: 22.15, PrecioDiesel: 19.85 },
-    { EfNombre: "SAN LUIS POTOSÍ", PrecioRegular: 20.30, PrecioPremium: 22.55, PrecioDiesel: 20.10 },
-    { EfNombre: "TLAXCALA", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.00 },
-    { EfNombre: "CAMPECHE", PrecioRegular: 20.20, PrecioPremium: 22.40, PrecioDiesel: 20.15 },
-    { EfNombre: "AGUASCALIENTES", PrecioRegular: 20.10, PrecioPremium: 22.30, PrecioDiesel: 20.05 },
-];
+            // Generar datos sintéticos
+            var preciosPorEF = [
+                { EfNombre: "CIUDAD DE MÉXICO", PrecioRegular: 19.87, PrecioPremium: 21.95, PrecioDiesel: 20.45 },
+                { EfNombre: "GUANAJUATO", PrecioRegular: 20.12, PrecioPremium: 22.34, PrecioDiesel: 19.78 },
+                { EfNombre: "VERACRUZ DE IGNACIO DE LA LLAVE", PrecioRegular: 19.92, PrecioPremium: 21.50, PrecioDiesel: 20.30 },
+                { EfNombre: "CHIAPAS", PrecioRegular: 20.40, PrecioPremium: 22.10, PrecioDiesel: 20.00 },
+                { EfNombre: "JALISCO", PrecioRegular: 20.25, PrecioPremium: 22.45, PrecioDiesel: 20.12 },
+                { EfNombre: "MÉXICO", PrecioRegular: 20.05, PrecioPremium: 22.00, PrecioDiesel: 20.25 },
+                { EfNombre: "QUINTANA ROO", PrecioRegular: 19.95, PrecioPremium: 21.75, PrecioDiesel: 20.10 },
+                { EfNombre: "TABASCO", PrecioRegular: 20.10, PrecioPremium: 22.30, PrecioDiesel: 19.85 },
+                { EfNombre: "PUEBLA", PrecioRegular: 19.89, PrecioPremium: 21.95, PrecioDiesel: 20.20 },
+                { EfNombre: "MICHOACÁN DE OCAMPO", PrecioRegular: 20.20, PrecioPremium: 22.50, PrecioDiesel: 19.95 },
+                { EfNombre: "TAMAULIPAS", PrecioRegular: 20.30, PrecioPremium: 22.40, PrecioDiesel: 20.00 },
+                { EfNombre: "NUEVO LEÓN", PrecioRegular: 20.50, PrecioPremium: 22.80, PrecioDiesel: 20.25 },
+                { EfNombre: "GUERRERO", PrecioRegular: 20.15, PrecioPremium: 22.35, PrecioDiesel: 20.10 },
+                { EfNombre: "BAJA CALIFORNIA", PrecioRegular: 20.45, PrecioPremium: 22.75, PrecioDiesel: 20.20 },
+                { EfNombre: "HIDALGO", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.15 },
+                { EfNombre: "MORELOS", PrecioRegular: 20.05, PrecioPremium: 22.00, PrecioDiesel: 19.90 },
+                { EfNombre: "COAHUILA", PrecioRegular: 20.35, PrecioPremium: 22.65, PrecioDiesel: 20.30 },
+                { EfNombre: "SONORA", PrecioRegular: 20.25, PrecioPremium: 22.50, PrecioDiesel: 20.15 },
+                { EfNombre: "YUCATÁN", PrecioRegular: 19.85, PrecioPremium: 21.75, PrecioDiesel: 20.00 },
+                { EfNombre: "DURANGO", PrecioRegular: 20.10, PrecioPremium: 22.25, PrecioDiesel: 20.05 },
+                { EfNombre: "ZACATECAS", PrecioRegular: 20.20, PrecioPremium: 22.35, PrecioDiesel: 20.10 },
+                { EfNombre: "COLIMA", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.20 },
+                { EfNombre: "CHIHUAHUA", PrecioRegular: 20.35, PrecioPremium: 22.60, PrecioDiesel: 20.10 },
+                { EfNombre: "BAJA CALIFORNIA SUR", PrecioRegular: 20.50, PrecioPremium: 22.75, PrecioDiesel: 20.30 },
+                { EfNombre: "SINALOA", PrecioRegular: 20.15, PrecioPremium: 22.40, PrecioDiesel: 20.05 },
+                { EfNombre: "NAYARIT", PrecioRegular: 20.25, PrecioPremium: 22.50, PrecioDiesel: 19.95 },
+                { EfNombre: "QUERÉTARO", PrecioRegular: 20.05, PrecioPremium: 22.20, PrecioDiesel: 20.10 },
+                { EfNombre: "OAXACA", PrecioRegular: 20.00, PrecioPremium: 22.15, PrecioDiesel: 19.85 },
+                { EfNombre: "SAN LUIS POTOSÍ", PrecioRegular: 20.30, PrecioPremium: 22.55, PrecioDiesel: 20.10 },
+                { EfNombre: "TLAXCALA", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.00 },
+                { EfNombre: "CAMPECHE", PrecioRegular: 20.20, PrecioPremium: 22.40, PrecioDiesel: 20.15 },
+                { EfNombre: "AGUASCALIENTES", PrecioRegular: 20.10, PrecioPremium: 22.30, PrecioDiesel: 20.05 },
+            ];
 
 
             // Procesar datos para el gráfico
@@ -346,3 +352,94 @@ var preciosPorEF = [
     </script>
 
 }
+
+<!-- Elementos descriptivos con AOS -->
+<div class="container-fluid px-4 mb-5">
+    <div class="row g-4">
+        <!-- Card Descripción General -->
+        <div class="col-12 col-lg-6" data-aos="fade-right">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-info-circle-fill text-primary me-2"></i>
+                        Acerca del Mapa
+                    </h5>
+                    <p class="card-text">
+                        Visualiza la infraestructura nacional de petrolíferos, incluyendo:
+                    </p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" data-aos="fade-left" data-aos-delay="100">
+                            <i class="bi bi-geo-alt text-danger me-2"></i>
+                            Ubicación de instalaciones y puntos de distribución
+                        </li>
+                        <li class="list-group-item" data-aos="fade-left" data-aos-delay="200">
+                            <i class="bi bi-diagram-2 text-success me-2"></i>
+                            Red de ductos y rutas de transporte
+                        </li>
+                        <li class="list-group-item" data-aos="fade-left" data-aos-delay="300">
+                            <i class="bi bi-card-checklist text-info me-2"></i>
+                            Información de permisos y regulación
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Estadísticas -->
+        <div class="col-12 col-lg-6" data-aos="fade-left">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-graph-up text-success me-2"></i>
+                        Datos Relevantes
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-6" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="p-3 bg-light rounded-3 text-center">
+                                <i class="bi bi-fuel-pump display-6 text-primary"></i>
+                                <h6 class="mt-2">Estaciones de Servicio</h6>
+                                <div id="total-estaciones" class="fw-bold">--</div>
+                            </div>
+                        </div>
+                        <div class="col-6" data-aos="zoom-in" data-aos-delay="200">
+                            <div class="p-3 bg-light rounded-3 text-center">
+                                <i class="bi bi-truck display-6 text-success"></i>
+                                <h6 class="mt-2">Distribuidores</h6>
+                                <div id="total-distribuidores" class="fw-bold">--</div>
+                            </div>
+                        </div>
+                        <div class="col-6" data-aos="zoom-in" data-aos-delay="300">
+                            <div class="p-3 bg-light rounded-3 text-center">
+                                <i class="bi bi-droplet-half display-6 text-warning"></i>
+                                <h6 class="mt-2">Almacenamiento</h6>
+                                <div id="total-almacenamiento" class="fw-bold">--</div>
+                            </div>
+                        </div>
+                        <div class="col-6" data-aos="zoom-in" data-aos-delay="400">
+                            <div class="p-3 bg-light rounded-3 text-center">
+                                <i class="bi bi-pin-map display-6 text-danger"></i>
+                                <h6 class="mt-2">Cobertura Nacional</h6>
+                                <div id="total-estados" class="fw-bold">32 Estados</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notas Importantes -->
+        <div class="col-12" data-aos="fade-up">
+            <div class="alert alert-info border-0 shadow-sm">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-lightbulb-fill fs-4 me-2"></i>
+                    <div>
+                        <h6 class="alert-heading mb-1">Información Importante</h6>
+                        <p class="mb-0">
+                            Utiliza los filtros y la búsqueda para encontrar información específica. Los datos se actualizan periódicamente según la información oficial disponible.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

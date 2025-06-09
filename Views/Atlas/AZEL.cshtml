@@ -87,7 +87,7 @@
 <link rel="stylesheet" href="~/css/calculos_zonas.css" />
 <div class="text-center">
   <h4 class="cp-section cp-grouping-section">
-    <img src="/img/atlas.png" alt="Icono personalizado" class="iconomenu" /> @ViewData["Title"]
+    <img src="/img/analisis.png" alt="Icono personalizado" class="iconomenu" /> @ViewData["Title"]
   </h4>
 </div>
 
@@ -97,7 +97,7 @@
     style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
     aria-label="breadcrumb" style="padding-left:15px">
     <ol class="breadcrumb lp-5">
-      <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
       @* <li class="breadcrumb-item"><a href="@Url.Action("Menu_Eventos", "Eventos" )">Certificados de Energías
             Limpias</a></li> *@
       <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
@@ -744,36 +744,36 @@
 
         // Llenar reporte
         const reportHTML = `
-                                                                    <div >
-                                                                      <div class="card-header text-center">
-                                                                          <h4 class="bustitulobus">Reporte Integral del Proyecto</h4>
-                                                                      </div>
-                                                                      <div class="card-body">
-                                                                        <h5 class="card-title">Resumen del Proyecto</h5>
-                                                                        <p><strong>Tipo de Tecnología:</strong> ${techType}</p>
-                                                                        <p><strong>Tipo de Proyecto:</strong> ${projectType}</p>
-                                                                        <p><strong>Área Seleccionada:</strong> ${area.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km²</p>
-                                                                        <p><strong>Capacidad Instalada:</strong> ${capacidadInstalada.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MW</p>
-                                                                        <p><strong>Generación Estimada:</strong> ${generacionEstimada.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} GWh/año</p>
-                                                                        <p><strong>Ingresos Anuales (antes de O&M):</strong> $${ingresosAnuales.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN</p>
-                                                                        <p><strong>Costo de O&M:</strong> $${costoOM.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN/año</p>
-                                                                        <p><strong>VPN (20 años):</strong> $${vpn.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN</p>
-                                                                        <p><strong>TIR:</strong> ${tir.toFixed(2)}%</p>
-                                                                        ${techType === "Convencional"
+                                                                      <div >
+                                                                        <div class="card-header text-center">
+                                                                            <h4 class="bustitulobus">Reporte Integral del Proyecto</h4>
+                                                                        </div>
+                                                                        <div class="card-body">
+                                                                          <h5 class="card-title">Resumen del Proyecto</h5>
+                                                                          <p><strong>Tipo de Tecnología:</strong> ${techType}</p>
+                                                                          <p><strong>Tipo de Proyecto:</strong> ${projectType}</p>
+                                                                          <p><strong>Área Seleccionada:</strong> ${area.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km²</p>
+                                                                          <p><strong>Capacidad Instalada:</strong> ${capacidadInstalada.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MW</p>
+                                                                          <p><strong>Generación Estimada:</strong> ${generacionEstimada.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} GWh/año</p>
+                                                                          <p><strong>Ingresos Anuales (antes de O&M):</strong> $${ingresosAnuales.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN</p>
+                                                                          <p><strong>Costo de O&M:</strong> $${costoOM.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN/año</p>
+                                                                          <p><strong>VPN (20 años):</strong> $${vpn.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN</p>
+                                                                          <p><strong>TIR:</strong> ${tir.toFixed(2)}%</p>
+                                                                          ${techType === "Convencional"
             ? `<p><strong>Emisiones Estimadas:</strong> ${emisionesProyecto.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kgCO₂eq/año</p>`
             : `<p><strong>Beneficio Ambiental:</strong> Emisiones casi nulas.</p>`
           }
-                                                                        <p><strong>Índice de Marginación:</strong> ${indiceMarginacion.toFixed(1)}</p>
-                                                                        <p><strong>Distancia a Red de Transmisión:</strong> ${distanciaRed.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km</p>
-                                                                        <p><strong>Factor de Emisión (CRE 2023):</strong> ${factorEmision.toFixed(3)} kgCO₂eq/MWh</p>
-                                                                        <hr>
-                                                                        ${analisisHistorico}
-                                                                        <hr>
-                                                                        <h5>Decisión de Inversión:</h5>
-                                                                        <p>${decision}</p>
+                                                                          <p><strong>Índice de Marginación:</strong> ${indiceMarginacion.toFixed(1)}</p>
+                                                                          <p><strong>Distancia a Red de Transmisión:</strong> ${distanciaRed.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km</p>
+                                                                          <p><strong>Factor de Emisión (CRE 2023):</strong> ${factorEmision.toFixed(3)} kgCO₂eq/MWh</p>
+                                                                          <hr>
+                                                                          ${analisisHistorico}
+                                                                          <hr>
+                                                                          <h5>Decisión de Inversión:</h5>
+                                                                          <p>${decision}</p>
+                                                                        </div>
                                                                       </div>
-                                                                    </div>
-                                                                  `;
+                                                                    `;
         document.getElementById("reportContent").innerHTML = reportHTML;
 
         // Graficamos

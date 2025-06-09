@@ -1874,7 +1874,14 @@ function iniciarSankey() {
 
             // Ahora que combinedData está completo, calcula los totales
             calcularTotalesPorNivel();
-
+            // Después de calcular totalPorNivel y formatear los valores:
+            $("#total-fep").text(totalPorNivel["Nivel FEP - Fuentes de Energía Primaria"] + " PJ");
+            $("#total-focal").text(totalPorNivel["Nivel FOCAL - Sector Energético"] + " PJ");
+            $("#total-nivel1").text(totalPorNivel["Nivel 1 - Provisión y Producción"] + " PJ");
+            $("#total-nivel2").text(totalPorNivel["Nivel 2 - Transformaciones"] + " PJ");
+            $("#total-nivel3").text(totalPorNivel["Nivel 3 - Tipos de Energía"] + " PJ");
+            $("#total-nivel4").text(totalPorNivel["Nivel 4 - Distribución"] + " PJ");
+            $("#total-nivel5").text(totalPorNivel["Nivel 5 - Uso Final"] + " PJ");
             // Inicializa el DataTable utilizando la estructura de datos combinada
             var table_mun = $("#Tipos").DataTable({
               lengthMenu: [
@@ -7192,9 +7199,8 @@ function iniciarSankey() {
         "path"
       );
       this.originalColor = this.color;
-      const uniqueId = `link_${this.source.id}_to_${
-        this.target.id
-      }_${Link.linkCounter++}`;
+      const uniqueId = `link_${this.source.id}_to_${this.target.id
+        }_${Link.linkCounter++}`;
       path.setAttribute("id", uniqueId);
 
       path.setAttribute("d", pathD);
@@ -7247,8 +7253,7 @@ function iniciarSankey() {
       );
       triangle.setAttribute(
         "points",
-        `${evt.clientX},${evt.clientY + 10} ${evt.clientX - 5},${
-          evt.clientY + 5
+        `${evt.clientX},${evt.clientY + 10} ${evt.clientX - 5},${evt.clientY + 5
         } ${evt.clientX - 5},${evt.clientY + 15}`
       );
       triangle.style.fill = this.color;
@@ -7757,7 +7762,7 @@ function iniciarSankey() {
     }
 
     // Sobrescribimos el método addEventListeners para que no haga nada
-    addEventListeners() {}
+    addEventListeners() { }
 
     co2Emisiones(group, tooltipInfo) {
       console.log("showTooltip called for node with id:", tooltipInfo.id);

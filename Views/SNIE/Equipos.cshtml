@@ -10,92 +10,99 @@
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
 }
 
-<div class="text-center mb-4">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="~/img/iconos/equipos.png" alt="Icono Equipos" class="iconomenu">
-        Catálogo de Equipos y Aparatos Relevantes
-        <button class="btn btn-link text-info" onclick="mostrarAyudaModulo()" data-bs-toggle="tooltip"
-            title="¿Qué es este módulo?">
-            <i class="fas fa-question-circle fa-lg"></i>
-        </button>
-    </h3>
-    <div class="text-muted mt-2 text-justify px-5">
-        <i class="fas fa-info-circle text-primary"></i>
-        <em>Consulta los principales equipos y aparatos relacionados con el consumo de energía en el mercado
-            mexicano.</em>
-    </div>
-</div>
+@{
+    var header = new HeaderViewModel
+    {
+        Title = "Catálogo de Equipos",
+        IconPath = "s_oferta.png",
+        Description = "Consulta los principales equipos y aparatos relacionados con el consumo de energía.",
+        Section = "⚡ Sistema Eléctrico",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Catálogo de Equipos",
+            description = "Base de datos nacional de equipos y aparatos eléctricos.",
+            functionality = "Permite consultar y analizar consumos energéticos por tipo de equipo.",
+            stage = "Consulta Técnica",
+            roles = new[] {
+new { icon = "building", text = "SENER: Monitoreo de mercado" },
+new { icon = "search", text = "Público: Consulta de eficiencia" },
+new { icon = "chart-bar", text = "Análisis: Consumo energético" }
+},
+            order = new { step = 1, description = "Consulta de equipos" }
+        })
+    };
+}
 
-<div class="alert alert-light mb-4" role="alert">
-    <nav aria-label="breadcrumb" style="padding-left:15px">
-        <ol class="breadcrumb lp-5">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
-            <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-        </ol>
-    </nav>
-</div>
+@await Html.PartialAsync("_ViewHeader", header)
 
-<div class="container-fluid ps-5 pe-5 mb-3">
-    <div class="alert alert-info">
-        <div class="row align-items-center">
-            <div class="col-md-2 text-center">
-                <img src="~/img/iconos/consumo.png" alt="Icono Consumo" class="img-fluid">
+<!-- Cards Informativas con AOS -->
+<div class="container-fluid px-4 mb-5">
+    <div class="row g-4">
+        <!-- Resumen Energético -->
+        <div class="col-12 col-lg-4" data-aos="fade-right">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-lightning-charge-fill text-warning me-2"></i>
+                        Resumen Energético
+                    </h5>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="text-start">
+                            <small class="text-muted d-block">Consumo Promedio</small>
+                            <span class="h4 mb-0 d-block">396.67 kWh/año</span>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block">Total Equipos</small>
+                            <span class="h4 mb-0 d-block">7.15M</span>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: 35%"></div>
+                        <div class="progress-bar bg-warning" style="width: 40%"></div>
+                        <div class="progress-bar bg-danger" style="width: 25%"></div>
+                    </div>
+                    <div class="mt-2 small">
+                        <span class="text-success">■ Bajo consumo</span>
+                        <span class="text-warning ms-2">■ Consumo medio</span>
+                        <span class="text-danger ms-2">■ Alto consumo</span>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-10">
-                <h5 class="alert-heading mb-2"><i class="fas fa-plug"></i> Contexto de consumo</h5>
-                <p class="mb-1 text-justify">
-                    <span class="badge bg-primary">Fuente: SENER / INEGI</span>
-                    <span class="badge bg-success ms-2">Catálogo Eficiencia Energética</span>
-                </p>
-                <hr>
-                <p class="small text-justify">
-                    Este módulo proporciona información esencial para evaluar el consumo anual de energía por equipo, su
-                    impacto en la demanda y su distribución comercial en el país.</p>
+        </div>
+
+        <!-- Gráfico Highcharts -->
+        <div class="col-12 col-lg-8" data-aos="fade-left">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-graph-up text-primary me-2"></i>
+                        Distribución de Consumo
+                    </h5>
+                    <div id="consumoChart" style="height: 300px;"></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Tabla de equipos -->
-<div class="container-fluid ps-5 pe-5">
-    <div class="table-responsive">
-        <table class="table table-bordered table-sm table-hover align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Equipo</th>
-                    <th>Consumo (kWh/año)</th>
-                    <th>Unidades Comercializadas</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Refrigerador</td>
-                    <td>350</td>
-                    <td>1,200,000</td>
-                </tr>
-                <tr>
-                    <td>Aire Acondicionado</td>
-                    <td>800</td>
-                    <td>950,000</td>
-                </tr>
-                <tr>
-                    <td>Lámpara LED</td>
-                    <td>40</td>
-                    <td>5,000,000</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Gráfico de pastel -->
-<div class="container-fluid ps-5 pe-5 mt-4">
-    <div class="card shadow-sm">
+<!-- Tabla DataTables Mejorada -->
+<div class="container-fluid px-4" data-aos="fade-up">
+    <div class="card shadow-sm border-0">
         <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-chart-pie text-primary"></i> Distribución de Unidades
-                Comercializadas</h5>
-            <img src="https://quickchart.io/chart?c={type:'pie',data:{labels:['Refrigerador','Aire Acondicionado','Lámpara LED'],datasets:[{data:[1200000,950000,5000000]}]}}"
-                alt="Gráfico Unidades" class="img-fluid">
+            <table id="equiposTable" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Equipo</th>
+                        <th>Consumo (kWh/año)</th>
+                        <th>Unidades</th>
+                        <th>Eficiencia</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Datos existentes -->
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -106,16 +113,137 @@
             Swal.fire({
                 title: 'Catálogo de Equipos',
                 html: `<div class='text-start'>
-                            <p>Visualiza información clave sobre el consumo energético y la penetración de mercado de aparatos domésticos.</p>
-                            <ul>
-                                <li><i class='fas fa-bolt'></i> Datos de consumo anual en kWh</li>
-                                <li><i class='fas fa-store'></i> Volumen de unidades vendidas</li>
-                                <li><i class='fas fa-chart-pie'></i> Comparativo visual de mercado</li>
-                            </ul>
-                        </div>`,
+                                                <p>Visualiza información clave sobre el consumo energético y la penetración de mercado de aparatos domésticos.</p>
+                                                <ul>
+                                                    <li><i class='fas fa-bolt'></i> Datos de consumo anual en kWh</li>
+                                                    <li><i class='fas fa-store'></i> Volumen de unidades vendidas</li>
+                                                    <li><i class='fas fa-chart-pie'></i> Comparativo visual de mercado</li>
+                                                </ul>
+                                            </div>`,
                 confirmButtonText: 'Cerrar',
                 width: 400
             });
         }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // DataTables
+            $('#equiposTable').DataTable({
+                responsive: true,
+                dom: 'Bfrtip',
+                buttons: ['excel', 'pdf', 'csv'],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+                }
+            });
+
+            // Highcharts
+            Highcharts.chart('consumoChart', {
+                chart: {
+                    type: 'column',
+                    backgroundColor: 'transparent',
+                    style: {
+                        fontFamily: 'Poppins, sans-serif'
+                    }
+                },
+                title: {
+                    text: 'Análisis de Equipos Energéticos',
+                    align: 'left',
+                    style: { fontSize: '16px' }
+                },
+                xAxis: {
+                    categories: [
+                        'Paneles Solares',
+                        'Aerogeneradores',
+                        'Inversores',
+                        'Transformadores',
+                        'Calderas',
+                        'Baterías'
+                    ]
+                },
+                yAxis: [{
+                    title: {
+                        text: 'Eficiencia (%)',
+                        style: { color: '#2ecc71' }
+                    },
+                    labels: { format: '{value}%' }
+                }, {
+                    title: {
+                        text: 'Disponibilidad en Mercado',
+                        style: { color: '#3498db' }
+                    },
+                    opposite: true,
+                    max: 100
+                }],
+                tooltip: {
+                    shared: true,
+                    useHTML: true,
+                    headerFormat: '<small>{point.key}</small><table>',
+                    pointFormat: '<tr><td style="color: {series.color}">{series.name}: </td>' +
+                        '<td style="text-align: right"><b>{point.y:.1f} {series.unit}</b></td></tr>',
+                    footerFormat: '</table>'
+                },
+                plotOptions: {
+                    column: {
+                        borderRadius: 5,
+                        borderWidth: 0
+                    },
+                    series: {
+                        animation: {
+                            duration: 2000,
+                            easing: 'easeOutBounce'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Eficiencia',
+                    data: [21.5, 45.0, 97.0, 98.5, 85.0, 90.0],
+                    color: '#2ecc71',
+                    unit: '%'
+                }, {
+                    name: 'Disponibilidad',
+                    type: 'spline',
+                    data: [85, 60, 90, 95, 75, 70],
+                    color: '#3498db',
+                    yAxis: 1,
+                    unit: '%',
+                    marker: {
+                        enabled: true,
+                        radius: 6
+                    }
+                }, {
+                    name: 'ROI (años)',
+                    type: 'scatter',
+                    data: [5.2, 7.5, 3.1, 4.2, 2.8, 6.5],
+                    color: '#e74c3c',
+                    unit: ' años',
+                    marker: {
+                        symbol: 'diamond',
+                        radius: 7
+                    }
+                }],
+                legend: {
+                    align: 'right',
+                    verticalAlign: 'top',
+                    backgroundColor: 'rgba(255,255,255,0.9)',
+                    borderRadius: 5,
+                    padding: 12,
+                    itemStyle: { fontWeight: 'normal' }
+                },
+                credits: { enabled: false },
+                responsive: {
+                    rules: [{
+                        condition: { maxWidth: 500 },
+                        chartOptions: {
+                            legend: {
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+            });
+        });
     </script>
 }

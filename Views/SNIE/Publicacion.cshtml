@@ -1,0 +1,141 @@
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@using NSIE.Models
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var httpContext = HttpContextAccessor.HttpContext;
+    var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["Title"] = "Publicación y Autorización de la Información";
+}
+
+<div class="container-fluid py-4 px-5">
+    <div class="text-center mb-4" data-aos="fade-down">
+        <h2 class="fw-bold">
+            <i class="fas fa-globe text-primary me-2"></i>
+            Publicación de Resultados y Seguimiento
+        </h2>
+        <p class="text-muted">Visualiza quién autorizó la publicación, cuándo y dónde se encuentra disponible la
+            información publicada.</p>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row mb-4" data-aos="fade-right">
+        <div class="col-md-4">
+            <label class="form-label">Filtrar por Dependencia:</label>
+            <select class="form-select">
+                <option>SENER</option>
+                <option>CRE</option>
+                <option>CFE</option>
+                <option>CONUEE</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Filtrar por Año:</label>
+            <select class="form-select">
+                <option>2023</option>
+                <option>2022</option>
+                <option>2021</option>
+            </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button class="btn btn-outline-primary w-100"><i class="fas fa-search"></i> Aplicar Filtros</button>
+        </div>
+    </div>
+
+    <!-- Tabla de Publicaciones -->
+    <div class="card shadow-sm mb-5" data-aos="fade-up">
+        <div class="card-header bg-info text-white">
+            <i class="fas fa-database me-2"></i> Histórico de Publicaciones
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Serie de Datos</th>
+                            <th>Dependencia Origen</th>
+                            <th>Fecha de Autorización</th>
+                            <th>Autorizado por</th>
+                            <th>Publicado en</th>
+                            <th>URL de Consulta</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Consumo Eléctrico Residencial</td>
+                            <td>CRE</td>
+                            <td>2025-05-10</td>
+                            <td>Consejo Energético Nacional</td>
+                            <td>Plataforma SNIEr</td>
+                            <td><a href="#" target="_blank">https://snie.gob.mx/series/cer</a></td>
+                            <td><span class="badge bg-success">Publicado</span></td>
+                        </tr>
+                        <tr>
+                            <td>Producción de Hidrocarburos</td>
+                            <td>PEMEX</td>
+                            <td>2025-04-22</td>
+                            <td>Unidad de Planeación Energética</td>
+                            <td>Portal Oficial</td>
+                            <td><a href="#" target="_blank">https://energia.gob.mx/balance2025</a></td>
+                            <td><span class="badge bg-warning text-dark">En proceso</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Línea de tiempo de autorizaciones -->
+    <div class="mb-5" data-aos="zoom-in">
+        <h5 class="fw-semibold">Trazabilidad de Publicación</h5>
+        <ul class="timeline">
+            <li>
+                <span class="badge bg-secondary">2025-04-01</span>
+                <strong>Serie enviada por CFE</strong>: Demanda nacional actualizada enviada para revisión.
+            </li>
+            <li>
+                <span class="badge bg-primary">2025-04-10</span>
+                <strong>Revisión por Planeación</strong>: Validación de congruencia con tendencias 2022.
+            </li>
+            <li>
+                <span class="badge bg-success">2025-05-10</span>
+                <strong>Autorización del Consejo</strong>: Publicación aprobada por el pleno.
+            </li>
+            <li>
+                <span class="badge bg-info">2025-05-12</span>
+                <strong>Publicación oficial</strong>: Disponible en el Portal SNIEr.
+            </li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .timeline {
+        list-style: none;
+        padding-left: 0;
+        border-left: 4px solid #dee2e6;
+        margin-left: 1rem;
+    }
+
+    .timeline li {
+        position: relative;
+        margin-bottom: 1.5rem;
+        padding-left: 1rem;
+    }
+
+    .timeline li::before {
+        content: "";
+        position: absolute;
+        top: 0.3rem;
+        left: -0.75rem;
+        width: 1rem;
+        height: 1rem;
+        background-color: #0d6efd;
+        border-radius: 50%;
+    }
+</style>

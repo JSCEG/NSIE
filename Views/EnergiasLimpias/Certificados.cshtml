@@ -17,46 +17,65 @@
     var totalCelOtorgados = 144488009;
 }
 
-<div class="text-center">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="~/img/energia-limpia.png" alt="Icono personalizado" class="iconomenu">
-        @ViewData["Title"]
-    </h3>
-</div>
 
-<!-- Miga de Pan -->
-<div class="alert alert-light" role="alert">
-    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-        aria-label="breadcrumb" style="padding-left:15px">
-        <ol class="breadcrumb lp-5">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
-            @* <li class="breadcrumb-item"><a href="@Url.Action("Menu_Eventos", "Eventos" )">Certificados de Energías
-            Limpias</a></li> *@
-            <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-        </ol>
-    </nav>
-</div>
+
+@{
+    var header = new HeaderViewModel
+    {
+        Title = "Certificados de Energías Limpias (CEL)",
+        IconPath = "energia-limpia.png",
+        Description = "Sistema de monitoreo y consulta de Certificados de Energía Limpia.",
+        Section = "🌿 Energías Limpias",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Certificados de Energías Limpias",
+            description = "Plataforma de seguimiento y consulta de CEL.",
+            functionality = "Permite visualizar estadísticas, participantes y regulación de CEL.",
+            stage = "Monitoreo CEL",
+            roles = new[] {
+                new { icon = "building", text = "CRE: Regulación y control" },
+                new { icon = "check-circle", text = "Generadores: Seguimiento" },
+                new { icon = "search", text = "Público: Consulta" }
+            },
+            order = new { step = 1, description = "Consulta de CEL y participantes" }
+        })
+    };
+}
+
+@await Html.PartialAsync("_ViewHeader", header)
+
 
 <div class="container ps-5 pe-5">
 
-    <!-- Imagen del banner -->
-    <div class="text-center">
-        <img src="~/img/banner/12.png" alt="Certificados de Energías Limpias" class="img-fluid"
-            style="max-width: 100%; height: auto; margin-bottom: 20px;">
+    <!-- Banner mejorado con AOS -->
+    <div class="text-center" data-aos="zoom-in" data-aos-duration="1000">
+        <img src="~/img/banner/12.png" alt="Certificados de Energías Limpias" class="img-fluid shadow-lg rounded" 
+             style="max-width: 100%; height: auto; margin-bottom: 20px;">
     </div>
 
-    @* Aqui el gran total de Certificados *@
-    <!-- Tarjeta con el total histórico de CEL otorgados -->
-    <div class="card text-white mb-4" style="background-color: #006769;">
-        <div class="card-body text-center ">
-            <h4 class="card-title text-white">Total Histórico de CEL Otorgados</h4>
-            <p class="card-text display-4">@string.Format("{0:N0}", totalCelOtorgados)</p> <!-- Formateo con comas -->
+    <!-- Tarjeta de total histórico mejorada -->
+    <div data-aos="flip-up" data-aos-duration="1200">
+        <div class="card text-white mb-4" style="background-color: #006769;">
+            <div class="card-body text-center">
+                <h4 class="card-title text-white" data-aos="fade-down" data-aos-delay="200">
+                    <i class="bi bi-award-fill me-2"></i>Total Histórico de CEL Otorgados
+                </h4>
+                <p class="card-text display-4" data-aos="zoom-in" data-aos-delay="400">
+                    @string.Format("{0:N0}", totalCelOtorgados)
+                </p>
+            </div>
         </div>
     </div>
 
+    <!-- Gráfico con animación -->
+    <div class="card shadow-sm border-0 mb-4" data-aos="fade-up" data-aos-duration="1000">
+        <div class="card-body">
+            <div id="grafico-cel" style="width:100%; height:700px;"></div>
+        </div>
+    </div>
 
-    <div id="grafico-cel" style="width:100%; height:700px;"></div>
-    <div class="table-responsive pb-3">
+    <!-- Tabla con efecto de entrada -->
+    <div class="table-responsive pb-3" data-aos="fade-up" data-aos-delay="200">
         <table id="tabla-cel" class="display table table-hover table-responsive table-bordered">
             <thead>
                 <tr>
@@ -231,7 +250,7 @@
 
     <br>
     <h2 class="subtitulo mb-3">Generadores Limpios en el Periodo de Otorgamiento</h2>
-    <div class="table-responsive pb-3">
+    <div class="table-responsive pb-3" data-aos="fade-up" data-aos-delay="200">
         <table id="tabla-genl" class="display table table-hover table-responsive table-bordered">
             <thead>
                 <tr>
@@ -450,54 +469,47 @@
     <br>
     <!-- Título con alert -->
     <div class="alert alert-success text-center" role="alert">
-        <h3>Línea del tiempo de los Certificados de Energías Limpias</h3>
+        <h3><i class="bi bi-clock-history me-2"></i>Línea del tiempo de los Certificados de Energías Limpias</h3>
         <hr>
-        <p>¡Conoce la línea del tiempo de los Instrumentos Regulatorios que ha emitido la CRE en Materia de Certificados
-            de Energías Limpias! </p>
+        <p>¡Conoce la línea del tiempo de los Instrumentos Regulatorios que ha emitido la CRE en Materia de Certificados de Energías Limpias!</p>
     </div>
 
-    <!-- Tarjeta con el total de Resoluciones y Acuerdos -->
-    <div class="card text-white mb-4" style="background-color: #006769;">
-        <div class="card-body text-center">
-            <h4 class="card-title text-white">Total Resoluciones y Acuerdos</h4>
-
-        </div>
-    </div>
-
+    <!-- Tarjetas de Totales (sin AOS) -->
     <div class="row">
-        <!-- Tarjeta de Resoluciones -->
         <div class="col-md-6 mb-4">
             <div class="card" style="background-color: #006769;">
                 <div class="card-body text-center">
-                    <h4 class="card-title text-white">Total Resoluciones</h4>
-                    <p class="card-text display-4 text-white">@string.Format("{0:N0}", ViewData["TotalResoluciones"])
-                    </p>
+                    <h4 class="card-title text-white">
+                        <i class="bi bi-file-text me-2"></i>Total Resoluciones
+                    </h4>
+                    <p class="card-text display-4 text-white">@string.Format("{0:N0}", ViewData["TotalResoluciones"])</p>
                 </div>
             </div>
         </div>
 
-        <!-- Tarjeta de Acuerdos -->
         <div class="col-md-6 mb-4">
-            <div class="card " style="background-color: #006769;">
+            <div class="card" style="background-color: #006769;">
                 <div class="card-body text-center">
-                    <h4 class="card-title text-white ">Total Acuerdos</h4>
+                    <h4 class="card-title text-white">
+                        <i class="bi bi-files me-2"></i>Total Acuerdos
+                    </h4>
                     <p class="card-text display-4 text-white">@string.Format("{0:N0}", ViewData["TotalAcuerdos"])</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Botones de Zoom -->
+    <!-- Controles Timeline (sin AOS) -->
     <div class="pb-3">
-        <button id="zoomIn" class="btn btn-primary">Zoom In</button>
-        <button id="zoomOut" class="btn btn-primary">Zoom Out</button>
+        <button id="zoomIn" class="btn btn-primary">
+            <i class="bi bi-zoom-in me-2"></i>Acercar
+        </button>
+        <button id="zoomOut" class="btn btn-primary">
+            <i class="bi bi-zoom-out me-2"></i>Alejar
+        </button>
     </div>
 
     <div id="timeline"></div>
-
-
-
-
 </div>
 
 <script>
@@ -539,30 +551,36 @@
                         fontSize: '10px'  // Tamaño de la fuente del total
                     },
                     formatter: function () {
-                        return Highcharts.numberFormat(this.total, 0, '.', ',');
+                        // Solo mostrar total si es mayor a 0
+                        return this.total > 0 ? Highcharts.numberFormat(this.total, 0, '.', ',') : '';
                     }
                 }
             },
             tooltip: {
                 valueDecimals: 0,
                 formatter: function () {
-                    return '<b>' + this.x + '</b><br/>' +
-                        this.series.name + ': ' + Highcharts.numberFormat(this.y, 0, '.', ',') + '<br/>' +
-                        'Total: ' + Highcharts.numberFormat(this.point.stackTotal, 0, '.', ',');
+                    // Solo mostrar el tooltip si hay valor mayor a 0
+                    if (this.y > 0) {
+                        return '<b>' + this.x + '</b><br/>' +
+                            this.series.name + ': ' + Highcharts.numberFormat(this.y, 0, '.', ',') + '<br/>' +
+                            'Total: ' + Highcharts.numberFormat(this.point.stackTotal, 0, '.', ',');
+                    }
+                    return false; // No mostrar tooltip para valores 0
                 }
             },
             plotOptions: {
                 bar: {
-                    stacking: 'normal',  // Apilar las barras
+                    stacking: 'normal',
                     dataLabels: {
-                        enabled: true,  // Mostrar data labels
-                        color: 'black',  // Color del texto
+                        enabled: true,
+                        color: 'black',
                         style: {
-                            fontSize: '10px',  // Tamaño de fuente para los data labels
-                            textOutline: '1px contrast', // Elimina el contorno del texto
+                            fontSize: '10px',
+                            textOutline: '1px contrast'
                         },
-                        formatter: function () {
-                            return Highcharts.numberFormat(this.y, 0, '.', ',');
+                        formatter: function() {
+                            // Solo mostrar etiqueta si hay valor
+                            return this.y ? Highcharts.numberFormat(this.y, 0, '.', ',') : '';
                         }
                     }
                 }
@@ -600,7 +618,7 @@
                 data: [2165115, 2191107, 2715207, 2509695, 2467700, 2720630, 2800282, 2514207, 2196668, 1947998, 1680727, 1830775]
             }, {
                 name: '2024',
-                data: [1904200, 2198405, 2323209, 2537756, 2754979, 2637287, 2285926, 2618979, null, null, null, null]
+                data: [1904200, 2198405, 2323209, 2537756, 2754979, 2637287, 2285926, 2618979, 0, 0, 0, 0] // Cambiamos null por 0
             }]
 
         });

@@ -1,0 +1,177 @@
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@using NSIE.Models
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var httpContext = HttpContextAccessor.HttpContext;
+    var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["IDUsuario"] = perfilUsuario.IdUsuario;
+    ViewData["Title"] = "Revisión Técnica de Series - Intercambio de Observaciones";
+
+    var header = new HeaderViewModel
+    {
+        Title = "Revisión Técnica de Series Energéticas",
+        IconPath = "analisis.png",
+        Description = "Controla el ciclo de revisión de series energéticas con comentarios interinstitucionales y trazabilidad detallada.",
+        Section = "🔍 Observaciones, Retroalimentación y Aprobación",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Revisión Técnica de Series",
+            description = "Módulo para analizar comentarios, devoluciones y respuestas entre actores del SNIEr.",
+            functionality = "Registra observaciones técnicas, tiempos de respuesta y seguimiento por serie.",
+            stage = "Revisión posterior al envío",
+            roles = new[] {
+                new { icon = "users", text = "Dependencias: Revisión y respuesta a observaciones" },
+                new { icon = "clipboard-check", text = "Unidad SNIEr: Emisión y cierre de observaciones" },
+                new { icon = "clock", text = "Seguimiento: Tiempo de respuesta y vencimientos" }
+            },
+            order = new { step = 1, description = "Permite el intercambio técnico previo a validación final." }
+        }),
+        LegalDescription = "Intercambio obligatorio de observaciones técnicas conforme al procedimiento del Art. 75 RLPT.",
+        Fundamentos = new List<FundamentoLegal> {
+            new() { Reference = "Art. 75 Reglamento", Description = "Valida calidad y consistencia antes de integración en BNE" },
+            new() { Reference = "Lineamientos SNIEr", Description = "Plazos y seguimiento de observaciones" }
+        }
+    };
+}
+
+@await Html.PartialAsync("_ViewHeader", header)
+
+<div class="container ps-5 pe-5">
+    <!-- Estado de series -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-bg-danger">
+                <div class="card-body">
+                    <h6><i class="fas fa-exclamation-circle"></i> Series por vencer</h6>
+                    <p class="fs-4 mb-0">3</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-bg-warning">
+                <div class="card-body">
+                    <h6><i class="fas fa-comments"></i> Series con observaciones</h6>
+                    <p class="fs-4 mb-0">5</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-bg-success">
+                <div class="card-body">
+                    <h6><i class="fas fa-check-circle"></i> Series aprobadas</h6>
+                    <p class="fs-4 mb-0">10</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Línea del tiempo por serie -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5><i class="fas fa-stream"></i> Línea de Tiempo - Serie: Consumo Eléctrico Residencial</h5>
+            <ul class="timeline">
+                <li><strong>2025-04-01:</strong> Serie enviada por CFE</li>
+                <li><strong>2025-04-03:</strong> SNIEr emite observación: faltan datos de marzo</li>
+                <li><strong>2025-04-05:</strong> CFE responde y corrige</li>
+                <li><strong>2025-04-07:</strong> Validación técnica positiva</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Gráfico de estado -->
+    <div class="card mb-5">
+        <div class="card-body">
+            <h5><i class="fas fa-chart-pie"></i> Estado General de las Series</h5>
+            <div id="graficoSeries" style="height: 400px"></div>
+        </div>
+    </div>
+
+    <!-- Tabla de observaciones abiertas -->
+    <div class="card">
+        <div class="card-body">
+            <h5><i class="fas fa-list"></i> Observaciones Abiertas</h5>
+            <table class="table table-striped" id="tablaObservaciones">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Serie</th>
+                        <th>Dependencia</th>
+                        <th>Observación</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Producción Eléctrica</td>
+                        <td>SENER</td>
+                        <td>Inconsistencia en valores trimestrales</td>
+                        <td>2025-05-15</td>
+                        <td><span class="badge bg-warning">Pendiente Respuesta</span></td>
+                    </tr>
+                    <tr>
+                        <td>Consumo Final Gas LP</td>
+                        <td>CRE</td>
+                        <td>Unidad diferente al catálogo</td>
+                        <td>2025-05-13</td>
+                        <td><span class="badge bg-danger">Por Vencer</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+        Highcharts.chart('graficoSeries', {
+            chart: { type: 'pie' },
+            title: { text: 'Distribución de Estados de Series' },
+            series: [{
+                name: 'Series',
+                colorByPoint: true,
+                data: [
+                    { name: 'Aprobadas', y: 10, color: '#198754' },
+                    { name: 'Observaciones', y: 5, color: '#ffc107' },
+                    { name: 'Por Vencer', y: 3, color: '#dc3545' }
+                ]
+            }]
+        });
+
+        $(document).ready(function () {
+            $('#tablaObservaciones').DataTable({
+                language: { url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json' }
+            });
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+}
+
+<style>
+    .timeline {
+        list-style: none;
+        padding-left: 1rem;
+        border-left: 3px solid #0d6efd;
+    }
+    .timeline li {
+        margin-bottom: 1rem;
+        position: relative;
+    }
+    .timeline li::before {
+        content: '';
+        position: absolute;
+        left: -0.6rem;
+        top: 0.3rem;
+        width: 1rem;
+        height: 1rem;
+        background-color: #0d6efd;
+        border-radius: 50%;
+    }
+</style>

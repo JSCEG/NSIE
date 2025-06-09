@@ -8,189 +8,209 @@
     var httpContext = HttpContextAccessor.HttpContext;
     var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+
+    var header = new HeaderViewModel {
+        Title = "Información técnica y económica de proyectos en desarrollo y concluidos",
+        IconPath = "mapam.png",
+        Description = "Visualiza y consulta la ubicación geográfica de proyectos energéticos, así como su información técnica y económica.",
+        Section = "📍 Proyectos",
+        ModuleInfo = JsonConvert.SerializeObject(new {
+            title = "Proyectos Energéticos",
+            description = "Consulta georreferenciada de proyectos energéticos nacionales.",
+            functionality = "Permite mapear proyectos, consultar detalles técnicos, descargar fichas técnicas y exportar datos.",
+            stage = "Planeación y seguimiento",
+            roles = new[] {
+                new { icon = "map", text = "Ubicación Geográfica" },
+                new { icon = "chart-bar", text = "Datos Técnicos y Económicos" },
+                new { icon = "file-alt", text = "Exportación de datos" }
+            },
+            order = new { step = 1, description = "Visualización y administración" }
+        })
+    };
 }
+@await Html.PartialAsync("_ViewHeader", header)
 
-<div class="text-center mb-4">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="~/img/iconos/mapa.png" alt="Mapa de Proyectos" class="iconomenu">
-        @ViewData["Title"]
-        <button class="btn btn-link text-info" onclick="mostrarAyudaModulo()" data-bs-toggle="tooltip"
-            title="¿Qué es este módulo?">
-            <i class="fas fa-question-circle fa-lg"></i>
-        </button>
-    </h3>
-    <div class="text-muted mt-2 text-justify px-5">
-        <i class="fas fa-info-circle text-primary"></i>
-        <em>Visualiza y consulta la ubicación geográfica de proyectos energéticos, así como su información técnica y
-            económica.</em>
-    </div>
-</div>
-
-<div class="alert alert-light mb-4" role="alert">
-    <nav aria-label="breadcrumb" style="padding-left:15px">
-        <ol class="breadcrumb lp-5">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
-            <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-        </ol>
-    </nav>
-</div>
-
-<div class="container-fluid ps-5 pe-5 mb-3">
-    <div class="alert alert-info">
-        <div class="row align-items-center">
-            <div class="col-md-2 text-center">
-                <img src="~/img/iconos/tecnica_economica.png" alt="Fundamento Legal" class="img-fluid">
-            </div>
-            <div class="col-md-10">
-                <h5 class="alert-heading mb-2"><i class="fas fa-book-open"></i> Fundamento técnico</h5>
-                <p class="mb-1 text-justify">
-                    <span class="badge bg-primary">Artículo 23</span>
-                    <span class="badge bg-success ms-2">Lineamientos SNIEr</span>
-                </p>
-                <hr>
-                <p class="small text-justify">
-                    El módulo permite mapear proyectos en desarrollo y concluidos, con información clave de inversión,
-                    capacidad instalada, tecnología utilizada y ubicación georreferenciada.
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Mapa Leaflet -->
-<div class="container-fluid ps-5 pe-5">
-    <div id="mapaProyectos" style="height: 600px; border: 2px solid var(--snier-primary); border-radius: 10px;"></div>
-</div>
-
-<!-- Modal Detalle -->
-<div class="modal fade" id="modalDetalleProyecto" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="modalDetalleLabel"><i class="fas fa-industry"></i> Detalles del Proyecto
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Nombre:</strong> <span id="detalle-nombre"></span></p>
-                <p><strong>Ubicación:</strong> <span id="detalle-ubicacion"></span></p>
-                <p><strong>Tipo de Energía:</strong> <span id="detalle-energia"></span></p>
-                <p><strong>Capacidad Instalada:</strong> <span id="detalle-capacidad"></span></p>
-                <p><strong>Monto de Inversión:</strong> <span id="detalle-inversion"></span></p>
-                <p><strong>Estado:</strong> <span id="detalle-estado"></span></p>
-                <hr />
-                <button class="btn btn-outline-success"><i class="fas fa-download"></i> Descargar ficha técnica</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Gráfico resumen -->
-<div class="container-fluid ps-5 pe-5 mt-5 mb-5">
-    <div class="card shadow-sm">
+<!-- Filtros + Dashboard -->
+<div class="container-fluid px-5 mt-4" data-aos="fade-up">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="card border-primary shadow-sm">
         <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-chart-bar text-primary"></i> Resumen técnico-económico</h5>
-            <div id="graficoProyectos" style="height: 400px;"></div>
+          <h6 class="card-title text-primary"><i class="fas fa-filter"></i> Filtrar por Estado</h6>
+          <select id="filtroEstado" class="form-select" onchange="filtrarProyectos()">
+            <option value="todos">Todos</option>
+            <option value="En desarrollo">En desarrollo</option>
+            <option value="Concluido">Concluido</option>
+          </select>
         </div>
+      </div>
     </div>
+    <div class="col-md-8">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card text-white shadow-sm h-100" style="background-color: #a0e4f1;">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div><h6><i class="fas fa-bolt"></i> Total Capacidad Instalada</h6><h4 id="totalCapacidad">0 MW</h4></div>
+              <small class="text-white-50">Suma total de proyectos visibles</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card text-white shadow-sm h-100" style="background-color: #ffd88d;">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div><h6><i class="fas fa-dollar-sign"></i> Total Inversión Estimada</h6><h4 id="totalInversion">$0 M USD</h4></div>
+              <small class="text-white-50">Suma total de proyectos visibles</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mapa + Tabla -->
+<div class="container-fluid px-5 mt-4" data-aos="zoom-in">
+  <div class="row">
+    <div class="col-lg-7 mb-4">
+      <div class="card shadow-sm p-2"><div id="mapaProyectos" style="height: 600px; border-radius: 10px;"></div></div>
+    </div>
+    <div class="col-lg-5 mb-4">
+      <div class="card shadow-sm p-3">
+        <h6 class="card-title"><i class="fas fa-table text-primary"></i> Lista de Proyectos</h6>
+        <table id="tablaProyectos" class="table table-striped table-hover w-100">
+          <thead class="bg-light"><tr>
+            <th>Nombre</th><th>Ubicación</th><th>Energía</th><th>Capacidad (MW)</th><th>Inversión (M USD)</th><th>Estado</th>
+          </tr></thead><tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal + Gráfico resumen -->
+<div class="modal fade" id="modalDetalleProyecto" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white"><h5 class="modal-title"><i class="fas fa-industry"></i> Detalles del Proyecto</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <p><strong>Nombre:</strong> <span id="detalle-nombre"></span></p>
+        <p><strong>Ubicación:</strong> <span id="detalle-ubicacion"></span></p>
+        <p><strong>Tipo de Energía:</strong> <span id="detalle-energia"></span></p>
+        <p><strong>Capacidad Instalada:</strong> <span id="detalle-capacidad"></span></p>
+        <p><strong>Monto de Inversión:</strong> <span id="detalle-inversion"></span></p>
+        <p><strong>Estado:</strong> <span id="detalle-estado"></span></p><hr/>
+        <button class="btn btn-outline-success"><i class="fas fa-download"></i> Descargar ficha técnica</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid px-5 mt-5 mb-5" data-aos="fade-up">
+  <div class="card shadow-sm"><div class="card-body">
+    <h5 class="card-title"><i class="fas fa-chart-bar text-primary"></i> Resumen técnico‑económico</h5>
+    <div id="graficoProyectos" style="height: 400px;"></div>
+  </div></div>
 </div>
 
 @section Scripts {
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"/>
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.awesome-markers/dist/leaflet.awesome-markers.css"/>
+  
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://unpkg.com/leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script>AOS.init();</script>
 
-    <script>
-        const proyectos = [
-            {
-                nombre: "Parque Solar Xochimilco",
-                ubicacion: "CDMX",
-                energia: "Fotovoltaica",
-                capacidad: "100 MW",
-                inversion: "$150M USD",
-                estado: "En desarrollo",
-                lat: 19.287, lon: -99.102
-            },
-            {
-                nombre: "Central Eólica Oaxaca III",
-                ubicacion: "Oaxaca",
-                energia: "Eólica",
-                capacidad: "150 MW",
-                inversion: "$230M USD",
-                estado: "Concluido",
-                lat: 17.065, lon: -96.721
-            }
-        ];
+  <script>
+    const proyectos = [
+      { nombre: "Parque Solar Xochimilco", ubicacion: "CDMX", energia: "Fotovoltaica", capacidad: "100", inversion: "$150", estado: "En desarrollo", lat: 19.287, lon: -99.102 },
+      { nombre: "Central Eólica Oaxaca III", ubicacion: "Oaxaca", energia: "Eólica", capacidad: "150", inversion: "$230", estado: "Concluido", lat: 17.065, lon: -96.721 }
+    ];
 
-        const mapa = L.map('mapaProyectos').setView([23.6345, -102.5528], 5);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(mapa);
+    let tabla, marcadores = [];
+    const mapa = L.map('mapaProyectos').setView([23.6345,-102.5528],5);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(mapa);
 
-        proyectos.forEach(p => {
-            const marker = L.marker([p.lat, p.lon]).addTo(mapa);
-            marker.bindPopup(`<strong>${p.nombre}</strong><br>${p.ubicacion}<br><button class='btn btn-sm btn-outline-primary mt-1' onclick='verDetalle(${JSON.stringify(p)})'>Ver más</button>`);
-        });
+    function getIcon(tipo) {
+      const icons = {
+        'Fotovoltaica': ['sun','orange'], 'Eólica': ['wind','cadetblue'], 'Biomasa':['leaf','green'],
+        'Nuclear':['atom','darkred'], 'Geotérmica':['fire','red'], 'Hidroeléctrica':['water','blue']
+      };
+      const [icon, color] = icons[tipo]||['bolt','blue'];
+      return L.AwesomeMarkers.icon({ icon, markerColor: color, prefix: 'fa' });
+    }
 
-        function verDetalle(data) {
-            document.getElementById('detalle-nombre').innerText = data.nombre;
-            document.getElementById('detalle-ubicacion').innerText = data.ubicacion;
-            document.getElementById('detalle-energia').innerText = data.energia;
-            document.getElementById('detalle-capacidad').innerText = data.capacidad;
-            document.getElementById('detalle-inversion').innerText = data.inversion;
-            document.getElementById('detalle-estado').innerText = data.estado;
-            new bootstrap.Modal(document.getElementById('modalDetalleProyecto')).show();
-        }
+    function initTabla() {
+      tabla = $('#tablaProyectos').DataTable({
+        data: proyectos.map(p=>[p.nombre,p.ubicacion,p.energia,`${p.capacidad} MW`,`${p.inversion} M USD`,p.estado]),
+        columns:[
+          { title: "Nombre" },{ title: "Ubicación" },{ title: "Energía" },
+          { title: "Capacidad (MW)" },{ title: "Inversión (M USD)" },{ title: "Estado" }
+        ],
+        dom: 'Bfrtip',
+        buttons: ['excelHtml5','csvHtml5','pdfHtml5','print'],
+        scrollX: true,
+        pageLength: 5
+      });
+    }
 
-        Highcharts.chart('graficoProyectos', {
-            chart: { type: 'column' },
-            title: { text: 'Comparativo de Proyectos' },
-            xAxis: {
-                categories: ['Xochimilco Solar', 'Oaxaca Eólica']
-            },
-            yAxis: {
-                min: 0,
-                title: { text: 'Valores estimados' }
-            },
-            tooltip: {
-                shared: true,
-                valueSuffix: ' MW / M USD'
-            },
-            plotOptions: {
-                column: {
-                    grouping: true,
-                    shadow: false,
-                    borderWidth: 0
-                }
-            },
-            series: [
-                {
-                    name: 'Capacidad Instalada (MW)',
-                    data: [100, 150],
-                    color: '#1e7e8c'
-                },
-                {
-                    name: 'Inversión (M USD)',
-                    data: [150, 230],
-                    color: '#16a34a'
-                }
-            ]
-        });
+    function agregarMarcadores(filtrados) {
+      marcadores.forEach(m=>mapa.removeLayer(m));
+      marcadores=[];
+      let totalMW=0, totalUSD=0;
+      filtrados.forEach(p=>{
+        const mk=L.marker([p.lat,p.lon],{icon:getIcon(p.energia)}).addTo(mapa);
+        mk.bindPopup(`<div class="fw-bold text-primary">${p.nombre}</div><small>${p.ubicacion}</small><br><button class='btn btn-sm btn-outline-primary mt-1' onclick='verDetalle(${JSON.stringify(p)})'>Ver más</button>`);
+        marcadores.push(mk);
+        totalMW+=parseInt(p.capacidad);
+        totalUSD+=parseInt(p.inversion.replace(/[^0-9]/g,''));
+      });
+      $('#totalCapacidad').text(`${totalMW} MW`);
+      $('#totalInversion').text(`$${totalUSD} M USD`);
+    }
 
-        function mostrarAyudaModulo() {
-            Swal.fire({
-                title: 'Información técnica y económica',
-                html: `<div class='text-start'>
-                            <p>Visualiza proyectos energéticos en un mapa interactivo. Haz clic en los marcadores para conocer más.</p>
-                            <ul>
-                                <li><i class="fas fa-map-marker-alt text-danger"></i> Marcadores por tipo de energía</li>
-                                <li><i class="fas fa-file-alt text-info"></i> Fichas técnicas descargables</li>
-                                <li><i class="fas fa-filter text-success"></i> Filtros por estado del proyecto (en futuras versiones)</li>
-                            </ul>
-                        </div>`,
-                confirmButtonText: 'Cerrar',
-                width: 400
-            });
-        }
-    </script>
+    function filtrarProyectos() {
+      const estado=$('#filtroEstado').val();
+      const filtrados = estado==='todos'? proyectos : proyectos.filter(p=>p.estado===estado);
+      agregarMarcadores(filtrados);
+      tabla.clear().rows.add(filtrados.map(p=>[p.nombre,p.ubicacion,p.energia,`${p.capacidad} MW`,`${p.inversion} M USD`,p.estado])).draw();
+    }
+
+    function verDetalle(data) {
+      $('#detalle-nombre').text(data.nombre);
+      $('#detalle-ubicacion').text(data.ubicacion);
+      $('#detalle-energia').text(data.energia);
+      $('#detalle-capacidad').text(`${data.capacidad} MW`);
+      $('#detalle-inversion').text(`$${data.inversion} M USD`);
+      $('#detalle-estado').text(data.estado);
+      new bootstrap.Modal($('#modalDetalleProyecto')).show();
+    }
+
+    $(document).ready(()=>{
+      initTabla();
+      filtrarProyectos();
+      Highcharts.chart('graficoProyectos',{
+        chart:{type:'column'}, title:{text:'Comparativo de Proyectos'},
+        xAxis:{categories: proyectos.map(p=>p.nombre)},
+        yAxis:{min:0, title:{text:'Valores estimados'}},
+        series:[
+          {name:'Capacidad Instalada (MW)',data:proyectos.map(p=>parseInt(p.capacidad)),color:'#1e7e8c'},
+          {name:'Inversión (M USD)',data:proyectos.map(p=>parseInt(p.inversion.replace(/[^0-9]/g,''))),color:'#16a34a'}
+        ],
+        tooltip:{shared:true}
+      });
+    });
+  </script>
 }

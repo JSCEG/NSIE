@@ -20,11 +20,22 @@ namespace NSIE.Controllers
 
     public class SNIEController : Controller
     {
+        public IActionResult EquiposE()
+        {
+            return View();
+        }
+        public IActionResult DesempeñoMIM()
+        {
+            return View();
+        }
         public IActionResult AltaColaboradores()
         {
             return View();
         }
-
+        public IActionResult Inventarios()
+        {
+            return View();
+        }
         public IActionResult CargaInformacion()
         {
             return View();
@@ -92,7 +103,38 @@ namespace NSIE.Controllers
             return View();
         }
 
-
+        public IActionResult CTG()
+        {
+            return View();
+        }
+        public IActionResult Otros()
+        {
+            return View();
+        }
+        public IActionResult Normalizacion()
+        {
+            return View();
+        }
+            public IActionResult Publicacion()
+        {
+            return View();
+        }
+        public IActionResult IMP()
+        {
+            return View();
+        }
+        public IActionResult CargaD()
+        {
+            return View();
+        }
+        public IActionResult RevisionS()
+        {
+            return View();
+        }
+        public IActionResult EnvioS()
+        {
+            return View();
+        }
         public IActionResult EscenariosMLP()
         {
             return View();
@@ -101,6 +143,32 @@ namespace NSIE.Controllers
         public IActionResult CatalogoTG()
         {
             return View();
+        }
+
+        public IActionResult AvanceProyectos()
+        {
+            var datosDemo = new
+            {
+                TotalProyectos = 245,
+                InversionTotal = 8500, // Millones USD
+                AvancePromedio = 65,
+                ProyectosActivos = 180
+            };
+
+            return View(datosDemo);
+        }
+
+        public IActionResult CertificadosLimpios()
+        {
+            var datosDemo = new
+            {
+                TotalCELs = 12500000,
+                CertificadosEmitidos = 8750000,
+                ValorPromedio = 25.80M,
+                PorcentajeCumplimiento = 85.5
+            };
+
+            return View(datosDemo);
         }
     }
 

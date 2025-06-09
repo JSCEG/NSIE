@@ -15,30 +15,125 @@
 }
 
 @{
-    ViewData["Title"] = "Precios de Gas L.P.";
+    var header = new HeaderViewModel
+    {
+        Title = "Precios de Gas L.P.",
+        IconPath = "precio.png",
+        Description = "Consulta los precios de Gas L.P. por región y unidad de medida.",
+        Section = "📊 Indicadores",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Precios de Gas L.P.",
+            description = "Sistema de consulta de precios de Gas L.P. por región.",
+            functionality = "Permite visualizar precios por kilo y litro en diferentes regiones del país.",
+            stage = "Consulta de Precios",
+            roles = new[] {
+new { icon = "building", text = "CRE: Monitoreo oficial" },
+new { icon = "search", text = "Público: Consulta de precios" },
+new { icon = "chart-bar", text = "Análisis: Estadísticas" }
+},
+            order = new { step = 1, description = "Consulta de precios por región" }
+        }),
+        LegalDescription = "Precios conforme a la regulación vigente."
+    };
 }
 
-<div class="text-center">
-    <h4 class="cp-section cp-grouping-section">
-        <img src="/img/precio.png" alt="Icono personalizado" class="iconomenu" />
-        @ViewData["Title"]
-    </h4>
+@await Html.PartialAsync("_ViewHeader", header)
+
+<!-- Elementos descriptivos con AOS -->
+<div class="container-fluid px-4 mb-5">
+    <div class="row g-4">
+        <!-- Card Descripción -->
+        <div class="col-12 col-lg-6" data-aos="fade-right">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-info-circle-fill text-primary me-2"></i>
+                        Consulta de Precios
+                    </h5>
+                    <p class="card-text">
+                        Visualiza los precios de Gas L.P. a nivel nacional:
+                    </p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" data-aos="fade-left" data-aos-delay="100">
+                            <i class="bi bi-geo-alt text-danger me-2"></i>
+                            Por región geográfica
+                        </li>
+                        <li class="list-group-item" data-aos="fade-left" data-aos-delay="200">
+                            <i class="bi bi-calendar3 text-success me-2"></i>
+                            Histórico semanal
+                        </li>
+                        <li class="list-group-item" data-aos="fade-left" data-aos-delay="300">
+                            <i class="bi bi-graph-up text-info me-2"></i>
+                            Comparativa por unidad (kg/L)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Instrucciones -->
+        <div class="col-12 col-lg-6" data-aos="fade-left">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-question-circle-fill text-success me-2"></i>
+                        ¿Cómo consultar?
+                    </h5>
+                    <div class="alert alert-light border shadow-sm" role="alert">
+                        <ol class="mb-0">
+                            <li class="mb-2" data-aos="fade-up" data-aos-delay="100">
+                                Seleccione el año y mes deseado
+                            </li>
+                            <li class="mb-2" data-aos="fade-up" data-aos-delay="200">
+                                Elija la semana específica
+                            </li>
+                            <li class="mb-2" data-aos="fade-up" data-aos-delay="300">
+                                Seleccione la unidad (kilos/litros)
+                            </li>
+                            <li data-aos="fade-up" data-aos-delay="400">
+                                Presione "Consultar Precios por Región"
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Informativo -->
+        <div class="col-12" data-aos="fade-up">
+            <div class="alert alert-info border-0 shadow-sm">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-lightbulb-fill fs-4 me-2"></i>
+                    <div>
+                        <h6 class="alert-heading mb-1">Información Importante</h6>
+                        <p class="mb-0">
+                            Los precios mostrados son los vigentes para cada región según la regulación aplicable.
+                            La información se actualiza semanalmente.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Tu contenido existente del mapa y controles -->
 <!-- Miga de Pan -->
 <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
     aria-label="breadcrumb" style="padding-left:15px">
     <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
     </ol>
 </nav>
 
 
- 
+
 
 @*Sección que Despliega el Mapap Inicial*@
 <div class="container">
-       <h6 class="subtitulo pb-3">Consulta de Precios de Gas L.P.</h6>
+    <h6 class="subtitulo pb-3">Consulta de Precios de Gas L.P.</h6>
     <br>
     <section id="despliega_mapa" class="pb-5">
         <br />
@@ -152,7 +247,7 @@
                     <div class="mb-3">
                         <label class="form-label">Mes:</label>
                         <select id="mesSelect" class="form-select">
-                              <!-- Opciones de año se llenan dinámicamente -->
+                            <!-- Opciones de año se llenan dinámicamente -->
                             @* <option value="1">Enero</option>
                             <option value="2">Febrero</option>
                             <option value="3">Marzo</option>
@@ -169,7 +264,7 @@
                     </div>
 
 
-                    
+
                     <div class="mb-3">
                         <label class="form-label">Semana:</label>
                         <select id="semanaSelect" class="form-select">
@@ -291,13 +386,13 @@
 
 @section scripts {
 
-        <script>
+    <script>
 
         var regionesLayer;
         var ductosLayer; // Variable para el shape de ductos
         var markers; // Variable para los marcadores
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             var fechaActual = new Date();
             var añoActual = fechaActual.getFullYear();
             var mesActual = fechaActual.getMonth() + 1;
@@ -344,12 +439,12 @@
                 var semanaInicio = 1;
                 while (semanaInicio <= fechaFinMes.getDate()) {
                     var semanaFin = Math.min(semanaInicio + 6, fechaFinMes.getDate());
-                    semanas.push({inicio: semanaInicio, fin: semanaFin});
+                    semanas.push({ inicio: semanaInicio, fin: semanaFin });
                     semanaInicio = semanaFin + 1;
                 }
 
                 if (selectedYear === añoActual && selectedMonth === mesActual) {
-                    semanas = semanas.filter(function(semana) {
+                    semanas = semanas.filter(function (semana) {
                         return semana.inicio <= diaActual;
                     });
                 }
@@ -374,17 +469,17 @@
             $('#semanaSelect').val(currentWeek);
 
 
-             // Esperar un momento para asegurarse de que los valores de los combos se establezcan correctamente
-            setTimeout(function() {
+            // Esperar un momento para asegurarse de que los valores de los combos se establezcan correctamente
+            setTimeout(function () {
                 consultarPrecios();
             }, 500);
 
-              // Limpiar el mapa al cambiar los combos
-             $('#yearSelect, #mesSelect, #semanaSelect, #precioSelect').change(function() {
+            // Limpiar el mapa al cambiar los combos
+            $('#yearSelect, #mesSelect, #semanaSelect, #precioSelect').change(function () {
                 limpiarMapa();
                 limpiarTabla();
-                limpiarDuctos();    
-            }); 
+                limpiarDuctos();
+            });
         });
     </script>
 
@@ -726,31 +821,31 @@
             //Carga Ductos de GLP
             function pop_ductos_glp_4326_0(feature, layer) {
                 var popupContent = '<table>\
-                                                                    <tr>\
-                                                                        <th scope="row">Región: </th>\
-                                                                        <td>' + (feature.properties['Región: '] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
-                                                                    </tr>\
-                                                                    <tr>\
-                                                                        <th scope="row">Ducto: </th>\
-                                                                        <td>' + (feature.properties['Ducto: '] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
-                                                                    </tr>\
-                                                                    <tr>\
-                                                                        <th scope="row">Servicio: </th>\
-                                                                        <td>' + (feature.properties['Servicio: '] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
-                                                                    </tr>\
-                                                                    <tr>\
-                                                                        <th scope="row">Longitud (km): </th>\
-                                                                        <td>' + (feature.properties['Longitud (km): '] !== null ? autolinker.link(feature.properties['lon'].toLocaleString()) : '') + '</td>\
-                                                                    </tr>\
-                                                                    <tr>\
-                                                                        <th scope="row">Capa nominal (B): </th>\
-                                                                        <td>' + (feature.properties['Capacidad nominal (B): '] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
-                                                                    </tr>\
-                                                                    <tr>\
-                                                                        <th scope="row">Capa operativa (B): </th>\
-                                                                        <td>' + (feature.properties['Capacidad operativa (B): '] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
-                                                                    </tr>\
-                                                                </table>';
+                                                                            <tr>\
+                                                                                <th scope="row">Región: </th>\
+                                                                                <td>' + (feature.properties['Región: '] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
+                                                                            </tr>\
+                                                                            <tr>\
+                                                                                <th scope="row">Ducto: </th>\
+                                                                                <td>' + (feature.properties['Ducto: '] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
+                                                                            </tr>\
+                                                                            <tr>\
+                                                                                <th scope="row">Servicio: </th>\
+                                                                                <td>' + (feature.properties['Servicio: '] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
+                                                                            </tr>\
+                                                                            <tr>\
+                                                                                <th scope="row">Longitud (km): </th>\
+                                                                                <td>' + (feature.properties['Longitud (km): '] !== null ? autolinker.link(feature.properties['lon'].toLocaleString()) : '') + '</td>\
+                                                                            </tr>\
+                                                                            <tr>\
+                                                                                <th scope="row">Capa nominal (B): </th>\
+                                                                                <td>' + (feature.properties['Capacidad nominal (B): '] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
+                                                                            </tr>\
+                                                                            <tr>\
+                                                                                <th scope="row">Capa operativa (B): </th>\
+                                                                                <td>' + (feature.properties['Capacidad operativa (B): '] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
+                                                                            </tr>\
+                                                                        </table>';
                 layer.bindPopup(popupContent, { maxHeight: 400 });
             }
 
@@ -1198,41 +1293,41 @@
     </script>
 
 
-@* Obtiene las Semanas *@
-<script>
-    function actualizarSemanas(year, month) {
-        $.ajax({
-            url: '/Indicadores/GetNumeroDeSemanas',
-            data: { year: year, month: month },
-            success: function (data) {
-                var numSemanas = data.numSemanas;
-                var semanaSelect = $('#semanaSelect');
-                semanaSelect.empty();
+    @* Obtiene las Semanas *@
+    <script>
+        function actualizarSemanas(year, month) {
+            $.ajax({
+                url: '/Indicadores/GetNumeroDeSemanas',
+                data: { year: year, month: month },
+                success: function (data) {
+                    var numSemanas = data.numSemanas;
+                    var semanaSelect = $('#semanaSelect');
+                    semanaSelect.empty();
 
-                for (var i = 1; i <= numSemanas; i++) {
-                    semanaSelect.append($('<option>', {
-                        value: i,
-                        text: 'Semana ' + i
-                    }));
+                    for (var i = 1; i <= numSemanas; i++) {
+                        semanaSelect.append($('<option>', {
+                            value: i,
+                            text: 'Semana ' + i
+                        }));
+                    }
                 }
-            }
+            });
+        }
+
+        // Llama a esta función cuando el año o el mes cambien
+        $('#yearSelect, #mesSelect').change(function () {
+            var year = $('#yearSelect').val();
+            var month = $('#mesSelect').val();
+            actualizarSemanas(year, month);
         });
-    }
 
-    // Llama a esta función cuando el año o el mes cambien
-    $('#yearSelect, #mesSelect').change(function() {
-        var year = $('#yearSelect').val();
-        var month = $('#mesSelect').val();
-        actualizarSemanas(year, month);
-    });
-
-    // Llama a la función de inicialización en la carga de la página
-    $(document).ready(function() {
-        var year = $('#yearSelect').val();
-        var month = $('#mesSelect').val();
-        actualizarSemanas(year, month);
-    });
-</script>
+        // Llama a la función de inicialización en la carga de la página
+        $(document).ready(function () {
+            var year = $('#yearSelect').val();
+            var month = $('#mesSelect').val();
+            actualizarSemanas(year, month);
+        });
+    </script>
 
 
     @*Consulta los Precios*@
@@ -1248,13 +1343,13 @@
                 'csvHtml5',
                 'pdfHtml5'
             ],
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
-                }
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+            }
         });
-        var regionesLayer; 
-        
-           function limpiarMapa() {
+        var regionesLayer;
+
+        function limpiarMapa() {
             if (regionesLayer) {
                 map.removeLayer(regionesLayer);
                 regionesLayer = null;
@@ -1272,10 +1367,10 @@
                 ductosLayer = null;
             }
         }
-        
-        
-        
-         // Define tu capa de regiones aquí para que sea accesible globalmente
+
+
+
+        // Define tu capa de regiones aquí para que sea accesible globalmente
         @* function limpiarMapa() {
             // Limpiar todas las capas de marcadores y círculos
             map.eachLayer(function (layer) {
@@ -1292,15 +1387,15 @@
 
 
         } *@
-        // Oculta ambas leyendas al inicio
-        $("#leyendaLitros").hide();
+            // Oculta ambas leyendas al inicio
+            $("#leyendaLitros").hide();
         $("#leyendaKilos").hide();
         $("#btnConsultar").click(function (event) {
-          consultarPrecios();
+            consultarPrecios();
         });
 
 
- function consultarPrecios() {
+        function consultarPrecios() {
             var yearSelect = $('#yearSelect').val();
             var mesSelect = $('#mesSelect').val();
             var semanaSelect = $('#semanaSelect').val();
@@ -1316,7 +1411,7 @@
 
             $("#buscador").show();
             $("#marker-info-panel").show();
-            
+
             var datos_solicitud = {
                 yearSelect: yearSelect,
                 mesSelect: mesSelect,
@@ -1484,3 +1579,4 @@
     </script>
 
 }
+

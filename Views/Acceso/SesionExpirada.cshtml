@@ -2,57 +2,149 @@
     Layout = null;
 }
 
+<!DOCTYPE html>
+<html lang="es">
 
-<html>
 <head>
+    <meta charset="utf-8" />
+    <title>SNIER - Sesión Expirada</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>MEP</title>
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous" />
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
+    <!-- FontAwesome + Montserrat -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
 
-    <!--Custom styles-->
-    <link rel="stylesheet" type="text/css" href="~/css/Login.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+        }
 
+        #myVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .user_card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .brand_logo {
+            max-width: 100px;
+        }
+
+        .btn-snie-verde {
+            background-color: #81c3c9 !important;
+            color: white !important;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            padding: 0.6rem 1.5rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-snie-verde:hover {
+            background-color: #5ba5aa !important;
+        }
+
+        .titulo {
+            color: #333;
+        }
+
+        .small-text {
+            font-size: 0.85rem;
+            color: #555;
+            margin-top: 1rem;
+        }
+
+        .fade-in {
+            animation: fadeIn ease 2s;
+        }
+
+        @@keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contador {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #c0392b;
+            margin-top: 0.5rem;
+        }
+    </style>
 </head>
+
 <body>
     <video autoplay muted loop id="myVideo">
         <source src="/video/Login_n.mp4" type="video/mp4">
     </video>
-    <div class="container h-100">
-        <div class="d-flex justify-content-center h-100">
-            <div class="user_card">
-                <div class="d-flex justify-content-center">
-                    <div class="brand_logo_container">
-                        <img src="/img/lc6.png" class="brand_logo" alt="Logo">
-                    </div>
-                </div>
 
-                <div class="mt-4 p-3">
-                    <h4 class="display-6 titulo fw-bold"><strong>¡Estimado Usuario!</strong></h4>
-                    <br />
-                    <div class="alert alert-danger" role="alert">
-                        <strong>Su sesión ha expirado o no ha iniciado sesión correctamente.</strong>
-                    </div>
-                    <div class="text-center">
-                        <a href="@Url.Action("Login", "Acceso")" class="btn login_btn">Iniciar Sesión</a>
-                    </div>
-                    <br />
-                    <div class="alert alert-warning" role="alert">
-                        <strong> ¡Por favor, inicie sesión nuevamente!</strong>
-                    </div>
-                  
-                </div>
+    <div class="container d-flex justify-content-center align-items-center min-vh-100 fade-in">
+        <div class="user_card text-center">
+            <div class="mb-4">
+                <img src="/img/login/logo_snier.png" alt="Logo SNIER" class="brand_logo">
+            </div>
+
+            <h4 class="titulo fw-bold mb-3">¡Estimado Usuario!</h4>
+
+            <div class="alert alert-danger">
+                <strong>Tu sesión ha expirado o no has iniciado sesión correctamente.</strong>
+            </div>
+
+            <a href="@Url.Action("Login", "Acceso")" class="btn btn-snie-verde mb-3">
+                <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+            </a>
+
+            <div class="alert alert-warning mb-2">
+                <strong>Por favor, inicia sesión nuevamente.</strong>
+            </div>
+
+            <div class="small-text">
+                Serás redirigido automáticamente en <span class="contador" id="cuentaRegresiva">8</span> segundos...
             </div>
         </div>
     </div>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+        let segundos = 8;
+        const contadorElemento = document.getElementById("cuentaRegresiva");
+
+        const cuentaAtras = setInterval(() => {
+            segundos--;
+            contadorElemento.textContent = segundos;
+            if (segundos <= 0) {
+                clearInterval(cuentaAtras);
+                window.location.href = '@Url.Action("Login", "Acceso")';
+            }
+        }, 1000);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

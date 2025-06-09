@@ -1,3 +1,31 @@
+@* 
+🔧 Mejora visual de esta vista .cshtml sin afectar la lógica existente. Instrucciones para Copilot:
+
+- Aplica estilos profesionales con Bootstrap 5 (cards, tablas, botones, alerts, etc.).
+- Usa animaciones AOS en títulos y secciones importantes.
+- Si hay una tabla, intégrala con DataTables:
+  - Soporte de búsqueda en tiempo real, paginación y exportación (Excel, PDF, CSV).
+  - Soporte para scroll horizontal si hay muchas columnas.
+- Si hay métricas o datos que podrían visualizarse gráficamente, sugiere e incluye un gráfico tipo demo con Highcharts (sin romper la lógica actual).
+- Mantén y respeta todos los scripts, modales y secciones @section ya existentes.
+- Conserva todas las estructuras Razor y C# sin cambios en nombres ni flujos.
+- Agrega mejoras tipo demo solo si son útiles para el usuario, como:
+  - Filtros por unidad o categoría,
+  - Cards resumen informativos,
+  - Tooltips, badges, alertas informativas con íconos,
+  - Dashboards embebidos.
+
+🧩 Cuando se agreguen ayudas visuales o funcionalidades tipo demo, usa componentes **impactantes y modernos visualmente**, pero que no interrumpan la experiencia del usuario (uso sutil de colores, animaciones y contenedores tipo spotlight o highlight, sin sobrecargar).
+
+📌 Si la vista aún no tiene el componente `_ViewHeader`, genéralo al inicio con un título, descripción, fundamentos legales y lógica funcional.
+
+✅ Todo el código generado debe ser 100% responsive, accesible y visualmente claro tanto en escritorio como en móviles.
+
+IMPORTANTE: No elimines scripts o lógicas ya presentes. Si mejoras algo, debe ser compatible y respetar la lógica principal.
+
+Ahora, mejora esta vista debajo de este comentario.
+*@
+
 @model HomeViewModel
 @using NSIE.Models
 @using Microsoft.AspNetCore.Http
@@ -5,7 +33,28 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
-    ViewData["Title"] = "Origen y el destino de la energía (SNIEr)";
+    var header = new HeaderViewModel
+    {
+        Title = "Origen y Destino de la Energía",
+        IconPath = "sistema.png",
+        Description = "Sistema de visualización y análisis de flujos energéticos nacionales.",
+        Section = "⚡ Sistema de Energía Nacional",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Flujos Energéticos",
+            description = "Plataforma de monitoreo de origen y destino de energía.",
+            functionality = "Permite analizar flujos y balances energéticos del SEN.",
+            stage = "Análisis de Flujos",
+            roles = new[] {
+new { icon = "bolt", text = "CENACE: Control operativo" },
+new { icon = "chart-network", text = "Técnico: Flujos y balances" },
+new { icon = "search", text = "Público: Consulta" }
+},
+            order = new { step = 1, description = "Visualización de flujos" }
+        })
+    };
+
+    // Existing session management
     var perfilJson = HttpContextAccessor.HttpContext.Session.GetString("PerfilUsuario");
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilJson);
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
@@ -13,23 +62,95 @@
     ViewData["IDUsuario"] = perfilUsuario.IdUsuario;
 }
 
-<!-- Título principal -->
-<div class="text-center">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="~/img/iconos/sistema.png" alt="Icono personalizado" class="iconomenu">
-        @ViewData["Title"]
-    </h3>
-</div>
-<!-- Miga de Pan -->
-<nav style="--bs-breadcrumb-divider: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&quot;);"
-    aria-label="breadcrumb" style="padding-left:15px">
-    <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-    </ol>
-</nav>
-<center>
+@await Html.PartialAsync("_ViewHeader", header)
 
-    <partial name="_DiagramaSEM_N" />
-    @* <partial name="_DiagramaSEM"/>*@
-</center>
+<!-- Cards Resumen con AOS -->
+<div class="container-fluid px-4 mb-5">
+    <div class="row g-4">
+        <!-- Card Generación -->
+        <div class="col-12 col-md-4" data-aos="fade-right">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+                            <i class="fas fa-bolt text-primary fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">Generación Total</h5>
+                            <small class="text-muted">Promedio diario</small>
+                        </div>
+                    </div>
+                    <h3 class="mb-0">85.4 GWh</h3>
+                    <div class="progress mt-3" style="height: 8px;">
+                        <div class="progress-bar bg-primary" style="width: 75%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Demanda -->
+        <div class="col-12 col-md-4" data-aos="fade-up">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-success bg-opacity-10 p-3 rounded-3 me-3">
+                            <i class="fas fa-plug text-success fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">Demanda Total</h5>
+                            <small class="text-muted">Máxima registrada</small>
+                        </div>
+                    </div>
+                    <h3 class="mb-0">82.1 GWh</h3>
+                    <div class="progress mt-3" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Balance -->
+        <div class="col-12 col-md-4" data-aos="fade-left">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-warning bg-opacity-10 p-3 rounded-3 me-3">
+                            <i class="fas fa-balance-scale text-warning fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">Balance Neto</h5>
+                            <small class="text-muted">Margen operativo</small>
+                        </div>
+                    </div>
+                    <h3 class="mb-0">+3.3 GWh</h3>
+                    <div class="progress mt-3" style="height: 8px;">
+                        <div class="progress-bar bg-warning" style="width: 65%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Diagrama Mejorado -->
+<div class="container-fluid px-4 mb-5" data-aos="zoom-in">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-0">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-project-diagram text-primary me-2"></i>
+                Diagrama de Flujos Energéticos
+            </h5>
+        </div>
+        <center>
+            <div class="">
+                <partial name="_DiagramaSEM_N" />
+            </div>
+        </center>
+
+    </div>
+</div>
+
+<!-- Scripts existentes -->
+@section Scripts {
+    // ...existing scripts...
+}

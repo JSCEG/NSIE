@@ -46,7 +46,7 @@
     @* Aquí va el contenido existente del dashboard *@
 
     <br>
-    <h3 class="subtitulo">Accesos en "EnerGeoCRE"</h1>
+    <h3 class="subtitulo">Accesos en "SNIER"</h1>
 
 
         <div class="row g-4 mt-4 mb-4">
@@ -79,7 +79,7 @@
                     <div class="app-card-body p-3 p-lg-4 d-flex align-items-center">
                         <i class="fas fa-user-tie fa-3x me-3" style="color: #1dbad5;"></i>
                         <div>
-                            <h4 class="stats-type mb-1">Inicios de Sesión Funcionarios CRE</h4>
+                            <h4 class="stats-type mb-1">Inicios de Sesión Usuarios</h4>
                             <div id="inicio-sesion-cre" class="stats-figure">Cargando...</div>
                         </div>
                     </div>
@@ -143,7 +143,7 @@
         </div>
 
         <br>
-        <h3 class="subtitulo">Actividad en "EnerGeoCRE"</h1>
+        <h3 class="subtitulo">Actividad en "SNIER"</h1>
             <!-- Sección de Usuarios Activos en Tiempo Real -->
             <div class="row mt-4" id="usuarios-activos-container">
                 <!-- Aquí se agregarán las tarjetas de usuarios activos -->
@@ -314,7 +314,7 @@
                     Highcharts.chart('grafica-actividad', {
                         chart: {
                             type: 'column',
-                            backgroundColor: '#eeeeed'
+                            backgroundColor: '#ffffff'
                         },
                         title: {
                             text: 'Actividad por ' + periodo
@@ -462,7 +462,7 @@
                     Highcharts.chart('grafica-actividad-usuario', {
                         chart: {
                             type: 'column',
-                            backgroundColor: '#eeeeed'
+                            backgroundColor: '#ffffff'
                         },
                         title: {
                             text: 'Actividad de ' + data.userName + ' por ' + periodo
@@ -589,7 +589,7 @@
                     Highcharts.chart('grafico-accesos-por-fecha', {
                         chart: {
                             type: 'line',
-                            backgroundColor: '#eeeeed'
+                            backgroundColor: '#ffffff'
                         },
                         title: {
                             text: 'Accesos por Fecha'
@@ -632,7 +632,7 @@
                 Highcharts.chart('grafico-accesos-usuario', {
                     chart: {
                         type: 'column',
-                        backgroundColor: '#eeeeed'
+                        backgroundColor: '#ffffff'
                     },
                     title: {
                         text: 'Accesos por Usuario'
@@ -660,7 +660,7 @@
                 Highcharts.chart('grafico-accesos-cargo', {
                     chart: {
                         type: 'pie',
-                        backgroundColor: '#eeeeed'
+                        backgroundColor: '#ffffff'
                     },
                     title: {
                         text: 'Accesos por Cargo'
@@ -679,7 +679,7 @@
                 Highcharts.chart('grafico-accesos-unidad', {
                     chart: {
                         type: 'area',
-                        backgroundColor: '#eeeeed'
+                        backgroundColor: '#ffffff'
                     },
                     plotOptions: {
                         area: {
@@ -718,7 +718,7 @@
                 Highcharts.chart('grafico-accesos-hoy', {
                     chart: {
                         type: 'column',
-                        backgroundColor: '#eeeeed'
+                        backgroundColor: '#ffffff'
                     },
                     title: {
                         text: 'Accesos por Usuario Hoy'
