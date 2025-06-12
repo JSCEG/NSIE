@@ -23,7 +23,7 @@
 }
 <div class="text-center">
     <h3 class="cp-section cp-grouping-section">
-        <img src="~/img/mexico.png" alt="Icono personalizado" class="iconomenu">
+        <img src="@Cdn.Url/img_snier/vistas/mexico.png" alt="Icono personalizado" class="iconomenu">
         @ViewData["Title"]
     </h3>
 </div>
@@ -56,10 +56,10 @@
                         <div class="card shadow-sm @(tarjeta.EsDisabled ? "disabled" : "")">
                             <a class="card-link @(tarjeta.EsDisabled ? "disabled" : "")" asp-controller="@tarjeta.Controlador" asp-action="@tarjeta.Accion">
                                 <div class="card-img">
-                                    <img src="~/img/@tarjeta.ImagenSrc" class="card-img" alt="..." />
+                                    <img src="@Cdn.Url/img_snier/vistas/@tarjeta.ImagenSrc" class="card-img" alt="..." />
                                     <div class="card-overlay">
                                         <h5 class="card-title">
-                                            <img src="~/img/logo_cre.png" alt="Icono personalizado" class="iconomenu">
+                                            <img src="@Cdn.Url/img_snier/vistas/logo_cre.png" alt="Icono personalizado" class="iconomenu">
                                             @tarjeta.Titulo
                                         </h5>
                                     </div>

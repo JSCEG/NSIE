@@ -4,6 +4,7 @@
 @using Newtonsoft.Json
 
 @{
+    
     var httpContext = HttpContextAccessor.HttpContext;
     var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
@@ -49,7 +50,7 @@
 <div class="container">
 <div class="row mb-4">
         <div class="col text-end">
-            <a asp-controller="Usuarios" asp-action="NuevoUsuario" class="btn btn-snie-verde shadow-sm">
+            <a asp-controller="Usuarios" asp-action="NuevoUsuario" class="btn btn-success shadow-sm">
                 <i class="fas fa-user-plus me-1"></i> Agregar Usuario
             </a>
         </div>

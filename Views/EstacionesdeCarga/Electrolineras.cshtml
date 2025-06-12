@@ -2,48 +2,37 @@
 @using Newtonsoft.Json
 
 @inject IHttpContextAccessor HttpContextAccessor
-
 @{
-    var httpContext = HttpContextAccessor.HttpContext;
-
-    var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
-
-    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
-
-
-
-    // Utilizar los datos del usuario para personalizar la vista
-
-    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
-
-    ViewData["RolUsuario"] = perfilUsuario.Rol;
-
-    ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
+    var header = new HeaderViewModel
+    {
+        Title = "Consulta de Electrolineras",
+        IconPath = "transporte_pm.png",
+        Description = "Ubica y consulta las electrolineras disponibles en México para el abastecimiento de vehículos eléctricos.",
+        Section = "Movilidad Eléctrica y Transporte Limpio",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Electrolineras en México",
+            description = "Este módulo permite visualizar las estaciones de carga eléctrica instaladas a nivel nacional.",
+            functionality = "Visualización georreferenciada de puntos de recarga para autos eléctricos, con filtros por entidad y tipo de conector.",
+            stage = "Consulta Pública",
+            roles = new[] {
+                new { icon = "charging-station", text = "Usuarios: Consulta de puntos de carga" },
+                new { icon = "user-cog", text = "Secretaría de Energía: Supervisión y monitoreo" },
+                new { icon = "map-marker-alt", text = "CFE: Instalación y operación de infraestructura" },
+                new { icon = "eye", text = "Consulta Pública: Acceso ciudadano a la información energética" }
+            },
+            order = new { step = 4, description = "Monitoreo de infraestructura de carga conforme al Plan Nacional de Electromovilidad" }
+        }),
+        LegalDescription = "Consulta de infraestructura energética de movilidad conforme a los lineamientos del Programa Nacional de Infraestructura de Carga Eléctrica.",
+        Fundamentos = new List<FundamentoLegal> {
+            new() { Reference = "Programa Nacional de Infraestructura de Carga", Description = "Define las metas de instalación de electrolineras a nivel nacional" },
+            new() { Reference = "Ley de Transición Energética", Description = "Fomenta el uso de vehículos eléctricos como medida de eficiencia energética" },
+            new() { Reference = "Art. 89 LIE", Description = "Establece mecanismos para fomentar tecnologías limpias en transporte" }
+        }
+    };
 }
 
-@{
-    ViewData["Title"] = "Consulta de Electrolineras";
-}
-<div class="text-center">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="~/img/transporte_pm.png" alt="Icono personalizado" class="iconomenu" />@ViewData["Title"]
-    </h3>
-</div>
-
-<!-- Miga de Pan -->
-<div class="alert alert-light" role="alert">
-    <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-        aria-label="breadcrumb" style="padding-left:15px">
-        <ol class="breadcrumb lp-5">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
-            @* <li class="breadcrumb-item"><a href="@Url.Action("MenuPE", "ProyEstrategicos" )">Menú de Proyectos
-            Estratégicos</a></li> *@
-            <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]
-            </li>
-        </ol>
-    </nav>
-</div>
-
+@await Html.PartialAsync("_ViewHeader", header)
 
 
     <div class="container container ps-5 pe-5">

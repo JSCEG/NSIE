@@ -1,6 +1,7 @@
 @{
     ViewData["Title"] = "Acceso al Sistema Nacional de Información Energética";
     Layout = null;
+    var cdn = "https://cdn.sassoapps.com";
 }
 
 <!DOCTYPE html>
@@ -72,13 +73,13 @@
 
 <body class="login-body">
     <video autoplay muted loop id="video-bg">
-        <source src="/video/Login_n.mp4" type="video/mp4">
+        <source src="@cdn/video/Login_snier.mp4" type="video/mp4">
     </video>
 
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="login-card shadow-sm p-4 rounded-4" data-aos="zoom-in">
             <div class="text-center mb-4">
-                <img src="/img/login/logo_snier.png" class="img-fluid mb-2" style="max-width: 100px;">
+                <img src="@cdn/img_snier/login/logo_snier.png" class="img-fluid mb-2" style="max-width: 100px;">
                 <h4 class="fw-bold" style="color: #81c3c9;">Bienvenido</h4>
                 <p class="text-muted">Accede al Sistema Nacional de Información Energética</p>
             </div>

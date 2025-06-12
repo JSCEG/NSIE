@@ -1,4 +1,7 @@
 @model Mep
+@{
+    var cdn = "https://cdn.sassoapps.com";
+}
 
 
 
@@ -34,19 +37,19 @@
   <center>
     <div class="flex-container">
       <div class="flex-item">
-        <span class="icon"><img src="~/img/Aprobado.png" alt="Icono personalizado" class="iconomenu"></span>
+        <span class="icon"><img src="@Cdn.Url/img_snier/vistas/Aprobado.png" alt="Icono personalizado" class="iconomenu"></span>
         <p>Solicitudes en Categoría "A":</p>
         <input type="text" class="form-control btn-cre-verde text-center display-6 fw-bold" id="aprobados" readonly />
       </div>
 
       <div class="flex-item">
-        <span class="icon"><img src="~/img/NoAprobado.png" alt="Icono personalizado" class="iconomenu"></span>
+        <span class="icon"><img src="@Cdn.Url/img_snier/vistas/NoAprobado.png" alt="Icono personalizado" class="iconomenu"></span>
        <p>Solicitudes en Categoría "D":</p>
         <input type="text" class="form-control btn-cre-rojo text-center display-6 fw-bold" id="noAprobados" readonly />
       </div>
 
       <div class="flex-item">
-        <span class="icon"><img src="~/img/evaluar.png" alt="Icono personalizado" class="iconomenu"></span>
+        <span class="icon"><img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu"></span>
         <p>Total Evaluadas:</p>
          <input type="text" class="form-control totalm text-center display-6 fw-bold" id="total" readonly />
       </div>
@@ -54,7 +57,7 @@
   </center>
 
 
-<h6 class="display-6 fw-bold subtitulo">  <span class="icon"><img src="~/img/evaluacionef.png" alt="Icono personalizado" class="iconomenu"></span>Evaluación de las Solicitudes por Entidad Federativa</h6> 
+<h6 class="display-6 fw-bold subtitulo">  <span class="icon"><img src="@Cdn.Url/img_snier/vistas/evaluacionef.png" alt="Icono personalizado" class="iconomenu"></span>Evaluación de las Solicitudes por Entidad Federativa</h6> 
 <br>           
 <br>
               <div class="table-responsive">

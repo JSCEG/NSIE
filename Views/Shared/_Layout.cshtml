@@ -3,7 +3,8 @@
 @using NSIE.Models
 @inject IHttpContextAccessor HttpContextAccessor
 
-@{
+@{  
+     @* var cdn = "https://cdn.sassoapps.com"; *@
     var httpContext = HttpContextAccessor.HttpContext;
     var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
@@ -111,7 +112,7 @@
     <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
     <script src="https://code.highcharts.com/modules/price-indicator.js"></script>
     <script src="https://code.highcharts.com/modules/pictorial.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+    @* <script src="https://code.highcharts.com/highcharts.js"></script> *@
     <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
     <script src="https://code.highcharts.com/gantt/modules/gantt.js"></script>
 
@@ -147,7 +148,7 @@
     <!-- Lightweight Charts -->
     <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
     <script src="~/js/carousel.js"></script>
-    <script src="~/js/sections-carousel.js"></script>
+    @* <script src="~/js/sections-carousel.js"></script> *@
 
     <!-- DOM Observer -->
     <script>
@@ -186,7 +187,7 @@
             <!-- Logo/Marca SNIER -->
             <a class="navbar-brand d-flex align-items-center" href="@Url.Action("Index", "Home")">
                 <span class="bg-whitep-2 me-2">
-                    <img src="~/img/lc6.png" alt="Logo SNIER" style="height:64px;width:auto;" />
+                    <img src="@Cdn.Url/img_snier/login/logo_snier.png" alt="Logo SNIER" style="height:64px;width:auto;" />
                 </span>
                 @* <span class="fw-bold d-none d-md-inline">SNIER</span> *@
             </a>
@@ -359,17 +360,25 @@
 
                 <hr class="my-3 mx-3 border-secondary" />
 
-                <div class="px-3 pb-2">
+                @* <div class="px-3 pb-2">
                     <small class="section-header">Sistema</small>
-                </div>
-
-                <a class="nav-link" href="#">
-                    <i class="bi bi-gear me-3"></i>Configuración
+                </div> *@
+                @if (perfilUsuario.IdUsuario == "1")
+                {
+                <hr class="my-3 mx-3 border-secondary" />
+                    <div class="px-3 pb-2">
+                        <small class="section-header">Sistema</small>
+                    </div>
+                    <a class="nav-link @(currentController == "Usuarios" ? "active" : "")" href="@Url.Action("AdministrarUsuarios", "Usuarios")">
+                        <i class="bi bi-people-fill me-3"></i>Usuarios
+                    </a>
+                    <a class="nav-link @(currentController == "Secciones" ? "active" : "")" href="@Url.Action("Index", "Secciones")">
+                        <i class="bi bi-ui-checks-grid me-3"></i>Secciones
+                    </a>
+                }
+                <a class="nav-link" href="@Url.Action("CerrarSesion", "Acceso")"></a>
+                <i class="bi bi-box-arrow-right me-3"></i>Salir
                 </a>
-                <a class="nav-link snier-link" href="#">
-                    <i class="bi bi-question-circle me-3"></i>Ayuda
-                </a>
-
             </nav>
         </div>
     </div>
@@ -420,14 +429,20 @@
                         </li>
                     }
                 }
-                <div class="px-3 pb-3">
-                    <small class="section-header">Sistema</small>
-                </div>
-                <a class="nav-link" href="#">
-                    <i class="bi bi-gear"></i>Configuración
-                </a>
-                <a class="nav-link snier-link" href="#">
-                    <i class="bi bi-question-circle"></i>Ayuda
+                @if (perfilUsuario.IdUsuario == "1")
+                {
+                   <div class="px-3 pb-3">
+                        <small class="section-header">Sistema</small>
+                    </div>
+                    <a class="nav-link @(currentController == "Usuarios" ? "active" : "")" href="@Url.Action("AdministrarUsuarios", "Usuarios")">
+                        <i class="bi bi-people-fill me-2"></i>Usuarios
+                    </a>
+                    <a class="nav-link @(currentController == "Secciones" ? "active" : "")" href="@Url.Action("Index", "Secciones")">
+                        <i class="bi bi-ui-checks-grid me-2"></i>Secciones
+                    </a>
+                }
+                <a class="nav-link" href="@Url.Action("CerrarSesion", "Acceso")">
+                    <i class="bi bi-box-arrow-right me-2"></i>Salir
                 </a>
             </nav>
         </div>
@@ -438,12 +453,12 @@
     <main class="main-content p-0">
         <div id="page-preloader" style="display:flex;">
             <div class="spinner"></div>
-            <img src="~/img/lc6.png" alt="Logo de la empresa" class="preloader-logo">
+            <img src="@Cdn.Url/img_snier/login/logo_snier.png" alt="Logo de la empresa" class="preloader-logo">
             <div class="loading-text">Cargando la página, por favor espere<span id="page-dots">...</span></div>
         </div>
         <div id="ajax-preloader" style="display:none;">
             <div class="spinner"></div>
-            <img src="~/img/lc6.png" alt="Logo de la empresa" class="preloader-logo">
+            <img src="@Cdn.Url/img_snier/login/logo_snier.png" alt="Logo de la empresa" class="preloader-logo">
             <div class="loading-text">Cargando los datos, por favor espere<span id="ajax-dots">...</span></div>
         </div>
 
@@ -454,7 +469,7 @@
             <div class="container-fluid px-5">
                 <div class="row">
                     <div class="col-md-4 mb-4">
-                        <img src="~/img/logo_sener_blanco.png" alt="Logo SENER" class="mb-2" style="max-height: 60px;">
+                        <img src="@Cdn.Url/img_snier/vistas/logo_sener_blanco.png" alt="Logo SENER" class="mb-2" style="max-height: 60px;">
                         <p class="small mb-1">Av. Insurgentes Sur 890, Col. Del Valle Centro,<br> Benito Juárez, C.P. 03100, Ciudad de México</p>
                         <p class="small mb-0">Tel: 55 5000 6000</p>
                         <p class="small mb-2">&copy; 2025 Secretaría de Energía - Gobierno de México</p>
@@ -539,7 +554,7 @@
 
 
     <!-- **Importante**: jQuery Validate <— debe ir **después** de cargar jQuery -->
-    <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 
@@ -557,7 +572,7 @@
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     <!-- Page Specific JS -->
-    <script src="~/js/app.js" asp-append-version="true"></script>
+    @* <script src="~/js/app.js" asp-append-version="true"></script> *@
     @* html2pdf *@
     @* <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script> *@
 
@@ -640,7 +655,7 @@
                                 <div class="item p-3" data-id="${notification.id}">
                                     <div class="row gx-2 justify-content-between align-items-center">
                                         <div class="col-auto">
-                                            <img class="profile-image" src="/img/notificaciones.png" alt="">
+                                            <img class="profile-image" src="@Cdn.Url/img_snier/vistas/img/notificaciones.png" alt="">
                                         </div>
                                         <div class="col">
                                             <div class="info">
@@ -968,7 +983,7 @@
     </script>
     <script src="~/js/validacion-formulario.js"></script>
     <!-- JavaScript -->
-    @if (perfilUsuario.Rol != "1")
+    @if (perfilUsuario.IdUsuario != "1")
     {
         <script src="~/js/seguridad.js"></script>
     }

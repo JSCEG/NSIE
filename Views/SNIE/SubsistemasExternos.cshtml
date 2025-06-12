@@ -153,23 +153,127 @@
 
         let chart;
         document.addEventListener('DOMContentLoaded', function () {
+            // Configuración de animaciones globales de Highcharts
+            Highcharts.setOptions({
+                chart: {
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeOutBounce'
+                    }
+                },
+                plotOptions: {
+                    series: {
+                        animation: {
+                            duration: 1500
+                        }
+                    }
+                }
+            });
+
             chart = Highcharts.chart('graficoSubsistemas', {
-                chart: { type: 'line' },
-                title: { text: 'Conectividad Dinámica por Subsistema' },
-                xAxis: { categories: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'] },
-                yAxis: { title: { text: 'Nivel de Conectividad' }, min: 0, max: 1 },
+                chart: { 
+                    type: 'line',
+                    events: {
+                        load: function() {
+                            // Animación inicial
+                            const series = this.series[0];
+                            const points = series.points;
+                            points.forEach((point, i) => {
+                                setTimeout(() => {
+                                    point.update(seriesData.PEMEX[i], true, {
+                                        duration: 1000,
+                                        easing: 'easeOutBounce'
+                                    });
+                                }, i * 300);
+                            });
+                        }
+                    }
+                },
+                title: { 
+                    text: 'Conectividad Dinámica por Subsistema',
+                    style: {
+                        fontWeight: 'bold'
+                    }
+                },
+                xAxis: { 
+                    categories: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+                    labels: {
+                        style: {
+                            fontWeight: '500'
+                        }
+                    }
+                },
+                yAxis: { 
+                    title: { 
+                        text: 'Nivel de Conectividad',
+                        style: {
+                            fontWeight: '500'
+                        }
+                    }, 
+                    min: 0, 
+                    max: 1,
+                    plotLines: [{
+                        value: 0.7,
+                        color: '#FF0000',
+                        dashStyle: 'shortdash',
+                        width: 2,
+                        label: {
+                            text: 'Nivel Mínimo Requerido'
+                        }
+                    }]
+                },
                 series: [{
                     name: 'PEMEX',
-                    data: seriesData.PEMEX,
-                    color: '#198754'
-                }]
+                    data: [0, 0, 0, 0], // Iniciamos en cero para la animación
+                    color: '#198754',
+                    marker: {
+                        enabled: true,
+                        radius: 6
+                    }
+                }],
+                tooltip: {
+                    formatter: function() {
+                        return `<b>${this.series.name}</b><br/>
+                                ${this.x}: ${(this.y * 100).toFixed(1)}% conectividad`;
+                    }
+                }
             });
         });
 
+        // Mejorar la transición entre subsistemas
         document.getElementById('selectorSubsistema').addEventListener('change', function () {
             const selected = this.value;
             if (chart) {
-                chart.series[0].update({ name: selected, data: seriesData[selected] });
+                const newData = seriesData[selected];
+                
+                // Animación secuencial para cada punto
+                newData.forEach((value, index) => {
+                    setTimeout(() => {
+                        chart.series[0].points[index].update({
+                            y: value
+                        }, true, {
+                            duration: 800,
+                            easing: 'easeOutBounce'
+                        });
+                    }, index * 200);
+                });
+
+                // Actualizar nombre de la serie
+                chart.series[0].update({
+                    name: selected
+                }, false);
+
+                // Actualizar color según el subsistema
+                const colors = {
+                    'PEMEX': '#198754',
+                    'CFE': '#0d6efd',
+                    'CENACE': '#ffc107',
+                    'CONUEE': '#dc3545'
+                };
+                
+                chart.series[0].update({
+                    color: colors[selected]
+                }, true);
             }
         });
     </script>

@@ -1,15 +1,15 @@
 @model HeaderViewModel
-
+@using NSIE.Models
 @{
     var moduleInfoJson = Html.Raw(Model.ModuleInfo);
-}
+   }
 
 <!-- HEADER FIJO con título, ayuda y migas -->
 <div class="header-fijo cp-section py-3 px-4 pb-4" data-aos="fade-down" data-aos-delay="150">
     <!-- Línea superior: ícono, título y botón de ayuda -->
     <div class="d-flex align-items-center justify-content-center gap-3 mb-2 flex-wrap text-center" data-aos="zoom-in"
         data-aos-delay="200">
-        <img src="~/img/modulos/@Model.IconPath" alt="@Model.Title" class="iconomenu" />
+        <img src="@Cdn.Url/img_snier/vistas/@Model.IconPath" alt="@Model.Title" class="iconomenu" />
         <h2 class="m-0"
             style="font-family: var(--font-family-display); font-weight: 700; font-size: var(--font-size-2xl); color: var(--gray-700); letter-spacing: 0.03em;">
             @Model.Title

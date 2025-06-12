@@ -44,8 +44,8 @@ new { icon = "newspaper", text = "Medios: Difusión" }
 <div class="container px-2 px-md-5">
     <div class="row mb-4">
         <div class="col-12 text-center" data-aos="fade-down">
-            <img src="~/img/banner/12.png" alt="Factor de Emisión SEN" class="img-fluid rounded shadow-sm mb-3"
-                style="max-width: 100%; height: auto;">
+            <img src="@Cdn.Url/img_snier/vistas/banner/12.png" alt="Factor de Emisión SEN"
+                class="img-fluid rounded shadow-sm mb-3" style="max-width: 100%; height: auto;">
         </div>
     </div>
 
@@ -268,13 +268,13 @@ new { icon = "newspaper", text = "Medios: Difusión" }
                 series: [{
                     name: 'Factor de Emisión (2017-2023)',
                     data: [
-                                                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2017).Select(f => (double?)f.Valor).FirstOrDefault())),
-                                                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2018).Select(f => (double?)f.Valor).FirstOrDefault())),
-                                                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2019).Select(f => (double?)f.Valor).FirstOrDefault())),
-                                                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2020).Select(f => (double?)f.Valor).FirstOrDefault())),
-                                                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2021).Select(f => (double?)f.Valor).FirstOrDefault())),
-                                                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2022).Select(f => (double?)f.Valor).FirstOrDefault())),
-                                                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2023).Select(f => (double?)f.Valor).FirstOrDefault())),
+                                                        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2017).Select(f => (double?)f.Valor).FirstOrDefault())),
+                                                        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2018).Select(f => (double?)f.Valor).FirstOrDefault())),
+                                                        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2019).Select(f => (double?)f.Valor).FirstOrDefault())),
+                                                        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2020).Select(f => (double?)f.Valor).FirstOrDefault())),
+                                                        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2021).Select(f => (double?)f.Valor).FirstOrDefault())),
+                                                        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2022).Select(f => (double?)f.Valor).FirstOrDefault())),
+                                                        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2023).Select(f => (double?)f.Valor).FirstOrDefault())),
                         null, null, null, null, null, null, null
                     ],
                     color: '#7cb5ec',
@@ -283,7 +283,7 @@ new { icon = "newspaper", text = "Medios: Difusión" }
                     name: 'Pronóstico (2024-2030)',
                     data: [
                         null, null, null, null, null, null, null,
-                                                    @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2024).Select(f => (double?)f.Valor).FirstOrDefault())),
+                                                        @Html.Raw(JsonConvert.SerializeObject(Model.FactoresEmision.Where(f => f.Anio == 2024).Select(f => (double?)f.Valor).FirstOrDefault())),
                         null, null, null, null, null, null
                     ],
                     color: '#ff5733',
