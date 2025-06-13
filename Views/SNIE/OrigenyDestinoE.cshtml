@@ -1,31 +1,3 @@
-@* 
-🔧 Mejora visual de esta vista .cshtml sin afectar la lógica existente. Instrucciones para Copilot:
-
-- Aplica estilos profesionales con Bootstrap 5 (cards, tablas, botones, alerts, etc.).
-- Usa animaciones AOS en títulos y secciones importantes.
-- Si hay una tabla, intégrala con DataTables:
-  - Soporte de búsqueda en tiempo real, paginación y exportación (Excel, PDF, CSV).
-  - Soporte para scroll horizontal si hay muchas columnas.
-- Si hay métricas o datos que podrían visualizarse gráficamente, sugiere e incluye un gráfico tipo demo con Highcharts (sin romper la lógica actual).
-- Mantén y respeta todos los scripts, modales y secciones @section ya existentes.
-- Conserva todas las estructuras Razor y C# sin cambios en nombres ni flujos.
-- Agrega mejoras tipo demo solo si son útiles para el usuario, como:
-  - Filtros por unidad o categoría,
-  - Cards resumen informativos,
-  - Tooltips, badges, alertas informativas con íconos,
-  - Dashboards embebidos.
-
-🧩 Cuando se agreguen ayudas visuales o funcionalidades tipo demo, usa componentes **impactantes y modernos visualmente**, pero que no interrumpan la experiencia del usuario (uso sutil de colores, animaciones y contenedores tipo spotlight o highlight, sin sobrecargar).
-
-📌 Si la vista aún no tiene el componente `_ViewHeader`, genéralo al inicio con un título, descripción, fundamentos legales y lógica funcional.
-
-✅ Todo el código generado debe ser 100% responsive, accesible y visualmente claro tanto en escritorio como en móviles.
-
-IMPORTANTE: No elimines scripts o lógicas ya presentes. Si mejoras algo, debe ser compatible y respetar la lógica principal.
-
-Ahora, mejora esta vista debajo de este comentario.
-*@
-
 @model HomeViewModel
 @using NSIE.Models
 @using Microsoft.AspNetCore.Http

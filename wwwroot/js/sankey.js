@@ -1,4 +1,5 @@
 //    document.addEventListener("DOMContentLoaded", function () {
+let combinedData = [];
 
 function iniciarSankey() {
     //Arrastre derl SVG
@@ -131,7 +132,7 @@ function iniciarSankey() {
                             }
 
                             const { yfinal, xfinal } = newData;
-                            const imgcapa = "/img/co2.png";
+                            const imgcapa = "https://cdn.sassoapps.com/img_sankey/co2.png";
 
                             // Crea una nueva instancia de WrapperNode y la retorna
                             const nuevoNodo = new WrapperNode(
@@ -443,12 +444,12 @@ function iniciarSankey() {
                                 idvalue[i] = 200;
                                 yvalue[i] = 330;
                                 nomvalue[i] = "Sector petróleo y gas";
-                                imagenes[i] = "/img/s_petroliferos.png";
+                                imagenes[i] = "https://cdn.sassoapps.com/img_sankey/s_petroliferos.png";
                             } else {
                                 idvalue[i] = 210;
                                 yvalue[i] = 620;
                                 nomvalue[i] = "Sector eléctrico";
-                                imagenes[i] = "/img/electricidadi.png";
+                                imagenes[i] = "https://cdn.sassoapps.com/img_sankey/electricidadi.png";
                             }
 
                             const nuevoNodoTooltip = new SectorTooltip(
@@ -680,17 +681,17 @@ function iniciarSankey() {
                                         contid = "Transformacion1";
                                         conty = 310;
                                         contheight = 355;
-                                        contimg = "/img/co2.png";
+                                        contimg = "https://cdn.sassoapps.com/img_sankey/co2.png";
                                     } else if (f === 1) {
                                         contid = "Transformacion2";
                                         conty = 670;
                                         contheight = 420;
-                                        contimg = "/img/rr4.png";
+                                        contimg = "https://cdn.sassoapps.com/img_sankey/rr4.png";
                                     } else {
                                         contid = "Transformacion3";
                                         conty = 60;
                                         contheight = 206;
-                                        contimg = "/img/co2.png";
+                                        contimg = "https://cdn.sassoapps.com/img_sankey/co2.png";
                                     }
 
                                     const idCapa = contid;
@@ -972,25 +973,25 @@ function iniciarSankey() {
                                         contx = 800;
                                         conty = 310;
                                         contheight = 206;
-                                        imgimpexp = "/img/importacion.png";
+                                        imgimpexp = "https://cdn.sassoapps.com/img_sankey/importacion.png";
                                     } else if (f === 1) {
                                         contid = "Importacion2";
                                         contx = 800;
                                         conty = 670;
                                         contheight = 206;
-                                        imgimpexp = "/img/importacion.png";
+                                        imgimpexp = "https://cdn.sassoapps.com/img_sankey/importacion.png";
                                     } else if (f === 2) {
                                         contid = "Exportacion1";
                                         contx = 820;
                                         conty = 310;
                                         contheight = 206;
-                                        imgimpexp = "/img/exportacion.png";
+                                        imgimpexp = "https://cdn.sassoapps.com/img_sankey/exportacion.png";
                                     } else {
                                         contid = "Exportacion2";
                                         contx = 820;
                                         conty = 670;
                                         contheight = 206;
-                                        imgimpexp = "/img/exportacion.png";
+                                        imgimpexp = "https://cdn.sassoapps.com/img_sankey/exportacion.png";
                                     }
 
                                     const idCapa = contid;
@@ -1555,6 +1556,21 @@ function iniciarSankey() {
                 });
             });
         }
+        async function ejecutarConsultaSankeyCompleta() {
+            try {
+                await consultaSankey();
+                await obtieneNodosCaja();
+                await nodos();
+                await sector();
+                await transformaciones();
+                await tiposEnergia();
+                await usosFinales();
+                await tablaFinal(); // ✅ Aquí sí se ejecuta cuando ya se llenó combinedData
+
+            } catch (error) {
+                console.error("Error en la ejecución de consulta Sankey:", error);
+            }
+        }
 
         obtieneNodosCaja()
             .then(() => consultaSankey())
@@ -1579,7 +1595,8 @@ function iniciarSankey() {
                 "Nivel 5 - Uso Final": 7,
             };
 
-            var combinedData = [];
+            combinedData = [];
+            // var combinedData = [];
             // Realiza la primera solicitud AJAX para obtener los datos de la primera tabla
             $.ajax({
                 url: "/Sankey/NodosTablaFep",
@@ -1885,19 +1902,19 @@ function iniciarSankey() {
                             buttons: [
                                 {
                                     extend: "copyHtml5",
-                                    title: "Energeo-FEP",
+                                    title: "SNIER-Balance Nacional de Energía",
                                 },
                                 {
                                     extend: "excelHtml5",
-                                    title: "Energeo-FEP",
+                                    title: "SNIER-Balance Nacional de Energía",
                                 },
                                 {
                                     extend: "csvHtml5",
-                                    title: "Energeo-FEP",
+                                    title: "SNIER-Balance Nacional de Energía",
                                 },
                                 {
                                     extend: "pdfHtml5",
-                                    title: "Energeo-FEP",
+                                    title: "SNIER-Balance Nacional de Energía",
                                     customize: function (doc) {
                                         doc.styles.tableHeader.color = "#9fa1a4";
                                         doc.defaultStyle.alignment = "center";
@@ -1925,7 +1942,6 @@ function iniciarSankey() {
             }
 
             function calcularTotalesPorNivel() {
-                // Objeto para almacenar los totales por nivel
                 let totalPorNivel = {
                     "Nivel FEP - Fuentes de Energía Primaria": 0,
                     "Nivel FOCAL - Sector Energético": 0,
@@ -1936,7 +1952,6 @@ function iniciarSankey() {
                     "Nivel 5 - Uso Final": 0,
                 };
 
-                // Sumar los valores por nivel
                 combinedData.forEach(function (item) {
                     if (item.nivel in totalPorNivel) {
                         const valor = parseFloat(item.valor || 0);
@@ -1946,7 +1961,6 @@ function iniciarSankey() {
                     }
                 });
 
-                // Redondear a 1 decimal y aplicar formato con separador de miles
                 const formatter = new Intl.NumberFormat("es-MX", {
                     minimumFractionDigits: 1,
                     maximumFractionDigits: 1,
@@ -1955,27 +1969,55 @@ function iniciarSankey() {
                 for (let nivel in totalPorNivel) {
                     totalPorNivel[nivel] = formatter.format(totalPorNivel[nivel]);
                 }
+
                 console.log("Totales por nivel calculados:", totalPorNivel);
-                // Actualizar los totales en el menú
-                $("#tarjetas-totales").html(""); // Limpiar contenido previo
+
+                const iconosPorNivel = {
+                    "Nivel FEP - Fuentes de Energía Primaria": "bi-lightning-charge-fill",
+                    "Nivel FOCAL - Sector Energético": "bi-bar-chart-line-fill",
+                    "Nivel 1 - Provisión y Producción": "bi-truck",
+                    "Nivel 2 - Transformaciones": "bi-cpu-fill",
+                    "Nivel 3 - Tipos de Energía": "bi-layers-fill",
+                    "Nivel 4 - Distribución": "bi-diagram-3-fill",
+                    "Nivel 5 - Uso Final": "bi-house-fill",
+                };
+
+                const coloresFondo = [
+                    "#e3f2fd", "#fce4ec", "#e8f5e9", "#fff3e0", "#ede7f6", "#f3e5f5", "#e0f7fa"
+                ];
+                // Verifica si hay datos válidos
+                const hayDatos = combinedData.length > 0 && combinedData.some(item => !isNaN(parseFloat(item.valor)));
+
+                if (!hayDatos) {
+                    $("#tarjetas-totales").html(`
+                    <div class="alert alert-warning w-100 text-center" role="alert">
+                        No hay datos disponibles para el filtro seleccionado.
+                    </div>
+                `);
+                    return; // Evita seguir si no hay datos
+                }
+
+                // Limpiar contenedor y renderizar tarjetas
+                $("#tarjetas-totales").html("");
+
                 for (let nivel in totalPorNivel) {
                     const nivelId = nivel
                         .toLowerCase()
                         .replace(/ /g, "-")
-                        .replace(/[^a-z0-9-]/g, ""); // Generar un ID único para cada nivel
+                        .replace(/[^a-z0-9-]/g, "");
 
                     $("#tarjetas-totales").append(`
-                            <div class="card shadow-sm m-2 border-0" style="min-width: 260px; flex: 1;">
-                                <div class="card-body text-center">
-                                    // <img src="https://cdn.sassoapps.com/img_snier/vistas/logo_sener_blanco.png" 
-                                    //      alt="Logo SENER" style="width: 40px; height: auto; margin-bottom: 10px;" />
-                                    <h6 class="card-title text-primary">${nivel}</h6>
-                                    <p class="card-text fs-5 fw-bold">${totalPorNivel[nivel]} PJ</p>
-                                </div>
+                        <div class="card shadow-sm m-2 border-0" style="min-width: 260px; flex: 1;">
+                            <div class="card-body text-center">
+                                <i class="bi bi-bar-chart-line fs-2 text-primary mb-2"></i>
+                                <h6 class="card-title text-primary">${nivel}</h6>
+                                <p class="card-text fs-5 fw-bold">${totalPorNivel[nivel]} PJ</p>
                             </div>
-                        `);
+                        </div>
+                    `);
                 }
             }
+
         }
 
         // Al hacer clic fuera de un nodo
@@ -2086,7 +2128,7 @@ function iniciarSankey() {
 
                             const { yfinal, xfinal } = newData;
 
-                            const imgcapa = "/img/co2.png";
+                            const imgcapa = "https://cdn.sassoapps.com/img_sankey/co2.png";
 
                             // Crea una nueva instancia de WrapperNode y la retorna
                             const nuevoNodo = new WrapperNode(
@@ -2398,12 +2440,12 @@ function iniciarSankey() {
                                 idvalue[i] = 200;
                                 yvalue[i] = 330;
                                 nomvalue[i] = "Sector petróleo y gas";
-                                imagenes[i] = "/img/s_petroliferos.png";
+                                imagenes[i] = "https://cdn.sassoapps.com/img_sankey/s_petroliferos.png";
                             } else {
                                 idvalue[i] = 210;
                                 yvalue[i] = 620;
                                 nomvalue[i] = "Sector eléctrico";
-                                imagenes[i] = "/img/electricidadi.png";
+                                imagenes[i] = "https://cdn.sassoapps.com/img_sankey/electricidadi.png";
                             }
 
                             const nuevoNodoTooltip = new SectorTooltip(
@@ -2633,17 +2675,17 @@ function iniciarSankey() {
                                         contid = "Transformacion1";
                                         conty = 310;
                                         contheight = 355;
-                                        contimg = "/img/co2.png";
+                                        contimg = "https://cdn.sassoapps.com/img_sankey/co2.png";
                                     } else if (f === 1) {
                                         contid = "Transformacion2";
                                         conty = 670;
                                         contheight = 420;
-                                        contimg = "/img/rr4.png";
+                                        contimg = "https://cdn.sassoapps.com/img_sankey/rr4.png";
                                     } else {
                                         contid = "Transformacion3";
                                         conty = 60;
                                         contheight = 206;
-                                        contimg = "/img/co2.png";
+                                        contimg = "https://cdn.sassoapps.com/img_sankey/co2.png";
                                     }
 
                                     const idCapa = contid;
@@ -2925,25 +2967,25 @@ function iniciarSankey() {
                                         contx = 800;
                                         conty = 310;
                                         contheight = 206;
-                                        imgimpexp = "/img/importacion.png";
+                                        imgimpexp = "https://cdn.sassoapps.com/img_sankey/importacion.png";
                                     } else if (f === 1) {
                                         contid = "Importacion2";
                                         contx = 800;
                                         conty = 670;
                                         contheight = 206;
-                                        imgimpexp = "/img/importacion.png";
+                                        imgimpexp = "https://cdn.sassoapps.com/img_sankey/importacion.png";
                                     } else if (f === 2) {
                                         contid = "Exportacion1";
                                         contx = 820;
                                         conty = 310;
                                         contheight = 206;
-                                        imgimpexp = "/img/exportacion.png";
+                                        imgimpexp = "https://cdn.sassoapps.com/img_sankey/exportacion.png";
                                     } else {
                                         contid = "Exportacion2";
                                         contx = 820;
                                         conty = 670;
                                         contheight = 206;
-                                        imgimpexp = "/img/exportacion.png";
+                                        imgimpexp = "https://cdn.sassoapps.com/img_sankey/exportacion.png";
                                     }
 
                                     const idCapa = contid;
@@ -3532,7 +3574,7 @@ function iniciarSankey() {
                 "Nivel 5 - Uso Final": 7,
             };
 
-            var combinedData = [];
+            combinedData = [];
             // Realiza la primera solicitud AJAX para obtener los datos de la primera tabla
             $.ajax({
                 url: "/Sankey/NodosTablaFep",
@@ -3840,19 +3882,19 @@ function iniciarSankey() {
                             buttons: [
                                 {
                                     extend: "copyHtml5",
-                                    title: "Energeo-FEP",
+                                    title: "SNIER-Balance Nacional de Energía",
                                 },
                                 {
                                     extend: "excelHtml5",
-                                    title: "Energeo-FEP",
+                                    title: "SNIER-Balance Nacional de Energía",
                                 },
                                 {
                                     extend: "csvHtml5",
-                                    title: "Energeo-FEP",
+                                    title: "SNIER-Balance Nacional de Energía",
                                 },
                                 {
                                     extend: "pdfHtml5",
-                                    title: "Energeo-FEP",
+                                    title: "SNIER-Balance Nacional de Energía",
                                     customize: function (doc) {
                                         doc.styles.tableHeader.color = "#9fa1a4";
                                         doc.defaultStyle.alignment = "center";
@@ -3985,11 +4027,11 @@ function iniciarSankey() {
                             clearInterval(animationInterval);
                             animationInterval = null;
                             playButton.html(
-                                '<img src="/img/play.png" alt="Play" style="width: 30%; height: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">'
+                                '<img src="https://cdn.sassoapps.com/img_sankey/play.png" alt="Play" style="width: 30%; height: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">'
                             ); // Cambiar a símbolo de Play
                         } else {
                             playButton.html(
-                                '<img src="/img/pause.png" alt="Pause" style="width: 30%; height: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">'
+                                '<img src="https://cdn.sassoapps.com/img_sankey/pause.png" alt="Pause" style="width: 30%; height: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">'
                             ); // Cambiar a símbolo de Pause
                             animationInterval = setInterval(updateYear, 300);
                         }
@@ -4014,7 +4056,7 @@ function iniciarSankey() {
                             clearInterval(animationInterval);
                             animationInterval = null;
                             playButton.html(
-                                '<img src="/img/play.png" alt="Play" style="width: 30%; height: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">'
+                                '<img src="https://cdn.sassoapps.com/img_sankey/play.png" alt="Play" style="width: 30%; height: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">'
                             );
                             // Reiniciar el índice al principio para el siguiente clic en play
                             currentYearIndex = 0;
@@ -4027,7 +4069,7 @@ function iniciarSankey() {
                         // Verificar si la animación debe detenerse
                         if (!animationInterval) {
                             playButton.html(
-                                '<img src="/img/play.png" alt="Play" style="width: 30%; height: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">'
+                                '<img src="https://cdn.sassoapps.com/img_sankey/play.png" alt="Play" style="width: 30%; height: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">'
                             );
                         }
                     }
@@ -4310,7 +4352,7 @@ function iniciarSankey() {
             width = 70,
             height = 20,
             co2 = 0,
-            imgco2 = "/img/co2.png",
+            imgco2 = "https://cdn.sassoapps.com/img_sankey/co2.png",
             tooltipPosition = "bottom"
         ) {
             this.id = id;
@@ -5598,8 +5640,8 @@ function iniciarSankey() {
             imgSrc = getImageFromNombre(nombre),
             width = 70,
             height = 20,
-            imgflecha = "/img/rr4.png",
-            imgco2 = "/img/co2.png",
+            imgflecha = "https://cdn.sassoapps.com/img_sankey/rr4.png",
+            imgco2 = "https://cdn.sassoapps.com/img_sankey/co2.png",
             tooltipPosition = "bottom" // Valor por defecto es 'bottom'
         ) {
             this.id = id;
@@ -6447,7 +6489,7 @@ function iniciarSankey() {
             y = 450,
             nombre = "Oferta Total",
             color = getColorFromNombre(nombre),
-            imgSrc = "/img/s_recurso.png",
+            imgSrc = "https://cdn.sassoapps.com/img_sankey/s_recurso.png",
             width = 100,
             height = 100,
             infoDataImp = "IMP TOTAL",
@@ -8033,81 +8075,81 @@ function iniciarSankey() {
     function getImageFromNombre(nombre) {
         switch (nombre) {
             case "Carbón": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/carboni.png";
+                return "https://cdn.sassoapps.com/img_sankey/carboni.png";
             case "Condensados": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/condensadosi.png";
+                return "https://cdn.sassoapps.com/img_sankey/condensadosi.png";
             case "Gas Natural": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/gasnaturali.png";
+                return "https://cdn.sassoapps.com/img_sankey/gasnaturali.png";
             case "Petróleo crudo": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/petroleoi.png";
+                return "https://cdn.sassoapps.com/img_sankey/petroleoi.png";
             case "Nucloenergía": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/nuclear.png";
+                return "https://cdn.sassoapps.com/img_sankey/nuclear.png";
             case "Bagazo de caña": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/sugar-cane.png";
+                return "https://cdn.sassoapps.com/img_sankey/sugar-cane.png";
             case "Biogas": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/biogasi.png";
+                return "https://cdn.sassoapps.com/img_sankey/biogasi.png";
             case "Energía Eólica": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/vientoi.png";
+                return "https://cdn.sassoapps.com/img_sankey/vientoi.png";
             case "Energía Solar": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/soli.png";
+                return "https://cdn.sassoapps.com/img_sankey/soli.png";
             case "Geoenergía": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/geotermiai.png";
+                return "https://cdn.sassoapps.com/img_sankey/geotermiai.png";
             case "Hidroenergía": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/aguai.png";
+                return "https://cdn.sassoapps.com/img_sankey/aguai.png";
             case "Leña": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/fire.png";
+                return "https://cdn.sassoapps.com/img_sankey/fire.png";
             case "Refinerías": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/Iconos Petrolíferos_Refineria.png";
+                return "https://cdn.sassoapps.com/img_sankey/Iconos Petrolíferos_Refineria.png";
             case "Coquizadores": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/Iconos Petrolíferos_Refineria.png";
+                return "https://cdn.sassoapps.com/img_sankey/Iconos Petrolíferos_Refineria.png";
             case "Complejos gaseros": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/Iconos Petrolíferos-29.png";
+                return "https://cdn.sassoapps.com/img_sankey/Iconos Petrolíferos-29.png";
             case "Carboeléctrica": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/Iconos Electricidad_Carbon.png";
+                return "https://cdn.sassoapps.com/img_sankey/Iconos Electricidad_Carbon.png";
             case "Combustión Interna": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/combin.png";
+                return "https://cdn.sassoapps.com/img_sankey/combin.png";
             case "Ciclo Combinado":
-                return "/img/Iconos Electricidad_Combustoleo.png";
+                return "https://cdn.sassoapps.com/img_sankey/Iconos Electricidad_Combustoleo.png";
             case "Térmica convencional":
-                return "/img/combin.png";
+                return "https://cdn.sassoapps.com/img_sankey/combin.png";
             case "Hidroeléctrica":
-                return "/img/hidroelec.png";
+                return "https://cdn.sassoapps.com/img_sankey/hidroelec.png";
             case "Fotovoltaica":
-                return "/img/foto.png";
+                return "https://cdn.sassoapps.com/img_sankey/foto.png";
             case "Turbo Gas": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/gasyvapor.png";
+                return "https://cdn.sassoapps.com/img_sankey/gasyvapor.png";
             case "Vapor": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/gasyvapor.png";
+                return "https://cdn.sassoapps.com/img_sankey/gasyvapor.png";
             case "Nucleoeléctrica": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/Iconos Electricidad_Centrales Electricas.png";
+                return "https://cdn.sassoapps.com/img_sankey/Iconos Electricidad_Centrales Electricas.png";
             case "Eólica": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/Iconos Electricidad_Eolica.png";
+                return "https://cdn.sassoapps.com/img_sankey/Iconos Electricidad_Eolica.png";
             case "Geotermoeléctrica": //quitar el ejemplo cuando se tenga la imagen
-                return "/img/Iconos Electricidad_Geotérmica.png";
+                return "https://cdn.sassoapps.com/img_sankey/Iconos Electricidad_Geotérmica.png";
             //case "Centrales eléctricas":
-            //return "/img/Iconos Electricidad_Centrales Electricas.png"
+            //return "https://cdn.sassoapps.com/img_sankey/Iconos Electricidad_Centrales Electricas.png"
             //case "Petrolíferos":
-            //return "/img/Iconos Petrolíferos-29.png" *@
+            //return "https://cdn.sassoapps.com/img_sankey/Iconos Petrolíferos-29.png" *@
             case "Distribución":
-                return "/img/s_distribucion.png";
+                return "https://cdn.sassoapps.com/img_sankey/s_distribucion.png";
             case "RNT":
-                return "/img/s_rntyrgd.png";
+                return "https://cdn.sassoapps.com/img_sankey/s_rntyrgd.png";
             case "RGD":
-                return "/img/rnd.png";
+                return "https://cdn.sassoapps.com/img_sankey/rnd.png";
             case "Hogares":
-                return "/img/hogar.png";
+                return "https://cdn.sassoapps.com/img_sankey/hogar.png";
             case "Serv. Púb. y Com.":
-                return "/img/servicio.png";
+                return "https://cdn.sassoapps.com/img_sankey/servicio.png";
             case "Público":
-                return "/img/servicio.png";
+                return "https://cdn.sassoapps.com/img_sankey/servicio.png";
             case "Transporte":
-                return "/img/camioni.png";
+                return "https://cdn.sassoapps.com/img_sankey/camioni.png";
             case "Agricultura":
-                return "/img/agricultura.png";
+                return "https://cdn.sassoapps.com/img_sankey/agricultura.png";
             case "Industrial":
-                return "/img/industria.png";
+                return "https://cdn.sassoapps.com/img_sankey/industria.png";
             case "Sector Energía":
-                return "/img/sectore.png";
+                return "https://cdn.sassoapps.com/img_sankey/sectore.png";
         }
     }
 
