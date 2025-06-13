@@ -29,9 +29,9 @@ var iconoBase = L.Icon.extend({
 });
 
 // Asignación de Iconos
-//var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
-//iconoAprobado = new iconoBase({ iconUrl: '/img/Aprobado.png' });
-//iconoNoaprobado = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+//var iconoSolicitudes = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Solicitudes.png' });
+//iconoAprobado = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Aprobado.png' });
+//iconoNoaprobado = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/NoAprobado.png' });
 
 
 var currentMarker = null; // Referencia al marcador actual
@@ -374,16 +374,16 @@ function CargaElectricidad() {
                         var imgSrc; // La URL de la imagen que se mostrará en el pop-up
                         switch (coordenada.tipoPermiso) {
                             case "vacío":
-                                imgSrc = '/img/fotovoltaica.png';
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/fotovoltaica.png';
                                 break;
                             /* case "Distribución de Gas Licuado de Petróleo mediante Planta de Distribución":
-                                imgSrc = '/img/glpmapa_dist.png';
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_dist.png';
                                 break;
                             case "Expendio al Público de Gas Licuado de Petróleo mediante Estación de Servicio con fin Específico":
-                                imgSrc = '/img/glpmapa.png';
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa.png';
                                 break; */
                             default:
-                                imgSrc = '/img/fotovoltaica.png'; // Ícono por defecto si no hay coincidencia
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/fotovoltaica.png'; // Ícono por defecto si no hay coincidencia
                                 break;
                         }
                         contenido += "<h2 class='subtitulo'><img src='" + imgSrc + "' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
@@ -609,9 +609,9 @@ function CargaElectricidad() {
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/fotovoltaica.png' });
-                /*  var iconoAlmacenamiento = new iconoBase({ iconUrl: '/img/glpmapa_alma.png' });
-                    var iconoDistribucion = new iconoBase({ iconUrl: '/img/glpmapa_dist.png' });*/
+                var iconoExpendio = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/fotovoltaica.png' });
+                /*  var iconoAlmacenamiento = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_alma.png' });
+                    var iconoDistribucion = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_dist.png' });*/
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {
                     var coordenada = response[j];
@@ -877,21 +877,21 @@ var uniqueTerms = [...new Set(availableTerms)];
 autocomplete(document.getElementById("busquedaGeneralInput"), availableTerms);
 
 //Links activos*@
-    function activarElemento(elementoID) {
-        // Obtén todos los elementos de tu menú
-        var elementos = document.querySelectorAll('.navbarmapag a');
+function activarElemento(elementoID) {
+    // Obtén todos los elementos de tu menú
+    var elementos = document.querySelectorAll('.navbarmapag a');
 
-        // Itera sobre ellos para eliminar la clase 'active'
-        elementos.forEach(function (el) {
-            el.classList.remove('active');
-        });
+    // Itera sobre ellos para eliminar la clase 'active'
+    elementos.forEach(function (el) {
+        el.classList.remove('active');
+    });
 
-        // Añade la clase 'active' al elemento clickeado
-        var elementoActivo = document.getElementById(elementoID);
-        if (elementoActivo) {
-            elementoActivo.classList.add('active');
-        }
+    // Añade la clase 'active' al elemento clickeado
+    var elementoActivo = document.getElementById(elementoID);
+    if (elementoActivo) {
+        elementoActivo.classList.add('active');
     }
+}
 
 
 

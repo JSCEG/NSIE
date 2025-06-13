@@ -21,8 +21,8 @@ var iconoBase = L.Icon.extend({
 });
 
 //3.-Asigna Iconos
-var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' }),
-    iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' }),
+var iconoSolicitudes = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Solicitudes.png' }),
+    iconoExpendio = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Expendio.png' }),
     iconoAzul = new iconoBase({ iconUrl: 'azul.png' });
 
 
@@ -141,8 +141,8 @@ map.on('draw:created', function (e) {
 function getColor(d) {
     return d == 1 ? '#008000' :
         d == 0 ? '#FFFF00' :
-        d == -1 ? '#FF0000' :
-        '#FFEDA0';
+            d == -1 ? '#FF0000' :
+                '#FFEDA0';
 }
 
 function style(feature) {
@@ -181,7 +181,7 @@ function zoomToFeature(e) {
 
     map.fitBounds(e.target.getBounds());
 
-    var municipiosSeleccionados = municipios_mapa.features.filter(function(feature) {
+    var municipiosSeleccionados = municipios_mapa.features.filter(function (feature) {
         return feature.properties.NOMGEO === estadoSeleccionado;
     });
 
@@ -210,13 +210,13 @@ function onEachFeature(feature, layer) {
 
 var info = L.control();
 
-info.onAdd = function(map) {
+info.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'info');
     this.update();
     return this._div;
 };
 
-info.update = function(props) {
+info.update = function (props) {
     var estadoLabel = 'Selecciona un estado';
     var estadoStatusLabel = '';
     var municipioLabel = 'Selecciona un municipio';
@@ -255,7 +255,7 @@ info.addTo(map);
 
 var legend = L.control({ position: 'bottomright' });
 
-legend.onAdd = function(map) {
+legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'info legend');
     var grades = [-1, 0, 1];
     var labels = ['Saturado', 'Equilibrado', 'Oportunidad'];
@@ -335,7 +335,7 @@ function resetHighlightMunicipio(e) {
 
 var resetZoomControl = L.control({ position: 'topleft' });
 
-resetZoomControl.onAdd = function(map) {
+resetZoomControl.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'reset-zoom-control');
     div.innerHTML = '<button onclick="resetZoom()">Reestablecer</button>';
     return div;

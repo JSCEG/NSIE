@@ -78,10 +78,10 @@ var municipiosLayer = L.geoJSON(null, {
 function onEachMunicipio(feature, layer) {
   layer.bindTooltip(
     '<div class="custom-tooltip">' +
-      feature.properties.NOM_MUN +
-      ", " +
-      feature.properties.NOMGEO +
-      "</div>"
+    feature.properties.NOM_MUN +
+    ", " +
+    feature.properties.NOMGEO +
+    "</div>"
   );
   // Efecto de hover
   layer.on("mouseover", function (e) {
@@ -140,79 +140,79 @@ function buscarGeneral() {
 
   // Si no se encontró por número de permiso, busca por entidad federativa
   //if (!encontrado) {
-    //estadosLayer.eachLayer(function (layer) {
-      //if (layer.feature.properties.NOMGEO === terminoBuscado) {
-        //map.fitBounds(layer.getBounds());
+  //estadosLayer.eachLayer(function (layer) {
+  //if (layer.feature.properties.NOMGEO === terminoBuscado) {
+  //map.fitBounds(layer.getBounds());
 
-        // Si ya había una entidad federativa buscada anteriormente, restablecemos su estilo
-        //if (lastSearchedEstadoLayer) {
-          //estadosLayer.resetStyle(lastSearchedEstadoLayer);
-        //}
+  // Si ya había una entidad federativa buscada anteriormente, restablecemos su estilo
+  //if (lastSearchedEstadoLayer) {
+  //estadosLayer.resetStyle(lastSearchedEstadoLayer);
+  //}
 
-        // Resalta la entidad federativa encontrada
-        //layer.setStyle({
-          //color: "#FF0000",
-          //fillColor: "#FF0000",
-          //fillOpacity: 0.5,
-        //});
+  // Resalta la entidad federativa encontrada
+  //layer.setStyle({
+  //color: "#FF0000",
+  //fillColor: "#FF0000",
+  //fillOpacity: 0.5,
+  //});
 
-        //lastSearchedEstadoLayer = layer;
+  //lastSearchedEstadoLayer = layer;
 
-        // Reiniciar el estilo de la entidad después de 5 segundos
-        //setTimeout(function () {
-          //estadosLayer.resetStyle(lastSearchedEstadoLayer);
-          //lastSearchedEstadoLayer = null;
-        //}, 5000);
+  // Reiniciar el estilo de la entidad después de 5 segundos
+  //setTimeout(function () {
+  //estadosLayer.resetStyle(lastSearchedEstadoLayer);
+  //lastSearchedEstadoLayer = null;
+  //}, 5000);
 
-        //encontrado = true;
-      //}
-    //});
+  //encontrado = true;
+  //}
+  //});
   //}
 
   // Si aún no se encontró, busca por municipio en la fuente de datos completa
   //if (!encontrado) {
-    // Divide el término de búsqueda en municipio y estado
-    //var terminos = terminoBuscado.split(",");
-    //var buscadoMunicipio = terminos[0].trim();
-    //var buscadoEstado = terminos.length > 1 ? terminos[1].trim() : "";
+  // Divide el término de búsqueda en municipio y estado
+  //var terminos = terminoBuscado.split(",");
+  //var buscadoMunicipio = terminos[0].trim();
+  //var buscadoEstado = terminos.length > 1 ? terminos[1].trim() : "";
 
-    //for (var i = 0; i < municipios_mapa.features.length; i++) {
-      //var municipio = municipios_mapa.features[i];
-      //var nombreMunicipio = municipio.properties.NOM_MUN;
-      //var nombreEstado = municipio.properties.NOMGEO;
+  //for (var i = 0; i < municipios_mapa.features.length; i++) {
+  //var municipio = municipios_mapa.features[i];
+  //var nombreMunicipio = municipio.properties.NOM_MUN;
+  //var nombreEstado = municipio.properties.NOMGEO;
 
-      // Comprueba si el nombre del municipio y del estado coinciden con el término de búsqueda
-      //if (
-        //nombreMunicipio === buscadoMunicipio &&
-        //(buscadoEstado === "" || nombreEstado === buscadoEstado)
-      //) {
-        //var bounds = L.geoJSON(municipio).getBounds();
-        //map.fitBounds(bounds);
+  // Comprueba si el nombre del municipio y del estado coinciden con el término de búsqueda
+  //if (
+  //nombreMunicipio === buscadoMunicipio &&
+  //(buscadoEstado === "" || nombreEstado === buscadoEstado)
+  //) {
+  //var bounds = L.geoJSON(municipio).getBounds();
+  //map.fitBounds(bounds);
 
-        // Si ya había un municipio buscado anteriormente, lo elimina
-        //if (lastSearchedMunicipioLayer) {
-          //map.removeLayer(lastSearchedMunicipioLayer);
-        //}
+  // Si ya había un municipio buscado anteriormente, lo elimina
+  //if (lastSearchedMunicipioLayer) {
+  //map.removeLayer(lastSearchedMunicipioLayer);
+  //}
 
-        // Agrega el municipio encontrado al mapa y lo resalta
-        //lastSearchedMunicipioLayer = L.geoJSON(municipio, {
-          //style: {
-            //color: "#FF0000",
-            //fillColor: "#FF0000",
-            //fillOpacity: 0.5,
-          //},
-        //}).addTo(map);
+  // Agrega el municipio encontrado al mapa y lo resalta
+  //lastSearchedMunicipioLayer = L.geoJSON(municipio, {
+  //style: {
+  //color: "#FF0000",
+  //fillColor: "#FF0000",
+  //fillOpacity: 0.5,
+  //},
+  //}).addTo(map);
 
-        // Reiniciar el estilo y eliminar el municipio después de 5 segundos
-        //setTimeout(function () {
-          //map.removeLayer(lastSearchedMunicipioLayer);
-          //lastSearchedMunicipioLayer = null;
-        //}, 5000);
+  // Reiniciar el estilo y eliminar el municipio después de 5 segundos
+  //setTimeout(function () {
+  //map.removeLayer(lastSearchedMunicipioLayer);
+  //lastSearchedMunicipioLayer = null;
+  //}, 5000);
 
-        //encontrado = true;
-        //break;
-      //}
-    //}
+  //encontrado = true;
+  //break;
+  //}
+  //}
   //}
 
   if (!encontrado) {
@@ -243,7 +243,7 @@ map.on("draw:created", function (e) {
 //Funciones de los botones y del Mapa*@
 
 //Carga el shape de GCR
-function setBounds() {}
+function setBounds() { }
 function pop_regiones_poligon_0(feature, layer) {
   var popupContent =
     '<table>\
@@ -522,10 +522,10 @@ function CargaElectricidad() {
   // Solo carga términos de búsqueda si estamos en estados o municipios
   // Verifica si la capa activa es estados o municipios para cargar los términos de búsqueda correspondientes
   //if (capaActiva === 'estados' || capaActiva === 'municipios') {
-   // cargarTerminosBusqueda();
+  // cargarTerminosBusqueda();
   //}
 
- 
+
   // Primera llamada AJAX como una promesa
   function cargarCamposVisibles() {
     return new Promise((resolve, reject) => {
@@ -601,52 +601,52 @@ function CargaElectricidad() {
               var imgSrc; // La URL de la imagen que se mostrará en el pop-up
               switch (coordenada.clasificacion) {
                 case "Hidroeléctrica":
-                  imgSrc = "/img/hidro.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/hidro.png";
                   break;
                 case "Bioenergía":
-                  imgSrc = "/img/biomasai.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/biomasai.png";
                   break;
                 case "Eólica":
-                  imgSrc = "/img/eolica.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/eolica.png";
                   break;
                 case "Turbo Gas y Vapor":
-                  imgSrc = "/img/vapor.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/vapor.png";
                   break;
                 case "Combustión Interna":
-                  imgSrc = "/img/combustion.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/combustion.png";
                   break;
                 case "Cogeneración":
-                  imgSrc = "/img/cogeneracion.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/cogeneracion.png";
                   break;
                 case "Cogeneración Eficiente":
-                  imgSrc = "/img/cogeneracion_eficiente.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/cogeneracion_eficiente.png";
                   break;
                 case "Ciclo combinado":
-                  imgSrc = "/img/ciclo_combinado.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/ciclo_combinado.png";
                   break;
                 case "Carboeléctrica":
-                  imgSrc = "/img/carboeléctrica.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/carboeléctrica.png";
                   break;
                 case "Solar Fotovoltaica":
-                  imgSrc = "/img/fotovoltaica.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/fotovoltaica.png";
                   break;
                 case "Energía Cinética":
-                  imgSrc = "/img/cinetica.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/cinetica.png";
                   break;
                 case "Nucleoeléctrica":
-                  imgSrc = "/img/nuclear.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/nuclear.png";
                   break;
                 case "Lecho Fluidizado":
-                  imgSrc = "/img/lecho.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/lecho.png";
                   break;
                 case "Importación":
-                  imgSrc = "/img/importacion_e.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/importacion_e.png";
                   break;
                 case "Geotérmica":
-                  imgSrc = "/img/geotermica.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/geotermica.png";
                   break;
                 default:
-                  imgSrc = "/img/central_electrica.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/central_electrica.png";
                   break;
               }
               contenido +=
@@ -964,29 +964,29 @@ function CargaElectricidad() {
           var iconoBase = L.Icon.extend({
             options: {
               iconSize: [36, 36],
-              iconAnchor: [12, 18], 
+              iconAnchor: [12, 18],
               popupAnchor: [0, -26]
             }
           });
 
           // Definición de iconos por tipo
           var iconos = {
-            convencional: new iconoBase({ iconUrl: "/img/central_electrica.png" }),
-            hidro: new iconoBase({ iconUrl: "/img/hidro.png" }),
-            bio: new iconoBase({ iconUrl: "/img/biomasai.png" }),
-            eolica: new iconoBase({ iconUrl: "/img/eolica.png" }),
-            vapor: new iconoBase({ iconUrl: "/img/vapor.png" }),
-            combustion: new iconoBase({ iconUrl: "/img/combustion.png" }),
-            cogeneracion: new iconoBase({ iconUrl: "/img/cogeneracion.png" }),
-            cogeneracionEficiente: new iconoBase({ iconUrl: "/img/cogeneracion_eficiente.png" }),
-            cicloCombinado: new iconoBase({ iconUrl: "/img/ciclo_combinado.png" }),
-            carboelectrica: new iconoBase({ iconUrl: "/img/carboeléctrica.png" }),
-            geotermica: new iconoBase({ iconUrl: "/img/geotermica.png" }),
-            solar: new iconoBase({ iconUrl: "/img/fotovoltaica.png" }),
-            cinetica: new iconoBase({ iconUrl: "/img/cinetica.png" }),
-            nuclear: new iconoBase({ iconUrl: "/img/nuclear.png" }),
-            lecho: new iconoBase({ iconUrl: "/img/lecho.png" }),
-            importacion: new iconoBase({ iconUrl: "/img/importacion_e.png" })
+            convencional: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/central_electrica.png" }),
+            hidro: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/hidro.png" }),
+            bio: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/biomasai.png" }),
+            eolica: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/eolica.png" }),
+            vapor: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/vapor.png" }),
+            combustion: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/combustion.png" }),
+            cogeneracion: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/cogeneracion.png" }),
+            cogeneracionEficiente: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/cogeneracion_eficiente.png" }),
+            cicloCombinado: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/ciclo_combinado.png" }),
+            carboelectrica: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/carboeléctrica.png" }),
+            geotermica: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/geotermica.png" }),
+            solar: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/fotovoltaica.png" }),
+            cinetica: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/cinetica.png" }),
+            nuclear: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/nuclear.png" }),
+            lecho: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/lecho.png" }),
+            importacion: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/importacion_e.png" })
           };
 
           // Procesar cada coordenada
@@ -996,7 +996,7 @@ function CargaElectricidad() {
 
             // Asignar icono según clasificación
             switch (coordenada.clasificacion) {
-              case "Hidroeléctrica": 
+              case "Hidroeléctrica":
                 iconoActual = iconos.hidro; break;
               case "Bioenergía":
                 iconoActual = iconos.bio; break;
@@ -1561,10 +1561,10 @@ function cargarMunicipios(cveEnt) {
     onEachFeature: function (feature, layer) {
       layer.bindTooltip(
         '<div class="custom-tooltip">' +
-          feature.properties.NOM_MUN +
-          ", " +
-          feature.properties.NOMGEO +
-          "</div>"
+        feature.properties.NOM_MUN +
+        ", " +
+        feature.properties.NOMGEO +
+        "</div>"
       );
 
       // Efecto Hover

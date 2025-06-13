@@ -21,10 +21,10 @@ var iconoBase = L.Icon.extend({
 });
 
 //3.-Asigna Iconos
-var iconoOptimas = new iconoBase({ iconUrl: '/img/Aprobado.png' }),
-    iconoViable = new iconoBase({ iconUrl: '/img/viable.png' }),
-    iconoFactible = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
-  
+var iconoOptimas = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Aprobado.png' }),
+    iconoViable = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/viable.png' }),
+    iconoFactible = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Solicitudes.png' });
+
 
 
 //4.-Vista Satelite

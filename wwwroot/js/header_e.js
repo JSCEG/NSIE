@@ -16,7 +16,7 @@ function addHeaderToMap(map) {
   // Crear contenedor principal del header
   var header = document.createElement('div');
   header.id = "map-header";
-  
+
   // ======================================
   // COLUMNA 1: Controles de mapa
   var col1 = document.createElement('div');
@@ -28,7 +28,7 @@ function addHeaderToMap(map) {
   fullscreenBtn.style.cssText = "background:white;border:none;cursor:pointer;font-size:8px;padding:2px;";
   fullscreenBtn.title = "Pantalla Completa";
   fullscreenBtn.innerHTML = '<i class="bi bi-arrows-fullscreen"></i>';
-  fullscreenBtn.addEventListener('click', function(e) {
+  fullscreenBtn.addEventListener('click', function (e) {
     L.DomEvent.stopPropagation(e);
     L.DomEvent.preventDefault(e);
     if (!document.fullscreenElement) {
@@ -51,7 +51,7 @@ function addHeaderToMap(map) {
     option.text = basemapOpts[key];
     basemapSelect.appendChild(option);
   }
-  basemapSelect.addEventListener('change', function(e) {
+  basemapSelect.addEventListener('change', function (e) {
     var sel = e.target.value;
     for (var key in baseMaps) {
       if (map.hasLayer(baseMaps[key])) { map.removeLayer(baseMaps[key]); }
@@ -75,7 +75,7 @@ function addHeaderToMap(map) {
   searchInput.id = "busquedaGeneralInput";
   searchInput.placeholder = "Permiso, Entidad o Municipio";
   searchInput.style.cssText = "font-size:8px;width:70%;";
-  
+
   // Contenedor para autocompletado
   var autocompleteList = document.createElement('div');
   autocompleteList.id = "autocomplete-list";
@@ -86,7 +86,7 @@ function addHeaderToMap(map) {
   searchBtn.id = "search-btn";
   searchBtn.style.cssText = "font-size:8px;margin-left:5px;";
   searchBtn.innerHTML = '<i class="bi bi-search"></i>';
-  searchBtn.addEventListener('click', function() {
+  searchBtn.addEventListener('click', function () {
     buscarGeneral();
   });
 
@@ -103,21 +103,21 @@ function addHeaderToMap(map) {
   col3.innerHTML = `
     <div style="display:inline-block;vertical-align:top;">
       <div style="text-align:center;margin-bottom:2px;">
-        <img src="/img/s_energia.png" alt="Permisos" style="width:16px;height:16px;"><br>
+        <img src="https://cdn.sassoapps.com/img_snier/vistas/s_energia.png" alt="Permisos" style="width:16px;height:16px;"><br>
         <span style="font-size:8px;">Permisos</span><br>
         <span id="totalPermisosAutorizados">0</span>
       </div>
     </div>
     <div style="display:inline-block;vertical-align:top;">
       <div style="text-align:center;margin-bottom:2px;">
-        <img src="/img/sectore.png" alt="Capacidad" style="width:16px;height:16px;"><br>
+        <img src="https://cdn.sassoapps.com/img_snier/vistas/sectore.png" alt="Capacidad" style="width:16px;height:16px;"><br>
         <span style="font-size:8px;">Capacidad (MW)</span><br>
         <span id="totalCapacidadAutorizada">0</span>
       </div>
     </div>
     <div style="display:inline-block;vertical-align:top;">
       <div style="text-align:center;">
-        <img src="/img/casas.png" alt="Generación" style="width:16px;height:16px;"><br>
+        <img src="https://cdn.sassoapps.com/img_snier/vistas/casas.png" alt="Generación" style="width:16px;height:16px;"><br>
         <span style="font-size:8px;">Generación (MWh)</span><br>
         <span id="totalGeneracionEstimada">0</span>
       </div>
@@ -131,7 +131,7 @@ function addHeaderToMap(map) {
 
   // Prevenir propagación de eventos del mapa
   L.DomEvent.disableClickPropagation(header);
-  
+
   // Agregar header al contenedor del mapa
   map.getContainer().appendChild(header);
 }

@@ -1,6 +1,7 @@
 @{
     ViewData["Title"] = "Registro al Sistema Nacional de Información Energética";
     Layout = null;
+    var cdn = "https://cdn.sassoapps.com";
 }
 
 <!DOCTYPE html>
@@ -24,14 +25,23 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
-        video#myVideo {
+        #video-bg {
             position: fixed;
-            right: 0;
-            bottom: 0;
+            @* top: 0;
+            left: 0; *@
+            top: 50%;
+            left: 50%;
             min-width: 100%;
             min-height: 100%;
+            width: auto;
+            height: auto;
             z-index: -1;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
         }
+
 
         .form-container {
             background-color: rgba(255, 255, 255, 0.8);
@@ -81,14 +91,14 @@
 </head>
 
 <body>
-    <video autoplay muted loop id="myVideo">
-        <source src="/video/Login_n.mp4" type="video/mp4">
+    <video autoplay muted loop id="video-bg">
+        <source src="@cdn/video/Login_snier.mp4" type="video/mp4">
     </video>
 
     <div class="container">
         <div class="form-container" data-aos="fade-up">
             <div class="text-center mb-4">
-                <img src="/img/lc6.png" height="90">
+                <img src="@cdn/img_snier/vistas/lc6.png" height="90">
                 <h2 class="mt-2" style="color:#1c4c63">Registro de Usuario</h2>
             </div>
 

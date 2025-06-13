@@ -29,9 +29,9 @@ var iconoBase = L.Icon.extend({
 });
 
 // Asignación de Iconos
-//var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
-//iconoAprobado = new iconoBase({ iconUrl: '/img/Aprobado.png' });
-//iconoNoaprobado = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+//var iconoSolicitudes = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Solicitudes.png' });
+//iconoAprobado = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Aprobado.png' });
+//iconoNoaprobado = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/NoAprobado.png' });
 
 
 var currentMarker = null; // Referencia al marcador actual
@@ -372,16 +372,16 @@ function CargaPI() {
                         var imgSrc; // La URL de la imagen que se mostrará en el pop-up
                         switch (coordenada.tipoPermiso) {
                             case "vacío":
-                                imgSrc = '/img/s_disponible.png';
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/s_disponible.png';
                                 break;
                             /* case "Distribución de Gas Licuado de Petróleo mediante Planta de Distribución":
-                                imgSrc = '/img/glpmapa_dist.png';
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_dist.png';
                                 break;
                             case "Expendio al Público de Gas Licuado de Petróleo mediante Estación de Servicio con fin Específico":
-                                imgSrc = '/img/glpmapa.png';
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa.png';
                                 break; */
                             default:
-                                imgSrc = '/img/s_disponible.png'; // Ícono por defecto si no hay coincidencia
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/s_disponible.png'; // Ícono por defecto si no hay coincidencia
                                 break;
                         }
                         contenido += "<h2 class='subtitulo'><img src='" + imgSrc + "' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
@@ -584,13 +584,13 @@ function CargaPI() {
                         */
                     contenido += "</ul>";
 
-//  if (camposVisiblesGlobal.includes("NumeroPermiso")) {
-//                     contenido += "<a class='btn btn-cre-rojo' target='_blank' href='/Indicadores/DetalleExpendio?NumeroPermiso=" + coordenada.numeroPermiso + "'>Ver detalle</a>";
-//                     } 
+                    //  if (camposVisiblesGlobal.includes("NumeroPermiso")) {
+                    //                     contenido += "<a class='btn btn-cre-rojo' target='_blank' href='/Indicadores/DetalleExpendio?NumeroPermiso=" + coordenada.numeroPermiso + "'>Ver detalle</a>";
+                    //                     } 
                     contenido += "<a class='street-view-link btn btn-cre-verde' href='http://maps.google.com/maps?q=&layer=c&cbll=" + coordenada.latitudGeo + "," + coordenada.longitudGeo + "&cbp=11,0,0,0,0' target='_blank'><b> Ver vista de calle </b></a>";
 
 
-                        contenido += "</div>";
+                    contenido += "</div>";
 
                     return contenido;
                 }
@@ -606,9 +606,9 @@ function CargaPI() {
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/s_disponible.png' });
-                /*  var iconoAlmacenamiento = new iconoBase({ iconUrl: '/img/glpmapa_alma.png' });
-                    var iconoDistribucion = new iconoBase({ iconUrl: '/img/glpmapa_dist.png' });*/
+                var iconoExpendio = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/s_disponible.png' });
+                /*  var iconoAlmacenamiento = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_alma.png' });
+                    var iconoDistribucion = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_dist.png' });*/
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {
                     var coordenada = response[j];
@@ -787,21 +787,21 @@ var uniqueTerms = [...new Set(availableTerms)];
 autocomplete(document.getElementById("busquedaGeneralInput"), availableTerms);
 
 //Links activos*@
-    function activarElemento(elementoID) {
-        // Obtén todos los elementos de tu menú
-        var elementos = document.querySelectorAll('.navbarmapag a');
+function activarElemento(elementoID) {
+    // Obtén todos los elementos de tu menú
+    var elementos = document.querySelectorAll('.navbarmapag a');
 
-        // Itera sobre ellos para eliminar la clase 'active'
-        elementos.forEach(function (el) {
-            el.classList.remove('active');
-        });
+    // Itera sobre ellos para eliminar la clase 'active'
+    elementos.forEach(function (el) {
+        el.classList.remove('active');
+    });
 
-        // Añade la clase 'active' al elemento clickeado
-        var elementoActivo = document.getElementById(elementoID);
-        if (elementoActivo) {
-            elementoActivo.classList.add('active');
-        }
+    // Añade la clase 'active' al elemento clickeado
+    var elementoActivo = document.getElementById(elementoID);
+    if (elementoActivo) {
+        elementoActivo.classList.add('active');
     }
+}
 
 //Funciones del Mapa*@
 

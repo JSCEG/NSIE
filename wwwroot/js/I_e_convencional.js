@@ -31,9 +31,9 @@ var iconoBase = L.Icon.extend({
 });
 
 // Asignación de Iconos
-//var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
-//iconoAprobado = new iconoBase({ iconUrl: '/img/Aprobado.png' });
-//iconoNoaprobado = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+//var iconoSolicitudes = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Solicitudes.png' });
+//iconoAprobado = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Aprobado.png' });
+//iconoNoaprobado = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/NoAprobado.png' });
 
 
 var currentMarker = null; // Referencia al marcador actual
@@ -333,7 +333,7 @@ function CargaElectricidad() {
             success: function (response) {
                 console.log("Estos son los Expendios Autorizados de Electricidad:", response); // ver la respuesta en consola
                 // Filtra la respuesta para incluir solo elementos con fuenteEnergia igual a 'Convencional'
-                datosExpendios = response.filter(function(coordenada) {
+                datosExpendios = response.filter(function (coordenada) {
                     return coordenada.fuenteEnergia === "Convencional";
                 });
 
@@ -368,16 +368,16 @@ function CargaElectricidad() {
                         var imgSrc; // La URL de la imagen que se mostrará en el pop-up
                         switch (coordenada.tipoPermiso) {
                             case "vacío":
-                                imgSrc = '/img/central_electrica.png';
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/central_electrica.png';
                                 break;
                             /* case "Distribución de Gas Licuado de Petróleo mediante Planta de Distribución":
-                                imgSrc = '/img/glpmapa_dist.png';
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_dist.png';
                                 break;
                             case "Expendio al Público de Gas Licuado de Petróleo mediante Estación de Servicio con fin Específico":
-                                imgSrc = '/img/glpmapa.png';
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa.png';
                                 break; */
                             default:
-                                imgSrc = '/img/central_electrica.png'; // Ícono por defecto si no hay coincidencia
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/central_electrica.png'; // Ícono por defecto si no hay coincidencia
                                 break;
                         }
                         contenido += "<h2 class='subtitulo'><img src='" + imgSrc + "' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
@@ -493,17 +493,17 @@ function CargaElectricidad() {
                     }
 
 
-                            if (camposVisiblesGlobal.includes("Planta")) {
+                    if (camposVisiblesGlobal.includes("Planta")) {
                         contenido += "<li><strong>Planta:</strong> " + handleNull(coordenada.planta) + "</li>";
                     }
 
                     if (camposVisiblesGlobal.includes("Combustible")) {
-                                                    contenido += "<li><strong>Combustible:</strong> " + handleNull(coordenada.combustible) + "</li>";
-                                                }
+                        contenido += "<li><strong>Combustible:</strong> " + handleNull(coordenada.combustible) + "</li>";
+                    }
 
                     if (camposVisiblesGlobal.includes("FuenteEnergía")) {
-                                                    contenido += "<li><strong>Fuente de Energía:</strong> " + handleNull(coordenada.fuenteEnergia) + "</li>";
-                                                }
+                        contenido += "<li><strong>Fuente de Energía:</strong> " + handleNull(coordenada.fuenteEnergia) + "</li>";
+                    }
 
 
                     if (camposVisiblesGlobal.includes("Comentarios")) {
@@ -603,48 +603,48 @@ function CargaElectricidad() {
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/central_electrica.png' });
-                /*  var iconoAlmacenamiento = new iconoBase({ iconUrl: '/img/glpmapa_alma.png' });
-                    var iconoDistribucion = new iconoBase({ iconUrl: '/img/glpmapa_dist.png' });*/
+                var iconoExpendio = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/central_electrica.png' });
+                /*  var iconoAlmacenamiento = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_alma.png' });
+                    var iconoDistribucion = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_dist.png' });*/
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {
                     var coordenada = response[j];
                     //Determina el icono a Usar
                     // Determinar el ícono basado en tipoPermiso
                     var iconoActual;
-                    
+
 
 
                     //var marker = L.marker([coordenada.latitudGeo, coordenada.longitudGeo], { icon: iconoActual });
                     //var contenidoPopup = generarContenidoPopup(coordenada);
                     //marker.bindPopup(contenidoPopup);
                     //markers.addLayer(marker);
-                        if (coordenada.fuenteEnergia === "Convencional") {
-                                                                            var iconoActual;
-                                                                            // Aquí iría tu código para determinar el icono actual basado en tipoPermiso
-                                                                            //
-                                                                                switch (coordenada.tipoPermiso) {
-                                                                                /*  case "SD":
-                                                                                    iconoActual = iconoAlmacenamiento;
-                                                                                    break;
-                                                                                case "Distribución de Gas Licuado de Petróleo mediante Planta de Distribución":
-                                                                                    iconoActual = iconoDistribucion;
-                                                                                    break; */
-                                                                                case "vacío":
-                                                                                    iconoActual = iconoExpendio;
-                                                                                    break;
-                                                                                default:
-                                                                                    iconoActual = iconoExpendio; // Ícono por defecto si no hay coincidencia
-                                                                                    break;
-                                                                            }
+                    if (coordenada.fuenteEnergia === "Convencional") {
+                        var iconoActual;
+                        // Aquí iría tu código para determinar el icono actual basado en tipoPermiso
+                        //
+                        switch (coordenada.tipoPermiso) {
+                            /*  case "SD":
+                                iconoActual = iconoAlmacenamiento;
+                                break;
+                            case "Distribución de Gas Licuado de Petróleo mediante Planta de Distribución":
+                                iconoActual = iconoDistribucion;
+                                break; */
+                            case "vacío":
+                                iconoActual = iconoExpendio;
+                                break;
+                            default:
+                                iconoActual = iconoExpendio; // Ícono por defecto si no hay coincidencia
+                                break;
+                        }
 
 
-                                                                            var marker = L.marker([coordenada.latitudGeo, coordenada.longitudGeo], { icon: iconoActual });
-                                                                            var contenidoPopup = generarContenidoPopup(coordenada);
-                                                                            marker.bindPopup(contenidoPopup);
+                        var marker = L.marker([coordenada.latitudGeo, coordenada.longitudGeo], { icon: iconoActual });
+                        var contenidoPopup = generarContenidoPopup(coordenada);
+                        marker.bindPopup(contenidoPopup);
 
-                                                                            markers.addLayer(marker);
-                                                                        }
+                        markers.addLayer(marker);
+                    }
                 }
 
                 map.addLayer(markers);
@@ -671,30 +671,30 @@ function CargaElectricidad() {
 
                 //******Fin Tarjetas Totales******///
 
-            // Función para procesar los datos
-                                function processData(response, key) {
-                                    var counts = {};
-                                    response.forEach(function (item) {
-                                        // Elimina los números al principio si el key es 'efId'
-                                        if (key === 'efId') {
-                                            item[key] = item[key].replace(/^\d+\s/, '');
-                                        }
+                // Función para procesar los datos
+                function processData(response, key) {
+                    var counts = {};
+                    response.forEach(function (item) {
+                        // Elimina los números al principio si el key es 'efId'
+                        if (key === 'efId') {
+                            item[key] = item[key].replace(/^\d+\s/, '');
+                        }
 
-                                        if (!counts[item[key]]) {
-                                            counts[item[key]] = 0;
-                                        }
-                                        counts[item[key]]++;
-                                    });
+                        if (!counts[item[key]]) {
+                            counts[item[key]] = 0;
+                        }
+                        counts[item[key]]++;
+                    });
 
-                                    var categories = [];
-                                    var data = [];
-                                    for (var entidad in counts) {
-                                        categories.push(entidad);
-                                        data.push(counts[entidad]);
-                                    }
+                    var categories = [];
+                    var data = [];
+                    for (var entidad in counts) {
+                        categories.push(entidad);
+                        data.push(counts[entidad]);
+                    }
 
-                                    return { categories, data };
-                                }
+                    return { categories, data };
+                }
                 var convencional = processData(datosExpendios, 'efId');
                 //Grafico de Columnas
                 // Paso 1: Procesa la respuesta
@@ -820,7 +820,7 @@ function CargaElectricidad() {
 }
 
 
-    CargaElectricidad();
+CargaElectricidad();
 
 
 
@@ -875,18 +875,18 @@ console.log("av", availableTerms);
 autocomplete(document.getElementById("busquedaGeneralInput"), availableTerms);
 
 //Links activos*@
-    function activarElemento(elementoID) {
-        // Obtén todos los elementos de tu menú
-        var elementos = document.querySelectorAll('.navbarmapag a');
+function activarElemento(elementoID) {
+    // Obtén todos los elementos de tu menú
+    var elementos = document.querySelectorAll('.navbarmapag a');
 
-        // Itera sobre ellos para eliminar la clase 'active'
-        elementos.forEach(function (el) {
-            el.classList.remove('active');
-        });
+    // Itera sobre ellos para eliminar la clase 'active'
+    elementos.forEach(function (el) {
+        el.classList.remove('active');
+    });
 
-        // Añade la clase 'active' al elemento clickeado
-        var elementoActivo = document.getElementById(elementoID);
-        if (elementoActivo) {
-            elementoActivo.classList.add('active');
-        }
+    // Añade la clase 'active' al elemento clickeado
+    var elementoActivo = document.getElementById(elementoID);
+    if (elementoActivo) {
+        elementoActivo.classList.add('active');
     }
+}

@@ -32,7 +32,7 @@
 <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
     aria-label="breadcrumb" style="padding-left:15px">
     <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
     </ol>
 </nav>
@@ -65,47 +65,47 @@
 
             <div id="main-container">
 
-            <div class="row g-4 mb-4">
-                <div class="col">
-                    <div class="app-card app-card-chart h-100 shadow-sm">
+                <div class="row g-4 mb-4">
+                    <div class="col">
+                        <div class="app-card app-card-chart h-100 shadow-sm">
 
-                        <div class="search-container p-3" id="search-container">
-                            <label class="form-label">Buscar en el Mapa:</label>
-                            <input type="text" id="busquedaGeneralInput" class="form-control"
-                                placeholder="Escribe el nombre de la Refinería,la Entidad Federativa o Municipio">
-                            <div id="autocomplete-list" class="autocomplete-items"></div>
-                            <!-- El resto de tu código -->
+                            <div class="search-container p-3" id="search-container">
+                                <label class="form-label">Buscar en el Mapa:</label>
+                                <input type="text" id="busquedaGeneralInput" class="form-control"
+                                    placeholder="Escribe el nombre de la Refinería,la Entidad Federativa o Municipio">
+                                <div id="autocomplete-list" class="autocomplete-items"></div>
+                                <!-- El resto de tu código -->
 
-                            <button class="btn btn-cre-rojo-home" onclick="buscarGeneral()"
-                                style="width:10% !important"><i class="bi bi-search"></i></button>
-                        </div>
+                                <button class="btn btn-cre-rojo-home" onclick="buscarGeneral()"
+                                    style="width:10% !important"><i class="bi bi-search"></i></button>
+                            </div>
 
-                        @*Menu de Botones*@
-                        <div class="container-fluid">
-                        </div>
-                        <div class="app-card-body p-4">
-                            <div class="chart-container">
-                                <div id="" class="app-card-body p-4">
-                                    <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
-                                    <div id="map" class="p-3 bg"></div>
-                                    <div class="leyenda pt-3">
-                                        <p>Mayor Concentración</p>
-                                        <p>Concentración Promedio</p>
-                                        <p>Menor Concentración</p>
-                                        <p> Ductos</p>
+                            @*Menu de Botones*@
+                            <div class="container-fluid">
+                            </div>
+                            <div class="app-card-body p-4">
+                                <div class="chart-container">
+                                    <div id="" class="app-card-body p-4">
+                                        <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
+                                        <div id="map" class="p-3 bg"></div>
+                                        <div class="leyenda pt-3">
+                                            <p>Mayor Concentración</p>
+                                            <p>Concentración Promedio</p>
+                                            <p>Menor Concentración</p>
+                                            <p> Ductos</p>
+                                        </div>
+                                        <br />
+                                        <div class="" id="grafico"></div>
+                                        @* <div class="" id="grafico2"></div> *@
+                                        <br />
                                     </div>
-                                    <br />
-                                    <div class="" id="grafico"></div>
-                                    @* <div class="" id="grafico2"></div> *@
-                                    <br />
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
                 </div>
-
-
-            </div>
             </div>
         </div>
     </section>
@@ -118,7 +118,8 @@
         #fullscreen-elements {
             display: flex;
             flex-direction: column;
-            height: auto; /* Valor inicial para cuando no esté en pantalla completa */
+            height: auto;
+            /* Valor inicial para cuando no esté en pantalla completa */
         }
 
         #fullscreen-last-update,
@@ -224,15 +225,15 @@
 </script>
 
 @*Shapes Estados*@
-<script type="text/javascript" src="~/Geovisualizador/shapes/estadosminlight.js"></script>
-<script type="text/javascript" src="~/Geovisualizador/shapes/municipiosminlight.js"></script>
+<script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/estadosminlight.js"></script>
+<script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/municipiosminlight.js"></script>
 
 
 @section scripts {
 
-    <script type="text/javascript" src="/js/configura_mapa.js"></script> 
+    <script type="text/javascript" src="/js/configura_mapa.js"></script>
 
-    <script type="text/javascript" src="/js/RS_refydes.js"></script> 
+    <script type="text/javascript" src="/js/RS_refydes.js"></script>
 
 
 }

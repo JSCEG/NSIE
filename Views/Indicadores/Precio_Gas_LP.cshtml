@@ -379,9 +379,9 @@ new { icon = "chart-bar", text = "Análisis: Estadísticas" }
 
 
 @*Gas L.P.*@
-<script src="~/Geovisualizador/data/ductos_glp_4326_0.js"></script>
+<script src="@Cdn.Url/Geovisualizador/data/ductos_glp_4326_0.js"></script>
 @*Shapes de Regiones de Precios de Gas L.P. por Litro y por Kilo*@
-<script type="text/javascript" src="~/Geovisualizador/shapes/regiones_litro_0.js"></script>
+<script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/regiones_litro_0.js"></script>
 
 
 @section scripts {
@@ -821,31 +821,31 @@ new { icon = "chart-bar", text = "Análisis: Estadísticas" }
             //Carga Ductos de GLP
             function pop_ductos_glp_4326_0(feature, layer) {
                 var popupContent = '<table>\
-                                                                            <tr>\
-                                                                                <th scope="row">Región: </th>\
-                                                                                <td>' + (feature.properties['Región: '] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
-                                                                            </tr>\
-                                                                            <tr>\
-                                                                                <th scope="row">Ducto: </th>\
-                                                                                <td>' + (feature.properties['Ducto: '] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
-                                                                            </tr>\
-                                                                            <tr>\
-                                                                                <th scope="row">Servicio: </th>\
-                                                                                <td>' + (feature.properties['Servicio: '] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
-                                                                            </tr>\
-                                                                            <tr>\
-                                                                                <th scope="row">Longitud (km): </th>\
-                                                                                <td>' + (feature.properties['Longitud (km): '] !== null ? autolinker.link(feature.properties['lon'].toLocaleString()) : '') + '</td>\
-                                                                            </tr>\
-                                                                            <tr>\
-                                                                                <th scope="row">Capa nominal (B): </th>\
-                                                                                <td>' + (feature.properties['Capacidad nominal (B): '] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
-                                                                            </tr>\
-                                                                            <tr>\
-                                                                                <th scope="row">Capa operativa (B): </th>\
-                                                                                <td>' + (feature.properties['Capacidad operativa (B): '] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
-                                                                            </tr>\
-                                                                        </table>';
+                                                                                <tr>\
+                                                                                    <th scope="row">Región: </th>\
+                                                                                    <td>' + (feature.properties['Región: '] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
+                                                                                </tr>\
+                                                                                <tr>\
+                                                                                    <th scope="row">Ducto: </th>\
+                                                                                    <td>' + (feature.properties['Ducto: '] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
+                                                                                </tr>\
+                                                                                <tr>\
+                                                                                    <th scope="row">Servicio: </th>\
+                                                                                    <td>' + (feature.properties['Servicio: '] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
+                                                                                </tr>\
+                                                                                <tr>\
+                                                                                    <th scope="row">Longitud (km): </th>\
+                                                                                    <td>' + (feature.properties['Longitud (km): '] !== null ? autolinker.link(feature.properties['lon'].toLocaleString()) : '') + '</td>\
+                                                                                </tr>\
+                                                                                <tr>\
+                                                                                    <th scope="row">Capa nominal (B): </th>\
+                                                                                    <td>' + (feature.properties['Capacidad nominal (B): '] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
+                                                                                </tr>\
+                                                                                <tr>\
+                                                                                    <th scope="row">Capa operativa (B): </th>\
+                                                                                    <td>' + (feature.properties['Capacidad operativa (B): '] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
+                                                                                </tr>\
+                                                                            </table>';
                 layer.bindPopup(popupContent, { maxHeight: 400 });
             }
 
@@ -925,16 +925,16 @@ new { icon = "chart-bar", text = "Análisis: Estadísticas" }
                                 var imgSrc; // La URL de la imagen que se mostrará en el pop-up
                                 switch (coordenada.tipoPermiso) {
                                     case "Almacenamiento de Gas Licuado de Petróleo":
-                                        imgSrc = '/img/glpmapa_alma.png';
+                                        imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_alma.png';
                                         break;
                                     case "Distribución de Gas Licuado de Petróleo mediante Planta de Distribución":
-                                        imgSrc = '/img/glpmapa_dist.png';
+                                        imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_dist.png';
                                         break;
                                     case "Expendio al Público de Gas Licuado de Petróleo mediante Estación de Servicio con fin Específico":
-                                        imgSrc = '/img/glpmapa.png';
+                                        imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa.png';
                                         break;
                                     default:
-                                        imgSrc = '/img/glpmapa.png'; // Ícono por defecto si no hay coincidencia
+                                        imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa.png'; // Ícono por defecto si no hay coincidencia
                                         break;
                                 }
                                 contenido += "<h2 class='subtitulo'><img src='" + imgSrc + "' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
@@ -1120,9 +1120,9 @@ new { icon = "chart-bar", text = "Análisis: Estadísticas" }
                             }
                         });
 
-                        var iconoExpendio = new iconoBase({ iconUrl: '/img/glpmapa.png' });
-                        var iconoAlmacenamiento = new iconoBase({ iconUrl: '/img/glpmapa_alma.png' });
-                        var iconoDistribucion = new iconoBase({ iconUrl: '/img/glpmapa_dist.png' });
+                        var iconoExpendio = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa.png' });
+                        var iconoAlmacenamiento = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_alma.png' });
+                        var iconoDistribucion = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_dist.png' });
                         // Agrega los marcadores para las coordenadas del mapa actual
                         for (var j = 0; j < response.length; j++) {
                             var coordenada = response[j];
@@ -1579,4 +1579,3 @@ new { icon = "chart-bar", text = "Análisis: Estadísticas" }
     </script>
 
 }
-

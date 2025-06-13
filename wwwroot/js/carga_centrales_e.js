@@ -99,22 +99,22 @@ function CargaElectricidad() {
   });
 
   const iconos = {
-    convencional: new iconoBase({ iconUrl: "/img/central_electrica.png" }),
-    hidro: new iconoBase({ iconUrl: "/img/hidro.png" }),
-    bio: new iconoBase({ iconUrl: "/img/biomasai.png" }),
-    eolica: new iconoBase({ iconUrl: "/img/eolica.png" }),
-    vapor: new iconoBase({ iconUrl: "/img/vapor.png" }),
-    combustion: new iconoBase({ iconUrl: "/img/combustion.png" }),
-    cogeneracion: new iconoBase({ iconUrl: "/img/cogeneracion.png" }),
-    cogeneracionEficiente: new iconoBase({ iconUrl: "/img/cogeneracion_eficiente.png" }),
-    cicloCombinado: new iconoBase({ iconUrl: "/img/ciclo_combinado.png" }),
-    carboelectrica: new iconoBase({ iconUrl: "/img/carboeléctrica.png" }),
-    geotermica: new iconoBase({ iconUrl: "/img/geotermica.png" }),
-    solar: new iconoBase({ iconUrl: "/img/fotovoltaica.png" }),
-    cinetica: new iconoBase({ iconUrl: "/img/cinetica.png" }),
-    nuclear: new iconoBase({ iconUrl: "/img/nuclear.png" }),
-    lecho: new iconoBase({ iconUrl: "/img/lecho.png" }),
-    importacion: new iconoBase({ iconUrl: "/img/importacion_e.png" })
+    convencional: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/central_electrica.png" }),
+    hidro: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/hidro.png" }),
+    bio: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/biomasai.png" }),
+    eolica: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/eolica.png" }),
+    vapor: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/vapor.png" }),
+    combustion: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/combustion.png" }),
+    cogeneracion: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/cogeneracion.png" }),
+    cogeneracionEficiente: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/cogeneracion_eficiente.png" }),
+    cicloCombinado: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/ciclo_combinado.png" }),
+    carboelectrica: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/carboeléctrica.png" }),
+    geotermica: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/geotermica.png" }),
+    solar: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/fotovoltaica.png" }),
+    cinetica: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/cinetica.png" }),
+    nuclear: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/nuclear.png" }),
+    lecho: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/lecho.png" }),
+    importacion: new iconoBase({ iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/importacion_e.png" })
   };
 
   // 3. Carga de campos visibles mediante promesa
@@ -124,11 +124,11 @@ function CargaElectricidad() {
         url: "/Indicadores/GetCamposVisiblesElectricidad_Infra",
         type: "GET",
         contentType: "application/json",
-        success: function(camposVisibles) {
+        success: function (camposVisibles) {
           camposVisiblesGlobal = camposVisibles;
           resolve(camposVisibles);
         },
-        error: function(error) {
+        error: function (error) {
           console.error("Error al obtener campos visibles", error);
           reject(error);
         }
@@ -151,22 +151,22 @@ function CargaElectricidad() {
     if (camposVisiblesGlobal.includes("RazonSocial")) {
       let imgSrc;
       switch (coordenada.clasificacion) {
-        case "Hidroeléctrica": imgSrc = "/img/hidro.png"; break;
-        case "Bioenergía": imgSrc = "/img/biomasai.png"; break;
-        case "Eólica": imgSrc = "/img/eolica.png"; break;
-        case "Turbo Gas y Vapor": imgSrc = "/img/vapor.png"; break;
-        case "Combustión Interna": imgSrc = "/img/combustion.png"; break;
-        case "Cogeneración": imgSrc = "/img/cogeneracion.png"; break;
-        case "Cogeneración Eficiente": imgSrc = "/img/cogeneracion_eficiente.png"; break;
-        case "Ciclo combinado": imgSrc = "/img/ciclo_combinado.png"; break;
-        case "Carboeléctrica": imgSrc = "/img/carboeléctrica.png"; break;
-        case "Solar Fotovoltaica": imgSrc = "/img/fotovoltaica.png"; break;
-        case "Energía Cinética": imgSrc = "/img/cinetica.png"; break;
-        case "Nucleoeléctrica": imgSrc = "/img/nuclear.png"; break;
-        case "Lecho Fluidizado": imgSrc = "/img/lecho.png"; break;
-        case "Importación": imgSrc = "/img/importacion_e.png"; break;
-        case "Geotérmica": imgSrc = "/img/geotermica.png"; break;
-        default: imgSrc = "/img/central_electrica.png"; break;
+        case "Hidroeléctrica": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/hidro.png"; break;
+        case "Bioenergía": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/biomasai.png"; break;
+        case "Eólica": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/eolica.png"; break;
+        case "Turbo Gas y Vapor": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/vapor.png"; break;
+        case "Combustión Interna": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/combustion.png"; break;
+        case "Cogeneración": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/cogeneracion.png"; break;
+        case "Cogeneración Eficiente": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/cogeneracion_eficiente.png"; break;
+        case "Ciclo combinado": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/ciclo_combinado.png"; break;
+        case "Carboeléctrica": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/carboeléctrica.png"; break;
+        case "Solar Fotovoltaica": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/fotovoltaica.png"; break;
+        case "Energía Cinética": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/cinetica.png"; break;
+        case "Nucleoeléctrica": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/nuclear.png"; break;
+        case "Lecho Fluidizado": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/lecho.png"; break;
+        case "Importación": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/importacion_e.png"; break;
+        case "Geotérmica": imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/geotermica.png"; break;
+        default: imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/central_electrica.png"; break;
       }
       contenido += `<h2 class='razon-social-popup'><img src='${imgSrc}' style='height: 24px; width: 24px;'/><strong>${handleNull(coordenada.razonSocial)}</strong></h2><br>`;
     }
@@ -276,7 +276,7 @@ function CargaElectricidad() {
   cargarCamposVisibles()
     .then(() => {
       limpiarMarcadores();
-      
+
       return $.ajax({
         url: "/Indicadores/GetExpendiosAutorizadosElectricidad_Infra",
         type: "GET",
@@ -352,24 +352,24 @@ CargaElectricidad();
 // Funciones de Autocompletado
 function autocomplete(inputElement, terms) {
   let currentFocus = -1;
-  
+
   // Eventos del input
   inputElement.addEventListener("input", handleInput);
-  
+
   // Evento global para cerrar listas
   document.addEventListener("click", e => closeAllLists(e.target));
 
   function handleInput(e) {
     const searchValue = this.value;
-    
+
     // Limpiar resultados anteriores
     closeAllLists();
     if (!searchValue) return false;
-    
+
     // Obtener y limpiar contenedor de sugerencias
     const suggestionList = document.getElementById("autocomplete-list");
     suggestionList.innerHTML = "";
-    
+
     // Generar sugerencias
     terms.forEach(term => {
       if (term.substr(0, searchValue.length).toUpperCase() === searchValue.toUpperCase()) {
@@ -385,14 +385,14 @@ function autocomplete(inputElement, terms) {
       <strong>${term.substr(0, searchValue.length)}</strong>
       ${term.substr(searchValue.length)}
     `;
-    
+
     // Manejar selección de sugerencia
     div.addEventListener("click", () => {
       inputElement.value = term;
       closeAllLists();
       buscarGeneral();
     });
-    
+
     return div;
   }
 
@@ -409,7 +409,7 @@ function initializeAutocomplete() {
   // Filtrar términos duplicados
   const uniqueTerms = [...new Set(availableTerms)];
   console.log("Términos disponibles:", availableTerms);
-  
+
   // Inicializar autocompletado
   const searchInput = document.getElementById("busquedaGeneralInput");
   if (searchInput) {
@@ -422,7 +422,7 @@ function activarElemento(elementoID) {
   // Remover clase activa de todos los elementos
   const menuItems = document.querySelectorAll(".navbarmapag a");
   menuItems.forEach(item => item.classList.remove("active"));
-  
+
   // Activar elemento seleccionado
   const elementoActivo = document.getElementById(elementoID);
   if (elementoActivo) {

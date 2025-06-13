@@ -381,16 +381,16 @@
     </script>
 
     @*Shapes Estados*@
-    <script type="text/javascript" src="~/Geovisualizador/shapes/estadosminlight.js"></script>
-    <script type="text/javascript" src="~/Geovisualizador/shapes/municipiosminlight.js"></script>
+    <script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/estadosminlight.js"></script>
+    <script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/municipiosminlight.js"></script>
 
 
 
     @*Ductos*@
     @*Petrolíferos*@
-    <script src="~/Geovisualizador/data/ductos_petroliferos_4326_0.js"></script>
+    <script src="@Cdn.Url/Geovisualizador/data/ductos_petroliferos_4326_0.js"></script>
     @*Gas L.P.*@
-    <script src="~/Geovisualizador/data/ductos_glp_4326_0.js"></script>
+    <script src="@Cdn.Url/Geovisualizador/data/ductos_glp_4326_0.js"></script>
     <script>
         window.userRole = @ViewData["RolUsuario"]; // Define userRole globalmente
         console.log(window.userRole);

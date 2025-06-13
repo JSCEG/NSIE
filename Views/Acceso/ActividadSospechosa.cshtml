@@ -1,5 +1,7 @@
 @{
+    ViewData["Title"] = "Acceso al Sistema Nacional de Información Energética";
     Layout = null;
+    var cdn = "https://cdn.sassoapps.com";
 }
 
 <!DOCTYPE html>
@@ -26,15 +28,23 @@
             overflow: hidden;
         }
 
-        #myVideo {
+          #video-bg {
             position: fixed;
-            top: 0;
-            left: 0;
+            @* top: 0;
+            left: 0; *@
+            top: 50%;
+            left: 50%;
             min-width: 100%;
             min-height: 100%;
-            object-fit: cover;
+            width: auto;
+            height: auto;
             z-index: -1;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
         }
+
 
         .user_card {
             background: rgba(255, 255, 255, 0.85);
@@ -86,14 +96,14 @@
 </head>
 
 <body>
-    <video autoplay muted loop id="myVideo">
-        <source src="/video/Login_n.mp4" type="video/mp4">
+   <video autoplay muted loop id="video-bg">
+        <source src="@cdn/video/Login_snier.mp4" type="video/mp4">
     </video>
 
     <div class="container d-flex justify-content-center align-items-center min-vh-100 fade-in">
         <div class="user_card text-center">
             <div class="mb-4">
-                <img src="/img/login/logo_snier.png" alt="Logo SNIER" class="brand_logo">
+                <img src="@cdn/img_snier/login/logo_snier.png" class="img-fluid mb-2" style="max-width: 100px;">
             </div>
 
             <h4 class="titulo fw-bold mb-3">¡Estimado Usuario!</h4>

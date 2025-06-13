@@ -78,10 +78,10 @@ var municipiosLayer = L.geoJSON(null, {
 function onEachMunicipio(feature, layer) {
   layer.bindTooltip(
     '<div class="custom-tooltip">' +
-      feature.properties.NOM_MUN +
-      ", " +
-      feature.properties.NOMGEO +
-      "</div>"
+    feature.properties.NOM_MUN +
+    ", " +
+    feature.properties.NOMGEO +
+    "</div>"
   );
   // Efecto de hover
   layer.on("mouseover", function (e) {
@@ -244,7 +244,7 @@ map.on("draw:created", function (e) {
 //Funciones de los botones y del Mapa*@
 
 //Carga el shape de GCR
-function setBounds() {}
+function setBounds() { }
 function pop_regiones_poligon_0(feature, layer) {
   var popupContent =
     '<table>\
@@ -614,16 +614,16 @@ function CargaElectricidad() {
               var imgSrc; // La URL de la imagen que se mostrará en el pop-up
               switch (coordenada.fuenteEnergia) {
                 case "Limpia":
-                  imgSrc = "/img/energia_limpia2.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/energia_limpia2.png";
                   break;
                 case "Importación":
-                  imgSrc = "/img/importacion_e.png";
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/importacion_e.png";
                   break;
                 /*case "Expendio al Público de Gas Licuado de Petróleo mediante Estación de Servicio con fin Específico":
-                                imgSrc = '/img/glpmapa.png';
+                                imgSrc = 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa.png';
                                 break; */
                 default:
-                  imgSrc = "/img/central_electrica.png"; // Ícono por defecto si no hay coincidencia
+                  imgSrc = "https://cdn.sassoapps.com/img_snier/vistas/central_electrica.png"; // Ícono por defecto si no hay coincidencia
                   break;
               }
               contenido +=
@@ -945,16 +945,16 @@ function CargaElectricidad() {
           });
 
           var iconoConvencional = new iconoBase({
-            iconUrl: "/img/central_electrica.png",
+            iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/central_electrica.png",
           });
           var iconoLimpia = new iconoBase({
-            iconUrl: "/img/energia_limpia2.png",
+            iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/energia_limpia2.png",
           });
 
           var iconoImportacion = new iconoBase({
-            iconUrl: "/img/importacion_e.png",
+            iconUrl: "https://cdn.sassoapps.com/img_snier/vistas/importacion_e.png",
           });
-          /*     var iconoDistribucion = new iconoBase({ iconUrl: '/img/glpmapa_dist.png' });*/
+          /*     var iconoDistribucion = new iconoBase({ iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/glpmapa_dist.png' });*/
           // Agrega los marcadores para las coordenadas del mapa actual
           for (var j = 0; j < response.length; j++) {
             var coordenada = response[j];

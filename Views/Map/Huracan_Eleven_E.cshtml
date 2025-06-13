@@ -34,7 +34,7 @@
 <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
     aria-label="breadcrumb" style="padding-left:15px">
     <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
         @* <li class="breadcrumb-item"><a href="@Url.Action("Hidrocarburos", "Home" )">Sector Petróleo y Gas</a></li>*@
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
     </ol>
@@ -540,22 +540,23 @@
 </script>
 
 @*Shapes Estados*@
-<script type="text/javascript" src="~/Geovisualizador/shapes/estadosminlight.js"></script>
-<script type="text/javascript" src="~/Geovisualizador/shapes/municipiosminlight.js"></script>
+<script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/estadosminlight.js"></script>
+<script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/municipiosminlight.js"></script>
 
 }
-<script src="~/Geovisualizador/shapes/2024100312_wsp34knt120hr_5km_1.js"></script>
+<script src="@Cdn.Url/Geovisualizador/shapes/2024100312_wsp34knt120hr_5km_1.js"></script>
 <script
-    src="~/Geovisualizador/shapes/EP112024_008adv_CONETropicalDepressionElevenEAdvisory8ForecastTrackUncertainty_2.js"></script>
-<script src="~/Geovisualizador/shapes/EP112024_008adv_TRACKForecastTrack_3.js"></script>
-<script src="~/Geovisualizador/shapes/EP112024_008adv_TRACKForecastTrack_4.js"></script>
-<script src="~/Geovisualizador/shapes/EP112024_008adv_WWTropicalDepressionElevenEAdvisory8WatchWarnings_5.js"></script>
+    src="@Cdn.Url/Geovisualizador/shapes/EP112024_008adv_CONETropicalDepressionElevenEAdvisory8ForecastTrackUncertainty_2.js"></script>
+<script src="@Cdn.Url/Geovisualizador/shapes/EP112024_008adv_TRACKForecastTrack_3.js"></script>
+<script src="@Cdn.Url/Geovisualizador/shapes/EP112024_008adv_TRACKForecastTrack_4.js"></script>
+<script
+    src="@Cdn.Url/Geovisualizador/shapes/EP112024_008adv_WWTropicalDepressionElevenEAdvisory8WatchWarnings_5.js"></script>
 
 @*Ductos*@
 @*Petrolíferos*@
-<script src="~/Geovisualizador/data/ductos_petroliferos_4326_0.js"></script>
+<script src="@Cdn.Url/Geovisualizador/data/ductos_petroliferos_4326_0.js"></script>
 @*Gas L.P.*@
-<script src="~/Geovisualizador/data/ductos_glp_4326_0.js"></script>
+<script src="@Cdn.Url/Geovisualizador/data/ductos_glp_4326_0.js"></script>
 
 @section scripts {
 
@@ -600,10 +601,10 @@
 
         function pop_2024100312_wsp34knt120hr_5km_1(feature, layer) {
             var popupContent = '<table>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['PERCENTAGE'] !== null ? autolinker.link(feature.properties['PERCENTAGE'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                    </table>';
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['PERCENTAGE'] !== null ? autolinker.link(feature.properties['PERCENTAGE'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                        </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
             layer.on('popupopen', function (e) {
                 addClassToPopupIfMedia(content, e.popup);
@@ -811,70 +812,70 @@
         map.addLayer(layer_2024100312_wsp34knt120hr_5km_1);
         function pop_EP112024_008adv_CONETropicalDepressionElevenEAdvisory8ForecastTrackUncertainty_2(feature, layer) {
             var popupContent = '<table>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['timestamp'] !== null ? autolinker.link(feature.properties['timestamp'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['begin'] !== null ? autolinker.link(feature.properties['begin'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['end'] !== null ? autolinker.link(feature.properties['end'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['altitudeMode'] !== null ? autolinker.link(feature.properties['altitudeMode'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['tessellate'] !== null ? autolinker.link(feature.properties['tessellate'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['extrude'] !== null ? autolinker.link(feature.properties['extrude'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['visibility'] !== null ? autolinker.link(feature.properties['visibility'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['drawOrder'] !== null ? autolinker.link(feature.properties['drawOrder'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['icon'] !== null ? autolinker.link(feature.properties['icon'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['timezone'] !== null ? autolinker.link(feature.properties['timezone'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormType'] !== null ? autolinker.link(feature.properties['stormType'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['advisoryDate'] !== null ? autolinker.link(feature.properties['advisoryDate'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['basin'] !== null ? autolinker.link(feature.properties['basin'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['fcstpd'] !== null ? autolinker.link(feature.properties['fcstpd'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['storm'] !== null ? autolinker.link(feature.properties['storm'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['atcfid'] !== null ? autolinker.link(feature.properties['atcfid'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['advisoryNum'] !== null ? autolinker.link(feature.properties['advisoryNum'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormNum'] !== null ? autolinker.link(feature.properties['stormNum'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormName'] !== null ? autolinker.link(feature.properties['stormName'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                    </table>';
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['timestamp'] !== null ? autolinker.link(feature.properties['timestamp'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['begin'] !== null ? autolinker.link(feature.properties['begin'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['end'] !== null ? autolinker.link(feature.properties['end'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['altitudeMode'] !== null ? autolinker.link(feature.properties['altitudeMode'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['tessellate'] !== null ? autolinker.link(feature.properties['tessellate'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['extrude'] !== null ? autolinker.link(feature.properties['extrude'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['visibility'] !== null ? autolinker.link(feature.properties['visibility'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['drawOrder'] !== null ? autolinker.link(feature.properties['drawOrder'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['icon'] !== null ? autolinker.link(feature.properties['icon'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['timezone'] !== null ? autolinker.link(feature.properties['timezone'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormType'] !== null ? autolinker.link(feature.properties['stormType'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['advisoryDate'] !== null ? autolinker.link(feature.properties['advisoryDate'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['basin'] !== null ? autolinker.link(feature.properties['basin'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['fcstpd'] !== null ? autolinker.link(feature.properties['fcstpd'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['storm'] !== null ? autolinker.link(feature.properties['storm'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['atcfid'] !== null ? autolinker.link(feature.properties['atcfid'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['advisoryNum'] !== null ? autolinker.link(feature.properties['advisoryNum'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormNum'] !== null ? autolinker.link(feature.properties['stormNum'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormName'] !== null ? autolinker.link(feature.properties['stormName'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                        </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
             layer.on('popupopen', function (e) {
                 addClassToPopupIfMedia(content, e.popup);
@@ -913,94 +914,94 @@
         map.addLayer(layer_EP112024_008adv_CONETropicalDepressionElevenEAdvisory8ForecastTrackUncertainty_2);
         function pop_EP112024_008adv_TRACKForecastTrack_3(feature, layer) {
             var popupContent = '<table>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['timestamp'] !== null ? autolinker.link(feature.properties['timestamp'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['begin'] !== null ? autolinker.link(feature.properties['begin'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['end'] !== null ? autolinker.link(feature.properties['end'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['altitudeMode'] !== null ? autolinker.link(feature.properties['altitudeMode'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['tessellate'] !== null ? autolinker.link(feature.properties['tessellate'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['extrude'] !== null ? autolinker.link(feature.properties['extrude'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['visibility'] !== null ? autolinker.link(feature.properties['visibility'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['drawOrder'] !== null ? autolinker.link(feature.properties['drawOrder'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['icon'] !== null ? autolinker.link(feature.properties['icon'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['timezone'] !== null ? autolinker.link(feature.properties['timezone'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormType'] !== null ? autolinker.link(feature.properties['stormType'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['basin'] !== null ? autolinker.link(feature.properties['basin'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['fcstpd'] !== null ? autolinker.link(feature.properties['fcstpd'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['storm'] !== null ? autolinker.link(feature.properties['storm'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['atcfid'] !== null ? autolinker.link(feature.properties['atcfid'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['advisoryNum'] !== null ? autolinker.link(feature.properties['advisoryNum'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormNum'] !== null ? autolinker.link(feature.properties['stormNum'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormName'] !== null ? autolinker.link(feature.properties['stormName'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['pubAdvTime'] !== null ? autolinker.link(feature.properties['pubAdvTime'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['TCInitLocation'] !== null ? autolinker.link(feature.properties['TCInitLocation'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['maxWindKnots'] !== null ? autolinker.link(feature.properties['maxWindKnots'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['maxWindMPH'] !== null ? autolinker.link(feature.properties['maxWindMPH'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['maxGustKnots'] !== null ? autolinker.link(feature.properties['maxGustKnots'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['maxGustMPH'] !== null ? autolinker.link(feature.properties['maxGustMPH'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormMovement'] !== null ? autolinker.link(feature.properties['stormMovement'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['minimumPressure'] !== null ? autolinker.link(feature.properties['minimumPressure'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['snippet'] !== null ? autolinker.link(feature.properties['snippet'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                    </table>';
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['timestamp'] !== null ? autolinker.link(feature.properties['timestamp'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['begin'] !== null ? autolinker.link(feature.properties['begin'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['end'] !== null ? autolinker.link(feature.properties['end'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['altitudeMode'] !== null ? autolinker.link(feature.properties['altitudeMode'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['tessellate'] !== null ? autolinker.link(feature.properties['tessellate'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['extrude'] !== null ? autolinker.link(feature.properties['extrude'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['visibility'] !== null ? autolinker.link(feature.properties['visibility'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['drawOrder'] !== null ? autolinker.link(feature.properties['drawOrder'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['icon'] !== null ? autolinker.link(feature.properties['icon'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['timezone'] !== null ? autolinker.link(feature.properties['timezone'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormType'] !== null ? autolinker.link(feature.properties['stormType'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['basin'] !== null ? autolinker.link(feature.properties['basin'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['fcstpd'] !== null ? autolinker.link(feature.properties['fcstpd'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['storm'] !== null ? autolinker.link(feature.properties['storm'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['atcfid'] !== null ? autolinker.link(feature.properties['atcfid'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['advisoryNum'] !== null ? autolinker.link(feature.properties['advisoryNum'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormNum'] !== null ? autolinker.link(feature.properties['stormNum'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormName'] !== null ? autolinker.link(feature.properties['stormName'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['pubAdvTime'] !== null ? autolinker.link(feature.properties['pubAdvTime'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['TCInitLocation'] !== null ? autolinker.link(feature.properties['TCInitLocation'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['maxWindKnots'] !== null ? autolinker.link(feature.properties['maxWindKnots'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['maxWindMPH'] !== null ? autolinker.link(feature.properties['maxWindMPH'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['maxGustKnots'] !== null ? autolinker.link(feature.properties['maxGustKnots'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['maxGustMPH'] !== null ? autolinker.link(feature.properties['maxGustMPH'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormMovement'] !== null ? autolinker.link(feature.properties['stormMovement'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['minimumPressure'] !== null ? autolinker.link(feature.properties['minimumPressure'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['snippet'] !== null ? autolinker.link(feature.properties['snippet'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                        </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
             layer.on('popupopen', function (e) {
                 addClassToPopupIfMedia(content, e.popup);
@@ -1037,94 +1038,94 @@
         map.addLayer(layer_EP112024_008adv_TRACKForecastTrack_3);
         function pop_EP112024_008adv_TRACKForecastTrack_4(feature, layer) {
             var popupContent = '<table>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['timestamp'] !== null ? autolinker.link(feature.properties['timestamp'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['begin'] !== null ? autolinker.link(feature.properties['begin'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['end'] !== null ? autolinker.link(feature.properties['end'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['altitudeMode'] !== null ? autolinker.link(feature.properties['altitudeMode'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['tessellate'] !== null ? autolinker.link(feature.properties['tessellate'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['extrude'] !== null ? autolinker.link(feature.properties['extrude'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['visibility'] !== null ? autolinker.link(feature.properties['visibility'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['drawOrder'] !== null ? autolinker.link(feature.properties['drawOrder'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['icon'] !== null ? autolinker.link(feature.properties['icon'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['timezone'] !== null ? autolinker.link(feature.properties['timezone'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormType'] !== null ? autolinker.link(feature.properties['stormType'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['basin'] !== null ? autolinker.link(feature.properties['basin'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['fcstpd'] !== null ? autolinker.link(feature.properties['fcstpd'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['storm'] !== null ? autolinker.link(feature.properties['storm'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['atcfid'] !== null ? autolinker.link(feature.properties['atcfid'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['advisoryNum'] !== null ? autolinker.link(feature.properties['advisoryNum'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormNum'] !== null ? autolinker.link(feature.properties['stormNum'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormName'] !== null ? autolinker.link(feature.properties['stormName'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['pubAdvTime'] !== null ? autolinker.link(feature.properties['pubAdvTime'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['TCInitLocation'] !== null ? autolinker.link(feature.properties['TCInitLocation'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['maxWindKnots'] !== null ? autolinker.link(feature.properties['maxWindKnots'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['maxWindMPH'] !== null ? autolinker.link(feature.properties['maxWindMPH'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['maxGustKnots'] !== null ? autolinker.link(feature.properties['maxGustKnots'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['maxGustMPH'] !== null ? autolinker.link(feature.properties['maxGustMPH'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormMovement'] !== null ? autolinker.link(feature.properties['stormMovement'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['minimumPressure'] !== null ? autolinker.link(feature.properties['minimumPressure'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['snippet'] !== null ? autolinker.link(feature.properties['snippet'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                    </table>';
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['timestamp'] !== null ? autolinker.link(feature.properties['timestamp'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['begin'] !== null ? autolinker.link(feature.properties['begin'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['end'] !== null ? autolinker.link(feature.properties['end'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['altitudeMode'] !== null ? autolinker.link(feature.properties['altitudeMode'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['tessellate'] !== null ? autolinker.link(feature.properties['tessellate'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['extrude'] !== null ? autolinker.link(feature.properties['extrude'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['visibility'] !== null ? autolinker.link(feature.properties['visibility'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['drawOrder'] !== null ? autolinker.link(feature.properties['drawOrder'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['icon'] !== null ? autolinker.link(feature.properties['icon'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['timezone'] !== null ? autolinker.link(feature.properties['timezone'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormType'] !== null ? autolinker.link(feature.properties['stormType'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['basin'] !== null ? autolinker.link(feature.properties['basin'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['fcstpd'] !== null ? autolinker.link(feature.properties['fcstpd'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['storm'] !== null ? autolinker.link(feature.properties['storm'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['atcfid'] !== null ? autolinker.link(feature.properties['atcfid'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['advisoryNum'] !== null ? autolinker.link(feature.properties['advisoryNum'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormNum'] !== null ? autolinker.link(feature.properties['stormNum'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormName'] !== null ? autolinker.link(feature.properties['stormName'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['pubAdvTime'] !== null ? autolinker.link(feature.properties['pubAdvTime'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['TCInitLocation'] !== null ? autolinker.link(feature.properties['TCInitLocation'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['maxWindKnots'] !== null ? autolinker.link(feature.properties['maxWindKnots'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['maxWindMPH'] !== null ? autolinker.link(feature.properties['maxWindMPH'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['maxGustKnots'] !== null ? autolinker.link(feature.properties['maxGustKnots'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['maxGustMPH'] !== null ? autolinker.link(feature.properties['maxGustMPH'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormMovement'] !== null ? autolinker.link(feature.properties['stormMovement'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['minimumPressure'] !== null ? autolinker.link(feature.properties['minimumPressure'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['snippet'] !== null ? autolinker.link(feature.properties['snippet'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                        </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
             layer.on('popupopen', function (e) {
                 addClassToPopupIfMedia(content, e.popup);
@@ -1170,70 +1171,70 @@
         map.addLayer(layer_EP112024_008adv_TRACKForecastTrack_4);
         function pop_EP112024_008adv_WWTropicalDepressionElevenEAdvisory8WatchWarnings_5(feature, layer) {
             var popupContent = '<table>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['timestamp'] !== null ? autolinker.link(feature.properties['timestamp'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['begin'] !== null ? autolinker.link(feature.properties['begin'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['end'] !== null ? autolinker.link(feature.properties['end'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['altitudeMode'] !== null ? autolinker.link(feature.properties['altitudeMode'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['tessellate'] !== null ? autolinker.link(feature.properties['tessellate'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['extrude'] !== null ? autolinker.link(feature.properties['extrude'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['visibility'] !== null ? autolinker.link(feature.properties['visibility'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['drawOrder'] !== null ? autolinker.link(feature.properties['drawOrder'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['icon'] !== null ? autolinker.link(feature.properties['icon'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['timezone'] !== null ? autolinker.link(feature.properties['timezone'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormType'] !== null ? autolinker.link(feature.properties['stormType'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['advisoryDate'] !== null ? autolinker.link(feature.properties['advisoryDate'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['basin'] !== null ? autolinker.link(feature.properties['basin'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['fcstpd'] !== null ? autolinker.link(feature.properties['fcstpd'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['storm'] !== null ? autolinker.link(feature.properties['storm'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['atcfid'] !== null ? autolinker.link(feature.properties['atcfid'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['advisoryNum'] !== null ? autolinker.link(feature.properties['advisoryNum'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormNum'] !== null ? autolinker.link(feature.properties['stormNum'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                        <tr>\
-                            <td colspan="2">' + (feature.properties['stormName'] !== null ? autolinker.link(feature.properties['stormName'].toLocaleString()) : '') + '</td>\
-                        </tr>\
-                    </table>';
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['description'] !== null ? autolinker.link(feature.properties['description'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['timestamp'] !== null ? autolinker.link(feature.properties['timestamp'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['begin'] !== null ? autolinker.link(feature.properties['begin'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['end'] !== null ? autolinker.link(feature.properties['end'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['altitudeMode'] !== null ? autolinker.link(feature.properties['altitudeMode'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['tessellate'] !== null ? autolinker.link(feature.properties['tessellate'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['extrude'] !== null ? autolinker.link(feature.properties['extrude'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['visibility'] !== null ? autolinker.link(feature.properties['visibility'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['drawOrder'] !== null ? autolinker.link(feature.properties['drawOrder'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['icon'] !== null ? autolinker.link(feature.properties['icon'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['timezone'] !== null ? autolinker.link(feature.properties['timezone'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormType'] !== null ? autolinker.link(feature.properties['stormType'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['advisoryDate'] !== null ? autolinker.link(feature.properties['advisoryDate'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['basin'] !== null ? autolinker.link(feature.properties['basin'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['fcstpd'] !== null ? autolinker.link(feature.properties['fcstpd'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['storm'] !== null ? autolinker.link(feature.properties['storm'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['atcfid'] !== null ? autolinker.link(feature.properties['atcfid'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['advisoryNum'] !== null ? autolinker.link(feature.properties['advisoryNum'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormNum'] !== null ? autolinker.link(feature.properties['stormNum'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                            <tr>\
+                                <td colspan="2">' + (feature.properties['stormName'] !== null ? autolinker.link(feature.properties['stormName'].toLocaleString()) : '') + '</td>\
+                            </tr>\
+                        </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
             layer.on('popupopen', function (e) {
                 addClassToPopupIfMedia(content, e.popup);
