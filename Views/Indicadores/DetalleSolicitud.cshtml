@@ -74,7 +74,7 @@
         <div class="col-lg-4 mt-3 mt-lg-0 mb-3" id="contact2">
             <div class="">
                 <h1 class="display-4 subtitulo fw-bold">
-                    <img src="/img/evaluar.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu" />
                     Información
                 </h1>
 
@@ -117,32 +117,32 @@
 
     <div id="divTablaPermisos" class="table-responsive"></div>
 
- @if (perfilUsuario.Mercado_ID == "1" || perfilUsuario.Mercado_ID == "0")
+    @if (perfilUsuario.Mercado_ID == "1" || perfilUsuario.Mercado_ID == "0")
 
     {
 
-    <h3  class="subtitulo display-9 fw-bold pt-3 pb-3">Información del Parque Vehicular a 3km de la Solicitud</h3>
-    <br>
+        <h3 class="subtitulo display-9 fw-bold pt-3 pb-3">Información del Parque Vehicular a 3km de la Solicitud</h3>
+        <br>
         @*Menu*@
-        <div class="navbarmapag" id="totales_en_isocrona"  class="pt-3">
+        <div class="navbarmapag" id="totales_en_isocrona" class="pt-3">
 
 
             <a id="coches" class="active icono-texto">
-                <img src="/img/coche.png" alt="Icono personalizado" class="iconomenu" />
+                <img src="@Cdn.Url/img_snier/vistas/coche.png" alt="Icono personalizado" class="iconomenu" />
                 <span>Total de Vehículos</span>
 
                 <div id="total_coches" style="font-size: 20px;"></div>
             </a>
 
             <a id="glp" class="icono-texto">
-                <img src="/img/moto.png" alt="Icono personalizado" class="iconomenu" />
+                <img src="@Cdn.Url/img_snier/vistas/moto.png" alt="Icono personalizado" class="iconomenu" />
                 <span>Total de Motocicletas</span>
 
                 <div id="total_motos" style="font-size: 20px;"></div>
             </a>
 
             @* <a id="expendios" class="icono-texto">
-                <img src="/img/evaluar.png" alt="Icono personalizado" class="iconomenu" />
+                <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu" />
                 <span>Total de Expendios Autorizados</span>
 
                 <div id="total_expendios" style="font-size: 20px;"></div>
@@ -182,7 +182,7 @@
         }
 
 
-    function calcularBoundingBox(latitud, longitud, radio) {
+        function calcularBoundingBox(latitud, longitud, radio) {
             var R = 6371; // Radio de la Tierra en km
             var deltaLat = (radio / R) * (180 / Math.PI);
             var deltaLon = (radio / (R * Math.cos((Math.PI * latitud) / 180))) * (180 / Math.PI);
@@ -205,42 +205,42 @@
         }
 
 
-function obtenerTotalesPorRadio(latitud, longitud, radio, mercadoSelect) {
-    // Calcular el bounding box basado en el radio de 3 km
-    let boundingBoxPoints = calcularBoundingBox(latitud, longitud, radio);
+        function obtenerTotalesPorRadio(latitud, longitud, radio, mercadoSelect) {
+            // Calcular el bounding box basado en el radio de 3 km
+            let boundingBoxPoints = calcularBoundingBox(latitud, longitud, radio);
 
-    // Agregar el mercadoSelect al objeto boundingBoxPoints
-    boundingBoxPoints.mercadoSelect = mercadoSelect;
+            // Agregar el mercadoSelect al objeto boundingBoxPoints
+            boundingBoxPoints.mercadoSelect = mercadoSelect;
 
-    // Verificar qué se está enviando al servidor
-    console.log('Datos enviados a getIsocrona:', boundingBoxPoints);
+            // Verificar qué se está enviando al servidor
+            console.log('Datos enviados a getIsocrona:', boundingBoxPoints);
 
-    // Enviando datos al backend.
-    $.ajax({
-        url: '/Indicadores/getIsocrona',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(boundingBoxPoints),
-        success: function (response) {
-            console.log('Success:', response);
+            // Enviando datos al backend.
+            $.ajax({
+                url: '/Indicadores/getIsocrona',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(boundingBoxPoints),
+                success: function (response) {
+                    console.log('Success:', response);
 
-            // Actualizar totales de vehículos
-            $('#total_coches').text(response.totalAutomoviles ? response.totalAutomoviles.toLocaleString() : '0');
+                    // Actualizar totales de vehículos
+                    $('#total_coches').text(response.totalAutomoviles ? response.totalAutomoviles.toLocaleString() : '0');
 
-            // Actualizar totales de motos
-            $('#total_motos').text(response.totalMotos ? response.totalMotos.toLocaleString() : '0');
+                    // Actualizar totales de motos
+                    $('#total_motos').text(response.totalMotos ? response.totalMotos.toLocaleString() : '0');
 
-            // Actualizar total de expendios autorizados
-            $('#total_expendios').text(response.expendiosAutorizadosCP && response.expendiosAutorizadosCP.length > 0 ? response.expendiosAutorizadosCP.length.toLocaleString() : '0');
+                    // Actualizar total de expendios autorizados
+                    $('#total_expendios').text(response.expendiosAutorizadosCP && response.expendiosAutorizadosCP.length > 0 ? response.expendiosAutorizadosCP.length.toLocaleString() : '0');
 
-            // Actualizar total del parque vehicular
-            $('#total_parque_vehicular').text(response.totalParqueVehicular ? response.totalParqueVehicular.toLocaleString() : '0');
-        },
-        error: function (error) {
-            console.error('Error:', error);
+                    // Actualizar total del parque vehicular
+                    $('#total_parque_vehicular').text(response.totalParqueVehicular ? response.totalParqueVehicular.toLocaleString() : '0');
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
         }
-    });
-}
 
         function ObtienePermisos(callback) {
             $.ajax({
@@ -268,9 +268,9 @@ function obtenerTotalesPorRadio(latitud, longitud, radio, mercadoSelect) {
             }
         });
 
-        var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
-        var iconoSolicitudesUrl = '/img/Solicitudes.png';
-        var iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' });
+        var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
+        var iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
+        var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Expendio.png' });
 
         function initMap() {
             map = L.map('map').setView([20.6736, -103.344], 5);
@@ -422,13 +422,13 @@ function obtenerTotalesPorRadio(latitud, longitud, radio, mercadoSelect) {
                         map.setView([latitud, longitud], 13);
 
 
-                    // Obtener totales por radio
+                        // Obtener totales por radio
                         //obtenerTotalesPorRadio(latitud, longitud, 3);
                         // Llamada a la función con latitud, longitud, radio de 3km, y el mercado select
-                        
+
 
                         // Suponiendo que ya tienes las variables latitud, longitud, radio, y mercado definidas:
-                    
+
                         var radio = 3;  // El radio en km
                         var mercado = 'petroliferos';  // Asigna el valor del mercado, por ejemplo 'petroliferos'
 
@@ -474,7 +474,7 @@ function obtenerTotalesPorRadio(latitud, longitud, radio, mercadoSelect) {
                                     contenido += "<div class='popup-content'>";
 
                                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                                        contenido += "<h2 class='subtitulo'><img src='/img/gasolinera.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                                        contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/gasolinera.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                                     }
 
                                     contenido += "<ul>";

@@ -51,8 +51,8 @@
 @foreach (var item in Model.Totales_EF)
 {
     <div class="text-center">
-        <h3 class="cp-section cp-grouping-section pb-3"> <img src="@Cdn.Url/img_snier/vistas/mexicoi.png" alt="Icono personalizado"
-                class="iconomenu">@item.EF_Nombre</h3>
+        <h3 class="cp-section cp-grouping-section pb-3"> <img src="@Cdn.Url/img_snier/vistas/mexicoi.png"
+                alt="Icono personalizado" class="iconomenu">@item.EF_Nombre</h3>
     </div>
 
 }
@@ -128,11 +128,11 @@
         });
 
         //Asignación de Iconos
-        var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' }),
-            iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' }),
+        var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' }),
+            iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Expendio.png' }),
             iconoAzul = new iconoBase({ iconUrl: 'azul.png' });
-        iconoAprobado = new iconoBase({ iconUrl: '/img/Aprobado.png' });
-        iconoNoaprobado = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+        iconoAprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' });
+        iconoNoaprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
 
         // Carga Resultados de las solicitudes al Mapa y permisos de la Entidad Federativa Seleccionada
@@ -298,7 +298,7 @@
         }
         //var datosExpendios; // variable global para almacenar todos los expendios
         function CargaExpendios() {
-            
+
             limpiarMarcadores();
             $.ajax({
                 url: '/Indicadores/GetExpendiosAutorizadosGLP',
@@ -332,7 +332,7 @@
                         contenido += "<div class='popup-content'>";
 
                         if (camposVisiblesGlobal.includes("RazonSocial")) {
-                            contenido += "<h2 class='subtitulo'><img src='/img/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                            contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                         }
 
                         contenido += "<ul>";
@@ -517,7 +517,7 @@
                         }
                     });
 
-                    var iconoExpendio = new iconoBase({ iconUrl: '/img/glpmapa.png' });
+                    var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa.png' });
 
                     // Agrega los marcadores para las coordenadas del mapa actual
                     for (var j = 0; j < response.length; j++) {
@@ -578,7 +578,7 @@
                         contenido += "<div class='popup-content'>";
 
                         if (camposVisiblesGlobal.includes("RazonSocial")) {
-                            contenido += "<h2 class='subtitulo'><img src='/img/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                            contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                         }
 
                         contenido += "<ul>";
@@ -763,7 +763,7 @@
                         }
                     });
 
-                    var iconoExpendio = new iconoBase({ iconUrl: '/img/glpmapa.png' });
+                    var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa.png' });
 
                     // Agrega los marcadores para las coordenadas del mapa actual
                     for (var j = 0; j < response.length; j++) {
@@ -1233,33 +1233,33 @@
             function pop_ductos_glp(feature, layer) {
                 // Variables para almacenar las coordenadas de clic
                 let clickedLat, clickedLon;
-                function updatePopupContent(){
+                function updatePopupContent() {
                     var popupContent = '<table>\
-                                                                <tr>\
-                                                                    <th scope="row">Región: </th>\
-                                                                    <td>' + (feature.properties['Región: '] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
-                                                                </tr>\
-                                                                <tr>\
-                                                                    <th scope="row">Ducto: </th>\
-                                                                    <td>' + (feature.properties['Ducto: '] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
-                                                                </tr>\
-                                                                <tr>\
-                                                                    <th scope="row">Servicio: </th>\
-                                                                    <td>' + (feature.properties['Servicio: '] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
-                                                                </tr>\
-                                                                <tr>\
-                                                                    <th scope="row">Longitud (km): </th>\
-                                                                    <td>' + (feature.properties['Longitud (km): '] !== null ? autolinker.link(feature.properties['lon'].toLocaleString()) : '') + '</td>\
-                                                                </tr>\
-                                                                <tr>\
-                                                                    <th scope="row">Capa nominal (B): </th>\
-                                                                    <td>' + (feature.properties['Capacidad nominal (B): '] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
-                                                                </tr>\
-                                                                <tr>\
-                                                                    <th scope="row">Capa operativa (B): </th>\
-                                                                    <td>' + (feature.properties['Capacidad operativa (B): '] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
-                                                                </tr>\
-                                                            </table>';
+                                                                    <tr>\
+                                                                        <th scope="row">Región: </th>\
+                                                                        <td>' + (feature.properties['Región: '] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
+                                                                    </tr>\
+                                                                    <tr>\
+                                                                        <th scope="row">Ducto: </th>\
+                                                                        <td>' + (feature.properties['Ducto: '] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
+                                                                    </tr>\
+                                                                    <tr>\
+                                                                        <th scope="row">Servicio: </th>\
+                                                                        <td>' + (feature.properties['Servicio: '] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
+                                                                    </tr>\
+                                                                    <tr>\
+                                                                        <th scope="row">Longitud (km): </th>\
+                                                                        <td>' + (feature.properties['Longitud (km): '] !== null ? autolinker.link(feature.properties['lon'].toLocaleString()) : '') + '</td>\
+                                                                    </tr>\
+                                                                    <tr>\
+                                                                        <th scope="row">Capa nominal (B): </th>\
+                                                                        <td>' + (feature.properties['Capacidad nominal (B): '] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
+                                                                    </tr>\
+                                                                    <tr>\
+                                                                        <th scope="row">Capa operativa (B): </th>\
+                                                                        <td>' + (feature.properties['Capacidad operativa (B): '] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
+                                                                    </tr>\
+                                                                </table>';
                     layer.bindPopup(popupContent, { maxHeight: 400 }).openPopup();
                 }
                 // Evento para capturar clics en el mapa dentro del área del feature

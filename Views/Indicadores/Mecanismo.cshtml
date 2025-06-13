@@ -2596,10 +2596,10 @@
                                 }
                             });
 
-                            var iconoOptimo = new iconoBase({ iconUrl: '/img/Aprobado.png' }),
-                                iconoViable = new iconoBase({ iconUrl: '/img/viable.png' }),
-                                iconoFactible = new iconoBase({ iconUrl: '/img/NoviableMun.png' });
-                                iconoNoViable = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+                            var iconoOptimo = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' }),
+                                iconoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/viable.png' }),
+                                iconoFactible = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoviableMun.png' });
+                                iconoNoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
                             // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                             response.forEach(function (item) {
@@ -2608,26 +2608,26 @@
                                 var iconoActualUrl;
                                 if (item.categoria == "Óptimo") {
                                     iconoActual = iconoOptimo;
-                                    iconoActualUrl = '/img/Aprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/Aprobado.png';
                                 } else if (item.categoria == "Viable") {
                                     iconoActual = iconoViable;
-                                    iconoActualUrl = '/img/viable.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/viable.png';
                                 } else if (item.categoria == "No Viable a Nivel Municipal") {
                                     iconoActual = iconoFactible;
-                                    iconoActualUrl = '/img/NoviableMun.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoviableMun.png';
 
                                 } else if (item.categoria == "No Viable a Nivel Entidad Federativa") {
                                     iconoActual = iconoNoViable;
-                                    iconoActualUrl = '/img/NoAprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
 
                                 }                              
                                 else {
                                     iconoActual = iconoNoViable; // default icon
-                                    iconoActualUrl = '/img/NoAprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                                 }
 
                                 var marker = L.marker([item.x_Geo, item.y_Geo], { icon: iconoActual });
-                                 var botonEvaluar = iconoActualUrl === '/img/NoAprobado.png'
+                                 var botonEvaluar = iconoActualUrl === '@Cdn.Url/img_snier/vistas/NoAprobado.png'
                                  ? "<button class='btn btn-cre-azul' onclick='redireccionarAEvaluacion(" + item.id + ", \"Petroliferos\")'>Acción Adicional: ¡Evaluar a Nivel Barrio!</button> <hr />"
                                  : "";
 
@@ -2757,17 +2757,17 @@
                                 // Asigna el icono de acuerdo a la categoría
                                 var iconoActualUrl;
                                 if (item.categoria == "Óptimo") {
-                                    iconoActualUrl = '/img/Aprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/Aprobado.png';
                                 } else if (item.categoria == "Viable") {
-                                    iconoActualUrl = '/img/viable.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/viable.png';
                                 } else if (item.categoria == "No Viable a Nivel Municipal") {
-                                    iconoActualUrl = '/img/NoviableMun.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoviableMun.png';
                                 }else if (item.categoria == "No Viable a Nivel Entidad Federativa") {
-                                    iconoActualUrl = '/img/NoAprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                                 }
 
                                 else {
-                                    iconoActualUrl = '/img/NoAprobado.png'; // default icon
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png'; // default icon
                                 }
 
                                 const li = document.createElement('li');
@@ -2787,7 +2787,7 @@
                                 li.insertBefore(icono, texto); // Insertar el icono antes del texto
 
                                   // Condición para mostrar el botón solo si el icono es "NoAprobado"
-                                if (iconoActualUrl === '/img/NoAprobado.png') {
+                                if (iconoActualUrl === '@Cdn.Url/img_snier/vistas/NoAprobado.png') {
                                     const botonEvaluar = document.createElement('button');
                                     botonEvaluar.classList.add('btn', 'btn-danger'); // Agregar las clases CSS para el botón
                                     botonEvaluar.innerHTML = 'Acción Adicional Requerida: Evaluar solicitud a nivel localidad';

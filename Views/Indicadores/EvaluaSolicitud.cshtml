@@ -92,7 +92,7 @@
         <div class="col-lg-4 mt-3 mt-lg-0 mb-3" id="contact2">
             <div class="">
                 <h1 class="display-4 subtitulo fw-bold">
-                    <img src="/img/evaluar.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu" />
                     Información
                 </h1>
 
@@ -130,21 +130,21 @@
 
 
             <a id="coches" class="active icono-texto">
-                <img src="/img/coche.png" alt="Icono personalizado" class="iconomenu" />
+                <img src="@Cdn.Url/img_snier/vistas/coche.png" alt="Icono personalizado" class="iconomenu" />
                 <span>Total de Vehículos</span>
 
                 <div id="total_coches" style="font-size: 20px;"></div>
             </a>
 
             <a id="glp" class="icono-texto">
-                <img src="/img/moto.png" alt="Icono personalizado" class="iconomenu" />
+                <img src="@Cdn.Url/img_snier/vistas/moto.png" alt="Icono personalizado" class="iconomenu" />
                 <span>Total de Motocicletas</span>
 
                 <div id="total_motos" style="font-size: 20px;"></div>
             </a>
 
             <a id="expendios" class="icono-texto">
-                <img src="/img/evaluar.png" alt="Icono personalizado" class="iconomenu" />
+                <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu" />
                 <span>Total de Expendios Autorizados</span>
 
                 <div id="total_expendios" style="font-size: 20px;"></div>
@@ -206,7 +206,7 @@
             <div class="alert alert-light" role="alert">
                 <div id="datos_ubicacion" class="scrollable-container row" style="display:block">
                     <h3 class="subtitulo display-9 fw-bold mb-2">
-                        <img src="/img/evaluar.png" alt="Icono personalizado" class="iconomenu pt-3">Datos de la
+                        <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu pt-3">Datos de la
                         Ubicación
                     </h3>
                     <br><br>
@@ -662,7 +662,7 @@
             <div class="alert alert-light" role="alert">
                 <div id="datos_ubicacion" class="scrollable-container row" style="display:none">
                     <h3 class="subtitulo display-9 fw-bold mb-2">
-                        <img src="/img/evaluar.png" alt="Icono personalizado" class="iconomenu pt-3">Datos de la
+                        <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu pt-3">Datos de la
                         Ubicación
                     </h3>
                     <br><br>
@@ -775,9 +775,9 @@
             }
         });
 
-        var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
-        var iconoSolicitudesUrl = '/img/Solicitudes.png';
-        var iconoExpendio = new iconoBase({ iconUrl: '/img/glpmapa.png' });
+        var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
+        var iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
+        var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa.png' });
 
         function initMap() {
             map = L.map('map').setView([20.6736, -103.344], 5);
@@ -986,7 +986,7 @@
                                     contenido += "<div class='popup-content'>";
 
                                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                                        contenido += "<h2 class='subtitulo'><img src='/img/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                                        contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                                     }
 
                                     contenido += "<ul>";
@@ -1375,9 +1375,9 @@
             }
         });
 
-        var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
-        var iconoSolicitudesUrl = '/img/Solicitudes.png';
-        var iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' });
+        var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
+        var iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
+        var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Expendio.png' });
 
         function initMap() {
             map = L.map('map').setView([20.6736, -103.344], 5);
@@ -1600,7 +1600,7 @@
                                     contenido += "<div class='popup-content'>";
 
                                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                                        contenido += "<h2 class='subtitulo'><img src='/img/gasolinera.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                                        contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/gasolinera.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                                     }
 
                                     contenido += "<ul>";

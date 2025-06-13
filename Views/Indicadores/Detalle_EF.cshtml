@@ -3,7 +3,7 @@
     ViewData["Title"] = "Detalle por Entidad Federativa ";
 }
 <div class="watermark-container">
-    @for (int i = 0; i < 50; i++)  /* Cambiamos el número 3 por 9 para tener más marcas de agua */
+    @for (int i = 0; i < 50; i++) /* Cambiamos el número 3 por 9 para tener más marcas de agua */
     {
         <div class="watermark">
             CRE-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
@@ -14,14 +14,14 @@
 @foreach (var item in Model.Totales_EF)
 {
     <div class="text-center ">
-         <input type="text" id="efid" value="@item.EF_ID" style="display:none">
+        <input type="text" id="efid" value="@item.EF_ID" style="display:none">
     </div>
 
 }
- @foreach (var totales in Model.Parametros_EF)
+@foreach (var totales in Model.Parametros_EF)
 {
-   <input type="text" id="indicadores_ef" value="@totales.ColumnasSeleccionadas_P1" style="display:none" >
-   <input type="text" id="umbral_ef" value="@totales.Umbral_P1" style="display:none">
+    <input type="text" id="indicadores_ef" value="@totales.ColumnasSeleccionadas_P1" style="display:none">
+    <input type="text" id="umbral_ef" value="@totales.Umbral_P1" style="display:none">
 }
 
 
@@ -30,7 +30,8 @@
 @foreach (var item in Model.Totales_EF)
 {
     <div class="text-center">
-        <h3 class="cp-section cp-grouping-section pb-3"> <img src="@Cdn.Url/img_snier/vistas/mexicoi.png" alt="Icono personalizado" class="iconomenu">@item.EF_Nombre</h3>
+        <h3 class="cp-section cp-grouping-section pb-3"> <img src="@Cdn.Url/img_snier/vistas/mexicoi.png"
+                alt="Icono personalizado" class="iconomenu">@item.EF_Nombre</h3>
     </div>
 
 }
@@ -54,7 +55,7 @@
 <script src="@Cdn.Url/Geovisualizador/data/ductos_petroliferos_4326_0.js"></script>
 
 <script src="~/js/kitmapapet.js"></script>
-@section scripts{
+@section scripts {
 
     @*Radio de 3km*@
     <script>
@@ -87,36 +88,36 @@
             function pop_ductos_petroliferos_4326_0(feature, layer) {
                 // Variables para almacenar las coordenadas de clic
                 let clickedLat, clickedLon;
-                function updatePopupContent(){
+                function updatePopupContent() {
                     var popupContent = '<table>\
-                                        <tr>\
-                                            <th scope="row">Región: </th>\
-                                            <td>' + (feature.properties['regin'] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
-                                        </tr>\
-                                        <tr>\
-                                            <th scope="row">Ducto: </th>\
-                                            <td>' + (feature.properties['ducto'] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
-                                        </tr>\
-                                        <tr>\
-                                            <th scope="row">Servicio: </th>\
-                                            <td>' + (feature.properties['servicio'] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
-                                        </tr>\
-                                        <tr>\
-                                            <th scope="row">Longitud (km): </th>\
-                                            <td>' + (feature.properties['longitud_'] !== null ? autolinker.link(feature.properties['longitud_'].toLocaleString()) : '') + '</td>\
-                                        </tr>\
-                                        <tr>\
-                                            <th scope="row">Capacidad nominal (B): </th>\
-                                            <td>' + (feature.properties['capa_n'] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
-                                        </tr>\
-                                        <tr>\
-                                            <th scope="row">Capacidad opertiva (B): </th>\
-                                            <td>' + (feature.properties['capa_o'] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
-                                        </tr>\
-                                        <tr>\
-                                            <td><a class="street-view-link btn btn-cre-verde" href="http://maps.google.com/maps?q=&layer=c&cbll=' + clickedLat + ',' + clickedLon + '&cbp=11,0,0,0,0" target="_blank"><b> Ver vista de calle </b></a></td>\
-                                        </tr>\
-                                    </table>';
+                                            <tr>\
+                                                <th scope="row">Región: </th>\
+                                                <td>' + (feature.properties['regin'] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
+                                            </tr>\
+                                            <tr>\
+                                                <th scope="row">Ducto: </th>\
+                                                <td>' + (feature.properties['ducto'] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
+                                            </tr>\
+                                            <tr>\
+                                                <th scope="row">Servicio: </th>\
+                                                <td>' + (feature.properties['servicio'] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
+                                            </tr>\
+                                            <tr>\
+                                                <th scope="row">Longitud (km): </th>\
+                                                <td>' + (feature.properties['longitud_'] !== null ? autolinker.link(feature.properties['longitud_'].toLocaleString()) : '') + '</td>\
+                                            </tr>\
+                                            <tr>\
+                                                <th scope="row">Capacidad nominal (B): </th>\
+                                                <td>' + (feature.properties['capa_n'] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
+                                            </tr>\
+                                            <tr>\
+                                                <th scope="row">Capacidad opertiva (B): </th>\
+                                                <td>' + (feature.properties['capa_o'] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
+                                            </tr>\
+                                            <tr>\
+                                                <td><a class="street-view-link btn btn-cre-verde" href="http://maps.google.com/maps?q=&layer=c&cbll=' + clickedLat + ',' + clickedLon + '&cbp=11,0,0,0,0" target="_blank"><b> Ver vista de calle </b></a></td>\
+                                            </tr>\
+                                        </table>';
                     layer.bindPopup(popupContent, { maxHeight: 400 }).openPopup();
                 }
                 // Evento para capturar clics en el mapa dentro del área del feature
@@ -168,7 +169,7 @@
                 fillOpacity: 0.2 // Opacidad del relleno del círculo
             }).addTo(map);
         }
-       //Crea los Iconos
+        //Crea los Iconos
         var iconoBase = L.Icon.extend({
             options: {
                 iconSize: [24, 24],
@@ -178,16 +179,16 @@
         });
 
         //Asignación de Iconos
-        var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' }),
-            iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' }),
+        var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' }),
+            iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Expendio.png' }),
             iconoAzul = new iconoBase({ iconUrl: 'azul.png' });
-            iconoAprobado = new iconoBase({ iconUrl: '/img/Aprobado.png' });
-            iconoNoaprobado = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+        iconoAprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' });
+        iconoNoaprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
 
         // Carga Resultados de las solicitudes al Mapa y permisos de la Entidad Federativa Seleccionada
         var coordenadasp = @Html.Raw(Json.Serialize(Model.Detalle_EF));
-        console.log("DetalleEF coord->:",coordenadasp);
+        console.log("DetalleEF coord->:", coordenadasp);
         var markers = L.markerClusterGroup();
         for (var j = 0; j < coordenadasp.length; j++) {
             var coordenada = coordenadasp[j];
@@ -202,7 +203,7 @@
             // Crea y agrega el marcador con el ícono seleccionado
             var marker = L.marker([coordenada.x_Geo, coordenada.y_Geo], { icon: iconoSeleccionado }).addTo(map);
             agregarCirculo(marker.getLatLng());
-//            marker.bindPopup("<h3> <i class='bi bi-fingerprint'></i> ID Solicitud: " + coordenada.id + "</h3><hr/><p><i class='bi bi-geo-alt-fill'></i> Entidad Federetiva: " + coordenada.eF_Nombre + "</p> <hr/><ul><li>Municipio: " + coordenada.municipio_Nombre + "</li><li>¿Documentos Completos?:" + coordenada.documentos_completos_text + "</li><li>¿Tiene Análisis de Riesgo?:" + coordenada.analisis_riesgo_text + "</li></ul> ");
+            //            marker.bindPopup("<h3> <i class='bi bi-fingerprint'></i> ID Solicitud: " + coordenada.id + "</h3><hr/><p><i class='bi bi-geo-alt-fill'></i> Entidad Federetiva: " + coordenada.eF_Nombre + "</p> <hr/><ul><li>Municipio: " + coordenada.municipio_Nombre + "</li><li>¿Documentos Completos?:" + coordenada.documentos_completos_text + "</li><li>¿Tiene Análisis de Riesgo?:" + coordenada.analisis_riesgo_text + "</li></ul> ");
             marker.bindPopup(
                 "<style>" +
                 ".popup-content {" +
@@ -216,10 +217,10 @@
                 "</style>" +
                 "<div class='popup-content'>" +
                 "<h3 class='subtitulo text-justify'>" + coordenada.razon_social + "</h3>" +
-                "<br style='padiding-top:3%'>"+
+                "<br style='padiding-top:3%'>" +
                 "<h3 class='title'> <i class='bi bi-qr-code'></i> Turno de Kmis: " + coordenada.turno + "</h3>" +
                 "<h3 class='title'> <i class='bi bi-fingerprint'></i> ID Solicitud: " + coordenada.id + "</h3>" +
-               
+
                 "<p><i class='bi bi-geo-alt-fill'></i> Entidad Federativa: " + coordenada.eF_Nombre + "</p>" +
                 "<ul>" +
                 "<li><strong>Marca Solicitada:</strong> " + coordenada.marca_solicitada + "</li>" +
@@ -266,7 +267,7 @@
         }
 
 
-       
+
         function CargaSolicitudes() {
             // Limpiar marcadores existentes
             limpiarMarcadores();
@@ -345,7 +346,7 @@
 
             //Carga los Expendios Autorizados
             var coordenadas1 = @Html.Raw(Json.Serialize(Model.Permisos_Autorizados));
-            console.log("Estas son las coordenadas: ",coordenadas1);
+            console.log("Estas son las coordenadas: ", coordenadas1);
             var markers = L.markerClusterGroup();
             for (var j = 0; j < coordenadas1.length; j++) {
                 var coordenada = coordenadas1[j];
@@ -356,8 +357,8 @@
                     "<p>" + coordenada.razón_social + "</p>" +
                     "<hr/>" +
                     "<ul>" +
-                        "<li>Fecha de Otorgamiento del Permiso: " + coordenada.fechaOtorgamiento + "</li>" +
-                        "<li>RFC: " + coordenada.rfc + "</li>" +
+                    "<li>Fecha de Otorgamiento del Permiso: " + coordenada.fechaOtorgamiento + "</li>" +
+                    "<li>RFC: " + coordenada.rfc + "</li>" +
                     "</ul>" +
                     "<a class='btn btn-cre-amarillo' target='_blank' href='/Indicadores/DetalleExpendio?NumeroPermiso=" + coordenada.numeroPermiso + "'>Ver detalle</a>" +
                     "<br/>" +
@@ -457,8 +458,8 @@
                     "<p>" + coordenada.razón_social + "</p>" +
                     "<hr/>" +
                     "<ul>" +
-                        "<li>Fecha de Otorgamiento del Permiso: " + coordenada.fechaOtorgamiento + "</li>" +
-                        "<li>RFC: " + coordenada.rfc + "</li>" +
+                    "<li>Fecha de Otorgamiento del Permiso: " + coordenada.fechaOtorgamiento + "</li>" +
+                    "<li>RFC: " + coordenada.rfc + "</li>" +
                     "</ul>" +
                     "<a class='btn btn-cre-amarillo' target='_blank' href='/Indicadores/DetalleExpendio?NumeroPermiso=" + coordenada.numeroPermiso + "'>Ver detalle</a>" +
                     "<br/>" +
@@ -473,36 +474,36 @@
         }
 
 
-     
+
         ////////////////SIDE BAR MUNICIPIOS//////////////////////////////////
         const municipios = [];
 
         var coordenadasp = @Html.Raw(Json.Serialize(Model.Detalle_EF));
 
         //console.log("MUNICIPIOS",municipios);
-       for (var j = 0; j < coordenadasp.length; j++) {
-                var coordenada = coordenadasp[j];
-                var iconoSeleccionado;
-                if (coordenada.resultado === "Aprobado") {
-                    iconoSeleccionado = iconoAprobado;
-                } else {
-                    iconoSeleccionado = iconoNoaprobado;
-                }
-                var municipio = {
+        for (var j = 0; j < coordenadasp.length; j++) {
+            var coordenada = coordenadasp[j];
+            var iconoSeleccionado;
+            if (coordenada.resultado === "Aprobado") {
+                iconoSeleccionado = iconoAprobado;
+            } else {
+                iconoSeleccionado = iconoNoaprobado;
+            }
+            var municipio = {
                 rs: coordenada.razon_social,
                 nombre: coordenada.turno,
                 coordenadas: [coordenada.x_Geo, coordenada.y_Geo],
                 resultado: coordenada.id,
                 icono: iconoSeleccionado
-                };
-                municipios.push(municipio);
-            }
-            console.log("MUNICIPIOS", municipios);
+            };
+            municipios.push(municipio);
+        }
+        console.log("MUNICIPIOS", municipios);
 
         //Seleccionamos el SIDE BAR
         const sidebar = document.querySelector('#sidebar');
-        
-        
+
+
         //Eventos Baiscos
         map.on('click', (evento) => {
             const lat = evento;
@@ -530,52 +531,52 @@
             })
         }
 
-    const crearitem = () => {
-    const ul = document.createElement('ul');
-    ul.classList.add('list-group');
-    ul.style.overflow = 'auto'; // Habilitar desplazamiento interno
-    ul.style.maxHeight = 'calc(280vh - 80px)'; // Ajustar el tamaño máximo
+        const crearitem = () => {
+            const ul = document.createElement('ul');
+            ul.classList.add('list-group');
+            ul.style.overflow = 'auto'; // Habilitar desplazamiento interno
+            ul.style.maxHeight = 'calc(280vh - 80px)'; // Ajustar el tamaño máximo
 
-    sidebar.append(ul);
+            sidebar.append(ul);
 
-    // Crear el elemento "Selecciona una Solicitud"
-    const seleccionaSolicitud = document.createElement('h6');
-                            seleccionaSolicitud.classList.add('btn', 'btn-cre-verde', 'text-center');
-                            seleccionaSolicitud.innerText = 'Selecciona una Solicitud:';
-                            seleccionaSolicitud.style.position = 'sticky'; // Establecer la posición sticky
-                            seleccionaSolicitud.style.top = '0'; // Asegurar que esté al inicio del sidebar
-                            sidebar.prepend(seleccionaSolicitud);
+            // Crear el elemento "Selecciona una Solicitud"
+            const seleccionaSolicitud = document.createElement('h6');
+            seleccionaSolicitud.classList.add('btn', 'btn-cre-verde', 'text-center');
+            seleccionaSolicitud.innerText = 'Selecciona una Solicitud:';
+            seleccionaSolicitud.style.position = 'sticky'; // Establecer la posición sticky
+            seleccionaSolicitud.style.top = '0'; // Asegurar que esté al inicio del sidebar
+            sidebar.prepend(seleccionaSolicitud);
 
-                            municipios.forEach((lugar) => {
-                                const li = document.createElement('li');
-                                li.classList.add('list-group-item');
-                                li.style.height = '200px'; // Establecer altura fija
-                                li.style.marginBottom = '10px'; // Agregar margen inferior
+            municipios.forEach((lugar) => {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.style.height = '200px'; // Establecer altura fija
+                li.style.marginBottom = '10px'; // Agregar margen inferior
 
-                                // Agregar el texto "ID solicitud: lugar.nombre"
-                                const texto = document.createElement('span');
-                                //texto.innerText = `ID solicitud: ${lugar.nombre}`;
+                // Agregar el texto "ID solicitud: lugar.nombre"
+                const texto = document.createElement('span');
+                //texto.innerText = `ID solicitud: ${lugar.nombre}`;
                 texto.innerHTML = `<strong>ID:</strong> ${lugar.resultado}<br><strong>Turno:</strong> ${lugar.nombre}<br><strong>Razón Social:</strong> ${lugar.rs}`;
-      
-                                li.appendChild(texto);
 
-                                // Agregar el icono correspondiente
-                                const icono = document.createElement('img');
-                                icono.src = lugar.icono.options.iconUrl;
-                                icono.classList.add('icono-responsivo'); // Agregar la clase CSS para el icono
-                                li.insertBefore(icono, texto); // Insertar el icono antes del texto
+                li.appendChild(texto);
 
-                                ul.append(li);
+                // Agregar el icono correspondiente
+                const icono = document.createElement('img');
+                icono.src = lugar.icono.options.iconUrl;
+                icono.classList.add('icono-responsivo'); // Agregar la clase CSS para el icono
+                li.insertBefore(icono, texto); // Insertar el icono antes del texto
 
-                                li.addEventListener('click', () => {
-                                    limpiaritems();
-                                    li.classList.add('active');
-                                    volar(lugar.coordenadas);
-                                });
-                            });
-                        };
+                ul.append(li);
 
-                            crearitem();
+                li.addEventListener('click', () => {
+                    limpiaritems();
+                    li.classList.add('active');
+                    volar(lugar.coordenadas);
+                });
+            });
+        };
+
+        crearitem();
 
         ////////BARRA DE MUNICIPIOS
         const menu_municipios = [];
@@ -617,7 +618,7 @@
             volar_municipio(selectedCoordenadas);
         });
 
-       
+
 
 
 
@@ -711,10 +712,10 @@
             var dataNoAprobados = [];
 
             // Para cada municipio, calcula el total de aprobados y no aprobados
-            municipios.forEach(function(municipio) {
+            municipios.forEach(function (municipio) {
                 var aprobados = data.filter(item => item.municipio_Nombre === municipio && item.resultado === 'Aprobado').length;
                 var noAprobados = data.filter(item => item.municipio_Nombre === municipio && item.resultado === 'No Aprobado').length;
-                
+
                 dataAprobados.push(aprobados);
                 dataNoAprobados.push(noAprobados);
             });
@@ -832,8 +833,4 @@
 
 
 
-    }
-
-
-
-    
+}

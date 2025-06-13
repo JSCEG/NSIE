@@ -1,6 +1,4 @@
 @model Mep
-
-
 @using Microsoft.AspNetCore.Http
 @using Newtonsoft.Json
 @using NSIE.Models
@@ -68,34 +66,34 @@
 
                 <a id="petroliferos" class="active icono-texto"
                     onclick="activarElemento('petroliferos'); CargaPetrolíferos()">
-                    <img src="/img/gasolinera.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/gasolinera.png" alt="Icono personalizado" class="iconomenu" />
                     <span>Petrolíferos</span>
 
                     <div id="total_petroliferos"></div>
                 </a>
 
                 <a id="glp" class="icono-texto" onclick="activarElemento('glp'); CargaGLP()">
-                    <img src="/img/glpmapa.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/glpmapa.png" alt="Icono personalizado" class="iconomenu" />
                     <span>Gas L.P.</span>
 
                     <div id="total_glp"></div>
                 </a>
 
                 <a id="gn" class="icono-texto" onclick="activarElemento('gn'); CargaGN()">
-                    <img src="/img/gasnaturali.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/gasnaturali.png" alt="Icono personalizado" class="iconomenu" />
                     <span>Gas Natural</span>
 
                     <div id="total_gn"></div>
                 </a>
 
                 <a id="electricidad" class="icono-texto" onclick="activarElemento('electricidad'); CargaElectricidad()">
-                    <img src="/img/central_electrica.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/central_electrica.png" alt="Icono personalizado" class="iconomenu" />
                     <span>Electricidad</span>
 
                     <div id="total_electricidad"></div>
                 </a>
                 <a id="infra" class="icono-texto" onclick="activarElemento('infra'); CargaSEM()">
-                    <img src="/img/lc6.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/lc6.png" alt="Icono personalizado" class="iconomenu" />
                     <span>Toda la Infraestructura</span>
                     <div id="total_infra"></div>
                 </a>

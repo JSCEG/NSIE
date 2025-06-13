@@ -45,7 +45,7 @@
     <div class="row mb-3">
         <div class="col-lg-8">
             <h3 class="display-6 subtitulo fw-bold">
-                <img src="/img/mexicoi.png" alt="Icono personalizado" class="iconomenu" />
+                <img src="@Cdn.Url/img_snier/vistas/mexicoi.png" alt="Icono personalizado" class="iconomenu" />
                 Ubicación
             </h3>
             <br>
@@ -55,7 +55,7 @@
             <div class="">
 
                 <h3 class="display-6 subtitulo fw-bold">
-                    <img src="/img/evaluar.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu" />
                     Información
                 </h3>
                 <br>
@@ -116,7 +116,7 @@
         <div class="row">
             <div class="col-12">
                 <h3 class="display-6 subtitulo fw-bold">
-                    <img src="/img/electricidad.png" alt="Tablero de Electricidad" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/electricidad.png" alt="Tablero de Electricidad" class="iconomenu" />
                     Información Histórica del Permisionario
                 </h3>
                 <div>
@@ -156,11 +156,11 @@
 
             L.marker([latitude, longitude]).addTo(map)
                 .bindPopup(`
-                                                                            <div>
-                                                                                <p>@Model.Razón_social</p>
-                                                                                <a class="street-view-link btn btn-cre-verde" href="http://maps.google.com/maps?q=&layer=c&cbll=${latitude},${longitude}&cbp=11,0,0,0,0" target="_blank"><b>Ver vista de calle</b></a>
-                                                                            </div>
-                                                                        `)
+                                                                                <div>
+                                                                                    <p>@Model.Razón_social</p>
+                                                                                    <a class="street-view-link btn btn-cre-verde" href="http://maps.google.com/maps?q=&layer=c&cbll=${latitude},${longitude}&cbp=11,0,0,0,0" target="_blank"><b>Ver vista de calle</b></a>
+                                                                                </div>
+                                                                            `)
                 .openPopup();
 
             map.on('click', function (e) {

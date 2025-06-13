@@ -44,7 +44,7 @@
         <div class="col-lg-4 mt-3 mt-lg-0 mb-3" id="contact2">
             <div class="">
                 <h1 class="display-4 subtitulo fw-bold">
-                    <img src="/img/evaluar.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu" />
                     Información
                 </h1>
                 <br>
@@ -94,7 +94,7 @@
     @*Busca la Solicitud Gas LP*@
     <script>
 
-      // Variable que almacena los permisos
+        // Variable que almacena los permisos
         var permisosGlobales = [];
 
         function calcularDistancia(lat1, lon1, lat2, lon2) {
@@ -138,9 +138,9 @@
             }
         });
 
-        var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
-        var iconoSolicitudesUrl = '/img/Solicitudes.png';
-        var iconoExpendio = new iconoBase({ iconUrl: '/img/glpmapa.png' });
+        var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
+        var iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
+        var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa.png' });
 
         function initMap() {
             map = L.map('map').setView([20.6736, -103.344], 5);
@@ -329,7 +329,7 @@
                                     contenido += "<div class='popup-content'>";
 
                                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                                        contenido += "<h2 class='subtitulo'><img src='/img/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                                        contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                                     }
 
                                     contenido += "<ul>";

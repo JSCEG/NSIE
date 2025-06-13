@@ -102,7 +102,7 @@
 
     @* Formulario *@
     <div id="evaluacion" class=" container mt-5 bg-white shadow p-3 mb-5 bg-body rounded">
-        @* <h3 class="subtitulo cp-section cp-grouping-section"><img src="/img/mexicoi.png" alt="Icono personalizado"
+        @* <h3 class="subtitulo cp-section cp-grouping-section"><img src="@Cdn.Url/img_snier/vistas/mexicoi.png" alt="Icono personalizado"
         class="iconomenu pt-3">Consulta Preliminar de la Calidad de la Ubicación</h3> *@
         <br>
         <div id="alertPlaceholder" style="display:none">
@@ -551,21 +551,21 @@
 
 
                 <a id="coches" class="active icono-texto">
-                    <img src="/img/coche.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/coche.png" alt="Icono personalizado" class="iconomenu" />
                     <span>Total de Vehículos</span>
 
                     <div id="total_coches" style="font-size: 20px;"></div>
                 </a>
 
                 <a id="glp" class="icono-texto">
-                    <img src="/img/moto.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/moto.png" alt="Icono personalizado" class="iconomenu" />
                     <span>Total de Motocicletas</span>
 
                     <div id="total_motos" style="font-size: 20px;"></div>
                 </a>
 
                 <a id="expendios" class="icono-texto">
-                    <img src="/img/evaluar.png" alt="Icono personalizado" class="iconomenu" />
+                    <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu" />
                     <span>Total de Expendios Autorizados</span>
 
                     <div id="total_expendios" style="font-size: 20px;"></div>
@@ -591,7 +591,7 @@
             <div class="alert alert-light" role="alert">
                 <div id="datos_ubicacion" class="scrollable-container row" style="display:none">
                     <h3 class="subtitulo display-9 fw-bold mb-2">
-                        <img src="/img/evaluar.png" alt="Icono personalizado" class="iconomenu pt-3">Datos de la
+                        <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado" class="iconomenu pt-3">Datos de la
                         Ubicación
                     </h3>
                     <br><br>
@@ -909,10 +909,10 @@
     });
 
     // Asignación de Iconos
-    var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
-    iconoAprobado = new iconoBase({ iconUrl: '/img/Aprobado_.png' });
-    iconoNoaprobado = new iconoBase({ iconUrl: '/img/NoAprobado_.png' });
-    iconoIndeterminado = new iconoBase({ iconUrl: '/img/alarma.png' });
+    var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
+    iconoAprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado_.png' });
+    iconoNoaprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado_.png' });
+    iconoIndeterminado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/alarma.png' });
 
 
     var currentMarker = null; // Referencia al marcador actual
@@ -1783,8 +1783,8 @@
                                         }
                                     });
 
-                                    var iconoPetroliferos = new iconoBase({ iconUrl: '/img/gasolinera.png' });
-                                    var iconoGLP = new iconoBase({ iconUrl: '/img/glpmapa.png' });
+                                    var iconoPetroliferos = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/gasolinera.png' });
+                                    var iconoGLP = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa.png' });
                                     // Determinar el ícono basado en tipoPermiso
                                     var iconoActual;
                                     switch (mercadoSelect) {

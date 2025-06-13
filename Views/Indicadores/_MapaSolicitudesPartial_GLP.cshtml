@@ -99,28 +99,28 @@
 
     <div id="main-container">
 
-    <div class="search-container p-3" id="search-container">
-        <label class="form-label">Buscar en el Mapa:</label>
-        <input type="text" id="busquedaPermisoInput" class="form-control"
-            placeholder="Escribe el Número de Solicitud, Turno K-MIS, Entidad Federativa o Municipio: 000 ó V-12345">
-        <div id="autocomplete-list" class="autocomplete-items"></div>
-        <button class="btn btn-cre-rojo-home" onclick="buscarPorNumeroPermiso()" style="width:10% !important"><i
-                class="bi bi-search"></i></button>
-    </div>
-    <br />
+        <div class="search-container p-3" id="search-container">
+            <label class="form-label">Buscar en el Mapa:</label>
+            <input type="text" id="busquedaPermisoInput" class="form-control"
+                placeholder="Escribe el Número de Solicitud, Turno K-MIS, Entidad Federativa o Municipio: 000 ó V-12345">
+            <div id="autocomplete-list" class="autocomplete-items"></div>
+            <button class="btn btn-cre-rojo-home" onclick="buscarPorNumeroPermiso()" style="width:10% !important"><i
+                    class="bi bi-search"></i></button>
+        </div>
+        <br />
 
-    <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
+        <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
 
-    <div id="fullscreen-container" class="d-flex h-100">
-        <div class="row m-0 w-100">
-            <div id="sidebar" class="d-flex flex-column justify-content-between col-3 p-2">
-                <!-- Contenido de la barra de datos -->
-            </div>
-            <div id="map" class="col p-0" style="position: relative; z-index: 500;">
-                <!-- Contenido del mapa -->
+        <div id="fullscreen-container" class="d-flex h-100">
+            <div class="row m-0 w-100">
+                <div id="sidebar" class="d-flex flex-column justify-content-between col-3 p-2">
+                    <!-- Contenido de la barra de datos -->
+                </div>
+                <div id="map" class="col p-0" style="position: relative; z-index: 500;">
+                    <!-- Contenido del mapa -->
+                </div>
             </div>
         </div>
-    </div>
     </div>
 
     <style>
@@ -139,17 +139,19 @@
 
         .fullscreen-mode #search-container {
             background-color: white;
-            z-index: 1000; /* Asegura que el buscador esté por encima de otros elementos si es necesario */
+            z-index: 1000;
+            /* Asegura que el buscador esté por encima de otros elementos si es necesario */
         }
 
         .fullscreen-mode #sidebar {
-            overflow-y: auto; /* Si deseas que la barra de datos sea desplazable */
+            overflow-y: auto;
+            /* Si deseas que la barra de datos sea desplazable */
         }
 
         .fullscreen-mode #map {
             height: 100%;
         }
-    </style> 
+    </style>
 
     <div class="leyenda">
         <p>Mayor Concentración de Solicitudes</p>
@@ -216,9 +218,9 @@
     }
 
     //Evalua la Solicitud
-function redireccionarAEvaluacion(idSolicitud, mercado) {
-    window.open("/Indicadores/EvaluaSolicitud?id=" + idSolicitud + "&mercado=" + mercado, '_blank');
-}
+    function redireccionarAEvaluacion(idSolicitud, mercado) {
+        window.open("/Indicadores/EvaluaSolicitud?id=" + idSolicitud + "&mercado=" + mercado, '_blank');
+    }
     //Manda a Detalle de solicitud 3km
     function redireccionarADetalle(idSolicitud) {
         window.open("/Indicadores/DetalleSolicitudGLP?id=" + idSolicitud, '_blank');
@@ -250,11 +252,11 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
     });
 
     //Asignación de Iconos
-    var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' }),
-        iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' }),
+    var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' }),
+        iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Expendio.png' }),
         iconoAzul = new iconoBase({ iconUrl: 'azul.png' });
-    iconoAprobado = new iconoBase({ iconUrl: '/img/Aprobado.png' });
-    iconoNoaprobado = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+    iconoAprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' });
+    iconoNoaprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
     //Vista Satelite
     map.createPane('pane_GoogleSatellite_0');
     map.getPane('pane_GoogleSatellite_0').style.zIndex = 0;
@@ -271,8 +273,8 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
     map.addLayer(layer_GoogleSatellite_0);
 
     var cartoDBDarkAll = L.tileLayer('https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-                        attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    });
+        attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>'
+    });
 
 
     //Configura los Base Layers
@@ -388,7 +390,7 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
     resetZoomControl.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'reset-zoom-control');
         div.innerHTML = '<button class="btn btn-cre-rojo-home"><i class="bi bi-house-door"></i></button>';
-        div.firstChild.onclick = function() {
+        div.firstChild.onclick = function () {
             resetZoom(map);
         };
         return div;
@@ -547,9 +549,9 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                 });
 
                 //Asignación de Iconos
-                var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
+                var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
                 var iconoSolicitudesUrl;
-                iconoSolicitudesUrl = '/img/Solicitudes.png';
+                iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
                 // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                 response.forEach(function (item) {
                     // Asigna el icono de acuerdo a la categoría
@@ -591,8 +593,8 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                         //"<li><strong>¿Tiene Análisis de Riesgo?:</strong> " + (item.analisis_riesgo == "1" ? 'SI' : 'No') + "</li>" +
                         "<li><strong>¿Tiene Análisis de Riesgo?:</strong> " + (item.analisis_riesgo) + "</li>" +
                         "</ul>" +
-                         "<button class='btn btn-cre-azul' onclick='redireccionarAEvaluacion(" + item.id + ", \"GasLP\")'>Evaluar esta solicitud</button>  <hr />" +
-                            
+                        "<button class='btn btn-cre-azul' onclick='redireccionarAEvaluacion(" + item.id + ", \"GasLP\")'>Evaluar esta solicitud</button>  <hr />" +
+
                         "<button class='btn btn-cre-amarillo' onclick='redireccionarADetalle(" + item.id + ")'>Ver Expendios Cercanos a Solicitud</button>  <hr />" +
                         "<a class='street-view-link btn btn-cre-verde' href='#'>Ver vista de calle</a> <hr />" +
                         "<a class='btn btn-cre-rojo' target='_blank' href='https://titan.cre.gob.mx/Consulta/Turno/" + item.turno + "'>Ver Expediente en Titán</a>" +
@@ -664,9 +666,9 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                 });
 
                 //Asignación de Iconos
-                var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
+                var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
                 var iconoSolicitudesUrl;
-                iconoSolicitudesUrl = '/img/Solicitudes.png';
+                iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
                 // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                 response.forEach(function (item) {
                     // Asigna el icono de acuerdo a la categoría
@@ -708,8 +710,8 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                         // "<li><strong>¿Tiene Análisis de Riesgo?:</strong> " + (item.analisis_riesgo == "1" ? 'SI' : 'No') + "</li>" +
                         "<li><strong>¿Tiene Análisis de Riesgo?:</strong> " + (item.analisis_riesgo) + "</li>" +
                         "</ul>" +
-                         "<button class='btn btn-cre-azul' onclick='redireccionarAEvaluacion(" + item.id + ", \"GasLP\")'>Evaluar esta solicitud</button>  <hr />" +
-                            
+                        "<button class='btn btn-cre-azul' onclick='redireccionarAEvaluacion(" + item.id + ", \"GasLP\")'>Evaluar esta solicitud</button>  <hr />" +
+
                         "<button class='btn btn-cre-amarillo' onclick='redireccionarADetalle(" + item.id + ")'>Ver Expendios Cercanos a Solicitud</button>  <hr />" +
                         "<a class='street-view-link btn btn-cre-verde' href='#'>Ver vista de calle</a> <hr />" +
                         "<a class='btn btn-cre-rojo' target='_blank' href='https://titan.cre.gob.mx/Consulta/Turno/" + item.turno + "'>Ver Expediente en Titán</a>" +
@@ -797,7 +799,7 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                     contenido += "<div class='popup-content'>";
 
                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                        contenido += "<h2 class='subtitulo'><img src='/img/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                        contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                     }
 
                     contenido += "<ul>";
@@ -980,7 +982,7 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/glpmapa.png' });
+                var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa.png' });
 
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {

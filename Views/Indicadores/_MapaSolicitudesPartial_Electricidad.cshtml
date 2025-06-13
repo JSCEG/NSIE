@@ -61,29 +61,35 @@
             <div class="col-sm pt-3">
                 @*Prueba*@
                 <div class="dropdown" style="position: relative; z-index: 1000;">
-                    <button class="btn btn-cre-rojo dropdown-toggle" id="dropdownMenuLink" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-cre-rojo dropdown-toggle" id="dropdownMenuLink" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         Selecciona Capa/Opción:
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#" onclick="limpiarMarcadores()">Limpiar Mapa</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="CargaSolicitudes()">Ver Solicitudes a Revisar</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="CargaSolicitudes()">Ver
+                                Solicitudes a Revisar</a></li>
                         @* <li><a class="dropdown-item" href="javascript:void(0)" onclick="CargaExpendios()">Ver Expendios Autorizados a Nivel Nacional</a></li> *@
-                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="CargaSyE()">Ver Solicitudes y Expendios Autorizados</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="CargaSyE()">Ver Solicitudes y
+                                Expendios Autorizados</a></li>
                     </ul>
                 </div>
 
             </div>
             <div class="col-sm pt-3">
                 <!-- Botón que activará el modal -->
-                <button onclick="openModal()" class="btn btn-cre-rojo"><i class="bi bi-camera-reels-fill"></i> Ver Guía</button>
+                <button onclick="openModal()" class="btn btn-cre-rojo"><i class="bi bi-camera-reels-fill"></i> Ver
+                    Guía</button>
 
                 <!-- Modal para mostrar el video -->
-                <div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:3000">
+                <div id="videoModal"
+                    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:3000">
                     <video width="80%" controls>
                         <source src="/video/guia.mp4" type="video/mp4">
                         Tu navegador no soporta el elemento video.
                     </video>
-                    <button onclick="closeModal()" class="btn btn-cre-rojo" style="position:absolute; top:10px; right:10px;z-index:3000; width:300px!important">Cerrar</button>
+                    <button onclick="closeModal()" class="btn btn-cre-rojo"
+                        style="position:absolute; top:10px; right:10px;z-index:3000; width:300px!important">Cerrar</button>
                 </div>
 
             </div>
@@ -92,31 +98,36 @@
 
     <div id="main-container">
 
-    <div class="search-container p-3" id="search-container">
-        <label class="form-label">Buscar en el Mapa:</label>
-        <input type="text" id="busquedaPermisoInput" class="form-control" placeholder="Escribe el Número de Solicitud, Turno K-MIS, Entidad Federativa o Municipio: 000 ó V-12345">
-        <div id="autocomplete-list" class="autocomplete-items"></div>
-        <button class="btn btn-cre-rojo-home" onclick="buscarPorNumeroPermiso()" style="width:10% !important"><i class="bi bi-search"></i></button>
-    </div>
-    <br />
-
-    <div id="" class="app-card-body p-4 d-flex align-items-center">
-        <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
-        <div id="alert-message" class="alert alert-info ms-3" role="alert" style="margin-left: 15px; padding: 10px; background-color: #FCFEE7; border-left: 6px solid #DEF321; color: #818F31;">
-            Para el caso del mercado de electricidad, las ubicaciones corresponden a la dirección proporcionada en la documentación del permiso otorgado que puede corresponder a la ubicación física de central eléctrica que representa.
+        <div class="search-container p-3" id="search-container">
+            <label class="form-label">Buscar en el Mapa:</label>
+            <input type="text" id="busquedaPermisoInput" class="form-control"
+                placeholder="Escribe el Número de Solicitud, Turno K-MIS, Entidad Federativa o Municipio: 000 ó V-12345">
+            <div id="autocomplete-list" class="autocomplete-items"></div>
+            <button class="btn btn-cre-rojo-home" onclick="buscarPorNumeroPermiso()" style="width:10% !important"><i
+                    class="bi bi-search"></i></button>
         </div>
-    </div>
+        <br />
 
-    <div id="fullscreen-container" class="d-flex h-100">
-        <div class="row m-0 w-100">
-            <div id="sidebar" class="d-flex flex-column justify-content-between col-3 p-2">
-                <!-- Contenido de la barra de datos -->
-            </div>
-            <div id="map" class="col p-0" style="position: relative; z-index: 500;">
-                <!-- Contenido del mapa -->
+        <div id="" class="app-card-body p-4 d-flex align-items-center">
+            <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
+            <div id="alert-message" class="alert alert-info ms-3" role="alert"
+                style="margin-left: 15px; padding: 10px; background-color: #FCFEE7; border-left: 6px solid #DEF321; color: #818F31;">
+                Para el caso del mercado de electricidad, las ubicaciones corresponden a la dirección proporcionada en
+                la documentación del permiso otorgado que puede corresponder a la ubicación física de central eléctrica
+                que representa.
             </div>
         </div>
-    </div>
+
+        <div id="fullscreen-container" class="d-flex h-100">
+            <div class="row m-0 w-100">
+                <div id="sidebar" class="d-flex flex-column justify-content-between col-3 p-2">
+                    <!-- Contenido de la barra de datos -->
+                </div>
+                <div id="map" class="col p-0" style="position: relative; z-index: 500;">
+                    <!-- Contenido del mapa -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <style>
@@ -135,17 +146,19 @@
 
         .fullscreen-mode #search-container {
             background-color: white;
-            z-index: 1000; /* Asegura que el buscador esté por encima de otros elementos si es necesario */
+            z-index: 1000;
+            /* Asegura que el buscador esté por encima de otros elementos si es necesario */
         }
 
         .fullscreen-mode #sidebar {
-            overflow-y: auto; /* Si deseas que la barra de datos sea desplazable */
+            overflow-y: auto;
+            /* Si deseas que la barra de datos sea desplazable */
         }
 
         .fullscreen-mode #map {
             height: 100%;
         }
-    </style> 
+    </style>
 
     <div class="leyenda">
         <p>Mayor Concentración de Solicitudes</p>
@@ -156,7 +169,7 @@
     </div>
 
     <br />
- 
+
 </section>
 
 @*Script de Pantalla Completa*@
@@ -219,11 +232,11 @@
     });
 
     //Asignación de Iconos
-    var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' }),
-        iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' }),
-        iconoAzul = new iconoBase({ iconUrl: 'azul.png' });
-    iconoAprobado = new iconoBase({ iconUrl: '/img/Aprobado.png' });
-    iconoNoaprobado = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+    var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' }),
+        iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Expendio.png' }),
+        iconoAzul = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/azul.png' });
+    iconoAprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' });
+    iconoNoaprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
     //Vista Satelite
     map.createPane('pane_GoogleSatellite_0');
     map.getPane('pane_GoogleSatellite_0').style.zIndex = 0;
@@ -240,8 +253,8 @@
     map.addLayer(layer_GoogleSatellite_0);
 
     var cartoDBDarkAll = L.tileLayer('https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-                        attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    });
+        attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>'
+    });
 
 
     //Configura los Base Layers
@@ -357,7 +370,7 @@
     resetZoomControl.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'reset-zoom-control');
         div.innerHTML = '<button class="btn btn-cre-rojo-home"><i class="bi bi-house-door"></i></button>';
-        div.firstChild.onclick = function() {
+        div.firstChild.onclick = function () {
             resetZoom(map);
         };
         return div;
@@ -413,21 +426,21 @@
 @*Funciones del Mapa*@
 <script>
 
-   //Limpia los Marcadores del Mapa
+    //Limpia los Marcadores del Mapa
     function limpiarMarcadores() {
-            // Limpiar todas las capas de marcadores y círculos
-            map.eachLayer(function (layer) {
-                if (layer instanceof L.Marker || layer instanceof L.MarkerClusterGroup || layer instanceof L.Circle) {
-                    map.removeLayer(layer);
-                }
-            });
+        // Limpiar todas las capas de marcadores y círculos
+        map.eachLayer(function (layer) {
+            if (layer instanceof L.Marker || layer instanceof L.MarkerClusterGroup || layer instanceof L.Circle) {
+                map.removeLayer(layer);
+            }
+        });
 
-            // Eliminar la capa de municipios
-            //if (municipiosLayer) {
-            //    map.removeLayer(municipiosLayer);
-            //    municipiosLayer = null; // Establecer la variable municipiosLayer como nula
-            //}
-        }
+        // Eliminar la capa de municipios
+        //if (municipiosLayer) {
+        //    map.removeLayer(municipiosLayer);
+        //    municipiosLayer = null; // Establecer la variable municipiosLayer como nula
+        //}
+    }
 
     //Carga las Solicitudes de GLP(Ahorita Petrolíferos actualizar!) al mapa
     function CargaSolicitudes() {
@@ -454,9 +467,9 @@
                 });
 
                 //Asignación de Iconos
-                var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
+                var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
                 var iconoSolicitudesUrl;
-                iconoSolicitudesUrl = '/img/Solicitudes.png';
+                iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
                 // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                 response.forEach(function (item) {
                     // Asigna el icono de acuerdo a la categoría
@@ -528,7 +541,7 @@
 
 
 
-     
+
 
             },
 
@@ -543,7 +556,7 @@
 
     }
     function CargaSolicitudes_1() {
-       
+
         $.ajax({
             url: '/Indicadores/GetSolicitudes_Electricidad',
             type: 'GET',
@@ -566,9 +579,9 @@
                 });
 
                 //Asignación de Iconos
-                var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
+                var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
                 var iconoSolicitudesUrl;
-                iconoSolicitudesUrl = '/img/Solicitudes.png';
+                iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
                 // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                 response.forEach(function (item) {
                     // Asigna el icono de acuerdo a la categoría
@@ -694,7 +707,7 @@
                     contenido += "<div class='popup-content'>";
 
                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                        contenido += "<h2 class='subtitulo'><img src='/img/central_electrica.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                        contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/central_electrica.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                     }
 
                     contenido += "<ul>";
@@ -879,7 +892,7 @@
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/central_electrica.png' });
+                var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/central_electrica.png' });
 
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {
@@ -896,22 +909,22 @@
                 map.addLayer(markers);
 
 
-    
+
             },
             error: function (error) {
                 // Maneja el error si ocurre.
             }
         });
     }
-  
 
-        
-    
-            function CargaSyE(){
-                limpiarMarcadores();
-                CargaExpendios_1();
-                CargaSolicitudes_1();
-            }
+
+
+
+    function CargaSyE() {
+        limpiarMarcadores();
+        CargaExpendios_1();
+        CargaSolicitudes_1();
+    }
 
 </script>
 @*Guia*@

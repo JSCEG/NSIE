@@ -16,7 +16,7 @@
 
 <div class="text-center">
     <h4 class="cp-section cp-grouping-section">
-        <img src="/img/ayuda.png" alt="Icono personalizado" class="iconomenu" />
+        <img src="@Cdn.Url/img_snier/vistas/ayuda.png" alt="Icono personalizado" class="iconomenu" />
         @ViewData["Title"]
     </h4>
 </div>
@@ -163,12 +163,12 @@
         }).addTo(map);
         var marker = L.marker([19.3635996, -99.1904745]).addTo(map);
         var contenido = `
-                    <div class='popup-content'>
-                        <h6>Secretaría de Energía - SENER</h6>
-                        <hr>
-                        <p>Av. Insurgentes Sur 890<br>Col. del Valle, CDMX</p>
-                        <a class='btn btn-outline-primary' href='https://www.google.com/maps/?q=19.3635996,-99.1904745' target='_blank'>Ver en Google Maps</a>
-                    </div>`;
+                        <div class='popup-content'>
+                            <h6>Secretaría de Energía - SENER</h6>
+                            <hr>
+                            <p>Av. Insurgentes Sur 890<br>Col. del Valle, CDMX</p>
+                            <a class='btn btn-outline-primary' href='https://www.google.com/maps/?q=19.3635996,-99.1904745' target='_blank'>Ver en Google Maps</a>
+                        </div>`;
         marker.bindPopup(contenido).openPopup();
     </script>
 }

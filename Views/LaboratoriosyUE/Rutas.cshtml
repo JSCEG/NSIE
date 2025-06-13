@@ -23,26 +23,27 @@
 
 <div class="text-center">
     <h4 class="cp-section cp-grouping-section">
-        <img src="/img/visitasv.png" alt="Icono personalizado" class="iconomenu" />
+        <img src="@Cdn.Url/img_snier/vistas/visitasv.png" alt="Icono personalizado" class="iconomenu" />
         @ViewData["Title"]
     </h4>
 </div>
 <!-- Miga de Pan -->
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb" style="padding-left:15px">
+<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+    aria-label="breadcrumb" style="padding-left:15px">
     <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
     </ol>
 </nav>
 @*Sección que Despliega el Mapap Inicial*@
 <div class="container">
-        <div id="map" ></div>
- 
+    <div id="map"></div>
+
 </div>
 
 
 
-@section scripts{
+@section scripts {
 
 
     @*Funcionalidades del Mapa Inicial*@
@@ -142,25 +143,25 @@
             }
         });
 
-var control = L.Routing.control(L.extend(window.lrmConfig, {
-	waypoints: [
-		L.latLng(57.74, 11.94),
-		L.latLng(57.6792, 11.949)
-	],
-	geocoder: L.Control.Geocoder.nominatim(),
-	routeWhileDragging: true,
-	reverseWaypoints: true,
-	showAlternatives: true,
-	altLineOptions: {
-		styles: [
-			{color: 'black', opacity: 0.15, weight: 9},
-			{color: 'white', opacity: 0.8, weight: 6},
-			{color: 'blue', opacity: 0.5, weight: 2}
-		]
-	}
-})).addTo(map);
+        var control = L.Routing.control(L.extend(window.lrmConfig, {
+            waypoints: [
+                L.latLng(57.74, 11.94),
+                L.latLng(57.6792, 11.949)
+            ],
+            geocoder: L.Control.Geocoder.nominatim(),
+            routeWhileDragging: true,
+            reverseWaypoints: true,
+            showAlternatives: true,
+            altLineOptions: {
+                styles: [
+                    { color: 'black', opacity: 0.15, weight: 9 },
+                    { color: 'white', opacity: 0.8, weight: 6 },
+                    { color: 'blue', opacity: 0.5, weight: 2 }
+                ]
+            }
+        })).addTo(map);
 
-L.Routing.errorControl(control).addTo(map);
+        L.Routing.errorControl(control).addTo(map);
 
         window.lrmConfig = {
             //    serviceUrl: 'https://api.mapbox.com/directions/v5',
@@ -171,4 +172,4 @@ L.Routing.errorControl(control).addTo(map);
 
 
 
-  }
+}

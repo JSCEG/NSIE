@@ -569,7 +569,7 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                                         }
                                     });
 
-                                    var iconoExpendio = new iconoBase({ iconUrl: '/img/glpmapa.png' });
+                                    var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa.png' });
 
                                     // Agrega los marcadores para las coordenadas del mapa actual
                                     for (var j = 0; j < response.length; j++) {
@@ -1247,9 +1247,9 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                                                         });
 
                                                         //Asignación de Iconos
-                                                        var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
+                                                        var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
                                                         var iconoSolicitudesUrl;
-                                                        iconoSolicitudesUrl = '/img/Solicitudes.png';
+                                                        iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
                                                         // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                                                         response.forEach(function (item) {
                                                             // Asigna el icono de acuerdo a la categoría
@@ -3351,10 +3351,10 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                             });
 
 
-                            var iconoOptimo = new iconoBase({ iconUrl: '/img/Aprobado.png' }),
-                                iconoViable = new iconoBase({ iconUrl: '/img/viable.png' }),
-                                iconoFactible = new iconoBase({ iconUrl: '/img/NoviableMun.png' });
-                            iconoNoViable = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+                            var iconoOptimo = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' }),
+                                iconoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/viable.png' }),
+                                iconoFactible = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoviableMun.png' });
+                            iconoNoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
                             // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                             response.forEach(function (item) {
@@ -3363,23 +3363,23 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                                 var iconoActualUrl;
                                 if (item.categoria == "Óptimo") {
                                     iconoActual = iconoOptimo;
-                                    iconoActualUrl = '/img/Aprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/Aprobado.png';
                                 } else if (item.categoria == "Viable") {
                                     iconoActual = iconoViable;
-                                    iconoActualUrl = '/img/viable.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/viable.png';
                                 } else if (item.categoria == "No Viable a Nivel Municipal") {
                                     iconoActual = iconoFactible;
-                                    iconoActualUrl = '/img/NoviableMun.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoviableMun.png';
 
                                 } else if (item.categoria == "No Viable a Nivel Entidad Federativa") {
                                     iconoActual = iconoNoViable;
-                                    iconoActualUrl = '/img/NoAprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
 
                                 }
                                                           
                                 else {
                                     iconoActual = iconoNoViable; // default icon
-                                    iconoActualUrl = '/img/NoAprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                                 }
 
                                 var marker = L.marker([item.x_Geo, item.y_Geo], { icon: iconoActual });
@@ -3510,18 +3510,18 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                                 // Asigna el icono de acuerdo a la categoría
                                 var iconoActualUrl;
                                 if (item.categoria == "Óptimo") {
-                                    iconoActualUrl = '/img/Aprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/Aprobado.png';
                                 } else if (item.categoria == "Viable") {
-                                    iconoActualUrl = '/img/viable.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/viable.png';
                                 } else if (item.categoria == "No Viable a Nivel Municipal") {
-                                    iconoActualUrl = '/img/NoviableMun.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoviableMun.png';
                                 } else if (item.categoria == "No Viable a Nivel Entidad Federativa") {
-                                    iconoActualUrl = '/img/NoAprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                                 }
 
 
                                 else {
-                                    iconoActualUrl = '/img/NoAprobado.png'; // default icon
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png'; // default icon
                                 }
 
                                 const li = document.createElement('li');
@@ -3579,7 +3579,7 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                         //                }
                         //            });
 
-                        //            var iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' });
+                        //            var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Expendio.png' });
 
                         //            // Agrega los marcadores para las coordenadas del mapa actual
                         //            for (var j = 0; j < response.length; j++) {
@@ -3642,7 +3642,7 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                                         contenido += "<div class='popup-content'>";
 
                                         if (camposVisiblesGlobal.includes("RazonSocial")) {
-                                            contenido += "<h2 class='subtitulo'><img src='/img/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                                            contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/glpmapa.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                                         }
 
                                         contenido += "<ul>";
@@ -3827,7 +3827,7 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                                         }
                                     });
 
-                                    var iconoExpendio = new iconoBase({ iconUrl: '/img/glpmapa.png' });
+                                    var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa.png' });
 
                                     // Agrega los marcadores para las coordenadas del mapa actual
                                     for (var j = 0; j < response.length; j++) {

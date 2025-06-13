@@ -82,7 +82,7 @@
 
     @* Formulario *@
     <div class="container mt-5 bg-white shadow p-3 mb-5 bg-body rounded">
-        @* <h3 class="subtitulo cp-section cp-grouping-section"><img src="/img/mexicoi.png" alt="Icono personalizado"
+        @* <h3 class="subtitulo cp-section cp-grouping-section"><img src="@Cdn.Url/img_snier/vistas/mexicoi.png" alt="Icono personalizado"
             class="iconomenu pt-3">Consulta Preliminar de la Calidad de la Ubicación</h3> *@
         <br>
         <div id="alertPlaceholder" style="display:none">
@@ -166,7 +166,7 @@
             <div class="alert alert-light" role="alert">
                 <div id="datos_ubicacion" class="scrollable-container row" style="display:none">
                     <h3 class="subtitulo display-9 fw-bold mb-2">
-                        <img src="/img/evaluar.png" alt="Icono personalizado"
+                        <img src="@Cdn.Url/img_snier/vistas/evaluar.png" alt="Icono personalizado"
                              class="iconomenu pt-3">Datos de la Ubicación
                     </h3>
                     <br><br>
@@ -282,9 +282,9 @@
        });
 
        // Asignación de Iconos
-       var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
-       iconoAprobado = new iconoBase({ iconUrl: '/img/Aprobado_.png' });
-       iconoNoaprobado = new iconoBase({ iconUrl: '/img/NoAprobado_.png' });
+       var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
+       iconoAprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado_.png' });
+       iconoNoaprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado_.png' });
 
 
        var currentMarker = null; // Referencia al marcador actual
@@ -920,23 +920,23 @@
                             var imgSrc; // La URL de la imagen que se mostrará en el pop-up
                             switch (coordenada.tipoPermiso) {
                                 case "Expendios":
-                                    imgSrc = '/img/gasolinera.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/gasolinera.png';
                                     break;
                                 case "Autoconsumo":
-                                    imgSrc = '/img/autoconsumo.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/autoconsumo.png';
                                     break;
                                 case "Almacenamiento en aeródromos":
-                                    imgSrc = '/img/alacenamientogasolina.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/alacenamientogasolina.png';
                                     break;
                                 case "Almacenamiento":
-                                    imgSrc = '/img/alacenamientogasolina.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/alacenamientogasolina.png';
                                     break;
                                 case "Distribución por otros medios distintos a ducto":
-                                    imgSrc = '/img/distribuciongasolina.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/distribuciongasolina.png';
                                     break;
 
                                 default:
-                                    imgSrc = '/img/gasolinera.png'; // Ícono por defecto si no hay coincidencia
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/gasolinera.png'; // Ícono por defecto si no hay coincidencia
                                     break;
                             }
                             contenido += "<h2 class='subtitulo'><img src='" + imgSrc + "' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
@@ -1111,10 +1111,10 @@
                         }
                     });
 
-                    var iconoExpendio = new iconoBase({ iconUrl: '/img/gasolinera.png' });
-                    var iconoAutoConsumo = new iconoBase({ iconUrl: '/img/autoconsumo.png' });
-                    var iconoAlmacenamiento = new iconoBase({ iconUrl: '/img/alacenamientogasolina.png' });
-                    var iconoDistribucion = new iconoBase({ iconUrl: '/img/distribuciongasolina.png' });
+                    var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/gasolinera.png' });
+                    var iconoAutoConsumo = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/autoconsumo.png' });
+                    var iconoAlmacenamiento = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/alacenamientogasolina.png' });
+                    var iconoDistribucion = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/distribuciongasolina.png' });
                     // Agrega los marcadores para las coordenadas del mapa actual
                     for (var j = 0; j < response.length; j++) {
                         var coordenada = response[j];
@@ -1371,16 +1371,16 @@
                             var imgSrc; // La URL de la imagen que se mostrará en el pop-up
                             switch (coordenada.tipoPermiso) {
                                 case "Almacenamiento de Gas Licuado de Petróleo":
-                                    imgSrc = '/img/glpmapa_alma.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/glpmapa_alma.png';
                                     break;
                                 case "Distribución de Gas Licuado de Petróleo mediante Planta de Distribución":
-                                    imgSrc = '/img/glpmapa_dist.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/glpmapa_dist.png';
                                     break;
                                 case "Expendio al Público de Gas Licuado de Petróleo mediante Estación de Servicio con fin Específico":
-                                    imgSrc = '/img/glpmapa.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/glpmapa.png';
                                     break;
                                 default:
-                                    imgSrc = '/img/glpmapa.png'; // Ícono por defecto si no hay coincidencia
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/glpmapa.png'; // Ícono por defecto si no hay coincidencia
                                     break;
                             }
                             contenido += "<h2 class='subtitulo'><img src='" + imgSrc + "' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
@@ -1566,9 +1566,9 @@
                         }
                     });
 
-                    var iconoExpendio = new iconoBase({ iconUrl: '/img/glpmapa.png' });
-                    var iconoAlmacenamiento = new iconoBase({ iconUrl: '/img/glpmapa_alma.png' });
-                    var iconoDistribucion = new iconoBase({ iconUrl: '/img/glpmapa_dist.png' });
+                    var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa.png' });
+                    var iconoAlmacenamiento = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa_alma.png' });
+                    var iconoDistribucion = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa_dist.png' });
                     // Agrega los marcadores para las coordenadas del mapa actual
                     for (var j = 0; j < response.length; j++) {
                         var coordenada = response[j];
@@ -1874,16 +1874,16 @@
                             var imgSrc; // La URL de la imagen que se mostrará en el pop-up
                             switch (coordenada.tipoPermiso) {
                                 case "SD":
-                                    imgSrc = '/img/gasnaturali.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/gasnaturali.png';
                                     break;
                                 /* case "Distribución de Gas Licuado de Petróleo mediante Planta de Distribución":
-                                    imgSrc = '/img/glpmapa_dist.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/glpmapa_dist.png';
                                     break;
                                 case "Expendio al Público de Gas Licuado de Petróleo mediante Estación de Servicio con fin Específico":
-                                    imgSrc = '/img/glpmapa.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/glpmapa.png';
                                     break; */
                                 default:
-                                    imgSrc = '/img/gasnaturali.png'; // Ícono por defecto si no hay coincidencia
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/gasnaturali.png'; // Ícono por defecto si no hay coincidencia
                                     break;
                             }
                             contenido += "<h2 class='subtitulo'><img src='" + imgSrc + "' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
@@ -2070,9 +2070,9 @@
                         }
                     });
 
-                    var iconoExpendio = new iconoBase({ iconUrl: '/img/gasnaturali.png' });
-                    /*  var iconoAlmacenamiento = new iconoBase({ iconUrl: '/img/glpmapa_alma.png' });
-                      var iconoDistribucion = new iconoBase({ iconUrl: '/img/glpmapa_dist.png' });*/
+                    var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/gasnaturali.png' });
+                    /*  var iconoAlmacenamiento = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa_alma.png' });
+                      var iconoDistribucion = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa_dist.png' });*/
                     // Agrega los marcadores para las coordenadas del mapa actual
                     for (var j = 0; j < response.length; j++) {
                         var coordenada = response[j];
@@ -2322,16 +2322,16 @@
                             var imgSrc; // La URL de la imagen que se mostrará en el pop-up
                             switch (coordenada.tipoPermiso) {
                                 case "vacío":
-                                    imgSrc = '/img/central_electrica.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/central_electrica.png';
                                     break;
                                 /* case "Distribución de Gas Licuado de Petróleo mediante Planta de Distribución":
-                                    imgSrc = '/img/glpmapa_dist.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/glpmapa_dist.png';
                                     break;
                                 case "Expendio al Público de Gas Licuado de Petróleo mediante Estación de Servicio con fin Específico":
-                                    imgSrc = '/img/glpmapa.png';
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/glpmapa.png';
                                     break; */
                                 default:
-                                    imgSrc = '/img/central_electrica.png'; // Ícono por defecto si no hay coincidencia
+                                    imgSrc = '@Cdn.Url/img_snier/vistas/central_electrica.png'; // Ícono por defecto si no hay coincidencia
                                     break;
                             }
                             contenido += "<h2 class='subtitulo'><img src='" + imgSrc + "' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
@@ -2543,9 +2543,9 @@
                         }
                     });
 
-                    var iconoExpendio = new iconoBase({ iconUrl: '/img/central_electrica.png' });
-                    /*  var iconoAlmacenamiento = new iconoBase({ iconUrl: '/img/glpmapa_alma.png' });
-                      var iconoDistribucion = new iconoBase({ iconUrl: '/img/glpmapa_dist.png' });*/
+                    var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/central_electrica.png' });
+                    /*  var iconoAlmacenamiento = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa_alma.png' });
+                      var iconoDistribucion = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/glpmapa_dist.png' });*/
                     // Agrega los marcadores para las coordenadas del mapa actual
                     for (var j = 0; j < response.length; j++) {
                         var coordenada = response[j];

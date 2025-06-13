@@ -870,9 +870,9 @@
                                                         });
 
                                                         //Asignación de Iconos
-                                                        var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
+                                                        var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
                                                         var iconoSolicitudesUrl;
-                                                        iconoSolicitudesUrl = '/img/Solicitudes.png';
+                                                        iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
                                                         // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                                                         response.forEach(function (item) {
                                                             // Asigna el icono de acuerdo a la categoría
@@ -2674,10 +2674,10 @@
                             });
 
 
-                    var iconoOptimo = new iconoBase({ iconUrl: '/img/Aprobado.png' }),
-                        iconoViable = new iconoBase({ iconUrl: '/img/viable.png' }),
-                        iconoFactible = new iconoBase({ iconUrl: '/img/NoviableMun.png' });
-                    iconoNoViable = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+                    var iconoOptimo = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' }),
+                        iconoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/viable.png' }),
+                        iconoFactible = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoviableMun.png' });
+                    iconoNoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
                             // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                             response.forEach(function (item) {
@@ -2686,22 +2686,22 @@
                                 var iconoActualUrl;
                         if (item.categoria == "Óptimo") {
                             iconoActual = iconoOptimo;
-                            iconoActualUrl = '/img/Aprobado.png';
+                            iconoActualUrl = '@Cdn.Url/img_snier/vistas/Aprobado.png';
                         } else if (item.categoria == "Viable") {
                             iconoActual = iconoViable;
-                            iconoActualUrl = '/img/viable.png';
+                            iconoActualUrl = '@Cdn.Url/img_snier/vistas/viable.png';
                         } else if (item.categoria == "No Viable a Nivel Municipal") {
                             iconoActual = iconoFactible;
-                            iconoActualUrl = '/img/NoviableMun.png';
+                            iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoviableMun.png';
 
                         } else if (item.categoria == "No Viable a Nivel Entidad Federativa") {
                             iconoActual = iconoNoViable;
-                            iconoActualUrl = '/img/NoAprobado.png';
+                            iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
 
                         }
                         else {
                                     iconoActual = iconoNoViable; // default icon
-                                    iconoActualUrl = '/img/NoAprobado.png';
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                                 }
 
                                 var marker = L.marker([item.x_Geo, item.y_Geo], { icon: iconoActual });
@@ -2830,18 +2830,18 @@
                                 // Asigna el icono de acuerdo a la categoría
                                 var iconoActualUrl;
                         if (item.categoria == "Óptimo") {
-                            iconoActualUrl = '/img/Aprobado.png';
+                            iconoActualUrl = '@Cdn.Url/img_snier/vistas/Aprobado.png';
                         } else if (item.categoria == "Viable") {
-                            iconoActualUrl = '/img/viable.png';
+                            iconoActualUrl = '@Cdn.Url/img_snier/vistas/viable.png';
                         } else if (item.categoria == "No Viable a Nivel Municipal") {
-                            iconoActualUrl = '/img/NoviableMun.png';
+                            iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoviableMun.png';
                         } else if (item.categoria == "No Viable a Nivel Entidad Federativa") {
-                            iconoActualUrl = '/img/NoAprobado.png';
+                            iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                         }
 
 
                                 else {
-                                    iconoActualUrl = '/img/NoAprobado.png'; // default icon
+                                    iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png'; // default icon
                                 }
 
                                 const li = document.createElement('li');
@@ -2917,7 +2917,7 @@
                                         contenido += "<div class='popup-content'>";
 
                                         if (camposVisiblesGlobal.includes("RazonSocial")) {
-                                            contenido += "<h2 class='subtitulo'><img src='/img/central_electrica.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                                            contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/central_electrica.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                                         }
 
                                         contenido += "<ul>";
@@ -3102,7 +3102,7 @@
                                         }
                                     });
 
-                                    var iconoExpendio = new iconoBase({ iconUrl: '/img/central_electrica.png' });
+                                    var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/central_electrica.png' });
 
                                     // Agrega los marcadores para las coordenadas del mapa actual
                                     for (var j = 0; j < response.length; j++) {

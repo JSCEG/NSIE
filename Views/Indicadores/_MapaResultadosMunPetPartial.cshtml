@@ -358,10 +358,10 @@
     });
 
     //3.2-Asigna Iconos
-    var iconoOptimas = new iconoBase({ iconUrl: '/img/Aprobado.png' }),
-        iconoViable = new iconoBase({ iconUrl: '/img/viable.png' }),
-        iconoFactible = new iconoBase({ iconUrl: '/img/NoviableMun.png' });
-    iconoNoViable = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+    var iconoOptimas = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' }),
+        iconoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/viable.png' }),
+        iconoFactible = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoviableMun.png' });
+    iconoNoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
     //////
     var currentMarkermun = null; // Referencia al marcador actual
@@ -601,7 +601,7 @@
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' });
+                var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Expendio.png' });
 
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {
@@ -679,10 +679,10 @@
                     }
                 });
 
-                var iconoOptimo = new iconoBase({ iconUrl: '/img/Aprobado.png' }),
-                    iconoViable = new iconoBase({ iconUrl: '/img/viable.png' }),
-                    iconoFactible = new iconoBase({ iconUrl: '/img/NoviableMun.png' });
-                    iconoNoViable = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+                var iconoOptimo = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' }),
+                    iconoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/viable.png' }),
+                    iconoFactible = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoviableMun.png' });
+                    iconoNoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
                 // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                 response.forEach(function (item) {
@@ -691,26 +691,26 @@
                     var iconoActualUrl;
                     if (item.categoria == "Óptimo") {
                         iconoActual = iconoOptimo;
-                        iconoActualUrl = '/img/Aprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/Aprobado.png';
                     } else if (item.categoria == "Viable") {
                         iconoActual = iconoViable;
-                        iconoActualUrl = '/img/viable.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/viable.png';
                     } else if (item.categoria == "No Viable a Nivel Municipal") {
                         iconoActual = iconoFactible;
-                        iconoActualUrl = '/img/NoviableMun.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoviableMun.png';
                     }  else if (item.categoria == "No Viable a Nivel Entidad Federativa") {
                         iconoActual = iconoNoViable;
-                        iconoActualUrl = '/img/NoAprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                     }
                     
                     else {
                         iconoActual = iconoNoViable;
-                        iconoActualUrl = '/img/NoAprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                     }
 
                     var marker = L.marker([item.x_Geo, item.y_Geo], { icon: iconoActual });
                       
-                      var botonEvaluar = iconoActualUrl === '/img/NoAprobado.png'
+                      var botonEvaluar = iconoActualUrl === '@Cdn.Url/img_snier/vistas/NoAprobado.png'
                       ? "<button class='btn btn-cre-azul' onclick='redireccionarAEvaluacion(" + item.id + ", \"Petroliferos\")'>Acción Adicional: ¡Evaluar a Nivel Barrio!</button> <hr />"
                       : "";
 
@@ -808,7 +808,7 @@
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' });
+                var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Expendio.png' });
 
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {
@@ -885,10 +885,10 @@
                     }
                 });
 
-                var iconoOptimo = new iconoBase({ iconUrl: '/img/Aprobado.png' }),
-                    iconoViable = new iconoBase({ iconUrl: '/img/viable.png' }),
-                    iconoFactible = new iconoBase({ iconUrl: '/img/NoviableMun.png' });
-                    iconoNoViable = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+                var iconoOptimo = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' }),
+                    iconoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/viable.png' }),
+                    iconoFactible = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoviableMun.png' });
+                    iconoNoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
                 // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                 response.forEach(function (item) {
@@ -897,25 +897,25 @@
                     var iconoActualUrl;
                     if (item.categoria == "Óptimo") {
                         iconoActual = iconoOptimo;
-                        iconoActualUrl = '/img/Aprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/Aprobado.png';
                     } else if (item.categoria == "Viable") {
                         iconoActual = iconoViable;
-                        iconoActualUrl = '/img/viable.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/viable.png';
                     } else if (item.categoria == "No Viable a Nivel Municipal") {
                         iconoActual = iconoFactible;
-                        iconoActualUrl = '/img/NoviableMun.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoviableMun.png';
                     }else if (item.categoria == "No Viable a Nivel Entidad Federativa") {
                         iconoActual = iconoNoViable;
-                        iconoActualUrl = '/img/NoAprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                     }
                     
                     else {
                         iconoActual = iconoNoViable;
-                        iconoActualUrl = '/img/NoAprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                     }
 
                     var marker = L.marker([item.x_Geo, item.y_Geo], { icon: iconoActual });
-                    var botonEvaluar = iconoActualUrl === '/img/NoAprobado.png'
+                    var botonEvaluar = iconoActualUrl === '@Cdn.Url/img_snier/vistas/NoAprobado.png'
                     ? "<button class='btn btn-cre-azul' onclick='redireccionarAEvaluacion(" + item.id + ", \"Petroliferos\")'>Acción Adicional: ¡Evaluar a Nivel Barrio!</button> <hr />"
                     : "";
 

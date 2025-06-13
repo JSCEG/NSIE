@@ -2064,3 +2064,30 @@ html:-moz-full-screen,
 html:-ms-fullscreen {
     background-color: white !important;
 }
+
+
+/* Mecanismos de Mercado Styles */
+.mecanismos-card {
+    min-height: 280px;
+    border-radius: 1rem;
+}
+
+.mecanismos-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-aos] {
+    pointer-events: none;
+}
+
+[data-aos].animated {
+    pointer-events: auto;
+}
+
+.bg-opacity-10 {
+    --bs-bg-opacity: 0.1;
+}

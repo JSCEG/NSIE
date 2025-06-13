@@ -255,11 +255,11 @@
     });
 
     //Asignación de Iconos
-    var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' }),
-        iconoExpendio = new iconoBase({ iconUrl: '/img/Expendio.png' }),
+    var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' }),
+        iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Expendio.png' }),
         iconoAzul = new iconoBase({ iconUrl: 'azul.png' });
-        iconoAprobado = new iconoBase({ iconUrl: '/img/Aprobado.png' });
-        iconoNoaprobado = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+        iconoAprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' });
+        iconoNoaprobado = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
 
 
@@ -594,7 +594,7 @@
                     contenido += "<div class='popup-content'>";
 
                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                        contenido += "<h2 class='subtitulo'><img src='/img/gasolinera.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                        contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/gasolinera.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                     }
 
                     contenido += "<ul>";
@@ -768,7 +768,7 @@
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/gasolinera.png' });
+                var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/gasolinera.png' });
 
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {
@@ -1007,9 +1007,9 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                 });
 
                 //Asignación de Iconos
-                var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
+                var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
                 var iconoSolicitudesUrl;
-                iconoSolicitudesUrl = '/img/Solicitudes.png';
+                iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
                 // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                 response.forEach(function (item) {
                     // Asigna el icono de acuerdo a la categoría
@@ -1593,9 +1593,9 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                     });
 
                     //Asignación de Iconos
-                    var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
+                    var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
                     var iconoSolicitudesUrl;
-                    iconoSolicitudesUrl = '/img/Solicitudes.png';
+                    iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
                     // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                     response.forEach(function (item) {
                         // Asigna el icono de acuerdo a la categoría
@@ -1708,9 +1708,9 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                     });
 
                     //Asignación de Iconos
-                    var iconoSolicitudes = new iconoBase({ iconUrl: '/img/Solicitudes.png' });
+                    var iconoSolicitudes = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Solicitudes.png' });
                     var iconoSolicitudesUrl;
-                    iconoSolicitudesUrl = '/img/Solicitudes.png';
+                    iconoSolicitudesUrl = '@Cdn.Url/img_snier/vistas/Solicitudes.png';
                     // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                     response.forEach(function (item) {
                         // Asigna el icono de acuerdo a la categoría
@@ -1833,7 +1833,7 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                     contenido += "<div class='popup-content'>";
 
                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                        contenido += "<h2 class='subtitulo'><img src='/img/gasolinera.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                        contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/gasolinera.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                     }
 
                     contenido += "<ul>";
@@ -2007,7 +2007,7 @@ function redireccionarAEvaluacion(idSolicitud, mercado) {
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/gasolinera.png' });
+                var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/gasolinera.png' });
 
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {

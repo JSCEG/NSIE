@@ -23,7 +23,7 @@
 
 <div class="text-center">
     <h4 class="cp-section cp-grouping-section">
-        <img src="/img/visitasv.png" alt="Icono personalizado" class="iconomenu" />
+        <img src="@Cdn.Url/img_snier/vistas/visitasv.png" alt="Icono personalizado" class="iconomenu" />
         @ViewData["Title"]
     </h4>
 </div>
@@ -31,27 +31,29 @@
 <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
     aria-label="breadcrumb" style="padding-left:15px">
     <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
     </ol>
 </nav>
 @*Sección que Despliega el Mapa Inicial*@
 <div class="container">
-      <!-- Imagen del banner -->
+    <!-- Imagen del banner -->
     <div class="text-center">
-        <img src="@Cdn.Url/img_snier/vistas/banner/luv.png" alt="Lista de Laboratorios y Unidades de Inspección" class="img-fluid"
-            style="max-width: 100%; height: auto; margin-bottom: 20px;">
+        <img src="@Cdn.Url/img_snier/vistas/banner/luv.png" alt="Lista de Laboratorios y Unidades de Inspección"
+            class="img-fluid" style="max-width: 100%; height: auto; margin-bottom: 20px;">
     </div>
 
-<div class="alert alert-info mt-4" role="alert">
-    <strong>Instrucciones para buscar:</strong>
-    <ul>
-        <li>Puedes buscar directamente ingresando el nombre en el cuadro de búsqueda.</li>
-        <li>Haciendo clic sobre una entidad federativa o un municipio en el mapa, se mostrará la información asociada.</li>
-        <li>Utiliza el botón de "Vista de Calle" en los marcadores del mapa para explorar su ubicación en Google Maps.</li>
-        <li>Los resultados mostrados incluyen únicamente los datos vigentes según el corte más reciente.</li>
-    </ul>
-</div>
+    <div class="alert alert-info mt-4" role="alert">
+        <strong>Instrucciones para buscar:</strong>
+        <ul>
+            <li>Puedes buscar directamente ingresando el nombre en el cuadro de búsqueda.</li>
+            <li>Haciendo clic sobre una entidad federativa o un municipio en el mapa, se mostrará la información
+                asociada.</li>
+            <li>Utiliza el botón de "Vista de Calle" en los marcadores del mapa para explorar su ubicación en Google
+                Maps.</li>
+            <li>Los resultados mostrados incluyen únicamente los datos vigentes según el corte más reciente.</li>
+        </ul>
+    </div>
 
 
     <section id="despliega_mapa" class="pb-5">
@@ -109,12 +111,12 @@
         </div>
 
 
-    <!-- Título con alert -->
-    <div class="alert alert-success text-center" role="alert">
-        <h3>Lista Completa de Laboratorios y Unidades de Inspección</h3>
-        <hr>
-        <p>¡Conoce la lista completa de Laboratorios y Unidades de Inspección vigentes! </p>
-    </div>
+        <!-- Título con alert -->
+        <div class="alert alert-success text-center" role="alert">
+            <h3>Lista Completa de Laboratorios y Unidades de Inspección</h3>
+            <hr>
+            <p>¡Conoce la lista completa de Laboratorios y Unidades de Inspección vigentes! </p>
+        </div>
 
 
         <div class="table-responsive">
@@ -392,9 +394,9 @@
                 }
             });
 
-            var iconoInspeccion = new iconoBase({ iconUrl: '/img/inspeccion.png' });
-            var iconoLaboratorio = new iconoBase({ iconUrl: '/img/laboratorio.png' });
-            var iconoTercerosEspecialistas = new iconoBase({ iconUrl: '/img/tercerose.png' });
+            var iconoInspeccion = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/inspeccion.png' });
+            var iconoLaboratorio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/laboratorio.png' });
+            var iconoTercerosEspecialistas = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/tercerose.png' });
 
             // Determinar el ícono basado en el tipo
             switch (tipo) {
@@ -436,16 +438,16 @@
                 var imgSrc; // La URL de la imagen que se mostrará en el pop-up
                 switch (coordenada.tipo) {
                     case "EE (¿Terceros especialistas?)":
-                        imgSrc = '/img/tercerose.png';
+                        imgSrc = '@Cdn.Url/img_snier/vistas/tercerose.png';
                         break;
                     case "Laboratorios de Prueba":
-                        imgSrc = '/img/laboratorio.png';
+                        imgSrc = '@Cdn.Url/img_snier/vistas/laboratorio.png';
                         break;
                     case "Unidades de Inspección":
-                        imgSrc = '/img/inspeccion.png';
+                        imgSrc = '@Cdn.Url/img_snier/vistas/inspeccion.png';
                         break;
                     default:
-                        imgSrc = '/img/laboratorio.png'; // Ícono por defecto si no hay coincidencia
+                        imgSrc = '@Cdn.Url/img_snier/vistas/laboratorio.png'; // Ícono por defecto si no hay coincidencia
                         break;
                 }
                 contenido += "<h2 class='subtitulo'><img src='" + imgSrc + "' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.nombre) + "</strong></h2><br>";

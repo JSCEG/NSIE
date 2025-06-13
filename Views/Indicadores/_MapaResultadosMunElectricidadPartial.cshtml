@@ -334,10 +334,10 @@ var iconoBase = L.Icon.extend({
 });
 
 //3.-Asigna Iconos
-var iconoOptimas = new iconoBase({ iconUrl: '/img/Aprobado.png' }),
-    iconoViable = new iconoBase({ iconUrl: '/img/viable.png' }),
-    iconoFactible = new iconoBase({ iconUrl: '/img/Factible.png' });
-    iconoNoViable = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+var iconoOptimas = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' }),
+    iconoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/viable.png' }),
+    iconoFactible = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Factible.png' });
+    iconoNoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
   
 
 
@@ -520,10 +520,10 @@ mapmun.on('draw:created', function (e) {
                     }
                 });
 
-                var iconoOptimo = new iconoBase({ iconUrl: '/img/Aprobado.png' }),
-                    iconoViable = new iconoBase({ iconUrl: '/img/viable.png' }),
-                    iconoFactible = new iconoBase({ iconUrl: '/img/NoviableMun.png' });
-                    iconoNoViable = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+                var iconoOptimo = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' }),
+                    iconoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/viable.png' }),
+                    iconoFactible = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoviableMun.png' });
+                    iconoNoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
                 // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                 response.forEach(function (item) {
@@ -532,21 +532,21 @@ mapmun.on('draw:created', function (e) {
                     var iconoActualUrl;
                     if (item.categoria == "Óptimo") {
                         iconoActual = iconoOptimo;
-                        iconoActualUrl = '/img/Aprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/Aprobado.png';
                     } else if (item.categoria == "Viable") {
                         iconoActual = iconoViable;
-                        iconoActualUrl = '/img/viable.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/viable.png';
                     } else if (item.categoria == "No Viable a Nivel Municipal") {
                         iconoActual = iconoFactible;
-                        iconoActualUrl = '/img/NoviableMun.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoviableMun.png';
                     } else if (item.categoria == "No Viable a Nivel Entidad Federativa") {
                         iconoActual = iconoNoViable;
-                        iconoActualUrl = '/img/NoAprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                     }
                     
                     else {
                         iconoActual = iconoNoViable;
-                        iconoActualUrl = '/img/NoAprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                     }
 
                     var marker = L.marker([item.x_Geo, item.y_Geo], { icon: iconoActual });
@@ -665,10 +665,10 @@ mapmun.on('draw:created', function (e) {
                         popupAnchor: [-3, -76]
                     }
                 });
-                 var iconoOptimo = new iconoBase({ iconUrl: '/img/Aprobado.png' }),
-                    iconoViable = new iconoBase({ iconUrl: '/img/viable.png' }),
-                    iconoFactible = new iconoBase({ iconUrl: '/img/NoviableMun.png' });
-                    iconoNoViable = new iconoBase({ iconUrl: '/img/NoAprobado.png' });
+                 var iconoOptimo = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/Aprobado.png' }),
+                    iconoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/viable.png' }),
+                    iconoFactible = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoviableMun.png' });
+                    iconoNoViable = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/NoAprobado.png' });
 
                 // Añade marcadores al grupo para cada conjunto de coordenadas en la respuesta
                 response.forEach(function (item) {
@@ -677,21 +677,21 @@ mapmun.on('draw:created', function (e) {
                     var iconoActualUrl;
                     if (item.categoria == "Óptimo") {
                         iconoActual = iconoOptimo;
-                        iconoActualUrl = '/img/Aprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/Aprobado.png';
                     } else if (item.categoria == "Viable") {
                         iconoActual = iconoViable;
-                        iconoActualUrl = '/img/viable.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/viable.png';
                     } else if (item.categoria == "No Viable a Nivel Municipal") {
                         iconoActual = iconoFactible;
-                        iconoActualUrl = '/img/NoviableMun.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoviableMun.png';
                     } else if (item.categoria == "No Viable a Nivel Entidad Federativa") {
                         iconoActual = iconoNoViable;
-                        iconoActualUrl = '/img/NoAprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                     }
 
                     else {
                         iconoActual = iconoNoViable;
-                        iconoActualUrl = '/img/NoAprobado.png';
+                        iconoActualUrl = '@Cdn.Url/img_snier/vistas/NoAprobado.png';
                     }
 
                     var marker = L.marker([item.x_Geo, item.y_Geo], { icon: iconoActual });
@@ -806,7 +806,7 @@ mapmun.on('draw:created', function (e) {
                     contenido += "<div class='popup-content'>";
 
                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                        contenido += "<h2 class='subtitulo'><img src='/img/central_electrica.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                        contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/central_electrica.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                     }
 
                     contenido += "<ul>";
@@ -989,7 +989,7 @@ mapmun.on('draw:created', function (e) {
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/central_electrica.png' });
+                var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/central_electrica.png' });
 
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {
@@ -1050,7 +1050,7 @@ mapmun.on('draw:created', function (e) {
                     contenido += "<div class='popup-content'>";
 
                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                        contenido += "<h2 class='subtitulo'><img src='/img/central_electrica.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
+                        contenido += "<h2 class='subtitulo'><img src='@Cdn.Url/img_snier/vistas/central_electrica.png' style='height: 24px; width: 24px;'/><strong>" + handleNull(coordenada.razonSocial) + "</strong></h2><br>";
                     }
 
                     contenido += "<ul>";
@@ -1233,7 +1233,7 @@ mapmun.on('draw:created', function (e) {
                     }
                 });
 
-                var iconoExpendio = new iconoBase({ iconUrl: '/img/central_electrica.png' });
+                var iconoExpendio = new iconoBase({ iconUrl: '@Cdn.Url/img_snier/vistas/central_electrica.png' });
 
                 // Agrega los marcadores para las coordenadas del mapa actual
                 for (var j = 0; j < response.length; j++) {
