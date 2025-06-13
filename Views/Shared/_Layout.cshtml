@@ -358,7 +358,7 @@
                     </ul>
                 }
 
-                <hr class="my-3 mx-3 border-secondary" />
+               
 
                 @* <div class="px-3 pb-2">
                     <small class="section-header">Sistema</small>
@@ -376,9 +376,12 @@
                         <i class="bi bi-ui-checks-grid me-3"></i>Secciones
                     </a>
                 }
-                <a class="nav-link" href="@Url.Action("CerrarSesion", "Acceso")"></a>
-                <i class="bi bi-box-arrow-right me-3"></i>Salir
+
+                <a class="nav-link @(currentController == "Acceso" ? "active" : "")" href="@Url.Action("CerrarSesion", "Acceso")">
+                    <i class="bi  bi-box-arrow-right me-3"></i>SalirCerrarSesion
                 </a>
+
+        
             </nav>
         </div>
     </div>
