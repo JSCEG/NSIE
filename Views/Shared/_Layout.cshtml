@@ -986,7 +986,10 @@
     </script>
     <script src="~/js/validacion-formulario.js"></script>
     <!-- JavaScript -->
-    @if (perfilUsuario.IdUsuario != "1")
+    @if (perfilUsuario.IdUsuario != "1" || perfilUsuario.IdUsuario != "31")
+    {
+        <script src="~/js/seguridad.js"></script>
+    }
     {
         <script src="~/js/seguridad.js"></script>
     }
