@@ -9,7 +9,6 @@
 
     var perfilJson = HttpContextAccessor.HttpContext.Session.GetString("PerfilUsuario");
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilJson);
-    // Utilizar los datos del usuario para personalizar la vista
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
     ViewData["RolUsuario"] = perfilUsuario.Rol;
     ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
@@ -35,41 +34,6 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
         })
     };
 }
-
-@await Html.PartialAsync("_ViewHeader", header)
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        function mostrarAyudaModulo(infoJson) {
-            try {
-                const info = typeof infoJson === 'string' ? JSON.parse(infoJson) : infoJson;
-                const html = `
-                                    <div class="text-start">
-                                        ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
-                                        ${info.functionality ? `<p><i class='fas fa-cogs'></i> ${info.functionality}</p>` : ''}
-                                        ${info.stage ? `<p><i class='fas fa-layer-group'></i> Etapa: ${info.stage}</p>` : ''}
-                                        ${info.roles?.length ? `
-                                            <ul>
-                                                ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
-                                            </ul>` : ''}
-                                        ${info.order ? `<p><i class='fas fa-sort-amount-up'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
-                                    </div>`;
-
-                Swal.fire({
-                    title: info.title || 'Ayuda del módulo',
-                    html: html,
-                    confirmButtonText: 'Cerrar',
-                    confirmButtonColor: '#6c757d',
-                    backdrop: true
-                });
-            } catch (e) {
-                console.error("Error al mostrar ayuda del módulo:", e);
-                Swal.fire('Error', 'No se pudo cargar la información del módulo', 'error');
-            }
-        }
-    </script>
-}
-
 @{
     ViewData["Title"] = "Inicio";
     var idUsuario = Convert.ToInt32(ViewData["IDUsuario"]);
@@ -78,88 +42,172 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
     var esConsultaPublica = (rolUsuario == "10" || nombreUsuario.Contains("consult"));
 }
 
+<style>
+    /* Estilos personalizados */
+    .card-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-<!-- HERO PRINCIPAL -->
-<section id="hero" class="py-5 bg-light text-center text-lg-start position-relative overflow-hidden">
-    <div class="container d-flex flex-column align-items-center justify-content-center text-center" data-aos="zoom-in">
-        <img src="@Cdn.Url/img_snier/login/logo_snier.png" class="img-fluid mb-4" alt="Sistema Energético Mexicano">
-        <h1 class="display-5 fw-bold">
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .hero-gradient {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .badge-custom {
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    @@media (prefers-reduced-motion) {
+        [data-aos] {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+    }
+</style>
+
+@await Html.PartialAsync("_ViewHeader", header)
+
+<!-- HERO PRINCIPAL MEJORADO -->
+<section id="hero" class="py-5 hero-gradient text-center position-relative overflow-hidden">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="zoom-in">
+                <img src="@Cdn.Url/img_snier/login/logo_snier.png" class="img-fluid mb-4"
+                    alt="Logo SNIEr - Sistema Nacional de Información Energética" loading="lazy" width="320"
+                    height="auto">
+
+                <h1 class="display-5 fw-bold mb-3">
+                    @if (esConsultaPublica)
+                    {
+                        <text>Bienvenido a la Consulta Pública</text>
+                    }
+                    else if (idUsuario == 46)
+                    {
+                        <text>Bienvenido, Usuario del Consejo</text>
+                    }
+                    else if (idUsuario == 58)
+                    {
+                        <text>Bienvenido, Usuario del Sector</text>
+                    }
+                    else
+                    {
+                        <text>Bienvenido, @nombreUsuario</text>
+                    }
+                </h1>
+                <p class="lead mb-4">El SNIEr es la fuente oficial de información del sector energético en México.</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <a href="#modulos" class="btn btn-primary btn-lg px-4">Explorar módulos</a>
+                    <a href="#ayuda" class="btn btn-outline-primary btn-lg px-4">¿Cómo usar?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTINÚA DONDE TE QUEDASTE - MEJORADO -->
+<section id="continuar" class="py-5 bg-white border-bottom" style="display:none;" aria-labelledby="continuarHeading">
+    <div class="container">
+        <h2 id="continuarHeading" class="fw-bold mb-4 text-center" data-aos="fade-up">
             @if (esConsultaPublica)
             {
-                <text>Bienvenido a la Consulta Pública</text>
-            }
-            else if (idUsuario == 46)
-            {
-                <text>Bienvenido, Usuario del Consejo</text>
-            }
-            else if (idUsuario == 58)
-            {
-                <text>Bienvenido, Usuario del Sector</text>
+                <text>¡Lo más buscado!</text>
             }
             else
             {
-                <text>Bienvenido, @nombreUsuario</text>
+                <text>Continúa donde te quedaste</text>
             }
-        </h1>
-        <p class="lead mt-3 mb-4">El SNIEr es la fuente oficial de información del sector energético en México.</p>
+        </h2>
+
+        <!-- Tarjetas dinámicas mejoradas -->
+        <div id="tarjetas-acciones" class="row g-4 justify-content-center"></div>
+
+        <!-- Loader mejorado -->
+        @* <div id="loader-continua" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando tu actividad reciente...</p>
+        </div> *@
     </div>
 </section>
 
-<!-- QUE ES EL SNIER -->
-<section class="py-5 bg-white">
-    <div class="container" data-aos="fade-up">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <h2 class="fw-bold">¿Qué es el SNIEr?</h2>
-                <p class="text-muted">El Sistema Nacional de Información Energética (SNIEr) integra, organiza y difunde
+<!-- QUE ES EL SNIER - MEJORADO -->
+<section id="que-es" class="py-5 bg-white" aria-labelledby="queEsHeading">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-md-6" data-aos="fade-right">
+                <h2 id="queEsHeading" class="fw-bold mb-4">¿Qué es el SNIEr?</h2>
+                <p class="text-muted mb-4">El Sistema Nacional de Información Energética (SNIEr) integra, organiza y
+                    difunde
                     datos técnicos, económicos, sociales y geoespaciales sobre el sector energético nacional. Es
                     coordinado por el Consejo y administrado por la CNE.</p>
-                <ul class="list-unstyled mt-3">
-                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Planeación Vinculante</li>
-                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Subsistemas interinstitucionales</li>
-                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Información técnica y geoespacial</li>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Planeación Vinculante</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Subsistemas
+                        interinstitucionales</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Información técnica y
+                        geoespacial</li>
                 </ul>
+                <a href="@Url.Action("About", "Home")" class="btn btn-outline-primary mt-3">Más información</a>
             </div>
-            <div class="col-md-6 text-center">
-                <img src="@Cdn.Url/img_snier/vistas/pregunta.png" class="img-fluid" alt="Explicación SNIEr">
+            <div class="col-md-6 text-center" data-aos="fade-left">
+                <img src="@Cdn.Url/img_snier/vistas/pregunta.png" class="img-fluid rounded shadow-sm"
+                    alt="Diagrama explicativo del SNIEr" loading="lazy">
             </div>
         </div>
     </div>
 </section>
 
-<!-- MODULOS DESTACADOS -->
-<section id="modulos" class="py-5 bg-light">
+<!-- MODULOS DESTACADOS - MEJORADO -->
+<section id="modulos" class="py-5 bg-light" aria-labelledby="modulosHeading">
     <div class="container">
-        <h2 class="fw-bold text-center mb-4" data-aos="fade-up">Contenido del SNIEr</h2>
-        <div class="row g-4" data-aos="fade-up">
-            <div class="col-md-4">
-                <div class="card h-100 text-center border-0 shadow-sm">
-                    <div class="card-body">
-                        <i class="bi bi-database fs-1 text-primary"></i>
-                        <h5 class="mt-3">Información Energética</h5>
-                        <p class="text-muted">Origen, destino y consumo final de la energía.</p>
-                        <a href="@Url.Action("Energia", "SNIE")" class="btn btn-sm btn-outline-primary mt-2">Ver más</a>
+        <h2 id="modulosHeading" class="fw-bold text-center mb-5" data-aos="fade-up">Contenido del SNIEr</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 text-center border-0 shadow-sm card-hover">
+                    <div class="card-body p-4">
+                        <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto"
+                            style="width: 60px; height: 60px;">
+                            <i class="bi bi-database fs-4"></i>
+                        </div>
+                        <h5 class="mb-3">Información Energética</h5>
+                        <p class="text-muted mb-4">Origen, destino y consumo final de la energía.</p>
+                        <a href="@Url.Action("Energia", "SNIE")" class="btn btn-outline-primary stretched-link">Ver
+                            más</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 text-center border-0 shadow-sm">
-                    <div class="card-body">
-                        <i class="bi bi-map fs-1 text-success"></i>
-                        <h5 class="mt-3">Georreferenciación</h5>
-                        <p class="text-muted">Mapa de permisos y proyectos energéticos.</p>
-                        <a href="@Url.Action("Mapa", "SNIE")" class="btn btn-sm btn-outline-success mt-2">Explorar</a>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 text-center border-0 shadow-sm card-hover">
+                    <div class="card-body p-4">
+                        <div class="icon-wrapper bg-success bg-opacity-10 text-success rounded-circle p-3 mb-3 mx-auto"
+                            style="width: 60px; height: 60px;">
+                            <i class="bi bi-map fs-4"></i>
+                        </div>
+                        <h5 class="mb-3">Georreferenciación</h5>
+                        <p class="text-muted mb-4">Mapa de permisos y proyectos energéticos.</p>
+                        <a href="@Url.Action("Mapa", "SNIE")"
+                            class="btn btn-outline-success stretched-link">Explorar</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 text-center border-0 shadow-sm">
-                    <div class="card-body">
-                        <i class="bi bi-gear-wide fs-1 text-warning"></i>
-                        <h5 class="mt-3">Catálogos y Tecnologías</h5>
-                        <p class="text-muted">Tecnologías para generación y uso final de energía.</p>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100 text-center border-0 shadow-sm card-hover">
+                    <div class="card-body p-4">
+                        <div class="icon-wrapper bg-warning bg-opacity-10 text-warning rounded-circle p-3 mb-3 mx-auto"
+                            style="width: 60px; height: 60px;">
+                            <i class="bi bi-gear-wide fs-4"></i>
+                        </div>
+                        <h5 class="mb-3">Catálogos y Tecnologías</h5>
+                        <p class="text-muted mb-4">Tecnologías para generación y uso final de energía.</p>
                         <a href="@Url.Action("Catalogos", "SNIE")"
-                            class="btn btn-sm btn-outline-warning mt-2">Consultar</a>
+                            class="btn btn-outline-warning stretched-link">Consultar</a>
                     </div>
                 </div>
             </div>
@@ -167,106 +215,759 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
     </div>
 </section>
 
-<!-- GRÁFICO DE INDICADORES -->
-<section id="indicadores" class="py-5 bg-white">
-    <div class="container" data-aos="fade-up">
-        <h2 class="fw-bold text-center mb-4">Indicadores Energéticos</h2>
-        <div id="chartContainer" style="height: 400px;"></div>
+<!-- GRÁFICO DE INDICADORES - MEJORADO -->
+<!-- GRÁFICO DE INDICADORES - VERSIÓN MEJORADA -->
+<section id="indicadores" class="py-5 bg-white" aria-labelledby="indicadoresHeading">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3">Datos en Tiempo Real</span>
+            <h2 id="indicadoresHeading" class="fw-bold mb-3">Indicadores Energéticos Clave</h2>
+            <p class="lead text-muted mx-auto" style="max-width: 700px;">
+                Monitoreo de los principales indicadores del sector energético mexicano
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Selector de Indicadores -->
+            <div class="col-md-4 col-lg-3" data-aos="fade-right">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0 fw-semibold">Filtrar Indicadores</h5>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="mb-3">
+                            <label for="tipoIndicador" class="form-label small fw-semibold">Tipo de Indicador</label>
+                            <select id="tipoIndicador" class="form-select">
+                                <option value="produccion">Producción</option>
+                                <option value="consumo">Consumo</option>
+                                <option value="renovable">Energías Renovables</option>
+                                <option value="precios">Precios y Tarifas</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="periodo" class="form-label small fw-semibold">Período</label>
+                            <select id="periodo" class="form-select">
+                                <option value="anual">Anual</option>
+                                <option value="trimestral" selected>Trimestral</option>
+                                <option value="mensual">Mensual</option>
+                            </select>
+                        </div>
+                        <button id="actualizarGrafico" class="btn btn-primary w-100 mt-2">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Actualizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico Principal -->
+            <div class="col-md-8 col-lg-9" data-aos="fade-left">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3">
+                        <h5 class="mb-0 fw-semibold">Visualización de Datos</h5>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-download me-1"></i> Exportar
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="#" onclick="exportChart('PNG')">PNG</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="exportChart('JPEG')">JPEG</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="exportChart('PDF')">PDF</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="exportChart('SVG')">SVG</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" onclick="exportData('CSV')">CSV (Datos)</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Contenedor del gráfico con loader -->
+                        <div id="chartLoader" class="text-center py-4" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <p class="mt-2 small text-muted">Actualizando datos...</p>
+                        </div>
+                        <div id="chartContainer" style="height: 400px; min-height: 300px;" 
+                             aria-live="polite" aria-atomic="true"></div>
+                        
+                        <!-- Leyenda del gráfico -->
+                        <div class="mt-3 small text-muted d-flex justify-content-between">
+                            <div>
+                                <i class="bi bi-info-circle me-1"></i>
+                                <span id="chartLastUpdate">Última actualización: Cargando...</span>
+                            </div>
+                            <div>
+                                <i class="bi bi-database me-1"></i>
+                                <span>Fuente: Sistema Nacional de Información Energética</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mini Gráficos Inferiores -->
+        <div class="row mt-4 g-3">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h6 class="fw-semibold mb-3">Generación Eléctrica</h6>
+                        <div id="miniChart1" style="height: 150px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h6 class="fw-semibold mb-3">Consumo por Sector</h6>
+                        <div id="miniChart2" style="height: 150px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h6 class="fw-semibold mb-3">Emisiones CO₂</h6>
+                        <div id="miniChart3" style="height: 150px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section
+
+<!-- CARRUSEL DE VISUALIZACIONES - MEJORADO -->
+<section id="visualizaciones" class="py-5 bg-light" aria-labelledby="visualizacionesHeading">
+    <div class="container">
+        <h2 id="visualizacionesHeading" class="fw-bold text-center mb-5" data-aos="fade-up">Visualizaciones Destacadas
+        </h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-10" data-aos="fade-up">
+                <div id="carouselVisual" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselVisual" data-bs-slide-to="0" class="active"
+                            aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselVisual" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselVisual" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner rounded-3 overflow-hidden shadow">
+                        <div class="carousel-item active">
+                            <img src="https://images.pexels.com/photos/414837/pexels-photo-414837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                                class="d-block w-100" alt="Infraestructura energética en México" loading="lazy">
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+                                <h5>Infraestructura energética</h5>
+                                <p>Mapa de instalaciones en territorio nacional</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://images.pexels.com/photos/32399131/pexels-photo-32399131/free-photo-of-complejo-industrial-en-botlek-rotterdam.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                                class="d-block w-100" alt="Proyectos energéticos industriales" loading="lazy">
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+                                <h5>Proyectos industriales</h5>
+                                <p>Complejos energéticos en operación</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://images.pexels.com/photos/9703551/pexels-photo-9703551.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                                class="d-block w-100" alt="Tecnologías renovables" loading="lazy">
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+                                <h5>Energías renovables</h5>
+                                <p>Generación limpia en México</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselVisual"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselVisual"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-@* <script src="https://code.highcharts.com/highcharts.js"></script> *@
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        Highcharts.chart('chartContainer', {
-            chart: { type: 'line' },
-            title: { text: 'Producción Energética Anual (GWh)' },
-            xAxis: { categories: ['2018', '2019', '2020', '2021', '2022'] },
-            yAxis: { title: { text: 'GWh' } },
-            series: [{
-                name: 'Energía Eléctrica',
-                data: [32000, 34000, 31000, 36000, 39000]
-            }, {
-                name: 'Hidrocarburos',
-                data: [28000, 29000, 27500, 30000, 31000]
-            }]
+<!-- MAPA DE TRAZABILIDAD - MEJORADO -->
+<h2 class="fw-bold text-center mb-5" data-aos="fade-up">Infraestructura del Fondo Mexicano del
+    Petróleo</h2>
+
+
+@* SECCIÓN DE MAPA *@
+
+<section id="despliega_mapa" class="pb-5">
+
+    <br />
+
+    <div class="app-card-header p-3 border-0">
+
+        @*Menu*@
+        <div class="navbarmapag">
+
+
+            <a id="electricidad" class="icono-texto">
+                <img src="@Cdn.Url/img_snier/vistas/inspeccion.png" alt="Icono personalizado" class="iconomenu" />
+                <span>Recursos FMP</span>
+
+                <div id="total_petroliferos"></div>
+            </a>
+
+
+        </div>
+
+
+
+        <!-- Nuevo Div para Conteo de Tipos de Permisos -->
+        <div id="conteo_tipos_permisos" class="conteo-permisos">
+            <!-- Aquí se mostrarán los conteos de tipos de permisos -->
+        </div>
+
+        <br>
+
+        <div id="main-container">
+
+            <div class="row g-4 mb-4">
+                <div class="col">
+                    <div class="app-card app-card-chart h-100 shadow-sm">
+
+                        <div class="search-container p-3" id="search-container">
+                            <label class="form-label">Buscar en el Mapa:</label>
+                            <input type="text" id="busquedaGeneralInput" class="form-control"
+                                placeholder="Número de Permiso, Entidad Federativa o Municipio">
+                            <div id="autocomplete-list" class="autocomplete-items"></div>
+                            <!-- El resto de tu código -->
+
+                            <button class="btn btn-cre-rojo-home" onclick="buscarGeneral()"
+                                style="width:10% !important"><i class="bi bi-search"></i></button>
+                        </div>
+
+                        @*Menu de Botones*@
+                        <div class="container-fluid">
+                        </div>
+                        <div class="app-card-body p-4">
+                            <div class="chart-container">
+                                <div id="" class="app-card-body p-4">
+                                    <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
+                                    <div id="map" class="p-3 bg"></div>
+                                    <div class="leyenda pt-3">
+                                        <p>Mayor Concentración</p>
+                                        <p>Concentración Promedio</p>
+                                        <p>Menor Concentración</p>
+                                        <p> Ductos</p>
+                                    </div>
+                                    <br />
+                                    <div class="" id="grafico"></div>
+                                    @* <div class="" id="grafico2"></div> *@
+
+                                    @* Precios de Gasolina  *@
+                                    @if (Convert.ToInt32(ViewData["RolUsuario"]) == 1)
+                                    {
+                                        <div id="graficoPrecios" style="width: 100%; height: 400px; margin-top: 20px;">
+                                        </div>
+                                    }
+
+
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BLOQUE DE AYUDA - MEJORADO -->
+<section id="ayuda" class="py-5 bg-light" aria-labelledby="ayudaHeading">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h2 id="ayudaHeading" class="fw-bold mb-4">¿Necesitas apoyo para usar la plataforma?</h2>
+                <p class="text-muted mb-4">Consulta nuestras guías de uso o contáctanos para obtener asistencia técnica
+                    del SNIEr.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="/Documentos/ManualSNIEr.pdf" class="btn btn-primary px-4" target="_blank">
+                        <i class="bi bi-file-earmark-pdf me-2"></i>Descargar manual
+                    </a>
+                    <button class="btn btn-outline-secondary px-4"
+                        onclick="mostrarAyudaModulo(@Html.Raw(header.ModuleInfo))">
+                        <i class="bi bi-info-circle me-2"></i>Ver información del módulo
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center" data-aos="fade-left">
+                <img src="@Cdn.Url/img_snier/vistas/ayuda.png" class="img-fluid rounded shadow-sm"
+                    alt="Ilustración de soporte técnico" loading="lazy">
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Función para mostrar ayuda del módulo (existente)
+        function mostrarAyudaModulo(infoJson) {
+            try {
+                const info = typeof infoJson === 'string' ? JSON.parse(infoJson) : infoJson;
+                const html = `
+                                        <div class="text-start">
+                                            ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
+                                            ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
+                                            ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
+                                            ${info.roles?.length ? `
+                                                <ul class="mb-3">
+                                                    ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
+                                                </ul>` : ''}
+                                            ${info.order ? `<p><i class='fas fa-sort-amount-up me-2'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
+                                            ${info.manualUrl ? `<a href="${info.manualUrl}" class="btn btn-sm btn-primary mt-2" target="_blank"><i class="fas fa-download me-2"></i>Descargar manual</a>` : ''}
+                                        </div>`;
+
+                Swal.fire({
+                    title: info.title || 'Ayuda del módulo',
+                    html: html,
+                    confirmButtonText: 'Cerrar',
+                    confirmButtonColor: '#6c757d',
+                    backdrop: true,
+                    width: '600px'
+                });
+            } catch (e) {
+                console.error("Error al mostrar ayuda del módulo:", e);
+                Swal.fire('Error', 'No se pudo cargar la información del módulo', 'error');
+            }
+        }
+
+        // Script para cargar últimas acciones (existente pero mejorado)
+        $(function () {
+
+            const $seccion = $('#continuar');
+            const $contenedor = $('#tarjetas-acciones');
+            const $loader = $('<div id="loader-continua" class="text-center py-3">Cargando…</div>');
+
+            $seccion.prepend($loader);
+
+            $.ajax({
+                url: '@Url.Action("GetUltimasAcciones", "Bitacora")',
+                data: { top: 5 },            // cambia el TOP si lo requieres
+                dataType: 'json',
+
+                beforeSend: () => {
+                    $seccion.hide();
+                    $loader.show();
+                },
+
+                success: acciones => {
+
+                    if (!acciones || !acciones.length) {
+                        $loader.text('Sin actividad reciente.');
+                        return;
+                    }
+
+                    acciones.forEach(a => {
+                        const card = `
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card h-100 shadow-sm border-0">
+                                            <div class="card-body d-flex flex-column">
+                                                @* <h6 class="fw-semibold mb-1">${a.accion}</h6> *@
+                                                <h6 class="fw-semibold mb-1">${a.pagina}</h6>
+
+                                                <span class="badge bg-secondary align-self-start mb-3">
+                                                    ${a.fecha}
+                                                </span>
+
+                                                <button class="btn btn-sm btn-primary mt-auto"
+                                                        data-controller="${a.controller}"
+                                                        data-action="${a.action}"
+                                                        onclick="irA(this)">
+                                                    Reanudar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                        $contenedor.append(card);
+                    });
+
+                    $seccion.fadeIn();
+                },
+
+                error: (xhr, status, err) => {
+                    console.error('Error al cargar últimas acciones:', err);
+                    $loader.text('No fue posible cargar la actividad.');
+                },
+
+                complete: () => $loader.hide()
+            });
         });
-    });
-</script>
 
-<!-- CARRUSEL DE VISUALIZACIONES (con imágenes en línea) -->
-<section class="py-5 bg-light">
-    <div class="container" data-aos="fade-up">
-        <h2 class="fw-bold text-center mb-4">Visualizaciones Destacadas</h2>
-        <div id="carouselVisual" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselVisual" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Visual 1"></button>
-                <button type="button" data-bs-target="#carouselVisual" data-bs-slide-to="1"
-                    aria-label="Visual 2"></button>
-                <button type="button" data-bs-target="#carouselVisual" data-bs-slide-to="2"
-                    aria-label="Visual 3"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://images.pexels.com/photos/414837/pexels-photo-414837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                        class="d-block w-100" alt="Visual 1">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.pexels.com/photos/32399131/pexels-photo-32399131/free-photo-of-complejo-industrial-en-botlek-rotterdam.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                        class="d-block w-100" alt="Visual 2">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.pexels.com/photos/9703551/pexels-photo-9703551.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                        class="d-block w-100" alt="Visual 3">
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselVisual" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Anterior</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselVisual" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Siguiente</span>
-            </button>
-        </div>
-    </div>
-</section>
+        /**
+         * Redirige a /{Controller}/{Action}
+         * Ajusta si usas áreas o parámetros extra.
+         */
+        function irA(btn) {
+            const controller = btn.dataset.controller;
+            const action = btn.dataset.action;
+
+            if (controller && action) {
+                window.location.href = `/${controller}/${action}`;
+            } else {
+                console.warn('Datos de ruta incompletos');
+            }
+        }
+
+  
+    </script>
+       <script>
+        // Variables globales para los gráficos
+        let mainChart, miniChart1, miniChart2, miniChart3;
+        
+        // Función para inicializar los gráficos
+        function initCharts() {
+            // Gráfico principal
+            mainChart = Highcharts.chart('chartContainer', {
+                chart: {
+                    type: 'line',
+                    styledMode: true,
+                    zoomType: 'xy'
+                },
+                title: { text: null },
+                subtitle: {
+                    text: 'Últimos 5 años',
+                    align: 'right'
+                },
+                xAxis: {
+                    categories: ['2018', '2019', '2020', '2021', '2022'],
+                    crosshair: true,
+                    title: { text: 'Año' }
+                },
+                yAxis: {
+                    title: { text: 'GWh' },
+                    min: 0
+                },
+                tooltip: {
+                    shared: true,
+                    valueSuffix: ' GWh',
+                    headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
+                    pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
+                },
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                },
+                series: [{
+                    name: 'Energía Eléctrica',
+                    data: [32000, 34000, 31000, 36000, 39000],
+                    color: '#0d6efd'
+                }, {
+                    name: 'Hidrocarburos',
+                    data: [28000, 29000, 27500, 30000, 31000],
+                    color: '#fd7e14'
+                }],
+                exporting: {
+                    enabled: false // Deshabilitamos la exportación nativa para usar nuestra propia función
+                },
+                responsive: {
+                    rules: [{
+                        condition: { maxWidth: 768 },
+                        chartOptions: {
+                            legend: { layout: 'horizontal', align: 'center', verticalAlign: 'bottom' }
+                        }
+                    }]
+                }
+            });
+
+            // Mini gráficos
+            miniChart1 = Highcharts.chart('miniChart1', {
+                chart: { type: 'column', height: 150 },
+                title: { text: null },
+                xAxis: { categories: ['Hidro', 'Térmica', 'Eólica', 'Solar'] },
+                yAxis: { title: { text: null } },
+                series: [{
+                    name: 'Generación',
+                    data: [12000, 18000, 5000, 4000],
+                    color: '#20c997'
+                }],
+                credits: { enabled: false },
+                legend: { enabled: false },
+                tooltip: { valueSuffix: ' GWh' }
+            });
+
+            miniChart2 = Highcharts.chart('miniChart2', {
+                chart: { type: 'pie', height: 150 },
+                title: { text: null },
+                plotOptions: {
+                    pie: {
+                        dataLabels: { enabled: false },
+                        showInLegend: false
+                    }
+                },
+                series: [{
+                    name: 'Consumo',
+                    colorByPoint: true,
+                    data: [
+                        { name: 'Industrial', y: 45, color: '#0dcaf0' },
+                        { name: 'Residencial', y: 30, color: '#ffc107' },
+                        { name: 'Comercial', y: 15, color: '#6610f2' },
+                        { name: 'Otros', y: 10, color: '#6c757d' }
+                    ]
+                }],
+                tooltip: { valueSuffix: '%' }
+            });
+
+            miniChart3 = Highcharts.chart('miniChart3', {
+                chart: { type: 'areaspline', height: 150 },
+                title: { text: null },
+                xAxis: { categories: ['2018', '2019', '2020', '2021', '2022'] },
+                yAxis: { title: { text: null } },
+                series: [{
+                    name: 'Emisiones',
+                    data: [120, 115, 105, 100, 95],
+                    color: '#dc3545'
+                }],
+                credits: { enabled: false },
+                legend: { enabled: false },
+                tooltip: { valueSuffix: ' MTon CO₂' }
+            });
+
+            // Actualizar fecha de última actualización
+            document.getElementById('chartLastUpdate').textContent = 
+                `Última actualización: ${new Date().toLocaleString()}`;
+        }
+
+        // Función para exportar gráfico
+        function exportChart(format) {
+            mainChart.exportChart({
+                type: format,
+                filename: 'indicadores-energeticos-' + new Date().toISOString().slice(0, 10)
+            });
+        }
+
+        // Función para exportar datos
+        function exportData(format) {
+            // Aquí iría la lógica para exportar los datos subyacentes
+            alert(`Exportando datos en formato ${format}. Implementar lógica real según backend.`);
+        }
+
+        // Simular carga de datos
+        function loadChartData() {
+            const loader = document.getElementById('chartLoader');
+            loader.style.display = 'block';
+            
+            // Simular llamada AJAX
+            setTimeout(() => {
+                // Aquí iría la lógica real para cargar datos del servidor
+                loader.style.display = 'none';
+                
+                // Actualizar gráficos con nuevos datos
+                mainChart.series[0].setData([33000, 35000, 32000, 37000, 40000]);
+                mainChart.series[1].setData([29000, 30000, 28500, 31000, 32000]);
+                
+                document.getElementById('chartLastUpdate').textContent = 
+                    `Última actualización: ${new Date().toLocaleString()}`;
+                
+                // Mostrar notificación de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Datos actualizados',
+                    text: 'Los indicadores se han refrescado correctamente',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }, 1500);
+        }
+
+        // Event listeners
+        document.getElementById('actualizarGrafico').addEventListener('click', loadChartData);
+        
+        // Inicializar gráficos al cargar la página
+        document.addEventListener('DOMContentLoaded', initCharts);
+    </script>
+    @*Script de Pantalla Completa*@
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const mapElement = document.getElementById('map');
+            const fullscreenButton = document.getElementById('fullscreen-btn');
+            const searchContainer = document.getElementById('search-container');
+            const mainContainer = document.getElementById('main-container');
+            const fullscreenElements = document.createElement('div');
+            fullscreenElements.id = 'fullscreen-elements';
+
+            const originalMapParent = mapElement.parentNode;
+            const originalSearchParent = searchContainer.parentNode;
+            const originalMapNextSibling = mapElement.nextSibling;
+            const originalSearchNextSibling = searchContainer.nextSibling;
+
+            fullscreenButton.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    mainContainer.appendChild(fullscreenElements); // Asegurarnos de que fullscreenElements esté en el DOM
+                    fullscreenElements.appendChild(searchContainer);
+                    fullscreenElements.appendChild(mapElement);
+                    fullscreenElements.requestFullscreen().catch(err => {
+                        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+
+            document.addEventListener('fullscreenchange', (event) => {
+                if (document.fullscreenElement) {
+                    fullscreenButton.textContent = "Salir de Pantalla Completa";
+                    mainContainer.classList.add('fullscreen-active');
+                    mapElement.style.height = "calc(100vh - 60px)";
+                    searchContainer.style.backgroundColor = "white";
+                } else {
+                    fullscreenButton.textContent = "Pantalla Completa";
+                    if (originalSearchNextSibling) {
+                        originalSearchParent.insertBefore(searchContainer, originalSearchNextSibling);
+                    } else {
+                        originalSearchParent.appendChild(searchContainer);
+                    }
+                    if (originalMapNextSibling) {
+                        originalMapParent.insertBefore(mapElement, originalMapNextSibling);
+                    } else {
+                        originalMapParent.appendChild(mapElement);
+                    }
+                    mainContainer.classList.remove('fullscreen-active');
+                    mapElement.style.height = "500px";
+
+                    // Asegurarse de que los estilos se restablezcan
+                    fullscreenElements.style.height = 'auto'; // Restablecer altura a su valor inicial
+                }
+            });
+        });
+    </script>
+
+    @*Shapes Estados*@
+    <script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/estadosminlight.js"></script>
+    <script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/municipiosminlight.js"></script>
 
 
-<!-- MAPA DE TRAZABILIDAD CON LEAFLET -->
-<section class="py-5 bg-white">
-    <div class="container" data-aos="fade-up">
-        <h2 class="fw-bold text-center mb-4">Trazabilidad Geoespacial</h2>
-        <div id="map" class="rounded shadow-sm" style="height: 500px;"></div>
-    </div>
-</section>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var map = L.map('map').setView([23.6345, -102.5528], 5);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+    @*Ductos*@
+    @*Petrolíferos*@
+    <script src="@Cdn.Url/Geovisualizador/data/ductos_petroliferos_4326_0.js"></script>
+    @*Gas L.P.*@
+    <script src="@Cdn.Url/Geovisualizador/data/ductos_glp_4326_0.js"></script>
+    <script>
+        window.userRole = @ViewData["RolUsuario"]; // Define userRole globalmente
+        console.log(window.userRole);
 
-        L.marker([19.4326, -99.1332]).addTo(map).bindPopup("CDMX - Proyecto Energético").openPopup();
-    });
-</script>
-<!-- BLOQUE DE AYUDA -->
-<section id="ayuda" class="py-5 bg-light">
-    <div class="container" data-aos="fade-up">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h3 class="fw-bold">¿Necesitas apoyo para usar la plataforma?</h3>
-                <p class="text-muted">Consulta nuestras guías de uso o contáctanos para obtener asistencia técnica del
-                    SNIEr.</p>
-                <a href="#" class="btn btn-outline-primary rounded-pill mt-3">Ir al Centro de Ayuda</a>
-            </div>
-            <div class="col-lg-6 text-center">
-                <img src="@Cdn.Url/img_snier/vistas/ayuda.png" alt="Ayuda" class="img-fluid">
-            </div>
-        </div>
-    </div>
-</section>
+    </script>
+
+
+    <script type="text/javascript" src="/js/configura_mapa.js"></script>
+    <script type="text/javascript" src="/js/I_petroliferos.js"></script>
+    <script>
+        var userRole = @ViewData["RolUsuario"]; // Define userRole desde el servidor
+
+        // Solo cargar el gráfico si el usuario tiene rol 1
+        if (userRole === 1) {
+            // Datos sintéticos
+            // Generar datos sintéticos
+            var preciosPorEF = [
+                { EfNombre: "CIUDAD DE MÉXICO", PrecioRegular: 19.87, PrecioPremium: 21.95, PrecioDiesel: 20.45 },
+                { EfNombre: "GUANAJUATO", PrecioRegular: 20.12, PrecioPremium: 22.34, PrecioDiesel: 19.78 },
+                { EfNombre: "VERACRUZ DE IGNACIO DE LA LLAVE", PrecioRegular: 19.92, PrecioPremium: 21.50, PrecioDiesel: 20.30 },
+                { EfNombre: "CHIAPAS", PrecioRegular: 20.40, PrecioPremium: 22.10, PrecioDiesel: 20.00 },
+                { EfNombre: "JALISCO", PrecioRegular: 20.25, PrecioPremium: 22.45, PrecioDiesel: 20.12 },
+                { EfNombre: "MÉXICO", PrecioRegular: 20.05, PrecioPremium: 22.00, PrecioDiesel: 20.25 },
+                { EfNombre: "QUINTANA ROO", PrecioRegular: 19.95, PrecioPremium: 21.75, PrecioDiesel: 20.10 },
+                { EfNombre: "TABASCO", PrecioRegular: 20.10, PrecioPremium: 22.30, PrecioDiesel: 19.85 },
+                { EfNombre: "PUEBLA", PrecioRegular: 19.89, PrecioPremium: 21.95, PrecioDiesel: 20.20 },
+                { EfNombre: "MICHOACÁN DE OCAMPO", PrecioRegular: 20.20, PrecioPremium: 22.50, PrecioDiesel: 19.95 },
+                { EfNombre: "TAMAULIPAS", PrecioRegular: 20.30, PrecioPremium: 22.40, PrecioDiesel: 20.00 },
+                { EfNombre: "NUEVO LEÓN", PrecioRegular: 20.50, PrecioPremium: 22.80, PrecioDiesel: 20.25 },
+                { EfNombre: "GUERRERO", PrecioRegular: 20.15, PrecioPremium: 22.35, PrecioDiesel: 20.10 },
+                { EfNombre: "BAJA CALIFORNIA", PrecioRegular: 20.45, PrecioPremium: 22.75, PrecioDiesel: 20.20 },
+                { EfNombre: "HIDALGO", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.15 },
+                { EfNombre: "MORELOS", PrecioRegular: 20.05, PrecioPremium: 22.00, PrecioDiesel: 19.90 },
+                { EfNombre: "COAHUILA", PrecioRegular: 20.35, PrecioPremium: 22.65, PrecioDiesel: 20.30 },
+                { EfNombre: "SONORA", PrecioRegular: 20.25, PrecioPremium: 22.50, PrecioDiesel: 20.15 },
+                { EfNombre: "YUCATÁN", PrecioRegular: 19.85, PrecioPremium: 21.75, PrecioDiesel: 20.00 },
+                { EfNombre: "DURANGO", PrecioRegular: 20.10, PrecioPremium: 22.25, PrecioDiesel: 20.05 },
+                { EfNombre: "ZACATECAS", PrecioRegular: 20.20, PrecioPremium: 22.35, PrecioDiesel: 20.10 },
+                { EfNombre: "COLIMA", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.20 },
+                { EfNombre: "CHIHUAHUA", PrecioRegular: 20.35, PrecioPremium: 22.60, PrecioDiesel: 20.10 },
+                { EfNombre: "BAJA CALIFORNIA SUR", PrecioRegular: 20.50, PrecioPremium: 22.75, PrecioDiesel: 20.30 },
+                { EfNombre: "SINALOA", PrecioRegular: 20.15, PrecioPremium: 22.40, PrecioDiesel: 20.05 },
+                { EfNombre: "NAYARIT", PrecioRegular: 20.25, PrecioPremium: 22.50, PrecioDiesel: 19.95 },
+                { EfNombre: "QUERÉTARO", PrecioRegular: 20.05, PrecioPremium: 22.20, PrecioDiesel: 20.10 },
+                { EfNombre: "OAXACA", PrecioRegular: 20.00, PrecioPremium: 22.15, PrecioDiesel: 19.85 },
+                { EfNombre: "SAN LUIS POTOSÍ", PrecioRegular: 20.30, PrecioPremium: 22.55, PrecioDiesel: 20.10 },
+                { EfNombre: "TLAXCALA", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.00 },
+                { EfNombre: "CAMPECHE", PrecioRegular: 20.20, PrecioPremium: 22.40, PrecioDiesel: 20.15 },
+                { EfNombre: "AGUASCALIENTES", PrecioRegular: 20.10, PrecioPremium: 22.30, PrecioDiesel: 20.05 },
+            ];
+
+
+            // Procesar datos para el gráfico
+            var categories = preciosPorEF.map(item => item.EfNombre);
+            var regularData = preciosPorEF.map(item => item.PrecioRegular);
+            var premiumData = preciosPorEF.map(item => item.PrecioPremium);
+            var dieselData = preciosPorEF.map(item => item.PrecioDiesel);
+
+            // Configurar y renderizar el gráfico
+            Highcharts.chart('graficoPrecios', {
+                chart: {
+                    type: 'line',
+                },
+                title: {
+                    text: 'Proyectos por Entidad Federativa'
+                },
+                xAxis: {
+                    categories: categories,
+                    title: {
+                        text: 'Entidad Federativa'
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Precio ($MXN)'
+                    }
+                },
+                tooltip: {
+                    shared: true,
+                    valueSuffix: ' MXN'
+                },
+                plotOptions: {
+                    column: {
+                        dataLabels: {
+                            enabled: true,
+                            format: '${point.y:.2f} MXN'
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name: 'En curso',
+                        data: regularData,
+                        color: '#1f77b4' // Azul
+                    },
+                    {
+                        name: 'Cancelado',
+                        data: premiumData,
+                        color: '#ff7f0e' // Naranja
+                    },
+                    {
+                        name: 'Terminado',
+                        data: dieselData,
+                        color: '#2ca02c' // Verde
+                    }
+                ]
+            });
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+
+
+}

@@ -4,6 +4,15 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
+    ViewData["Title"] = "Catálogo de Tecnologías de Generación Eléctrica";
+
+    var perfilJson = HttpContextAccessor.HttpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilJson);
+    // Utilizar los datos del usuario para personalizar la vista
+    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
+
     var header = new HeaderViewModel
     {
         Title = "Catálogo de Tecnologías de Generación Eléctrica",
@@ -73,8 +82,8 @@ new { icon = "leaf", text = "Sustentable: Biomasa, Geotérmica" }
         <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up">
             <div class="card shadow-sm border-0 h-100">
                 <div class="position-relative">
-                    <img src="@Cdn.Url/img_snier/vistas/tecnologias/solar.jpg" class="card-img-top" alt="Solar Fotovoltaica"
-                        style="height: 200px; object-fit: cover;">
+                    <img src="@Cdn.Url/img_snier/vistas/tecnologias/solar.jpg" class="card-img-top"
+                        alt="Solar Fotovoltaica" style="height: 200px; object-fit: cover;">
                     <div class="position-absolute top-0 end-0 p-2">
                         <span class="badge bg-success">Renovable</span>
                     </div>
@@ -149,8 +158,8 @@ new { icon = "leaf", text = "Sustentable: Biomasa, Geotérmica" }
         <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
             <div class="card shadow-sm border-0 h-100">
                 <div class="position-relative">
-                    <img src="@Cdn.Url/img_snier/vistas/tecnologias/combinado.jpg" class="card-img-top" alt="Ciclo Combinado"
-                        style="height: 200px; object-fit: cover;">
+                    <img src="@Cdn.Url/img_snier/vistas/tecnologias/combinado.jpg" class="card-img-top"
+                        alt="Ciclo Combinado" style="height: 200px; object-fit: cover;">
                     <div class="position-absolute top-0 end-0 p-2">
                         <span class="badge bg-warning text-dark">Convencional</span>
                     </div>

@@ -4,6 +4,14 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
+    ViewData["Title"] = "| Ahorros por Medidas de Reducción";
+    var perfilJson = HttpContextAccessor.HttpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilJson);
+    // Utilizar los datos del usuario para personalizar la vista
+    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
+
     var header = new HeaderViewModel
     {
         Title = "Ahorros por Medidas de Reducción",
@@ -188,13 +196,13 @@ new { icon = "search", text = "Público: Consulta de resultados" }
             Swal.fire({
                 title: 'Ahorros por Medidas',
                 html: `<div class='text-start'>
-                                            <p>Consulta el impacto de medidas de eficiencia energética.</p>
-                                            <ul>
-                                                <li><i class='fas fa-lightbulb text-warning'></i> Medidas adoptadas por el gobierno y sector privado</li>
-                                                <li><i class='fas fa-bolt text-success'></i> Estimaciones de ahorro energético en GWh</li>
-                                                <li><i class='fas fa-chart-line'></i> Gráfico evolutivo del ahorro logrado</li>
-                                            </ul>
-                                        </div>`,
+                                                <p>Consulta el impacto de medidas de eficiencia energética.</p>
+                                                <ul>
+                                                    <li><i class='fas fa-lightbulb text-warning'></i> Medidas adoptadas por el gobierno y sector privado</li>
+                                                    <li><i class='fas fa-bolt text-success'></i> Estimaciones de ahorro energético en GWh</li>
+                                                    <li><i class='fas fa-chart-line'></i> Gráfico evolutivo del ahorro logrado</li>
+                                                </ul>
+                                            </div>`,
                 confirmButtonText: 'Cerrar',
                 width: 400
             });

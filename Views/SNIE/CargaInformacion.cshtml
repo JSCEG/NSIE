@@ -463,13 +463,13 @@ new { icon = "balance-scale", text = "Jurídico: Validación normativa" }
                     Swal.fire({
                         title: 'Procesando archivo...',
                         html: `
-                                        <div class="progress mb-3">
-                                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                                                 style="width: 0%">
-                                            </div>
-                                        </div>
-                                        <p class="mb-0">Validando ${archivo.name}</p>
-                                    `,
+                                                <div class="progress mb-3">
+                                                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                                         style="width: 0%">
+                                                    </div>
+                                                </div>
+                                                <p class="mb-0">Validando ${archivo.name}</p>
+                                            `,
                         showConfirmButton: false,
                         allowOutsideClick: false,
                         didOpen: () => {
@@ -503,27 +503,27 @@ new { icon = "balance-scale", text = "Jurídico: Validación normativa" }
             Swal.fire({
                 title: 'Formato Requerido',
                 html: `
-                                <div class="table-responsive">
-                                    <table class="table table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Fecha</th>
-                                                <th>Hora</th>
-                                                <th>Valor</th>
-                                                <th>Unidad</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>01/01/2024</td>
-                                                <td>00:00</td>
-                                                <td>1234.56</td>
-                                                <td>MW</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            `,
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fecha</th>
+                                                        <th>Hora</th>
+                                                        <th>Valor</th>
+                                                        <th>Unidad</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>01/01/2024</td>
+                                                        <td>00:00</td>
+                                                        <td>1234.56</td>
+                                                        <td>MW</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    `,
                 icon: 'info'
             });
         }
@@ -536,21 +536,21 @@ new { icon = "balance-scale", text = "Jurídico: Validación normativa" }
             Swal.fire({
                 title: 'Formatos Permitidos',
                 html: `
-                                <div class="list-group">
-                                    <div class="list-group-item">
-                                        <h6 class="mb-1"><i class="bi bi-file-earmark-excel text-success"></i> Excel (.xlsx, .xls)</h6>
-                                        <small class="text-muted">Formato recomendado para series de tiempo</small>
-                                    </div>
-                                    <div class="list-group-item">
-                                        <h6 class="mb-1"><i class="bi bi-file-earmark-text text-primary"></i> CSV (.csv)</h6>
-                                        <small class="text-muted">Valores separados por comas</small>
-                                    </div>
-                                </div>
-                                <div class="alert alert-info mt-3">
-                                    <i class="bi bi-info-circle-fill"></i>
-                                    Los archivos deben seguir el formato establecido
-                                </div>
-                            `,
+                                        <div class="list-group">
+                                            <div class="list-group-item">
+                                                <h6 class="mb-1"><i class="bi bi-file-earmark-excel text-success"></i> Excel (.xlsx, .xls)</h6>
+                                                <small class="text-muted">Formato recomendado para series de tiempo</small>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <h6 class="mb-1"><i class="bi bi-file-earmark-text text-primary"></i> CSV (.csv)</h6>
+                                                <small class="text-muted">Valores separados por comas</small>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-info mt-3">
+                                            <i class="bi bi-info-circle-fill"></i>
+                                            Los archivos deben seguir el formato establecido
+                                        </div>
+                                    `,
                 icon: 'info'
             });
         }
@@ -559,41 +559,41 @@ new { icon = "balance-scale", text = "Jurídico: Validación normativa" }
             Swal.fire({
                 title: 'Vista Previa',
                 html: `
-                                <div class="card mb-3">
-                                    <div class="card-header bg-info text-white">
-                                        <i class="bi bi-graph-up"></i> Serie de Tiempo
-                                    </div>
-                                    <div class="card-body">
-                                        <canvas id="previewChart"></canvas>
-                                    </div>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-sm table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Fecha</th>
-                                                <th>Hora</th>
-                                                <th class="text-end">Valor</th>
-                                                <th>Unidad</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>01/01/2024</td>
-                                                <td>00:00</td>
-                                                <td class="text-end">1,234.56</td>
-                                                <td>MW</td>
-                                            </tr>
-                                            <tr>
-                                                <td>01/01/2024</td>
-                                                <td>01:00</td>
-                                                <td class="text-end">1,345.67</td>
-                                                <td>MW</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            `,
+                                        <div class="card mb-3">
+                                            <div class="card-header bg-info text-white">
+                                                <i class="bi bi-graph-up"></i> Serie de Tiempo
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="previewChart"></canvas>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fecha</th>
+                                                        <th>Hora</th>
+                                                        <th class="text-end">Valor</th>
+                                                        <th>Unidad</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>01/01/2024</td>
+                                                        <td>00:00</td>
+                                                        <td class="text-end">1,234.56</td>
+                                                        <td>MW</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>01/01/2024</td>
+                                                        <td>01:00</td>
+                                                        <td class="text-end">1,345.67</td>
+                                                        <td>MW</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    `,
                 width: '800px',
                 didOpen: () => {
                     new Chart(document.getElementById('previewChart'), {
@@ -625,11 +625,11 @@ new { icon = "balance-scale", text = "Jurídico: Validación normativa" }
             Swal.fire({
                 title: 'Descargando...',
                 html: `
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
-                                         role="progressbar" style="width: 0%"></div>
-                                </div>
-                            `,
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                                                 role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                    `,
                 timer: 1500,
                 timerProgressBar: true,
                 didOpen: () => {
@@ -653,38 +653,38 @@ new { icon = "balance-scale", text = "Jurídico: Validación normativa" }
             Swal.fire({
                 title: 'Editar Serie de Tiempo',
                 html: `
-                                <form id="formEditarSerie">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nombre de la Serie</label>
-                                        <input type="text" class="form-control" id="editNombre" value="Generación Neta Eléctrica Total" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Unidad de Medida</label>
-                                        <select class="form-select" id="editUnidad" required>
-                                            <option>MW</option>
-                                            <option>GWh</option>
-                                            <option>Barriles</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Periodicidad</label>
-                                        <select class="form-select" id="editPeriodicidad" required>
-                                            <option>Anual</option>
-                                            <option>Mensual</option>
-                                            <option>Diaria</option>
-                                            <option>Horaria</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Confidencialidad</label>
-                                        <select class="form-select" id="editConfidencialidad" required>
-                                            <option>Público</option>
-                                            <option>Reservado</option>
-                                            <option>Confidencial</option>
-                                        </select>
-                                    </div>
-                                </form>
-                            `,
+                                        <form id="formEditarSerie">
+                                            <div class="mb-3">
+                                                <label class="form-label">Nombre de la Serie</label>
+                                                <input type="text" class="form-control" id="editNombre" value="Generación Neta Eléctrica Total" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Unidad de Medida</label>
+                                                <select class="form-select" id="editUnidad" required>
+                                                    <option>MW</option>
+                                                    <option>GWh</option>
+                                                    <option>Barriles</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Periodicidad</label>
+                                                <select class="form-select" id="editPeriodicidad" required>
+                                                    <option>Anual</option>
+                                                    <option>Mensual</option>
+                                                    <option>Diaria</option>
+                                                    <option>Horaria</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Confidencialidad</label>
+                                                <select class="form-select" id="editConfidencialidad" required>
+                                                    <option>Público</option>
+                                                    <option>Reservado</option>
+                                                    <option>Confidencial</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                    `,
                 showCancelButton: true,
                 confirmButtonText: 'Guardar cambios',
                 cancelButtonText: 'Cancelar',

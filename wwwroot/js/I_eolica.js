@@ -899,7 +899,7 @@ function activarElemento(elementoID) {
 
 
 //Capas del JS
-var urlRaster = '/Geovisualizador/rasters/viento.png';
+var urlRaster = 'https://cdn.sassoapps.com/Geovisualizador/rasters/viento.png';
 var esquinaSupIzq = L.latLng(32.734349540232256, -118.3537828525035);
 var esquinaInfDer = L.latLng(14.533412477527252, -86.74104147980864);
 var bounds = L.latLngBounds(esquinaSupIzq, esquinaInfDer);

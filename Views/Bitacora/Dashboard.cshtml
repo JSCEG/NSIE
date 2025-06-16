@@ -9,6 +9,7 @@
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
     ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["Title"] = "Seguridad y Auditoría";
 }
 
 @{

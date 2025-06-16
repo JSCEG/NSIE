@@ -46,6 +46,9 @@ namespace NSIE.Servicios
         Task<List<AccesoPorUsuario>> GetAccesosHoyPorUsuarioAsync();
         Task<List<UsuarioActivo>> ObtenerUsuariosActivosAsync();
 
+
+        // Obtener las ultimas acciones del usuario
+        Task<IEnumerable<UltimaAccionDto>> ObtenerUltimasAccionesAsync(int usuarioId, int top = 5);
     }
 
 
@@ -59,6 +62,17 @@ namespace NSIE.Servicios
         {
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
+
+        // Obtiene las ultimas 5 acciones dle usuairo como shortcut para su entrada
+        public async Task<IEnumerable<UltimaAccionDto>> ObtenerUltimasAccionesAsync(
+                int usuarioId, int top = 5)
+        {
+            const string sql = "EXEC dbo.sp_ObtenerUltimasAccionesUsuario @IdUsuario, @Top";
+            using var conn = new SqlConnection(connectionString);
+            return await conn.QueryAsync<UltimaAccionDto>(sql,
+                        new { IdUsuario = usuarioId, Top = top });
+        }
+
 
         public async Task RegistrarActividadAsync(string userId, string userName, string actionName, string controllerName, string pageName, string tipo, string elemento, string idElemento, string valor, string additionalData = null)
         {

@@ -312,8 +312,37 @@ namespace NSIE.Controllers
 
 
 
+        // ----------  Últimas acciones del usuario (TOP n) ----------
+        [HttpGet]
+        public async Task<IActionResult> GetUltimasAcciones(int top = 5)
+        {
+            // 1. Perfil desde sesión
+            var perfilJson = HttpContext.Session.GetString("PerfilUsuario");
+            if (string.IsNullOrWhiteSpace(perfilJson))
+                return Unauthorized();               // sesión expirada
+
+            var perfil = JsonConvert.DeserializeObject<PerfilUsuario>(perfilJson);
+
+            // 2. Convertir IdUsuario a int de forma segura
+            var idUsuario = int.TryParse(perfil.IdUsuario, out var tmp) ? tmp : 0;
+            if (idUsuario == 0) return BadRequest("IdUsuario inválido");
+
+            // 3. Consultar repositorio usando el entero
+            var acciones = await repositorioBitacora
+                             .ObtenerUltimasAccionesAsync(idUsuario, top);
+
+            // 4. Reducir payload para la tarjeta
+            var result = acciones.Select(a => new
+            {
+                fecha = a.Timestamp.ToString("dd/MM/yyyy HH:mm"),
+                pagina = a.PageName,
+                controller = a.ControllerName,
+                action = a.ActionName
+            });
 
 
+            return Json(result);
+        }
 
 
 

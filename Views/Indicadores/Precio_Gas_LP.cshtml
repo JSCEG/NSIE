@@ -12,6 +12,7 @@
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
     ViewData["RolUsuario"] = perfilUsuario.Rol;
     ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
+    ViewData["Title"] = "Precios de Gas L.P.";
 }
 
 @{
@@ -821,31 +822,31 @@ new { icon = "chart-bar", text = "Análisis: Estadísticas" }
             //Carga Ductos de GLP
             function pop_ductos_glp_4326_0(feature, layer) {
                 var popupContent = '<table>\
-                                                                                <tr>\
-                                                                                    <th scope="row">Región: </th>\
-                                                                                    <td>' + (feature.properties['Región: '] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
-                                                                                </tr>\
-                                                                                <tr>\
-                                                                                    <th scope="row">Ducto: </th>\
-                                                                                    <td>' + (feature.properties['Ducto: '] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
-                                                                                </tr>\
-                                                                                <tr>\
-                                                                                    <th scope="row">Servicio: </th>\
-                                                                                    <td>' + (feature.properties['Servicio: '] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
-                                                                                </tr>\
-                                                                                <tr>\
-                                                                                    <th scope="row">Longitud (km): </th>\
-                                                                                    <td>' + (feature.properties['Longitud (km): '] !== null ? autolinker.link(feature.properties['lon'].toLocaleString()) : '') + '</td>\
-                                                                                </tr>\
-                                                                                <tr>\
-                                                                                    <th scope="row">Capa nominal (B): </th>\
-                                                                                    <td>' + (feature.properties['Capacidad nominal (B): '] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
-                                                                                </tr>\
-                                                                                <tr>\
-                                                                                    <th scope="row">Capa operativa (B): </th>\
-                                                                                    <td>' + (feature.properties['Capacidad operativa (B): '] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
-                                                                                </tr>\
-                                                                            </table>';
+                                                                                    <tr>\
+                                                                                        <th scope="row">Región: </th>\
+                                                                                        <td>' + (feature.properties['Región: '] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
+                                                                                    </tr>\
+                                                                                    <tr>\
+                                                                                        <th scope="row">Ducto: </th>\
+                                                                                        <td>' + (feature.properties['Ducto: '] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
+                                                                                    </tr>\
+                                                                                    <tr>\
+                                                                                        <th scope="row">Servicio: </th>\
+                                                                                        <td>' + (feature.properties['Servicio: '] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
+                                                                                    </tr>\
+                                                                                    <tr>\
+                                                                                        <th scope="row">Longitud (km): </th>\
+                                                                                        <td>' + (feature.properties['Longitud (km): '] !== null ? autolinker.link(feature.properties['lon'].toLocaleString()) : '') + '</td>\
+                                                                                    </tr>\
+                                                                                    <tr>\
+                                                                                        <th scope="row">Capa nominal (B): </th>\
+                                                                                        <td>' + (feature.properties['Capacidad nominal (B): '] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
+                                                                                    </tr>\
+                                                                                    <tr>\
+                                                                                        <th scope="row">Capa operativa (B): </th>\
+                                                                                        <td>' + (feature.properties['Capacidad operativa (B): '] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
+                                                                                    </tr>\
+                                                                                </table>';
                 layer.bindPopup(popupContent, { maxHeight: 400 });
             }
 
