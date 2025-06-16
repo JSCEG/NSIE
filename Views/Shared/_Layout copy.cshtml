@@ -53,8 +53,8 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/snier.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/nuevolook" asp-append-version="true" />
 
 
     <!-- SweetAlert2 -->
@@ -986,7 +986,10 @@
     </script>
     <script src="~/js/validacion-formulario.js"></script>
     <!-- JavaScript -->
-    @if (perfilUsuario.IdUsuario != "1")
+    @if (perfilUsuario.IdUsuario != "1" || perfilUsuario.IdUsuario != "31")
+    {
+        <script src="~/js/seguridad.js"></script>
+    }
     {
         <script src="~/js/seguridad.js"></script>
     }
@@ -1003,34 +1006,6 @@
             /* Chrome, Opera y otras versiones de Firefox */
         }
     </style>
-@* AYUDA - MODAL*@
-<script>
-    function mostrarAyudaModulo(info) {
-        if (!info) return;
-
-        const html = `
-            <div class="text-start">
-                ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
-                ${info.functionality ? `<p><i class='fas fa-cogs'></i> ${info.functionality}</p>` : ''}
-                ${info.stage ? `<p><i class='fas fa-layer-group'></i> Etapa: ${info.stage}</p>` : ''}
-                ${info.roles?.length ? `
-                    <ul>
-                        ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
-                    </ul>` : ''}
-                ${info.order ? `<p><i class='fas fa-sort-amount-up'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
-            </div>`;
-
-        Swal.fire({
-            title: info.title || 'Ayuda del módulo',
-            html: html,
-            confirmButtonText: 'Cerrar',
-            confirmButtonColor: '#6c757d',
-            backdrop: true
-        });
-    }
-</script>
-
-
     @*Rutas*@
     @await RenderSectionAsync("Scripts", required: false)
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

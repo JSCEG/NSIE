@@ -106,22 +106,19 @@ new { icon = "search", text = "Público: Consulta" }
 
 <!-- Diagrama Mejorado -->
 <div class="container-fluid px-4 mb-5" data-aos="zoom-in">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-white border-0">
-            <h5 class="card-title mb-0">
-                <i class="fas fa-project-diagram text-primary me-2"></i>
-                Diagrama de Flujos Energéticos
-            </h5>
-        </div>
-        <center>
-            <div class="">
-                <partial name="_DiagramaSEM_N" />
-            </div>
-        </center>
 
+    <div class="card-header bg-white border-0">
+        <h5 class="card-title mb-0">
+            <i class="fas fa-project-diagram text-primary me-2"></i>
+            Diagrama de Flujos Energéticos
+        </h5>
     </div>
-</div>
 
+
+</div>
+<center style="background-color: #efefee!important;">
+    <partial name="_DiagramaSEM_N" />
+</center>
 <!-- Scripts existentes -->
 @section Scripts {
     // ...existing scripts...

@@ -37,6 +37,39 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
 }
 
 @await Html.PartialAsync("_ViewHeader", header)
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function mostrarAyudaModulo(infoJson) {
+            try {
+                const info = typeof infoJson === 'string' ? JSON.parse(infoJson) : infoJson;
+                const html = `
+                                    <div class="text-start">
+                                        ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
+                                        ${info.functionality ? `<p><i class='fas fa-cogs'></i> ${info.functionality}</p>` : ''}
+                                        ${info.stage ? `<p><i class='fas fa-layer-group'></i> Etapa: ${info.stage}</p>` : ''}
+                                        ${info.roles?.length ? `
+                                            <ul>
+                                                ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
+                                            </ul>` : ''}
+                                        ${info.order ? `<p><i class='fas fa-sort-amount-up'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
+                                    </div>`;
+
+                Swal.fire({
+                    title: info.title || 'Ayuda del módulo',
+                    html: html,
+                    confirmButtonText: 'Cerrar',
+                    confirmButtonColor: '#6c757d',
+                    backdrop: true
+                });
+            } catch (e) {
+                console.error("Error al mostrar ayuda del módulo:", e);
+                Swal.fire('Error', 'No se pudo cargar la información del módulo', 'error');
+            }
+        }
+    </script>
+}
+
 @{
     ViewData["Title"] = "Inicio";
     var idUsuario = Convert.ToInt32(ViewData["IDUsuario"]);
@@ -142,7 +175,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
     </div>
 </section>
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
+@* <script src="https://code.highcharts.com/highcharts.js"></script> *@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         Highcharts.chart('chartContainer', {
@@ -232,7 +265,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                 <a href="#" class="btn btn-outline-primary rounded-pill mt-3">Ir al Centro de Ayuda</a>
             </div>
             <div class="col-lg-6 text-center">
-                <img src="@Cdn.Url/img_snier/vistas/ayuda.png" alt="Ayuda" class="img-fluid" >
+                <img src="@Cdn.Url/img_snier/vistas/ayuda.png" alt="Ayuda" class="img-fluid">
             </div>
         </div>
     </div>
