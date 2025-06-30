@@ -15,15 +15,15 @@ namespace NSIE.Controllers
     public class AccesoController : Controller
     {
         private readonly IServicioEmailSMTP _servicioEmailSMTP;
-        private readonly IServicioEmail _servicioEmail;
+        //private readonly IServicioEmail _servicioEmail;
         private readonly IRepositorioAcceso _repositorioAcceso;
         private readonly string _connectionString;
         private readonly ILogger<AccesoController> _logger;
-        public AccesoController(IRepositorioAcceso repositorioAcceso, IConfiguration configuration, IServicioEmail servicioEmail, IServicioEmailSMTP servicioEmailSMTP, ILogger<AccesoController> logger)
+        public AccesoController(IRepositorioAcceso repositorioAcceso, IConfiguration configuration, IServicioEmailSMTP servicioEmailSMTP, ILogger<AccesoController> logger)
         {
             _repositorioAcceso = repositorioAcceso;
             _connectionString = configuration.GetConnectionString("DefaultConnection");
-            _servicioEmail = servicioEmail;
+            //_servicioEmail = servicioEmail;
             _servicioEmailSMTP = servicioEmailSMTP;
             _logger = logger;
         }
@@ -82,112 +82,126 @@ namespace NSIE.Controllers
         }
         #endregion
 
-        #region Metodo Login
-        [HttpPost]
-        public IActionResult Login(Usuario oUsuario, bool registrarAcceso = true)
+#region Metodo Login
+[HttpPost]
+public IActionResult Login(Usuario oUsuario, bool registrarAcceso = true)
+{
+    oUsuario.Clave = ConvertirSha256(oUsuario.Clave);
+
+    using (SqlConnection cn = new SqlConnection(_connectionString))
+    {
+        // Validar usuario por correo o RFC
+        SqlCommand cmd = new SqlCommand("sp_ValidarUsuarioRFCEmail", cn);
+        cmd.Parameters.AddWithValue("CorreoRFC", oUsuario.Correo);
+        cmd.Parameters.AddWithValue("Clave", oUsuario.Clave);
+        cmd.CommandType = CommandType.StoredProcedure;
+
+        cn.Open();
+        oUsuario.IdUsuario = Convert.ToInt32(cmd.ExecuteScalar());
+    }
+
+    if (oUsuario.IdUsuario != 0)
+    {
+        using (SqlConnection cn = new SqlConnection(_connectionString))
         {
-            oUsuario.Clave = ConvertirSha256(oUsuario.Clave);
+            // Verificar si el usuario está vigente
+            bool esVigente = cn.QuerySingleOrDefault<bool>(
+                "SELECT Vigente FROM USUARIO WHERE IdUsuario = @IdUsuario",
+                new { IdUsuario = oUsuario.IdUsuario }
+            );
 
-            using (SqlConnection cn = new SqlConnection(_connectionString))
-            {
-                // Validar usuario por correo o RFC
-                SqlCommand cmd = new SqlCommand("sp_ValidarUsuarioRFCEmail", cn);
-                cmd.Parameters.AddWithValue("CorreoRFC", oUsuario.Correo);
-                cmd.Parameters.AddWithValue("Clave", oUsuario.Clave);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cn.Open();
-                oUsuario.IdUsuario = Convert.ToInt32(cmd.ExecuteScalar());
-            }
-
-            if (oUsuario.IdUsuario != 0)
-            {
-                using (SqlConnection cn = new SqlConnection(_connectionString))
-                {
-                    // Verificar si el usuario está vigente
-                    bool esVigente = cn.QuerySingleOrDefault<bool>(
-                        "SELECT Vigente FROM USUARIO WHERE IdUsuario = @IdUsuario",
-                        new { IdUsuario = oUsuario.IdUsuario }
-                    );
-
-                    if (!esVigente)
-                    {
-                        ViewData["MostrarModal"] = false;
-                        ViewData["Mensaje"] = "Lo sentimos, su usuario no tiene acceso a la plataforma";
-                        return View("Login");
-                    }
-
-                    if (registrarAcceso)
-                    {
-                        var correoUsuario = cn.QuerySingleOrDefault<string>(
-                            "SELECT Correo FROM USUARIO WHERE IdUsuario = @IdUsuario",
-                            new { IdUsuario = oUsuario.IdUsuario }
-                        );
-                        RegistrarAcceso(correoUsuario, "Inicio de sesión funcionario CRE");
-                    }
-
-                    // Activar sesión
-                    cn.Execute(
-                        "UPDATE USUARIO SET SesionActiva = 1, UltimaActualizacion = GETDATE(), HoraInicioSesion = GETDATE() WHERE IdUsuario = @IdUsuario",
-                        new { IdUsuario = oUsuario.IdUsuario }
-                    );
-
-                    // Obtener perfil del usuario
-                    PerfilUsuario perfilUsuario = cn.QuerySingleOrDefault<PerfilUsuario>(
-                        "sp_ObtenerUsuarioSession",
-                        new { IdUsuario = oUsuario.IdUsuario },
-                        commandType: CommandType.StoredProcedure
-                    );
-
-                    if (perfilUsuario != null)
-                    {
-                        var perfilUsuarioJson = JsonConvert.SerializeObject(perfilUsuario);
-                        HttpContext.Session.SetString("PerfilUsuario", perfilUsuarioJson);
-
-                        // Obtener secciones y módulos permitidos agrupados correctamente
-                        var seccionesDict = new Dictionary<int, SeccionSNIER>();
-
-                        cn.Query<SeccionSNIER, ModuloSNIER, int>(
-                            "sp_ObtenerSeccionesYModulosPorUsuario",
-                            (seccion, modulo) =>
-                            {
-                                if (!seccionesDict.TryGetValue(seccion.Id, out var seccionExistente))
-                                {
-                                    seccionExistente = seccion;
-                                    seccionExistente.Modulos = new List<ModuloSNIER>();
-                                    seccionesDict[seccion.Id] = seccionExistente;
-                                }
-
-                                if (modulo != null && modulo.ModuloId != 0)
-                                {
-                                    seccionExistente.Modulos.Add(modulo);
-                                }
-
-                                return seccionExistente.Id;
-                            },
-                            new { IdUsuario = oUsuario.IdUsuario },
-                            splitOn: "ModuloId",
-                            commandType: CommandType.StoredProcedure
-                        );
-
-                        var seccionesAgrupadas = seccionesDict.Values.ToList();
-                        var seccionesUsuarioJson = JsonConvert.SerializeObject(seccionesAgrupadas);
-                        HttpContext.Session.SetString("SeccionesUsuario", seccionesUsuarioJson);
-
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-            }
-            else
+            if (!esVigente)
             {
                 ViewData["MostrarModal"] = false;
-                ViewData["Mensaje"] = "Usuario no encontrado o contraseña incorrecta";
+                ViewData["Mensaje"] = "Lo sentimos, su usuario no tiene acceso a la plataforma";
                 return View("Login");
             }
 
-            return View();
+            if (registrarAcceso)
+            {
+                var correoUsuario = cn.QuerySingleOrDefault<string>(
+                    "SELECT Correo FROM USUARIO WHERE IdUsuario = @IdUsuario",
+                    new { IdUsuario = oUsuario.IdUsuario }
+                );
+                RegistrarAcceso(correoUsuario, "Inicio de sesión funcionario CRE");
+            }
+
+            // Activar sesión
+            cn.Execute(
+                "UPDATE USUARIO SET SesionActiva = 1, UltimaActualizacion = GETDATE(), HoraInicioSesion = GETDATE() WHERE IdUsuario = @IdUsuario",
+                new { IdUsuario = oUsuario.IdUsuario }
+            );
+
+            // Obtener perfil del usuario
+            PerfilUsuario perfilUsuario = cn.QuerySingleOrDefault<PerfilUsuario>(
+                "sp_ObtenerUsuarioSession",
+                new { IdUsuario = oUsuario.IdUsuario },
+                commandType: CommandType.StoredProcedure
+            );
+
+            if (perfilUsuario != null)
+            {
+                var perfilUsuarioJson = JsonConvert.SerializeObject(perfilUsuario);
+                HttpContext.Session.SetString("PerfilUsuario", perfilUsuarioJson);
+
+                // Obtener secciones y módulos permitidos agrupados correctamente
+                var seccionesDict = new Dictionary<int, SeccionSNIER>();
+
+                cn.Query<SeccionSNIER, ModuloSNIER, int>(
+                    "sp_ObtenerSeccionesYModulosPorUsuario",
+                    (seccion, modulo) =>
+                    {
+                        if (!seccionesDict.TryGetValue(seccion.Id, out var seccionExistente))
+                        {
+                            seccionExistente = seccion;
+                            seccionExistente.Modulos = new List<ModuloSNIER>();
+                            seccionesDict[seccion.Id] = seccionExistente;
+                        }
+
+                        if (modulo != null && modulo.ModuloId != 0)
+                        {
+                            // Detectar módulos externos (Controller = "EXTERNA")
+                            if (modulo.Controller == "EXTERNA")
+                                modulo.EsExterno = true;
+
+                            seccionExistente.Modulos.Add(modulo);
+                        }
+
+                        return seccionExistente.Id;
+                    },
+                    new { IdUsuario = oUsuario.IdUsuario },
+                    splitOn: "ModuloId",
+                    commandType: CommandType.StoredProcedure
+                );
+
+                var seccionesAgrupadas = seccionesDict.Values.ToList();
+                var seccionesUsuarioJson = JsonConvert.SerializeObject(seccionesAgrupadas);
+                HttpContext.Session.SetString("SeccionesUsuario", seccionesUsuarioJson);
+
+                // Redireccionar si hay al menos un módulo externo (solo el primero)
+                var primerModuloExterno = seccionesAgrupadas
+                    .SelectMany(s => s.Modulos)
+                    .FirstOrDefault(m => m.EsExterno && !string.IsNullOrWhiteSpace(m.Action));
+
+                if (primerModuloExterno != null)
+                {
+                    return Redirect(primerModuloExterno.Action);
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
         }
-        #endregion
+    }
+    else
+    {
+        ViewData["MostrarModal"] = false;
+        ViewData["Mensaje"] = "Usuario no encontrado o contraseña incorrecta";
+        return View("Login");
+    }
+
+    return View();
+}
+#endregion
 
         private void RegistrarAcceso(string correoUsuario, string tipoAcceso)
         {

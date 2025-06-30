@@ -194,10 +194,10 @@ new { icon = "clipboard-check", text = "Secretaría Técnica: Da seguimiento" }
     <!-- Fundamento Legal -->
     <div class="alert alert-success mb-4" role="alert">
         <div class="row align-items-center">
-            <div class="col-md-2 text-center">
+            @* <div class="col-md-2 text-center">
                 <img src="@Cdn.Url/img_snier/vistas/iconos/legal_foundations.png" alt="Fundamento Legal" class="img-fluid"
                     style="max-height: 100px;">
-            </div>
+            </div> *@
             <div class="col-md-10">
                 <h5 class="alert-heading mb-2">
                     <i class="fas fa-book-reader"></i> Fundamento Legal del Programa Anual
@@ -576,12 +576,15 @@ new { icon = "clipboard-check", text = "Secretaría Técnica: Da seguimiento" }
                         xAxis: {
                             type: 'datetime',
                             min: Date.UTC(2024, 0, 1),
-                            max: Date.UTC(2024, 11, 31)
+                            max: Date.UTC(2024, 11, 31),
+                            labels: { enabled: false }
                         },
                         yAxis: {
                             categories: ['Planeación', 'Primer Trimestre', 'Segundo Trimestre', 'Tercer Trimestre', 'Cuarto Trimestre'],
-                            reversed: true
+                            reversed: true,
+                            title: { text: null }
                         },
+
                         series: [{
                             name: 'Programa Anual 2024',
                             data: [{
@@ -642,26 +645,26 @@ new { icon = "clipboard-check", text = "Secretaría Técnica: Da seguimiento" }
             Swal.fire({
                 title: 'Proponer Modificación al Programa',
                 html: `
-                                                                                                                                                <form id="formModificacion">
-                                                                                                                                                    <div class="mb-3">
-                                                                                                                                                        <label class="form-label">Tipo de Modificación</label>
-                                                                                                                                                        <select class="form-select" required>
-                                                                                                                                                            <option value="">Seleccione...</option>
-                                                                                                                                                            <option value="1">Actualización de metas</option>
-                                                                                                                                                            <option value="2">Ajuste de calendario</option>
-                                                                                                                                                            <option value="3">Modificación de recursos</option>
-                                                                                                                                                        </select>
-                                                                                                                                                    </div>
-                                                                                                                                                    <div class="mb-3">
-                                                                                                                                                        <label class="form-label">Justificación</label>
-                                                                                                                                                        <textarea class="form-control" rows="3" required></textarea>
-                                                                                                                                                    </div>
-                                                                                                                                                    <div class="mb-3">
-                                                                                                                                                        <label class="form-label">Fundamento Legal</label>
-                                                                                                                                                        <input type="text" class="form-control" required>
-                                                                                                                                                    </div>
-                                                                                                                                                </form>
-                                                                                                                                            `,
+                                                                                                                                                                <form id="formModificacion">
+                                                                                                                                                                    <div class="mb-3">
+                                                                                                                                                                        <label class="form-label">Tipo de Modificación</label>
+                                                                                                                                                                        <select class="form-select" required>
+                                                                                                                                                                            <option value="">Seleccione...</option>
+                                                                                                                                                                            <option value="1">Actualización de metas</option>
+                                                                                                                                                                            <option value="2">Ajuste de calendario</option>
+                                                                                                                                                                            <option value="3">Modificación de recursos</option>
+                                                                                                                                                                        </select>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="mb-3">
+                                                                                                                                                                        <label class="form-label">Justificación</label>
+                                                                                                                                                                        <textarea class="form-control" rows="3" required></textarea>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="mb-3">
+                                                                                                                                                                        <label class="form-label">Fundamento Legal</label>
+                                                                                                                                                                        <input type="text" class="form-control" required>
+                                                                                                                                                                    </div>
+                                                                                                                                                                </form>
+                                                                                                                                                            `,
                 showCancelButton: true,
                 confirmButtonText: 'Enviar propuesta',
                 cancelButtonText: 'Cancelar',
@@ -688,94 +691,94 @@ new { icon = "clipboard-check", text = "Secretaría Técnica: Da seguimiento" }
             Swal.fire({
                 title: 'Programa de Trabajo del Consejo',
                 html: `
-                                                    <div class="text-start ayuda-modulo">
-                                                                        <div class="mb-4">
-                                                                            <h6 class="border-bottom pb-2">
-                                                                                <i class="fas fa-info-circle"></i> Descripción
-                                                                            </h6>
-                                                                            <p>Consulta los objetivos, metas, recursos y actividades anuales del Consejo.</p>
-                                                                        </div>
+                                                                    <div class="text-start ayuda-modulo">
+                                                                                        <div class="mb-4">
+                                                                                            <h6 class="border-bottom pb-2">
+                                                                                                <i class="fas fa-info-circle"></i> Descripción
+                                                                                            </h6>
+                                                                                            <p>Consulta los objetivos, metas, recursos y actividades anuales del Consejo.</p>
+                                                                                        </div>
 
-                                                                        <div class="mb-4">
-                                                                            <h6 class="border-bottom pb-2">
-                                                                                <i class="fas fa-tasks"></i> Funcionalidad
-                                                                            </h6>
-                                                                            <p>Permite consultar metas, objetivos y recursos definidos en el Programa Anual.</p>
-                                                                        </div>
+                                                                                        <div class="mb-4">
+                                                                                            <h6 class="border-bottom pb-2">
+                                                                                                <i class="fas fa-tasks"></i> Funcionalidad
+                                                                                            </h6>
+                                                                                            <p>Permite consultar metas, objetivos y recursos definidos en el Programa Anual.</p>
+                                                                                        </div>
 
-                                                                        <div class="mb-4">
-                                                                            <h6 class="border-bottom pb-2">
-                                                                                <i class="fas fa-sync-alt"></i> Etapa del Ciclo
-                                                                            </h6>
-                                                                            <p>Planeación y programación</p>
-                                                                        </div>
+                                                                                        <div class="mb-4">
+                                                                                            <h6 class="border-bottom pb-2">
+                                                                                                <i class="fas fa-sync-alt"></i> Etapa del Ciclo
+                                                                                            </h6>
+                                                                                            <p>Planeación y programación</p>
+                                                                                        </div>
 
-                                                                        <div class="mb-4">
-                                                                            <h6 class="border-bottom pb-2">
-                                                                                <i class="fas fa-users-cog"></i> Interacción entre Roles
-                                                                            </h6>
-                                                                            <ul class="list-unstyled">
-                                                                                <li>
-                                                                                    <i class="fas fa-check-circle text-success"></i> 
-                                                                                    Secretaría Técnica: Propone el programa
-                                                                                </li>
-                                                                                <li>
-                                                                                    <i class="fas fa-check-circle text-info"></i> 
-                                                                                    Consejo: Aprueba en sesión
-                                                                                </li>
-                                                                            </ul>
-                                                                        </div>
+                                                                                        <div class="mb-4">
+                                                                                            <h6 class="border-bottom pb-2">
+                                                                                                <i class="fas fa-users-cog"></i> Interacción entre Roles
+                                                                                            </h6>
+                                                                                            <ul class="list-unstyled">
+                                                                                                <li>
+                                                                                                    <i class="fas fa-check-circle text-success"></i> 
+                                                                                                    Secretaría Técnica: Propone el programa
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <i class="fas fa-check-circle text-info"></i> 
+                                                                                                    Consejo: Aprueba en sesión
+                                                                                                </li>
+                                                                                            </ul>
+                                                                                        </div>
 
-                                                                        <div class="mb-4">
-                                                                            <h6 class="border-bottom pb-2">
-                                                                                <i class="fas fa-puzzle-piece"></i> Elementos que la Integran
-                                                                            </h6>
-                                                                            <ul class="list-unstyled">
-                                                                                <li><i class="fas fa-chart-bar text-primary"></i> Tarjetas de metas</li>
-                                                                                <li><i class="fas fa-calendar text-success"></i> Calendario anual</li>
-                                                                                <li><i class="fas fa-file-pdf text-danger"></i> Botón de descarga del plan en PDF</li>
-                                                                                <li><i class="fas fa-chart-line text-info"></i> Gráficos de seguimiento</li>
-                                                                                <li><i class="fas fa-tasks text-warning"></i> Cronograma de actividades</li>
-                                                                            </ul>
-                                                                        </div>
+                                                                                        <div class="mb-4">
+                                                                                            <h6 class="border-bottom pb-2">
+                                                                                                <i class="fas fa-puzzle-piece"></i> Elementos que la Integran
+                                                                                            </h6>
+                                                                                            <ul class="list-unstyled">
+                                                                                                <li><i class="fas fa-chart-bar text-primary"></i> Tarjetas de metas</li>
+                                                                                                <li><i class="fas fa-calendar text-success"></i> Calendario anual</li>
+                                                                                                <li><i class="fas fa-file-pdf text-danger"></i> Botón de descarga del plan en PDF</li>
+                                                                                                <li><i class="fas fa-chart-line text-info"></i> Gráficos de seguimiento</li>
+                                                                                                <li><i class="fas fa-tasks text-warning"></i> Cronograma de actividades</li>
+                                                                                            </ul>
+                                                                                        </div>
 
-                                                                        <div class="mb-4">
-                                                                            <h6 class="border-bottom pb-2">
-                                                                                <i class="fas fa-balance-scale"></i> Fundamento Legal
-                                                                            </h6>
-                                                                            <p>
-                                                                                <span class="badge bg-primary">Art. 76 RLPT</span>
-                                                                                <span class="badge bg-info ms-2">Art. 10 y 47 Lineamientos</span>
-                                                                            </p>
-                                                                            <small class="text-muted">
-                                                                                El Programa Anual es obligatorio para la planificación del Consejo.
-                                                                            </small>
-                                                                        </div>
+                                                                                        <div class="mb-4">
+                                                                                            <h6 class="border-bottom pb-2">
+                                                                                                <i class="fas fa-balance-scale"></i> Fundamento Legal
+                                                                                            </h6>
+                                                                                            <p>
+                                                                                                <span class="badge bg-primary">Art. 76 RLPT</span>
+                                                                                                <span class="badge bg-info ms-2">Art. 10 y 47 Lineamientos</span>
+                                                                                            </p>
+                                                                                            <small class="text-muted">
+                                                                                                El Programa Anual es obligatorio para la planificación del Consejo.
+                                                                                            </small>
+                                                                                        </div>
 
-                                                                        <div>
-                                                                            <h6 class="border-bottom pb-2">
-                                                                                <i class="fas fa-star"></i> Importancia
-                                                                            </h6>
-                                                                            <p class="mb-0">
-                                                                                Módulo fundamental que establece la dirección estratégica del Consejo, siendo el primer paso 
-                                                                                del ciclo normativo. Define el rumbo a seguir y establece los compromisos institucionales 
-                                                                                que guiarán las acciones del SNIEr.
-                                                                            </p>
-                                                                        </div>
+                                                                                        <div>
+                                                                                            <h6 class="border-bottom pb-2">
+                                                                                                <i class="fas fa-star"></i> Importancia
+                                                                                            </h6>
+                                                                                            <p class="mb-0">
+                                                                                                Módulo fundamental que establece la dirección estratégica del Consejo, siendo el primer paso 
+                                                                                                del ciclo normativo. Define el rumbo a seguir y establece los compromisos institucionales 
+                                                                                                que guiarán las acciones del SNIEr.
+                                                                                            </p>
+                                                                                        </div>
 
-                                                                        <div>
-                                                                            <h6 class="border-bottom pb-2">
-                                                                                <i class="fas fa-check-double"></i> Orden en el Ciclo
-                                                                            </h6>
-                                                                            <p class="mb-0">
-                                                                                <span class="badge bg-primary">Paso 1</span>
-                                                                                Es el punto de partida normativo del Consejo que establece metas, recursos y 
-                                                                                actividades anuales. Su correcta definición es crítica para el éxito de las 
-                                                                                etapas subsecuentes del ciclo.
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                `,
+                                                                                        <div>
+                                                                                            <h6 class="border-bottom pb-2">
+                                                                                                <i class="fas fa-check-double"></i> Orden en el Ciclo
+                                                                                            </h6>
+                                                                                            <p class="mb-0">
+                                                                                                <span class="badge bg-primary">Paso 1</span>
+                                                                                                Es el punto de partida normativo del Consejo que establece metas, recursos y 
+                                                                                                actividades anuales. Su correcta definición es crítica para el éxito de las 
+                                                                                                etapas subsecuentes del ciclo.
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                `,
                 width: 'auto',
                 maxWidth: '400px',
                 customClass: {

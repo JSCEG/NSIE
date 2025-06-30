@@ -59,6 +59,7 @@ builder.Services.AddTransient<IRepositorioAcceso, RepositorioAcceso>();
 builder.Services.AddTransient<VisitasViewComponent>();
 builder.Services.AddTransient<IRepositorioHome, RepositorioHome>();
 builder.Services.AddTransient<IRepositorioSankey, RepositorioSankey>();
+builder.Services.AddTransient<IRepositorioSankeySener, RepositorioSankeySener>();
 builder.Services.AddTransient<IRepositorioMIM, RepositorioMIM>();
 builder.Services.AddTransient<IRepositorioAtlas, RepositorioAtlas>();
 builder.Services.AddTransient<IRepositorioMap, RepositorioMap>();
@@ -78,7 +79,7 @@ builder.Services.AddIdentityCore<UsuarioApp>();
 builder.Services.AddScoped<AutorizacionFiltro>();
 builder.Services.AddScoped<ValidacionInputFiltro>();
 
-builder.Services.AddTransient<IServicioEmail, ServicioEmailSendGrid>();
+// builder.Services.AddTransient<IServicioEmail, ServicioEmailSendGrid>();
 builder.Services.AddTransient<IServicioEmailSMTP, ServicioEmailSmtp>();
 
 // Registrar el repositorio de bitácora

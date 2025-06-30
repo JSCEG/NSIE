@@ -21,6 +21,7 @@ namespace NSIE.Models
 		public string AyudaVista { get; set; }
 		public int Orden { get; set; }
 		public bool ModuloActivo { get; set; }
-	}
+		public bool EsExterno { get; set; } // nueva propiedad	
 }
 
+}

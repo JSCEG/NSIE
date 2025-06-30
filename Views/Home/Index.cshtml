@@ -38,8 +38,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
     ViewData["Title"] = "Inicio";
     var idUsuario = Convert.ToInt32(ViewData["IDUsuario"]);
     var rolUsuario = perfilUsuario?.Rol;
-    var nombreUsuario = perfilUsuario?.Nombre?.ToLower();
-    var esConsultaPublica = (rolUsuario == "10" || nombreUsuario.Contains("consult"));
+    var nombreUsuario = perfilUsuario?.Nombre?.ToString();  var esConsultaPublica = (rolUsuario == "10" || nombreUsuario.Contains("consult"));
 }
 
 <style>
@@ -110,35 +109,8 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
     </div>
 </section>
 
-<!-- CONTINÚA DONDE TE QUEDASTE - MEJORADO -->
-<section id="continuar" class="py-5 bg-white border-bottom" style="display:none;" aria-labelledby="continuarHeading">
-    <div class="container">
-        <h2 id="continuarHeading" class="fw-bold mb-4 text-center" data-aos="fade-up">
-            @if (esConsultaPublica)
-            {
-                <text>¡Lo más buscado!</text>
-            }
-            else
-            {
-                <text>Continúa donde te quedaste</text>
-            }
-        </h2>
-
-        <!-- Tarjetas dinámicas mejoradas -->
-        <div id="tarjetas-acciones" class="row g-4 justify-content-center"></div>
-
-        <!-- Loader mejorado -->
-        @* <div id="loader-continua" class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Cargando...</span>
-            </div>
-            <p class="mt-2">Cargando tu actividad reciente...</p>
-        </div> *@
-    </div>
-</section>
-
 <!-- QUE ES EL SNIER - MEJORADO -->
-<section id="que-es" class="py-5 bg-white" aria-labelledby="queEsHeading">
+@* <section id="que-es" class="py-5 bg-white" aria-labelledby="queEsHeading">
     <div class="container">
         <div class="row align-items-center g-4">
             <div class="col-md-6" data-aos="fade-right">
@@ -162,10 +134,10 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
             </div>
         </div>
     </div>
-</section>
+</section> *@
 
 <!-- MODULOS DESTACADOS - MEJORADO -->
-<section id="modulos" class="py-5 bg-light" aria-labelledby="modulosHeading">
+@* <section id="modulos" class="py-5 bg-light" aria-labelledby="modulosHeading">
     <div class="container">
         <h2 id="modulosHeading" class="fw-bold text-center mb-5" data-aos="fade-up">Contenido del SNIEr</h2>
         <div class="row g-4 justify-content-center">
@@ -213,11 +185,11 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
             </div>
         </div>
     </div>
-</section>
+</section> *@
 
-<!-- GRÁFICO DE INDICADORES - MEJORADO -->
+
 <!-- GRÁFICO DE INDICADORES - VERSIÓN MEJORADA -->
-<section id="indicadores" class="py-5 bg-white" aria-labelledby="indicadoresHeading">
+@* <section id="indicadores" class="py-5 bg-white" aria-labelledby="indicadoresHeading">
     <div class="container">
         <div class="text-center mb-5" data-aos="fade-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3">Datos en Tiempo Real</span>
@@ -265,8 +237,8 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                     <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3">
                         <h5 class="mb-0 fw-semibold">Visualización de Datos</h5>
                         <div class="dropdown">
-                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
-                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-download me-1"></i> Exportar
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -274,7 +246,9 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                                 <li><a class="dropdown-item" href="#" onclick="exportChart('JPEG')">JPEG</a></li>
                                 <li><a class="dropdown-item" href="#" onclick="exportChart('PDF')">PDF</a></li>
                                 <li><a class="dropdown-item" href="#" onclick="exportChart('SVG')">SVG</a></li>
-                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
                                 <li><a class="dropdown-item" href="#" onclick="exportData('CSV')">CSV (Datos)</a></li>
                             </ul>
                         </div>
@@ -287,9 +261,9 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                             </div>
                             <p class="mt-2 small text-muted">Actualizando datos...</p>
                         </div>
-                        <div id="chartContainer" style="height: 400px; min-height: 300px;" 
-                             aria-live="polite" aria-atomic="true"></div>
-                        
+                        <div id="chartContainer" style="height: 400px; min-height: 300px;" aria-live="polite"
+                            aria-atomic="true"></div>
+
                         <!-- Leyenda del gráfico -->
                         <div class="mt-3 small text-muted d-flex justify-content-between">
                             <div>
@@ -334,7 +308,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
             </div>
         </div>
     </div>
-</section
+</section > *@
 
 <!-- CARRUSEL DE VISUALIZACIONES - MEJORADO -->
 <section id="visualizaciones" class="py-5 bg-light" aria-labelledby="visualizacionesHeading">
@@ -357,7 +331,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                             <img src="https://images.pexels.com/photos/414837/pexels-photo-414837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                                 class="d-block w-100" alt="Infraestructura energética en México" loading="lazy">
                             <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
-                                <h5>Infraestructura energética</h5>
+                                <h5 style="color:white">Infraestructura energética</h5>
                                 <p>Mapa de instalaciones en territorio nacional</p>
                             </div>
                         </div>
@@ -365,7 +339,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                             <img src="https://images.pexels.com/photos/32399131/pexels-photo-32399131/free-photo-of-complejo-industrial-en-botlek-rotterdam.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                                 class="d-block w-100" alt="Proyectos energéticos industriales" loading="lazy">
                             <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
-                                <h5>Proyectos industriales</h5>
+                                <h5 style="color:white">Proyectos industriales</h5>
                                 <p>Complejos energéticos en operación</p>
                             </div>
                         </div>
@@ -373,7 +347,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                             <img src="https://images.pexels.com/photos/9703551/pexels-photo-9703551.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                                 class="d-block w-100" alt="Tecnologías renovables" loading="lazy">
                             <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
-                                <h5>Energías renovables</h5>
+                                <h5 style="color:white">Energías renovables</h5>
                                 <p>Generación limpia en México</p>
                             </div>
                         </div>
@@ -394,20 +368,20 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
     </div>
 </section>
 
-<!-- MAPA DE TRAZABILIDAD - MEJORADO -->
-<h2 class="fw-bold text-center mb-5" data-aos="fade-up">Infraestructura del Fondo Mexicano del
-    Petróleo</h2>
+@* <!-- MAPA DE TRAZABILIDAD - MEJORADO -->
+<h2 class="fw-bold text-center mb-5" data-aos="fade-up">Mapa de Infraestructura</h2>
+
+*@
 
 
-@* SECCIÓN DE MAPA *@
-
+@*
 <section id="despliega_mapa" class="pb-5">
 
     <br />
 
     <div class="app-card-header p-3 border-0">
 
-        @*Menu*@
+       
         <div class="navbarmapag">
 
 
@@ -447,7 +421,6 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                                 style="width:10% !important"><i class="bi bi-search"></i></button>
                         </div>
 
-                        @*Menu de Botones*@
                         <div class="container-fluid">
                         </div>
                         <div class="app-card-body p-4">
@@ -463,9 +436,9 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                                     </div>
                                     <br />
                                     <div class="" id="grafico"></div>
-                                    @* <div class="" id="grafico2"></div> *@
+                                    <div class="" id="grafico2"></div> 
 
-                                    @* Precios de Gasolina  *@
+                  
                                     @if (Convert.ToInt32(ViewData["RolUsuario"]) == 1)
                                     {
                                         <div id="graficoPrecios" style="width: 100%; height: 400px; margin-top: 20px;">
@@ -484,7 +457,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
         </div>
     </div>
 </section>
-
+*@
 <!-- BLOQUE DE AYUDA - MEJORADO -->
 <section id="ayuda" class="py-5 bg-light" aria-labelledby="ayudaHeading">
     <div class="container">
@@ -518,17 +491,17 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
             try {
                 const info = typeof infoJson === 'string' ? JSON.parse(infoJson) : infoJson;
                 const html = `
-                                        <div class="text-start">
-                                            ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
-                                            ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
-                                            ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
-                                            ${info.roles?.length ? `
-                                                <ul class="mb-3">
-                                                    ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
-                                                </ul>` : ''}
-                                            ${info.order ? `<p><i class='fas fa-sort-amount-up me-2'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
-                                            ${info.manualUrl ? `<a href="${info.manualUrl}" class="btn btn-sm btn-primary mt-2" target="_blank"><i class="fas fa-download me-2"></i>Descargar manual</a>` : ''}
-                                        </div>`;
+                                                                                                <div class="text-start">
+                                                                                                    ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
+                                                                                                    ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
+                                                                                                    ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
+                                                                                                    ${info.roles?.length ? `
+                                                                                                        <ul class="mb-3">
+                                                                                                            ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
+                                                                                                        </ul>` : ''}
+                                                                                                    ${info.order ? `<p><i class='fas fa-sort-amount-up me-2'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
+                                                                                                    ${info.manualUrl ? `<a href="${info.manualUrl}" class="btn btn-sm btn-primary mt-2" target="_blank"><i class="fas fa-download me-2"></i>Descargar manual</a>` : ''}
+                                                                                                </div>`;
 
                 Swal.fire({
                     title: info.title || 'Ayuda del módulo',
@@ -572,25 +545,25 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
 
                     acciones.forEach(a => {
                         const card = `
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="card h-100 shadow-sm border-0">
-                                            <div class="card-body d-flex flex-column">
-                                                @* <h6 class="fw-semibold mb-1">${a.accion}</h6> *@
-                                                <h6 class="fw-semibold mb-1">${a.pagina}</h6>
+                                                                                            <div class="col-12 col-md-6 col-lg-4">
+                                                                                                <div class="card h-100 shadow-sm border-0">
+                                                                                                    <div class="card-body d-flex flex-column">
+                                                                                                        @* <h6 class="fw-semibold mb-1">${a.accion}</h6> *@
+                                                                                                        <h6 class="fw-semibold mb-1">${a.pagina}</h6>
 
-                                                <span class="badge bg-secondary align-self-start mb-3">
-                                                    ${a.fecha}
-                                                </span>
+                                                                                                        <span class="badge bg-secondary align-self-start mb-3">
+                                                                                                            ${a.fecha}
+                                                                                                        </span>
 
-                                                <button class="btn btn-sm btn-primary mt-auto"
-                                                        data-controller="${a.controller}"
-                                                        data-action="${a.action}"
-                                                        onclick="irA(this)">
-                                                    Reanudar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>`;
+                                                                                                        <button class="btn btn-sm btn-primary mt-auto"
+                                                                                                                data-controller="${a.controller}"
+                                                                                                                data-action="${a.action}"
+                                                                                                                onclick="irA(this)">
+                                                                                                            Reanudar
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>`;
                         $contenedor.append(card);
                     });
 
@@ -621,174 +594,195 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
             }
         }
 
-  
+
     </script>
-       <script>
-        // Variables globales para los gráficos
-        let mainChart, miniChart1, miniChart2, miniChart3;
-        
-        // Función para inicializar los gráficos
-        function initCharts() {
-            // Gráfico principal
-            mainChart = Highcharts.chart('chartContainer', {
-                chart: {
-                    type: 'line',
-                    styledMode: true,
-                    zoomType: 'xy'
-                },
-                title: { text: null },
-                subtitle: {
-                    text: 'Últimos 5 años',
-                    align: 'right'
-                },
-                xAxis: {
-                    categories: ['2018', '2019', '2020', '2021', '2022'],
-                    crosshair: true,
-                    title: { text: 'Año' }
-                },
-                yAxis: {
-                    title: { text: 'GWh' },
-                    min: 0
-                },
-                tooltip: {
-                    shared: true,
-                    valueSuffix: ' GWh',
-                    headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
-                    pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
-                },
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-                },
-                series: [{
-                    name: 'Energía Eléctrica',
-                    data: [32000, 34000, 31000, 36000, 39000],
-                    color: '#0d6efd'
-                }, {
-                    name: 'Hidrocarburos',
-                    data: [28000, 29000, 27500, 30000, 31000],
-                    color: '#fd7e14'
-                }],
-                exporting: {
-                    enabled: false // Deshabilitamos la exportación nativa para usar nuestra propia función
-                },
-                responsive: {
-                    rules: [{
-                        condition: { maxWidth: 768 },
-                        chartOptions: {
-                            legend: { layout: 'horizontal', align: 'center', verticalAlign: 'bottom' }
-                        }
-                    }]
-                }
-            });
 
-            // Mini gráficos
-            miniChart1 = Highcharts.chart('miniChart1', {
-                chart: { type: 'column', height: 150 },
-                title: { text: null },
-                xAxis: { categories: ['Hidro', 'Térmica', 'Eólica', 'Solar'] },
-                yAxis: { title: { text: null } },
-                series: [{
-                    name: 'Generación',
-                    data: [12000, 18000, 5000, 4000],
-                    color: '#20c997'
-                }],
-                credits: { enabled: false },
-                legend: { enabled: false },
-                tooltip: { valueSuffix: ' GWh' }
-            });
+    <!-- ====================== INDICADORES DEMO (JS COMPLETO) ====================== -->
+    <script>
+        (() => {
+            /* --------------------------------------------------------------------
+             * VARIABLES GLOBALES
+             * ------------------------------------------------------------------ */
+            let mainChart, miniChart1, miniChart2, miniChart3;
 
-            miniChart2 = Highcharts.chart('miniChart2', {
-                chart: { type: 'pie', height: 150 },
-                title: { text: null },
-                plotOptions: {
-                    pie: {
-                        dataLabels: { enabled: false },
-                        showInLegend: false
-                    }
-                },
-                series: [{
-                    name: 'Consumo',
-                    colorByPoint: true,
-                    data: [
-                        { name: 'Industrial', y: 45, color: '#0dcaf0' },
-                        { name: 'Residencial', y: 30, color: '#ffc107' },
-                        { name: 'Comercial', y: 15, color: '#6610f2' },
-                        { name: 'Otros', y: 10, color: '#6c757d' }
-                    ]
-                }],
-                tooltip: { valueSuffix: '%' }
-            });
+            /* --------------------------------------------------------------------
+             * EVENTOS INICIALES
+             * ------------------------------------------------------------------ */
+            document.addEventListener('DOMContentLoaded', initCharts);
 
-            miniChart3 = Highcharts.chart('miniChart3', {
-                chart: { type: 'areaspline', height: 150 },
-                title: { text: null },
-                xAxis: { categories: ['2018', '2019', '2020', '2021', '2022'] },
-                yAxis: { title: { text: null } },
-                series: [{
-                    name: 'Emisiones',
-                    data: [120, 115, 105, 100, 95],
-                    color: '#dc3545'
-                }],
-                credits: { enabled: false },
-                legend: { enabled: false },
-                tooltip: { valueSuffix: ' MTon CO₂' }
-            });
+            /* --------------------------------------------------------------------
+             * FUNCIÓN: inicializa gráficos y temporizadores
+             * ------------------------------------------------------------------ */
+            function initCharts() {
 
-            // Actualizar fecha de última actualización
-            document.getElementById('chartLastUpdate').textContent = 
-                `Última actualización: ${new Date().toLocaleString()}`;
-        }
-
-        // Función para exportar gráfico
-        function exportChart(format) {
-            mainChart.exportChart({
-                type: format,
-                filename: 'indicadores-energeticos-' + new Date().toISOString().slice(0, 10)
-            });
-        }
-
-        // Función para exportar datos
-        function exportData(format) {
-            // Aquí iría la lógica para exportar los datos subyacentes
-            alert(`Exportando datos en formato ${format}. Implementar lógica real según backend.`);
-        }
-
-        // Simular carga de datos
-        function loadChartData() {
-            const loader = document.getElementById('chartLoader');
-            loader.style.display = 'block';
-            
-            // Simular llamada AJAX
-            setTimeout(() => {
-                // Aquí iría la lógica real para cargar datos del servidor
-                loader.style.display = 'none';
-                
-                // Actualizar gráficos con nuevos datos
-                mainChart.series[0].setData([33000, 35000, 32000, 37000, 40000]);
-                mainChart.series[1].setData([29000, 30000, 28500, 31000, 32000]);
-                
-                document.getElementById('chartLastUpdate').textContent = 
-                    `Última actualización: ${new Date().toLocaleString()}`;
-                
-                // Mostrar notificación de éxito
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Datos actualizados',
-                    text: 'Los indicadores se han refrescado correctamente',
-                    timer: 2000,
-                    showConfirmButton: false
+                /* 1. Gráfico principal */
+                mainChart = Highcharts.chart('chartContainer', {
+                    chart: { type: 'spline', zoomType: 'x' },
+                    title: null,
+                    subtitle: { text: 'Datos sintéticos demo', align: 'right' },
+                    xAxis: { categories: [], crosshair: true },
+                    yAxis: { title: { text: 'Valor (unidades)' }, min: 0 },
+                    tooltip: { shared: true },
+                    legend: { align: 'center', verticalAlign: 'bottom' },
+                    exporting: { enabled: false }
                 });
-            }, 1500);
-        }
 
-        // Event listeners
-        document.getElementById('actualizarGrafico').addEventListener('click', loadChartData);
-        
-        // Inicializar gráficos al cargar la página
-        document.addEventListener('DOMContentLoaded', initCharts);
+                /* 2. Mini-gráficos base (arrancan vacíos) */
+                miniChart1 = Highcharts.chart('miniChart1', {
+                    chart: { type: 'column', height: 150 },
+                    title: null,
+                    xAxis: { categories: ['Hidro', 'Térmica', 'Eólica', 'Solar'] },
+                    yAxis: { title: null },
+                    series: [{ name: 'Generación', data: [0, 0, 0, 0] }],
+                    credits: { enabled: false },
+                    legend: { enabled: false }
+                });
+
+                miniChart2 = Highcharts.chart('miniChart2', {
+                    chart: { type: 'pie', height: 150 },
+                    title: null,
+                    plotOptions: { pie: { dataLabels: { enabled: false } } },
+                    series: [{ name: 'Consumo', data: [] }],
+                    credits: { enabled: false },
+                    legend: { enabled: false }
+                });
+
+                miniChart3 = Highcharts.chart('miniChart3', {
+                    chart: { type: 'areaspline', height: 150 },
+                    title: null,
+                    xAxis: { categories: [] },
+                    yAxis: { title: null },
+                    series: [{ name: 'Emisiones', data: [] }],
+                    credits: { enabled: false },
+                    legend: { enabled: false }
+                });
+
+                /* 3. Botón “Actualizar” con popup     */
+                document.getElementById('actualizarGrafico')
+                    .addEventListener('click', () => refreshCharts(true));
+
+                /* 4. Primera carga silenciosa + refresco cada 60 s */
+                refreshCharts(false);                   // sin popup
+                setInterval(() => refreshCharts(false), 60000);
+            }
+
+            /* --------------------------------------------------------------------
+             * FUNCIÓN: genera y dibuja datos demo
+             * @@param mostrarPopup(bool) => si true, lanza SweetAlert
+                * ------------------------------------------------------------------ */
+            function refreshCharts(mostrarPopup = false) {
+
+                /* 1. Lectura de filtros */
+                const tipo = document.getElementById('tipoIndicador').value; // produccion, consumo…
+                const periodo = document.getElementById('periodo').value;       // anual, trimestral, mensual
+
+                /* 2. Categorías y series sintéticas */
+                const categories = generarCategorias(periodo);
+                const serieA = generarSerieAleatoria(categories.length, 25000, 45000);
+                const serieB = generarSerieAleatoria(categories.length, 18000, 30000);
+
+                /* 3. Actualiza el gráfico principal */
+                mainChart.update({
+                    xAxis: { categories },
+                    series: [{
+                        name: nombreSerieA(tipo),
+                        data: serieA
+                    }, {
+                        name: nombreSerieB(tipo),
+                        data: serieB
+                    }]
+                }, true, true, false);   // redraw=true, oneToOne=true, animation=false
+
+                /* 4. Mini-gráficos sincronizados */
+                miniChart1.series[0].setData([
+                    rand(5000, 20000), rand(5000, 20000), rand(1000, 6000), rand(1000, 6000)
+                ]);
+
+                miniChart2.update({
+                    series: [{
+                        data: [
+                            { name: 'Industrial', y: rand(30, 50) },
+                            { name: 'Residencial', y: rand(20, 40) },
+                            { name: 'Comercial', y: rand(10, 20) },
+                            { name: 'Otros', y: rand(5, 15) }
+                        ]
+                    }]
+                });
+
+                miniChart3.update({
+                    xAxis: { categories },
+                    series: [{ name: 'Emisiones', data: generarSerieAleatoria(categories.length, 80, 140) }]
+                });
+
+                /* 5. Fecha/hora de la última actualización */
+                document.getElementById('chartLastUpdate').textContent =
+                    `Última actualización: ${new Date().toLocaleString()}`;
+
+                /* 6. Popup opcional solo al pulsar el botón */
+                if (mostrarPopup) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Datos demo actualizados',
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+                }
+            }
+
+            /* --------------------------------------------------------------------
+             * UTILIDADES DE DATOS DEMO
+             * ------------------------------------------------------------------ */
+            function generarCategorias(periodo) {
+                const ahora = new Date();
+                const year = ahora.getFullYear();
+
+                if (periodo === 'anual') {
+                    return [year - 4, year - 3, year - 2, year - 1, year].map(String);
+                }
+
+                if (periodo === 'trimestral') {
+                    const out = [];
+                    for (let y = year - 1; y <= year; y++) {
+                        ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => out.push(`${y}-${q}`));
+                    }
+                    return out;
+                }
+
+                /* mensual → 12 meses abreviados */
+                return ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            }
+
+            function generarSerieAleatoria(n, min, max) {
+                return Array.from({ length: n }, () => rand(min, max));
+            }
+
+            function rand(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            function nombreSerieA(tipo) {
+                switch (tipo) {
+                    case 'consumo': return 'Energía Consumida';
+                    case 'renovable': return 'Capacidad Renovable';
+                    case 'precios': return 'Precio Promedio';
+                    default: return 'Energía Eléctrica';
+                }
+            }
+            function nombreSerieB(tipo) {
+                switch (tipo) {
+                    case 'consumo': return 'Picos de Demanda';
+                    case 'renovable': return 'Instalaciones';
+                    case 'precios': return 'Tarifa Residencial';
+                    default: return 'Hidrocarburos';
+                }
+            }
+
+        })();
     </script>
+    <!-- ==================== FIN INDICADORES DEMO ==================== -->
+
+
+
     @*Script de Pantalla Completa*@
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {

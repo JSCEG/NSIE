@@ -15,21 +15,34 @@ namespace NSIE.Controllers
 {
     [ServiceFilter(typeof(ValidacionInputFiltro))]
     [AutorizacionFiltro]
-    public class SankeyController : Controller
+    public class SankeySenerController : Controller
     {
-        private readonly IRepositorioSankey repositorioSankey;
+        private readonly IRepositorioSankeySener repositorioSankeySener;
 
 
-        public SankeyController(IRepositorioSankey repositorioSankey)
+        public SankeySenerController(IRepositorioSankeySener repositorioSankeySener)
         {
 
-            this.repositorioSankey = repositorioSankey;
+            this.repositorioSankeySener = repositorioSankeySener;
         }
 
 
 
-        public IActionResult SankeySener()
+        public async Task<IActionResult> SankeySener()
         {
+            try
+            {
+                //Obtener los años disponibles desde el repositorio
+                var años = await repositorioSankeySener.ObtenerAños();
+
+                // Pasar los años a la vista
+                ViewBag.Years = años;
+            }
+            catch (Exception)
+            {
+                // Manejar excepciones
+                // Puedes decidir qué hacer si hay un error, como mostrar un mensaje de error
+            }
             return View();
         }
 
@@ -37,7 +50,7 @@ namespace NSIE.Controllers
         {
             try
             {
-                var años = await repositorioSankey.ObtenerAños();
+                var años = await repositorioSankeySener.ObtenerAños();
 
                 // Pasar los años a la vista
                 ViewBag.Years = años;
@@ -57,7 +70,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveSankey(consultaSankey);
+                var calificacion = await repositorioSankeySener.devuelveSankey(consultaSankey);
 
                 if (calificacion == null)
                 {
@@ -81,7 +94,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.obtenerNodosxAño(nodosSankey);
+                var calificacion = await repositorioSankeySener.obtenerNodosxAño(nodosSankey);
 
                 if (calificacion == null)
                 {
@@ -103,7 +116,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveNodosCajaSankey(nodosCajaSankey);
+                var calificacion = await repositorioSankeySener.devuelveNodosCajaSankey(nodosCajaSankey);
 
                 if (calificacion == null)
                 {
@@ -125,7 +138,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveNodosSectores(nodosSectores);
+                var calificacion = await repositorioSankeySener.devuelveNodosSectores(nodosSectores);
 
                 if (calificacion == null)
                 {
@@ -147,7 +160,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveNodosTransformaciones(nodosTransformaciones);
+                var calificacion = await repositorioSankeySener.devuelveNodosTransformaciones(nodosTransformaciones);
 
                 if (calificacion == null)
                 {
@@ -169,7 +182,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveNodosTiposEnergia(nodosTiposEnergia);
+                var calificacion = await repositorioSankeySener.devuelveNodosTiposEnergia(nodosTiposEnergia);
 
                 if (calificacion == null)
                 {
@@ -191,7 +204,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveNodosUsoFinal(nodosUsoFinal);
+                var calificacion = await repositorioSankeySener.devuelveNodosUsoFinal(nodosUsoFinal);
 
                 if (calificacion == null)
                 {
@@ -212,7 +225,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveGrafica(nodosGrafica);
+                var calificacion = await repositorioSankeySener.devuelveGrafica(nodosGrafica);
 
                 if (calificacion == null)
                 {
@@ -233,7 +246,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveTablaFep(nodosTablaFep);
+                var calificacion = await repositorioSankeySener.devuelveTablaFep(nodosTablaFep);
 
                 if (calificacion == null)
                 {
@@ -254,7 +267,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveTablaSector(nodosTablaSector);
+                var calificacion = await repositorioSankeySener.devuelveTablaSector(nodosTablaSector);
 
                 if (calificacion == null)
                 {
@@ -275,7 +288,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveTablaTransformacion(nodosTablaTransformacion);
+                var calificacion = await repositorioSankeySener.devuelveTablaTransformacion(nodosTablaTransformacion);
 
                 if (calificacion == null)
                 {
@@ -296,7 +309,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveTablaTipos(nodosTablaTipos);
+                var calificacion = await repositorioSankeySener.devuelveTablaTipos(nodosTablaTipos);
 
                 if (calificacion == null)
                 {
@@ -317,7 +330,7 @@ namespace NSIE.Controllers
             try
             {
 
-                var calificacion = await repositorioSankey.devuelveTablaUso(nodosTablaUso);
+                var calificacion = await repositorioSankeySener.devuelveTablaUso(nodosTablaUso);
 
                 if (calificacion == null)
                 {

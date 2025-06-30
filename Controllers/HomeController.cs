@@ -17,7 +17,7 @@ namespace NSIE.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IRepositorioProyectos _repositorioProyectos; // Usar _ consistentemente
-        private readonly IServicioEmail _servicioEmail;               // Usar _ consistentemente
+                                                                      //  private readonly IServicioEmail _servicioEmail;               // Usar _ consistentemente
         private readonly string _connectionString;                    // Usar _ consistentemente
         private readonly HttpClient _client;
         private readonly IRepositorioHome _repositorioHome;
@@ -28,12 +28,12 @@ namespace NSIE.Controllers
             ILogger<HomeController> logger,
             IRepositorioProyectos repositorioProyectos,
             IConfiguration configuration,
-            IServicioEmail servicioEmail,
+            // IServicioEmail servicioEmail,
             IRepositorioHome repositorioHome)
         {
             _logger = logger;
             _repositorioProyectos = repositorioProyectos;           // Sin this
-            _servicioEmail = servicioEmail;                         // Sin this
+                                                                    //   _servicioEmail = servicioEmail;                         // Sin this
             _connectionString = configuration.GetConnectionString("DefaultConnection");
             _client = new HttpClient();
             _repositorioHome = repositorioHome;                     // Sin this

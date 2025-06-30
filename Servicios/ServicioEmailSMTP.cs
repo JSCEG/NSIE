@@ -62,21 +62,27 @@ namespace NSIE.Servicios
                 int port;
                 bool enableSsl;
 
-                if (tipoCuenta == "Office365")
+                if (tipoCuenta == "Office365")            // Tenants empresariales
                 {
                     host = _configuration["EmailSettings:SmtpOffice365:Host"];
                     port = int.Parse(_configuration["EmailSettings:SmtpOffice365:Port"]);
                     enableSsl = bool.Parse(_configuration["EmailSettings:SmtpOffice365:EnableSsl"]);
                 }
-                else if (tipoCuenta == "Exchange")
+                else if (tipoCuenta == "Exchange")        // Servidor on-prem interno
                 {
                     host = _configuration["EmailSettings:SmtpExchange:Host"];
                     port = int.Parse(_configuration["EmailSettings:SmtpExchange:Port"]);
                     enableSsl = bool.Parse(_configuration["EmailSettings:SmtpExchange:EnableSsl"]);
                 }
+                else if (tipoCuenta == "OutlookBasic")    // NUEVO: cuentas @outlook.com / @hotmail
+                {
+                    host = _configuration["EmailSettings:SmtpOutlook:Host"];
+                    port = int.Parse(_configuration["EmailSettings:SmtpOutlook:Port"]);
+                    enableSsl = bool.Parse(_configuration["EmailSettings:SmtpOutlook:EnableSsl"]);
+                }
                 else
                 {
-                    throw new Exception("Tipo de cuenta no soportado en configuración.");
+                    throw new Exception($"Tipo de cuenta no soportado: {tipoCuenta}");
                 }
 
                 using var client = new SmtpClient(host, port)
@@ -98,11 +104,11 @@ namespace NSIE.Servicios
             }
             catch (Exception ex)
             {
-                // Aquí log o traza para ver el verdadero motivo
-                Console.WriteLine("ERROR AL ENVIAR CORREO: " + ex.Message);
-                throw; // vuelve a lanzar para que la vista lo capture
+                Console.WriteLine($"ERROR AL ENVIAR CORREO: {ex.Message}");
+                throw;
             }
         }
+
 
     }
 

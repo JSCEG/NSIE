@@ -20,6 +20,9 @@ namespace NSIE.Controllers
 
     public class SNIEController : Controller
     {
+
+    
+
         public IActionResult EquiposE()
         {
             return View();
