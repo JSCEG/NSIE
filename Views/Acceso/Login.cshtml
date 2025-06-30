@@ -296,6 +296,170 @@
                 margin-bottom: 1rem;
             }
         }
+
+        /* Estilos mejorados para los módulos */
+        .section-title::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+            z-index: -1;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            height: 100%;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .module-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .module-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(33, 109, 146, 0.15);
+        }
+
+        .module-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .module-card:hover .module-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .module-icon {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .module-card h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+            line-height: 1.3;
+        }
+
+        .module-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        .governance-section {
+            background: linear-gradient(135deg, rgba(33, 109, 146, 0.05), rgba(129, 195, 201, 0.05));
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin-top: 3rem;
+        }
+
+        .governance-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            height: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .governance-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(33, 109, 146, 0.15);
+            border-color: var(--primary-light);
+        }
+
+        .governance-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .governance-card:hover .governance-icon {
+            transform: scale(1.1);
+        }
+
+        .governance-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .governance-card h5 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .governance-card p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Responsive improvements */
+        @@media (max-width: 768px) {
+            .module-card {
+                padding: 1.5rem;
+            }
+
+            .governance-section {
+                padding: 2rem 1rem;
+                margin-top: 2rem;
+            }
+
+            .module-icon-wrapper {
+                width: 60px;
+                height: 60px;
+            }
+
+            .module-icon {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 
@@ -385,85 +549,276 @@
         </div>
     </section>
 
-    <!-- Modules Section -->
-    <section class="py-5" id="modulos" style="background:#ffff">
+    <!-- Modules Section - Versión Mejorada -->
+    <section class="py-5" id="modulos" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="section-title">Módulos principales</h2>
-                <p class="lead text-muted">Explora las herramientas especializadas del SNIER</p>
+                <h2 class="section-title position-relative">
+                    <span class="bg-light px-4">Módulos del SNIER</span>
+                </h2>
+                <p class="lead text-muted">Explora las herramientas especializadas del Sistema Nacional de Información
+                    Energética
+                </p>
             </div>
 
-            <div class="row g-4">
-                <div class="col-md-4" data-aos="fade-up">
-                    <div class="feature-card p-4">
-                        <i class="bi bi-lightning-charge feature-icon"></i>
-                        <h4>Balance Nacional de Energía</h4>
-                        <p>Visualiza los flujos de energía desde su generación hasta su consumo final por sector y
-                            fuente energética.</p>
+            <!-- Módulos Principales -->
+            <div class="mb-5">
+                <h3 class="text-center mb-4  fw-bold">📊 Módulos de Información</h3>
+                <div class="row g-4">
+                    <!-- El inventario y el potencial de los recursos renovables -->
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                        <div class="module-card">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-sun module-icon"></i>
+                            </div>
+                            <h4>Inventario y Potencial de Recursos Renovables</h4>
+                            <p>Atlas de recursos renovables, exploración, extracción, explotación, producción,
+                                transformación,
+                                transporte, almacenamiento, distribución y consumo final.</p>
+                            <div class="module-footer">
+                                <span class="badge bg-success">Disponible</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- El origen y el destino de la energía -->
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="module-card">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-diagram-3 module-icon"></i>
+                            </div>
+                            <h4>Origen y Destino de la Energía</h4>
+                            <p>Visualiza el flujo energético a lo largo de toda la cadena de valor nacional y sectorial.
+                            </p>
+                            <div class="module-footer">
+                                <span class="badge bg-info">Interactivo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información sobre el Mercado Eléctrico Mayorista -->
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="module-card">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-lightning-charge module-icon"></i>
+                            </div>
+                            <h4>Mercado Eléctrico Mayorista</h4>
+                            <p>Información estadística sobre precios, ofertas, demanda y operación del mercado eléctrico
+                                nacional.
+                            </p>
+                            <div class="module-footer">
+                                <span class="badge bg-warning">Tiempo Real</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seguimiento a instrumentos de planeación energética -->
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                        <div class="module-card">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-graph-up-arrow module-icon"></i>
+                            </div>
+                            <h4>Planeación Energética y Proyectos Estratégicos</h4>
+                            <p>Seguimiento a instrumentos de planeación energética y avance de proyectos estratégicos
+                                nacionales.
+                            </p>
+                            <div class="module-footer">
+                                <span class="badge bg-primary">Estratégico</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sistemas Especializados -->
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="module-card">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-piggy-bank module-icon"></i>
+                            </div>
+                            <h4>FOTEASE</h4>
+                            <h6 class="text-muted small mb-2">Fondo para la Transición Energética y el Aprovechamiento
+                                Sustentable de la Energía</h6>
+                            <p>Instrumento financiero para promover proyectos de eficiencia energética, energías
+                                renovables y transición energética nacional.</p>
+                            <div class="module-footer">
+                                <span class="badge bg-success">Financiero</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="module-card">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-file-earmark-text module-icon"></i>
+                            </div>
+                            <h4>FSUE</h4>
+                            <p>Fondo del Servicio Universal de Energía para comunidades rurales y aisladas del país.</p>
+                            <div class="module-footer">
+                                <span class="badge bg-success">Social</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                        <div class="module-card">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-lightbulb module-icon"></i>
+                            </div>
+                            <h4>Fondos de I+D</h4>
+                            <p>Fondos de Investigación y Desarrollo para innovación tecnológica en el sector energético.
+                            </p>
+                            <div class="module-footer">
+                                <span class="badge bg-info">Innovación</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-card p-4">
-                        <i class="bi bi-tree feature-icon"></i>
-                        <h4>Certificados de Energías Limpias</h4>
-                        <p>Consulta certificados emitidos, participantes obligados y cumplimiento de metas anuales.</p>
+            </div>
+
+            <!-- Registros y Certificaciones -->
+            <div class="mb-5">
+                <h3 class="text-center mb-4 fw-bold">🏆 Registros y Certificaciones</h3>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                        <div class="module-card border-success">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-award module-icon "></i>
+                            </div>
+                            <h4>Certificados de Energías Limpias</h4>
+                            <p>Registro público de CELs, participantes obligados y cumplimiento de metas de energías
+                                limpias.
+                            </p>
+                            <div class="module-footer">
+                                <span class="badge bg-success">Oficial</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="module-card border-success">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-gear-wide-connected module-icon "></i>
+                            </div>
+                            <h4>Catálogo de Tecnologías</h4>
+                            <p>Tecnologías para generación de electricidad y habilitadoras del sector energético.</p>
+                            <div class="module-footer">
+                                <span class="badge bg-success">Catálogo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="module-card border-success">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-bar-chart-steps module-icon "></i>
+                            </div>
+                            <h4>Escenarios Energéticos</h4>
+                            <p>Escenarios de referencia a mediano y largo plazo del sector energético nacional.</p>
+                            <div class="module-footer">
+                                <span class="badge bg-success">Prospectivo</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-card p-4">
-                        <i class="bi bi-currency-dollar feature-icon"></i>
-                        <h4>Precios y Tarifas</h4>
-                        <p>Acceso a tarifas eléctricas vigentes, precios de hidrocarburos y comparativos históricos.</p>
+            </div>
+
+            <!-- Eficiencia Energética -->
+            <div class="mb-5">
+                <h3 class="text-center mb-4 fw-bold">⚡ Eficiencia Energética</h3>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                        <div class="module-card border-warning">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-fuel-pump module-icon "></i>
+                            </div>
+                            <h4>Combustibles y Poderes Caloríficos</h4>
+                            <p>Lista completa con características técnicas y energéticas.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="module-card border-warning">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-tools module-icon "></i>
+                            </div>
+                            <h4>Catálogo de Equipos</h4>
+                            <p>Aparatos relevantes para consumo de energía y unidades comercializadas.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="module-card border-warning">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-building module-icon "></i>
+                            </div>
+                            <h4>Registro de Instalaciones</h4>
+                            <p>Edificaciones, empresas y productos de eficiencia energética.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="module-card border-warning">
+                            <div class="module-icon-wrapper">
+                                <i class="bi bi-arrow-down-circle module-icon "></i>
+                            </div>
+                            <h4>Medidas de Reducción</h4>
+                            <p>Ahorros generados por medidas de reducción en intensidad energética.</p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4" data-aos="fade-up">
-                    <div class="feature-card p-4">
-                        <i class="bi bi-file-earmark-check feature-icon"></i>
-                        <h4>Permisos y Regulaciones</h4>
-                        <p>Visualiza permisos autorizados por CRE, CNH, SENER con su vigencia y documentación asociada.
-                        </p>
-                    </div>
+            </div>
+
+            <!-- Funciones del Consejo -->
+            <div class="governance-section">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold">🏛️ Funciones del Consejo</h3>
+                    <p class="text-muted">Actividades de gobernanza y control del SNIEr</p>
                 </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-card p-4">
-                        <i class="bi bi-map feature-icon"></i>
-                        <h4>Georreferenciación</h4>
-                        <p>Mapas interactivos con infraestructura energética, proyectos renovables y condiciones
-                            climáticas.</p>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                        <div class="governance-card">
+                            <div class="governance-icon">
+                                <i class="bi bi-bullseye"></i> <!-- Cambiado de bi-target a bi-bullseye -->
+                            </div>
+                            <h5>Objetivos y Metas</h5>
+                            <p>Implementación de la Planeación Vinculante del sector energético.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-card p-4">
-                        <i class="bi bi-bar-chart-line feature-icon"></i>
-                        <h4>Estadísticas e Indicadores</h4>
-                        <p>Paneles con gráficos dinámicos de producción, consumo, demanda y eficiencia energética.</p>
+
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="governance-card">
+                            <div class="governance-icon">
+                                <i class="bi bi-file-text"></i>
+                                <!-- Cambiado de bi-file-earmark-ruled a bi-file-text -->
+                            </div>
+                            <h5>Disposiciones Normativas</h5>
+                            <p>Políticas, reglas, lineamientos y formatos técnicos para el SNIEr.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up">
-                    <div class="feature-card p-4">
-                        <i class="bi bi-graph-up-arrow feature-icon"></i>
-                        <h4>Pronósticos Energéticos</h4>
-                        <p>Modelos predictivos de consumo y generación con escenarios futuros para toma de decisiones.
-                        </p>
+
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="governance-card">
+                            <div class="governance-icon">
+                                <i class="bi bi-search"></i> <!-- Este se mantiene igual -->
+                            </div>
+                            <h5>Verificación de Acciones</h5>
+                            <p>Validación del cumplimiento de instrumentos de Planeación Energética.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-card p-4">
-                        <i class="bi bi-cloud-arrow-up feature-icon"></i>
-                        <h4>Carga de Datos</h4>
-                        <p>Módulo seguro para instituciones que alimentan el sistema con archivos validados.</p>
-                    </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-card p-4">
-                        <i class="bi bi-bell feature-icon"></i>
-                        <h4>Notificaciones y Alertas</h4>
-                        <p>Alertas regulatorias, vencimientos de permisos y reportes por mercado energético.</p>
+
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="governance-card">
+                            <div class="governance-icon">
+                                <i class="bi bi-cash-stack"></i> <!-- Cambiado de bi-currency-dollar a bi-cash-stack -->
+                            </div>
+                            <h5>Recursos Presupuestales</h5>
+                            <p>Asegurar recursos suficientes para instrumentos de planeación energética.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
 
     <!-- Benefits Section -->
     <section class="py-5 bg-light" id="beneficios">

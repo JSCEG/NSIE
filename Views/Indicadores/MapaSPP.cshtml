@@ -18,7 +18,7 @@
 
 
 @{
-    ViewData["Title"] = " Evalúa tu Solicitud de Permiso para Expendio";
+    ViewData["Title"] = "Modelos de Evaluación de Proyectos Energéticos";
 }
 
 @* Modal de Alertas *@
@@ -80,7 +80,7 @@
 
     <div class="container">
         <div class="row pt-3">
-            <h3 class="subtitulo">Evalúa tu Solicitud</h3>
+            <h3 class="subtitulo">Evaluación y Modelado de Proyectos</h3>
         </div>
     </div>
     <center lass="p-3">
@@ -88,7 +88,7 @@
         <br>
         <a class="btn btn-cre-verde" asp-controller="Usuarios" asp-action="Guia_Consulta_Publica" target="_self"
             style="display: inline-block; width: 200px; text-align: center;">Ver video para realizar la Evaluación de la
-            Solicitud</a>
+            Evaluación</a>
         <br>
     </center>
     <br>
@@ -114,7 +114,7 @@
         <div id="step1" class="step" style="display:block;">
 
 
-            <h3 class="subtitulo">Paso 1: ¡Proporciona el tipo de Mercado y año de tu Solicitud de Permiso de Expendio!
+            <h3 class="subtitulo">Paso 1: ¡Proporciona el tipo de Mercado y año del Proyecto!
             </h3>
             <br>
             <br>
@@ -148,7 +148,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="alert alert-success" role="alert">
-                            <strong>Importante:</strong> La valoración de viabilidad positiva o negativa en EnerGeoCRE
+                            <strong>Importante:</strong> La valoración de viabilidad positiva o negativa en SNIEr
                             se
                             refiere
                             exclusivamente a los criterios e indicadores definidos para las escalas de Entidad
@@ -159,7 +159,7 @@
                             relación con el
                             Sector de Energía.
                             <br><br>
-                            El alcance de EnerGeoCRE permite al usuario elegir ubicaciones para localizar expendios con
+                            El alcance de SNIEr permite al usuario elegir ubicaciones para localizar expendios con
                             el
                             propósito de
                             realizar dicha actividad en lugares lícitos a nivel de escala de barrios o colonias. Esto
@@ -223,7 +223,7 @@
 
                         </div>
                         <label>Pregunta 3.-Bajo protesta de decir verdad. ¿Tiene evidencia de la compatibilidad o
-                            incompatibilidad del uso de suelo con la solicitud?</label>
+                            incompatibilidad del uso de suelo?</label>
                         <div class="radio-group">
                             <input type="radio" id="petroleos3_si" name="petroleos3" value="si">
                             <label for="petroleos3_si">Sí</label>
@@ -343,7 +343,7 @@
                             <label for="gasLP2_no">No</label>
                         </div>
                         <label>Pregunta 3.-Bajo protesta de decir verdad. ¿Tiene evidencia de la compatibilidad o
-                            incompatibilidad del uso de suelo con la solicitud?</label>
+                            incompatibilidad del uso de suelo?</label>
                         <div class="radio-group">
                             <input type="radio" id="gasLP3_si" name="gasLP3" value="si">
                             <label for="gasLP3_si">Sí</label>
@@ -458,7 +458,7 @@
         <!-- Paso 3: Resultados -->
         <div id="step3" class="step" style="display:none;">
 
-            <h3 class="subtitulo">Paso 3: Ejecuta la consulta preliminar de la solicitud</h3>
+            <h3 class="subtitulo">Paso 3: Ejecuta la consulta preliminar </h3>
             <br><br>
 
             <div class="row">
@@ -466,15 +466,14 @@
                     <div class="alert alert-success" role="alert">
                         <h5 class="alert-heading">Puntuación de la ubicación propuesta</h5>
                         <hr>
-                        <p class="mb-0"> Evaluar la ubicación geográfica propuesta, de la solicitud de permiso de
-                            expendio, desde el punto de vista de cobertura sin saturación en el Sistema de Energía
+                        <p class="mb-0"> Evaluar la ubicación geográfica del proyecto, desde el punto de vista de cobertura sin saturación en el Sistema de Energía
                             (Subsector Hidrocarburos, Subsector Electricidad y sus relaciones) enfocado a armonizar los
                             Artículos 41 y 42 de la LORCME.</p>
                         <br><br>
                         <div id="instrucciones" class="alert alert-warning" role="alert">
                             <p style="text-align:justify">
                                 <strong>Instrucciones:</strong> Sobre el mapa
-                                seleccione la ubicación de la solicitud, finalmente presione el botón "Ejecutar
+                                seleccione la ubicación del proyecto, finalmente presione el botón "Ejecutar
                                 Evaluación".
                             </p>
                             <!-- Botón que activará el modal -->
@@ -1595,7 +1594,7 @@
 
             contentType: 'application/json',
             success: function (response) {
-                console.log("Resultado de la Evaluación a Solicitud Pública:", response); // ver la respuesta en consola del navegador
+                console.log("Resultado de la Evaluación del Proyecto:", response); // ver la respuesta en consola del navegador
 
                 //var resultadoFinal = response[0].resultadoFinal;
 
@@ -1824,7 +1823,7 @@
                                 error: function (error) {
                                     console.error('Error:', error);
                                     // Mostrar mensaje personalizado al usuario
-                                    showAlert('No se pudo realizar la evaluación, toda vez que la ubicación seleccionada tiene restricciones lógicas, por favor realice una vez más la evaluación de su solicitud.');
+                                    showAlert('No se pudo realizar la evaluación, toda vez que la ubicación seleccionada tiene restricciones lógicas, por favor realice una vez más la evaluación de su proyecto.');
                                     $("#resultadoAlert").hide();
                                     $("#datos_ubicacion").hide();
                                     $("#totales_en_isocrona").hide();
@@ -1846,7 +1845,7 @@
                         error: function (xhr, status, error) {
                             console.error("Error al obtener la isocrona: " + error);
                             // Mostrar mensaje personalizado al usuario
-                            showAlert('No se pudo realizar la evaluación, toda vez que la ubicación seleccionada tiene restricciones lógicas, por favor realice una vez más la evaluación de su solicitud.');
+                            showAlert('No se pudo realizar la evaluación, toda vez que la ubicación seleccionada tiene restricciones lógicas, por favor realice una vez más la evaluación de su proyecto.');
                             $("#resultadoAlert").hide();
                             $("#datos_ubicacion").hide();
                             $("#totales_en_isocrona").hide();
@@ -1876,7 +1875,7 @@
                 // Maneja el error si ocurre.
                 console.error('Error:', error);
                 // Mostrar mensaje personalizado al usuario
-                showAlert('No se pudo realizar la evaluación, toda vez que la ubicación seleccionada tiene restricciones lógicas, por favor realice una vez más la evaluación de su solicitud.');
+                showAlert('No se pudo realizar la evaluación, toda vez que la ubicación seleccionada tiene restricciones lógicas, por favor realice una vez más la evaluación de su proyecto.');
                 $("#resultadoAlert").hide();
                 $("#datos_ubicacion").hide();
                 $("#totales_en_isocrona").hide();

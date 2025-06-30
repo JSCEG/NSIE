@@ -21,8 +21,26 @@ namespace NSIE.Controllers
     public class SNIEController : Controller
     {
 
-    
+        public IActionResult Escenarios()
+        {
+            return View();
+        }
+        public IActionResult FOTEASE()
+        {
+            return View();
+        }
 
+
+        public IActionResult FSUE()
+        {
+            return View();
+        }
+
+
+        public IActionResult Fondos_i_D()
+        {
+            return View();
+        }
         public IActionResult EquiposE()
         {
             return View();
@@ -118,7 +136,7 @@ namespace NSIE.Controllers
         {
             return View();
         }
-            public IActionResult Publicacion()
+        public IActionResult Publicacion()
         {
             return View();
         }

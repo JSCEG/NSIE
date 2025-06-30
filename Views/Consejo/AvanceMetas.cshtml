@@ -9,12 +9,12 @@
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
     ViewData["RolUsuario"] = perfilUsuario.Rol;
-    ViewData["Title"] = "Avance de Metas y Líneas de Acción";
+    ViewData["Title"] = "Líneas de Acción";
 }
 
 @{
     var header = new HeaderViewModel {
-        Title = "Avance de Metas y Líneas de Acción",
+        Title = "Líneas de Acción",
         IconPath = "metas_consejo.png",
         Description = "Evalúa resultados frente al Programa Anual, facilitando el seguimiento de compromisos institucionales del Consejo.",
         Section = "📊 Seguimiento Estratégico",
