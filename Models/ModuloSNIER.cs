@@ -22,6 +22,10 @@ namespace NSIE.Models
 		public int Orden { get; set; }
 		public bool ModuloActivo { get; set; }
 		public bool EsExterno { get; set; } // nueva propiedad	
-}
+
+
+		// ✅ NUEVO: Soporte a vistas hijas
+		public List<VistaSNIER> Vistas { get; set; } = new List<VistaSNIER>();
+	}
 
 }

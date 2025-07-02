@@ -12,6 +12,7 @@ namespace NSIE.Models
         public string ResponsableNormativo { get; set; }
         public string PublicoObjetivo { get; set; }
         public bool SeccionActiva { get; set; } // Si usas 'Activo AS SeccionActiva'
+        public int Orden { get; set; } = 1;
         public List<ModuloSNIER> Modulos { get; set; } = new List<ModuloSNIER>();
     }
 }

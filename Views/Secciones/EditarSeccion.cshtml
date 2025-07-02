@@ -1,4 +1,5 @@
 @model NSIE.Models.SeccionConModulos
+@using NSIE.Models
 @using Microsoft.AspNetCore.Http
 @using Newtonsoft.Json
 @inject IHttpContextAccessor HttpContextAccessor
@@ -106,14 +107,14 @@
             Swal.fire({
                 title: 'Editar Sección',
                 html: `
-                            <div class="text-start">
-                                <p>Esta vista permite modificar los campos informativos y normativos de una sección.</p>
-                                <ul class="list-unstyled">
-                                    <li><i class="fas fa-pen text-primary"></i> Edita título, fundamento legal, descripción, objetivo, y más.</li>
-                                    <li><i class="fas fa-check-circle text-success"></i> Al guardar, los cambios se reflejan en el sistema SNIEr.</li>
-                                </ul>
-                            </div>
-                        `,
+                                <div class="text-start">
+                                    <p>Esta vista permite modificar los campos informativos y normativos de una sección.</p>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-pen text-primary"></i> Edita título, fundamento legal, descripción, objetivo, y más.</li>
+                                        <li><i class="fas fa-check-circle text-success"></i> Al guardar, los cambios se reflejan en el sistema SNIEr.</li>
+                                    </ul>
+                                </div>
+                            `,
                 width: '400px',
                 customClass: {
                     popup: 'swal-responsive',
@@ -130,7 +131,7 @@
                     title: '¡Éxito!',
                     text: '@TempData["Exito"]',
                     confirmButtonColor: '#1e7e8c'
-                                });
+                                        });
         </script>
     }
 
