@@ -56,6 +56,7 @@ builder.Services.AddTransient<IRepositorioProyectos, RepositorioProyectos>();
 builder.Services.AddTransient<IRepositorioUsuarios, RepositorioUsuarios>();
 builder.Services.AddTransient<IRepositorioSecciones, RepositorioSecciones>();
 builder.Services.AddTransient<IRepositorioAcceso, RepositorioAcceso>();
+builder.Services.AddTransient<IRepositorioSNIER, RepositorioSNIER>();
 builder.Services.AddTransient<VisitasViewComponent>();
 builder.Services.AddTransient<IRepositorioHome, RepositorioHome>();
 builder.Services.AddTransient<IRepositorioSankey, RepositorioSankey>();
