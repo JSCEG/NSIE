@@ -38,6 +38,10 @@
             --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
         }
 
+        .bpComposerFooter {
+            display: none !important;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
             color: #333;
@@ -704,6 +708,13 @@
             }
         }
     </style>
+    <style>
+        /* Oculta el texto 'by Botpress' forzadamente */
+        a[href*="https://botpress.com/?from=webchat"] {
+            display: none !important;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -1583,6 +1594,32 @@
         });
     </script>
     <script src="~/js/validacion-formulario.js"></script>
+
+    <script src="https://cdn.botpress.cloud/webchat/v3.0/inject.js" defer></script>
+    <script src="https://files.bpcontent.cloud/2025/07/03/06/20250703065244-GFQSQ0GG.js" defer></script>
+    <script>
+        // Esperamos a que cargue todo el contenido incluido lo inyectado
+        window.addEventListener('load', () => {
+            const ocultarBotpressFooter = () => {
+                const footer = document.querySelector('.bpComposerFooter');
+                if (footer) {
+                    footer.style.display = 'none';
+                }
+            };
+
+            // Ocultamos al cargar
+            ocultarBotpressFooter();
+
+            // Observamos si lo reinyectan y lo ocultamos de nuevo
+            const observer = new MutationObserver(() => ocultarBotpressFooter());
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    </script>
+
+
 </body>
 
 </html>

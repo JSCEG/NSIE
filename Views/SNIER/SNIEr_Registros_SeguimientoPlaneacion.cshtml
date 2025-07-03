@@ -15,55 +15,864 @@
 
 	var header = new HeaderViewModel
 	{
-		Title = "Seguimiento a instrumentos de planeación energética y proyectos estratégicos",
-		IconPath = "conding.png",
-		Description = "Registros con Información Estadística sobre seguimiento a instrumentos de planeación - Esta sección del sitio se encuentra actualmente en desarrollo.",
+		Title = "📈 Seguimiento a Instrumentos de Planeación",
+		IconPath = "logo_snier.png",
+		Description = "Monitoreo cuantitativo y cualitativo del avance en el cumplimiento de metas y líneas de acción de los Instrumentos de Planeación Energética conforme al Artículo 27 del Reglamento.",
 		Section = "🧬 SNIEr > 📚 Registros con Información Estadística sobre",
 		ModuleInfo = JsonConvert.SerializeObject(new
 		{
-			title = "Seguimiento a instrumentos de planeación energética y proyectos estratégicos",
-			description = "Registros con Información Estadística sobre seguimiento a instrumentos de planeación - La funcionalidad estará disponible próximamente como parte del desarrollo del SNIEr.",
-			functionality = "Esta sección alojará información sobre seguimiento a planeación energética aún no liberada al público.",
-			stage = "En construcción",
+			title = "Seguimiento a Instrumentos de Planeación Energética",
+			description = "Sistema integral de monitoreo para PROSENER, Estrategia Nacional, PLATEASE, PLADESE y PLADESHi con seguimiento de metas, líneas de acción y proyectos estratégicos.",
+			functionality = "Dashboard interactivo con indicadores de avance, mapas de proyectos y seguimiento de cumplimiento normativo.",
+			stage = "Operativo",
 			roles = new[] {
-new { icon = "hammer", text = "Equipo de Desarrollo: Módulo en implementación" },
-new { icon = "eye", text = "Consulta Pública: Pronto disponible para usuarios" }
-},
-			order = new { step = 0, description = "Planificado en la fase inicial del sistema" },
-			manualUrl = "#"
+				new { icon = "users", text = "Unidades Responsables: Seguimiento de líneas de acción" },
+				new { icon = "eye", text = "Consejo de Planeación: Supervisión estratégica" },
+				new { icon = "chart-bar", text = "Público General: Consulta de avances" }
+			},
+			order = new { step = 1, description = "Módulo estratégico para el cumplimiento de metas nacionales" },
+			manualUrl = "/docs/seguimiento-planeacion"
 		})
 	};
 }
 
 @await Html.PartialAsync("_ViewHeader", header)
 
-<div class="container mb-5 ps-5 pe-5">
-	<div class="row">
-		<div class="col-12 col-md-10 col-lg-7 mx-auto">
-			<div class="app-card p-5 text-center shadow-sm border rounded-4 bg-white">
-				<div class="mb-4">
-					<img src="@Cdn.Url/img_snier/login/logo_snier.png" class="img-fluid" alt="Logo SNIER"
-						style="max-height: 100%;" />
-				</div>
+<style>
+	/* Evitar zoom brusco en hover */
+	.navbar-brand:hover img {
+		transform: none !important;
+	}
+	
+	/* Estilos específicos para la vista */
+	.snier-kpi-card {
+		background: var(--white);
+		border: 1px solid var(--gray-200);
+		border-radius: 0.75rem;
+		box-shadow: var(--shadow-subtle);
+		transition: box-shadow 0.2s ease;
+	}
+	
+	.snier-kpi-card:hover {
+		box-shadow: var(--shadow-soft);
+	}
+	
+	.snier-section {
+		background: var(--gray-50);
+		border-radius: 1rem;
+		padding: 2rem;
+		margin-bottom: 2rem;
+		border: 1px solid var(--gray-200);
+	}
+	
+	.snier-timeline {
+		position: relative;
+		padding-left: 2rem;
+	}
+	
+	.snier-timeline::before {
+		content: '';
+		position: absolute;
+		left: 0.5rem;
+		top: 0;
+		bottom: 0;
+		width: 2px;
+		background: var(--snier-primary);
+	}
+	
+	.snier-timeline-item {
+		position: relative;
+		margin-bottom: 1.5rem;
+	}
+	
+	.snier-timeline-item::before {
+		content: '';
+		position: absolute;
+		left: -1.875rem;
+		top: 0.5rem;
+		width: 12px;
+		height: 12px;
+		background: var(--snier-primary);
+		border-radius: 50%;
+		border: 3px solid var(--white);
+	}
+	
+	.snier-progress-enhanced {
+		height: 24px;
+		border-radius: 12px;
+		background: var(--gray-200);
+		overflow: hidden;
+	}
+	
+	.snier-progress-bar {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: white;
+		font-weight: 600;
+		font-size: 0.75rem;
+		text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+	}
+</style>
 
-				<h5 class="text-muted mb-3">🧬 SNIEr > 📚 Registros con Información Estadística sobre > 📈 Seguimiento a instrumentos de planeación energética y proyectos estratégicos</h5>
-				<h6 class="text-muted mb-3">Estamos trabajando para habilitar esta funcionalidad pronto.</h6>
-
-				<div class="alert alert-info small">
-					<strong>Nota:</strong> Esta sección está en desarrollo como parte del sistema SNIEr.
-				</div>
-
-				<button class="btn btn-danger px-4 mt-3" onclick="goBack()" data-bs-toggle="tooltip"
-					title="Regresa a la vista anterior">
-					<i class="bi bi-arrow-left-circle-fill"></i> Regresar
+<div class="container ps-5 pe-5 mt-4">
+	<!-- Dashboard Principal de Instrumentos -->
+	<div class="snier-section">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h4 class="text-primary fw-bold mb-0">
+				<i class="bi bi-diagram-3-fill me-2"></i>
+				Dashboard por Instrumento de Planeación
+			</h4>
+			<div class="btn-group" role="group">
+				<button type="button" class="btn btn-outline-primary btn-sm active" data-instrument="all">
+					<i class="bi bi-grid-3x3-gap me-1"></i>Todos
 				</button>
+				<button type="button" class="btn btn-outline-primary btn-sm" data-instrument="prosener">PROSENER</button>
+				<button type="button" class="btn btn-outline-primary btn-sm" data-instrument="estrategia">Estrategia Nacional</button>
+				<button type="button" class="btn btn-outline-primary btn-sm" data-instrument="platease">PLATEASE</button>
+				<button type="button" class="btn btn-outline-primary btn-sm" data-instrument="pladese">PLADESE</button>
+				<button type="button" class="btn btn-outline-primary btn-sm" data-instrument="pladeshi">PLADESHi</button>
+			</div>
+		</div>
+
+		<!-- KPIs Principales -->
+		<div class="row" id="kpi-cards">
+			<div class="col-md-3 mb-3">
+				<div class="snier-kpi-card p-4 text-center h-100">
+					<div class="d-flex justify-content-between align-items-start mb-3">
+						<span class="badge bg-success-subtle text-success">Art. 27</span>
+						<i class="bi bi-lightning-charge-fill text-warning fs-3"></i>
+					</div>
+					<h3 class="text-primary fw-bold mb-1">35.2%</h3>
+					<p class="text-muted small mb-3">Energías Limpias</p>
+					<div class="snier-progress-enhanced">
+						<div class="snier-progress-bar bg-success" style="width: 70.4%;">70.4%</div>
+					</div>
+					<small class="text-muted mt-2 d-block">Meta 2030: 50%</small>
+				</div>
+			</div>
+			<div class="col-md-3 mb-3">
+				<div class="snier-kpi-card p-4 text-center h-100">
+					<div class="d-flex justify-content-between align-items-start mb-3">
+						<span class="badge bg-info-subtle text-info">Art. 27</span>
+						<i class="bi bi-house-fill text-info fs-3"></i>
+					</div>
+					<h3 class="text-primary fw-bold mb-1">12.8%</h3>
+					<p class="text-muted small mb-3">Pobreza Energética</p>
+					<div class="snier-progress-enhanced">
+						<div class="snier-progress-bar bg-info" style="width: 42.7%;">42.7%</div>
+					</div>
+					<small class="text-muted mt-2 d-block">Meta 2030: 6%</small>
+				</div>
+			</div>
+			<div class="col-md-3 mb-3">
+				<div class="snier-kpi-card p-4 text-center h-100">
+					<div class="d-flex justify-content-between align-items-start mb-3">
+						<span class="badge bg-warning-subtle text-warning">Art. 27</span>
+						<i class="bi bi-speedometer2 text-warning fs-3"></i>
+					</div>
+					<h3 class="text-primary fw-bold mb-1">-2.1%</h3>
+					<p class="text-muted small mb-3">Intensidad Energética</p>
+					<div class="snier-progress-enhanced">
+						<div class="snier-progress-bar bg-warning" style="width: 35%;">35%</div>
+					</div>
+					<small class="text-muted mt-2 d-block">Meta 2030: -6%</small>
+				</div>
+			</div>
+			<div class="col-md-3 mb-3">
+				<div class="snier-kpi-card p-4 text-center h-100">
+					<div class="d-flex justify-content-between align-items-start mb-3">
+						<span class="badge bg-primary-subtle text-primary">Proyectos</span>
+						<i class="bi bi-geo-alt-fill text-primary fs-3"></i>
+					</div>
+					<h3 class="text-primary fw-bold mb-1">147</h3>
+					<p class="text-muted small mb-3">Proyectos Estratégicos</p>
+					<div class="d-flex justify-content-between small text-muted">
+						<span>🟢 89 Activos</span>
+						<span>🟡 58 En Progreso</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Timeline de Hitos Importantes -->
+	<div class="snier-section">
+		<h5 class="text-primary fw-bold mb-4">
+			<i class="bi bi-clock-history me-2"></i>
+			Timeline de Hitos 2024
+		</h5>
+		<div class="snier-timeline">
+			<div class="snier-timeline-item">
+				<div class="d-flex justify-content-between align-items-start">
+					<div>
+						<h6 class="fw-bold mb-1">Actualización PROSENER</h6>
+						<p class="text-muted small mb-0">Revisión de metas de energías limpias para el periodo 2024-2030</p>
+					</div>
+					<span class="badge bg-success-subtle text-success">Completado</span>
+				</div>
+				<small class="text-muted">15 enero 2024</small>
+			</div>
+			<div class="snier-timeline-item">
+				<div class="d-flex justify-content-between align-items-start">
+					<div>
+						<h6 class="fw-bold mb-1">Informe de Avance PLATEASE</h6>
+						<p class="text-muted small mb-0">Evaluación semestral del progreso en proyectos de transición energética</p>
+					</div>
+					<span class="badge bg-warning-subtle text-warning">En Progreso</span>
+				</div>
+				<small class="text-muted">30 marzo 2024</small>
+			</div>
+			<div class="snier-timeline-item">
+				<div class="d-flex justify-content-between align-items-start">
+					<div>
+						<h6 class="fw-bold mb-1">Lanzamiento PLADESHi</h6>
+						<p class="text-muted small mb-0">Inicio del Plan de Desarrollo del Sistema de Hidrógeno</p>
+					</div>
+					<span class="badge bg-info-subtle text-info">Programado</span>
+				</div>
+				<small class="text-muted">15 junio 2024</small>
+			</div>
+		</div>
+	</div>
+
+	<!-- Seguimiento de Metas Detallado -->
+	<div class="snier-section">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h5 class="text-primary fw-bold mb-0">
+				<i class="bi bi-graph-up-arrow me-2"></i>
+				Seguimiento de Metas (Art. 27)
+			</h5>
+			<div class="dropdown">
+				<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+					<i class="bi bi-calendar3 me-1"></i>2024
+				</button>
+				<ul class="dropdown-menu">
+					<li><a class="dropdown-item" href="#">2024</a></li>
+					<li><a class="dropdown-item" href="#">2023</a></li>
+					<li><a class="dropdown-item" href="#">2022</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-8 mb-4">
+				<div id="metasChart" style="height: 350px; background: white; border-radius: 0.75rem; border: 1px solid var(--gray-200);"></div>
+			</div>
+			<div class="col-lg-4 mb-4">
+				<div id="gaugeChart" style="height: 350px; background: white; border-radius: 0.75rem; border: 1px solid var(--gray-200);"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Líneas de Acción -->
+	<div class="snier-section">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h5 class="text-primary fw-bold mb-0">
+				<i class="bi bi-list-task me-2"></i>
+				Líneas de Acción por Unidad Responsable (Art. 26)
+			</h5>
+			<div class="d-flex gap-2">
+				<button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filtrosModal">
+					<i class="bi bi-funnel me-1"></i>Filtros
+				</button>
+				<button class="btn btn-sm btn-success" onclick="exportarLineasAccion()">
+					<i class="bi bi-download me-1"></i>Exportar
+				</button>
+			</div>
+		</div>
+		<div class="table-responsive" style="background: white; border-radius: 0.75rem; border: 1px solid var(--gray-200);">
+			<table id="lineasAccionTable" class="table table-hover mb-0">
+				<thead class="table-light">
+					<tr>
+						<th width="5%">#</th>
+						<th width="20%">Instrumento</th>
+						<th width="25%">Línea de Acción</th>
+						<th width="15%">Unidad Responsable</th>
+						<th width="10%">Estatus</th>
+						<th width="10%">Avance</th>
+						<th width="10%">Última Actualización</th>
+						<th width="5%">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- Datos se cargarán dinámicamente -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- Proyectos Estratégicos -->
+	<div class="snier-section">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h5 class="text-primary fw-bold mb-0">
+				<i class="bi bi-geo-alt me-2"></i>
+				Mapa de Proyectos Estratégicos
+			</h5>
+			<div class="btn-group btn-group-sm" role="group">
+				<button type="button" class="btn btn-outline-primary active" data-map-filter="all">Todos</button>
+				<button type="button" class="btn btn-outline-success" data-map-filter="active">Activos</button>
+				<button type="button" class="btn btn-outline-warning" data-map-filter="progress">En Progreso</button>
+				<button type="button" class="btn btn-outline-secondary" data-map-filter="planned">Planeados</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-8 mb-4">
+				<div id="proyectosMap" style="height: 450px; border-radius: 0.75rem; border: 1px solid var(--gray-200);"></div>
+			</div>
+			<div class="col-lg-4 mb-4">
+				<div style="background: white; border-radius: 0.75rem; border: 1px solid var(--gray-200); padding: 1.5rem; height: 450px;">
+					<h6 class="text-primary fw-bold mb-3">
+						<i class="bi bi-clipboard-data me-2"></i>
+						Resumen de Proyectos
+					</h6>
+					<div class="row text-center mb-4">
+						<div class="col-4">
+							<div class="p-3 bg-success-subtle rounded">
+								<div class="fw-bold text-success fs-4">89</div>
+								<small class="text-muted">Activos</small>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="p-3 bg-warning-subtle rounded">
+								<div class="fw-bold text-warning fs-4">58</div>
+								<small class="text-muted">En Progreso</small>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="p-3 bg-secondary-subtle rounded">
+								<div class="fw-bold text-secondary fs-4">23</div>
+								<small class="text-muted">Planeados</small>
+							</div>
+						</div>
+					</div>
+					<div id="proyectosPorTipoChart" style="height: 200px;"></div>
+					<hr>
+					<h6 class="text-muted mb-3">Proyectos Prioritarios</h6>
+					<div class="snier-timeline">
+						<div class="snier-timeline-item">
+							<div class="d-flex justify-content-between align-items-center">
+								<div>
+									<div class="fw-semibold">Central Solar Sonora</div>
+									<small class="text-muted">1,200 MW - PVIRCE</small>
+								</div>
+								<span class="badge bg-success-subtle text-success">85%</span>
+							</div>
+						</div>
+						<div class="snier-timeline-item">
+							<div class="d-flex justify-content-between align-items-center">
+								<div>
+									<div class="fw-semibold">Gasoducto Tuxpan-Tula</div>
+									<small class="text-muted">Natural Gas - PAM</small>
+								</div>
+								<span class="badge bg-warning-subtle text-warning">67%</span>
+							</div>
+						</div>
+						<div class="snier-timeline-item">
+							<div class="d-flex justify-content-between align-items-center">
+								<div>
+									<div class="fw-semibold">Red Inteligente CDMX</div>
+									<small class="text-muted">Smart Grid - Quinquenal</small>
+								</div>
+								<span class="badge bg-info-subtle text-info">45%</span>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
+<!-- Modal de Filtros -->
+<div class="modal fade" id="filtrosModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">
+					<i class="bi bi-funnel me-2"></i>
+					Filtros de Líneas de Acción
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3">
+					<label class="form-label">Instrumento</label>
+					<select class="form-select" id="filtroInstrumento">
+						<option value="">Todos los instrumentos</option>
+						<option value="PROSENER">PROSENER</option>
+						<option value="Estrategia Nacional">Estrategia Nacional</option>
+						<option value="PLATEASE">PLATEASE</option>
+						<option value="PLADESE">PLADESE</option>
+						<option value="PLADESHi">PLADESHi</option>
+					</select>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Estatus</label>
+					<select class="form-select" id="filtroEstatus">
+						<option value="">Todos los estatus</option>
+						<option value="iniciada">Iniciada</option>
+						<option value="en-progreso">En Progreso</option>
+						<option value="completada">Completada</option>
+						<option value="pausada">Pausada</option>
+					</select>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Unidad Responsable</label>
+					<select class="form-select" id="filtroUnidad">
+						<option value="">Todas las unidades</option>
+						<option value="SENER">SENER</option>
+						<option value="CONUEE">CONUEE</option>
+						<option value="CFE">CFE</option>
+						<option value="PEMEX">PEMEX</option>
+						<option value="CRE">CRE</option>
+					</select>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary" onclick="aplicarFiltros()">Aplicar Filtros</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal de Detalle de Línea de Acción -->
+<div class="modal fade" id="detalleLineaModal" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">
+					<i class="bi bi-info-circle me-2"></i>
+					Detalle de Línea de Acción
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body" id="detalleLineaContent">
+				<!-- Contenido se carga dinámicamente -->
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
 <script>
-	function goBack() {
-		window.history.back();
+	// Datos de ejemplo para líneas de acción
+	const lineasAccionData = [
+		{
+			id: 1,
+			instrumento: "PROSENER",
+			linea: "Promover el desarrollo de energías renovables",
+			unidad: "SENER",
+			estatus: "en-progreso",
+			avance: 75,
+			fechaActualizacion: "2024-01-15",
+			evidencia: "/docs/evidencia-1.pdf"
+		},
+		{
+			id: 2,
+			instrumento: "Estrategia Nacional",
+			linea: "Reducir la intensidad energética en el sector industrial",
+			unidad: "CONUEE",
+			estatus: "completada",
+			avance: 100,
+			fechaActualizacion: "2024-01-10",
+			evidencia: "/docs/evidencia-2.pdf"
+		},
+		{
+			id: 3,
+			instrumento: "PLATEASE",
+			linea: "Implementar sistemas de almacenamiento de energía",
+			unidad: "CFE",
+			estatus: "iniciada",
+			avance: 25,
+			fechaActualizacion: "2024-01-20",
+			evidencia: "/docs/evidencia-3.pdf"
+		},
+		{
+			id: 4,
+			instrumento: "PLADESE",
+			linea: "Desarrollar infraestructura de hidrógeno verde",
+			unidad: "PEMEX",
+			estatus: "en-progreso",
+			avance: 45,
+			fechaActualizacion: "2024-01-18",
+			evidencia: "/docs/evidencia-4.pdf"
+		},
+		{
+			id: 5,
+			instrumento: "PLADESHi",
+			linea: "Modernizar redes de distribución eléctrica",
+			unidad: "CRE",
+			estatus: "en-progreso",
+			avance: 60,
+			fechaActualizacion: "2024-01-22",
+			evidencia: "/docs/evidencia-5.pdf"
+		}
+	];
+
+	// Datos de proyectos estratégicos
+	const proyectosData = [
+		{ id: 1, nombre: "Central Solar Sonora", lat: 29.2972, lng: -110.3309, tipo: "Solar", status: "active", avance: 85, instrumento: "PVIRCE" },
+		{ id: 2, nombre: "Parque Eólico Oaxaca", lat: 16.2518, lng: -95.1917, tipo: "Eólico", status: "active", avance: 92, instrumento: "PVIRCE" },
+		{ id: 3, nombre: "Gasoducto Tuxpan-Tula", lat: 20.9573, lng: -97.4056, tipo: "Gas Natural", status: "progress", avance: 67, instrumento: "PAM" },
+		{ id: 4, nombre: "Red Inteligente CDMX", lat: 19.4326, lng: -99.1332, tipo: "Smart Grid", status: "progress", avance: 45, instrumento: "Quinquenal" },
+		{ id: 5, nombre: "Central Hidroeléctrica Chiapas", lat: 16.7569, lng: -93.1292, tipo: "Hidráulica", status: "planned", avance: 15, instrumento: "PVIRCE" }
+	];
+
+	$(document).ready(function() {
+		initializeCharts();
+		initializeMap();
+		initializeDataTable();
+		setupEventHandlers();
+	});
+
+	function initializeCharts() {
+		// Gráfico de seguimiento de metas
+		Highcharts.chart('metasChart', {
+			chart: { type: 'line', backgroundColor: 'transparent' },
+			title: { text: null },
+			xAxis: {
+				categories: ['2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+				gridLineWidth: 1,
+				gridLineColor: '#f0f0f0'
+			},
+			yAxis: {
+				title: { text: 'Porcentaje (%)' },
+				gridLineColor: '#f0f0f0'
+			},
+			tooltip: {
+				shared: true,
+				backgroundColor: 'rgba(255,255,255,0.95)',
+				borderColor: '#ddd',
+				borderRadius: 8
+			},
+			legend: { align: 'center', verticalAlign: 'bottom' },
+			series: [{
+				name: 'Energías Limpias',
+				data: [25.1, 27.3, 29.8, 32.1, 35.2, 38.0, 41.2, 44.1, 46.8, 48.9, 50.0],
+				color: '#28a745',
+				marker: { radius: 4 }
+			}, {
+				name: 'Meta Energías Limpias',
+				data: [null, null, null, null, null, null, null, null, null, null, 50],
+				color: '#28a745',
+				dashStyle: 'dash',
+				marker: { symbol: 'diamond', radius: 6 }
+			}, {
+				name: 'Reducción Pobreza Energética',
+				data: [18.5, 17.2, 15.8, 14.1, 12.8, 11.2, 9.8, 8.5, 7.3, 6.8, 6.0],
+				color: '#17a2b8',
+				marker: { radius: 4 }
+			}, {
+				name: 'Intensidad Energética',
+				data: [0, -0.5, -1.1, -1.6, -2.1, -2.8, -3.5, -4.2, -4.9, -5.5, -6.0],
+				color: '#ffc107',
+				marker: { radius: 4 }
+			}],
+			credits: { enabled: false },
+			plotOptions: {
+				line: {
+					lineWidth: 3,
+					states: { hover: { lineWidth: 4 } }
+				}
+			}
+		});
+
+		// Gauge de avance general
+		Highcharts.chart('gaugeChart', {
+			chart: { type: 'solidgauge', backgroundColor: 'transparent' },
+			title: { text: null },
+			pane: {
+				center: ['50%', '85%'],
+				size: '140%',
+				startAngle: -90,
+				endAngle: 90,
+				background: {
+					backgroundColor: '#EEE',
+					innerRadius: '60%',
+					outerRadius: '100%',
+					shape: 'arc'
+				}
+			},
+			tooltip: { enabled: false },
+			yAxis: {
+				min: 0,
+				max: 100,
+				stops: [
+					[0.1, '#DF5353'],
+					[0.5, '#DDDF0D'],
+					[0.9, '#55BF3B']
+				],
+				lineWidth: 0,
+				tickWidth: 0,
+				minorTickInterval: null,
+				tickAmount: 2,
+				labels: { y: 16 }
+			},
+			plotOptions: {
+				solidgauge: {
+					dataLabels: {
+						y: 5,
+						borderWidth: 0,
+						useHTML: true,
+						format: '<div style="text-align:center"><span style="font-size:25px;color:black">{y}%</span><br/><span style="font-size:12px;color:silver">Avance General</span></div>'
+					}
+				}
+			},
+			series: [{
+				name: 'Avance',
+				data: [68.5],
+				dataLabels: { format: '<div style="text-align:center"><span style="font-size:25px;color:black">{y}%</span><br/><span style="font-size:12px;color:silver">Avance General</span></div>' }
+			}],
+			credits: { enabled: false }
+		});
+
+		// Gráfico de proyectos por tipo
+		Highcharts.chart('proyectosPorTipoChart', {
+			chart: { type: 'pie', backgroundColor: 'transparent' },
+			title: { text: null },
+			tooltip: { pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>' },
+			accessibility: { point: { valueSuffix: '%' } },
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer',
+					dataLabels: { enabled: false },
+					showInLegend: false,
+					size: '80%'
+				}
+			},
+			series: [{
+				name: 'Proyectos',
+				colorByPoint: true,
+				data: [{
+					name: 'Solar',
+					y: 35.2,
+					color: '#ffc107'
+				}, {
+					name: 'Eólico',
+					y: 28.1,
+					color: '#17a2b8'
+				}, {
+					name: 'Gas Natural',
+					y: 18.7,
+					color: '#fd7e14'
+				}, {
+					name: 'Hidráulica',
+					y: 12.3,
+					color: '#20c997'
+				}, {
+					name: 'Otros',
+					y: 5.7,
+					color: '#6c757d'
+				}]
+			}],
+			credits: { enabled: false }
+		});
+	}
+
+	function initializeMap() {
+		const map = L.map('proyectosMap').setView([23.6345, -102.5528], 5);
+		
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '© OpenStreetMap contributors'
+		}).addTo(map);
+
+		const statusColors = {
+			'active': '#28a745',
+			'progress': '#ffc107',
+			'planned': '#6c757d'
+		};
+
+		proyectosData.forEach(proyecto => {
+			const marker = L.circleMarker([proyecto.lat, proyecto.lng], {
+				radius: 8,
+				fillColor: statusColors[proyecto.status],
+				color: '#fff',
+				weight: 2,
+				opacity: 1,
+				fillOpacity: 0.8
+			}).addTo(map);
+
+			marker.bindPopup(`
+				<div class="p-2">
+					<h6 class="mb-1">${proyecto.nombre}</h6>
+					<p class="mb-1 small text-muted">${proyecto.tipo} - ${proyecto.instrumento}</p>
+					<div class="progress mb-2" style="height: 5px;">
+						<div class="progress-bar" style="width: ${proyecto.avance}%; background-color: ${statusColors[proyecto.status]}"></div>
+					</div>
+					<small>Avance: ${proyecto.avance}%</small>
+				</div>
+			`);
+		});
+
+		// Store map reference globally
+		window.proyectosMap = map;
+	}
+
+	function initializeDataTable() {
+		const table = $('#lineasAccionTable').DataTable({
+			data: lineasAccionData,
+			columns: [
+				{ data: 'id' },
+				{ data: 'instrumento' },
+				{ data: 'linea' },
+				{ data: 'unidad' },
+				{ 
+					data: 'estatus',
+					render: function(data) {
+						const badges = {
+							'iniciada': 'bg-secondary',
+							'en-progreso': 'bg-warning',
+							'completada': 'bg-success',
+							'pausada': 'bg-danger'
+						};
+						const labels = {
+							'iniciada': 'Iniciada',
+							'en-progreso': 'En Progreso',
+							'completada': 'Completada',
+							'pausada': 'Pausada'
+						};
+						return `<span class="badge ${badges[data]} text-white">${labels[data]}</span>`;
+					}
+				},			{ 
+				data: 'avance',
+				render: function(data) {
+					const color = data >= 80 ? 'success' : data >= 50 ? 'warning' : 'danger';
+					return `
+						<div class="snier-progress-enhanced">
+							<div class="snier-progress-bar bg-${color}" style="width: ${data}%">${data}%</div>
+						</div>
+					`;
+				}
+			},
+				{ 
+					data: 'fechaActualizacion',
+					render: function(data) {
+						return new Date(data).toLocaleDateString('es-MX');
+					}
+				},
+				{ 
+					data: null,
+					render: function(data, type, row) {
+						return `
+							<div class="btn-group btn-group-sm">
+								<button class="btn btn-outline-primary" onclick="verDetalle(${row.id})" title="Ver detalle">
+									<i class="bi bi-eye"></i>
+								</button>
+								<button class="btn btn-outline-success" onclick="descargarEvidencia('${row.evidencia}')" title="Descargar evidencia">
+									<i class="bi bi-download"></i>
+								</button>
+							</div>
+						`;
+					}
+				}
+			],
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+			},
+			responsive: true,
+			pageLength: 10,
+			order: [[0, 'asc']]
+		});
+
+		// Store table reference globally
+		window.lineasAccionTable = table;
+	}
+
+	function setupEventHandlers() {
+		// Filtros de instrumentos
+		$('[data-instrument]').click(function() {
+			$('[data-instrument]').removeClass('active');
+			$(this).addClass('active');
+			const instrument = $(this).data('instrument');
+			filterByInstrument(instrument);
+		});
+
+		// Filtros de mapa
+		$('[data-map-filter]').click(function() {
+			$('[data-map-filter]').removeClass('active');
+			$(this).addClass('active');
+			const filter = $(this).data('map-filter');
+			filterMapProjects(filter);
+		});
+	}
+
+	function filterByInstrument(instrument) {
+		if (instrument === 'all') {
+			window.lineasAccionTable.search('').draw();
+		} else {
+			window.lineasAccionTable.column(1).search(instrument).draw();
+		}
+	}
+
+	function filterMapProjects(filter) {
+		// Implementar filtrado del mapa según el estado del proyecto
+		console.log('Filtering map by:', filter);
+	}
+
+	function aplicarFiltros() {
+		const instrumento = $('#filtroInstrumento').val();
+		const estatus = $('#filtroEstatus').val();
+		const unidad = $('#filtroUnidad').val();
+
+		let searchTerms = [];
+		if (instrumento) searchTerms.push(instrumento);
+		if (estatus) searchTerms.push(estatus);
+		if (unidad) searchTerms.push(unidad);
+
+		window.lineasAccionTable.search(searchTerms.join(' ')).draw();
+		$('#filtrosModal').modal('hide');
+	}
+
+	function verDetalle(id) {
+		const linea = lineasAccionData.find(l => l.id === id);
+		const content = `
+			<div class="row">
+				<div class="col-md-6">
+					<h6>Información General</h6>
+					<table class="table table-sm">
+						<tr><td><strong>Instrumento:</strong></td><td>${linea.instrumento}</td></tr>
+						<tr><td><strong>Unidad Responsable:</strong></td><td>${linea.unidad}</td></tr>
+						<tr><td><strong>Estatus:</strong></td><td>${linea.estatus}</td></tr>
+						<tr><td><strong>Avance:</strong></td><td>${linea.avance}%</td></tr>
+					</table>
+				</div>
+				<div class="col-md-6">
+					<h6>Seguimiento</h6>
+					<div class="progress mb-2">
+						<div class="progress-bar" style="width: ${linea.avance}%">${linea.avance}%</div>
+					</div>
+					<p><strong>Última actualización:</strong> ${new Date(linea.fechaActualizacion).toLocaleDateString('es-MX')}</p>
+					<a href="${linea.evidencia}" class="btn btn-sm btn-primary" target="_blank">
+						<i class="bi bi-download me-1"></i>Descargar Evidencia
+					</a>
+				</div>
+			</div>
+			<hr>
+			<h6>Descripción de la Línea de Acción</h6>
+			<p>${linea.linea}</p>
+		`;
+		$('#detalleLineaContent').html(content);
+		$('#detalleLineaModal').modal('show');
+	}
+
+	function descargarEvidencia(url) {
+		window.open(url, '_blank');
+	}
+
+	function exportarLineasAccion() {
+		// Implementar exportación a Excel/PDF
+		alert('Funcionalidad de exportación en desarrollo');
 	}
 </script>
