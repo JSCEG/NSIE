@@ -1731,7 +1731,121 @@ body::before {
     color: #0482ab;
 }
 
-/* Sankey SVG y nodos */
+/* Mejoras para las tarjetas Sankey */
+.sankey-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e3f2fd;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 120, 174, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-height: 140px;
+}
+
+.sankey-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0078ae 0%, #4db6e6 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.sankey-card:hover::before {
+    transform: scaleX(1);
+}
+
+.sankey-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 120, 174, 0.15);
+    border-color: #bbdefb;
+}
+
+.sankey-card .card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+}
+
+.sankey-card .card-icon {
+    background: linear-gradient(135deg, #0078ae 0%, #4db6e6 100%);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 120, 174, 0.3);
+}
+
+.sankey-card .card-title {
+    color: #0078ae;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+}
+
+.sankey-card .card-value {
+    color: #2c3e50;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #0078ae 0%, #4db6e6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Contenedor de tarjetas mejorado */
+#tarjetas-totales {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+    padding: 1rem 0;
+    justify-content: center !important;
+    align-items: stretch !important;
+}
+
+#tarjetas-totales .sankey-card {
+    flex: 1 1 calc(16.666% - 1rem) !important;
+    max-width: 300px;
+    min-width: 260px;
+}
+
+@media (max-width: 1200px) {
+    #tarjetas-totales .sankey-card {
+        flex: 1 1 calc(33.333% - 1rem) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    #tarjetas-totales .sankey-card {
+        flex: 1 1 calc(50% - 1rem) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #tarjetas-totales .sankey-card {
+        flex: 1 1 100% !important;
+    }
+}
+
+/* =====================================================
+                       Sankey - estilos específicos
+                       ===================================================== */
 #sankeySvg g {
     cursor: pointer;
 }
@@ -2686,4 +2800,87 @@ span {
     letter-spacing: 0.5px;
 }
 
-/* ===================================================== */
+/* Mejora del contenedor principal de tarjetas */
+.alert.alert-light {
+    border-radius: 15px;
+    border: 1px solid #e3f2fd;
+    box-shadow: 0 4px 20px rgba(0, 120, 174, 0.08);
+}
+
+.alert-heading {
+    position: relative;
+}
+
+.alert-heading::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #0078ae 0%, #4db6e6 100%);
+    border-radius: 2px;
+}
+
+/* Animación de entrada para las tarjetas */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sankey-card {
+    animation: slideInUp 0.6s ease-out;
+}
+
+.sankey-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.sankey-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.sankey-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.sankey-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.sankey-card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.sankey-card:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.sankey-card:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+/* Efecto de pulso para valores grandes */
+.sankey-card .card-value.highlight {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}

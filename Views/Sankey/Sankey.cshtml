@@ -107,12 +107,18 @@ new() { Reference = "Art. 70 Reglamento", Description = "Establece los lineamien
         <br>
         <br>
 
-        <div class="alert alert-light" role="alert">
-            <center>
-                <h3 class="alert-heading">Totales</h3>
-            </center>
+        <div class="alert alert-light border-0 shadow-sm" role="alert"
+            style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
+            <div class="text-center mb-3">
+                <h3 class="alert-heading text-primary fw-bold">
+                    <i class="bi bi-graph-up me-2"></i>Totales por Nivel Energético
+                </h3>
+                <p class="text-muted mb-0">Visualización de los totales energéticos por cada nivel del Balance Nacional
+                    de Energía</p>
+            </div>
 
-            <div id="tarjetas-totales" class="row g-4 mt-4 mb-4 ps-2 pe-2">
+            <div id="tarjetas-totales"
+                class="d-flex flex-wrap justify-content-center align-items-stretch gap-3 mt-4 mb-4">
                 <!-- Las tarjetas se generarán aquí dinámicamente -->
             </div>
         </div>

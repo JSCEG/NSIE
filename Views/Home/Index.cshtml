@@ -38,7 +38,8 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
     ViewData["Title"] = "Inicio";
     var idUsuario = Convert.ToInt32(ViewData["IDUsuario"]);
     var rolUsuario = perfilUsuario?.Rol;
-    var nombreUsuario = perfilUsuario?.Nombre?.ToString();  var esConsultaPublica = (rolUsuario == "10" || nombreUsuario.Contains("consult"));
+    var nombreUsuario = perfilUsuario?.Nombre?.ToString(); var esConsultaPublica = (rolUsuario == "10" ||
+    nombreUsuario.Contains("consult"));
 }
 
 <style>
@@ -467,7 +468,8 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                 <p class="text-muted mb-4">Consulta nuestras guías de uso o contáctanos para obtener asistencia técnica
                     del SNIEr.</p>
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="/Documentos/ManualSNIEr.pdf" class="btn btn-primary px-4" target="_blank">
+                    <a href="https://cdn.sassoapps.com/Manuales/Manual_Usuario_SNIEr.pdf" class="btn btn-primary px-4"
+                        target="_blank">
                         <i class="bi bi-file-earmark-pdf me-2"></i>Descargar manual
                     </a>
                     <button class="btn btn-outline-secondary px-4"
@@ -491,17 +493,17 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
             try {
                 const info = typeof infoJson === 'string' ? JSON.parse(infoJson) : infoJson;
                 const html = `
-                                                                                                <div class="text-start">
-                                                                                                    ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
-                                                                                                    ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
-                                                                                                    ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
-                                                                                                    ${info.roles?.length ? `
-                                                                                                        <ul class="mb-3">
-                                                                                                            ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
-                                                                                                        </ul>` : ''}
-                                                                                                    ${info.order ? `<p><i class='fas fa-sort-amount-up me-2'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
-                                                                                                    ${info.manualUrl ? `<a href="${info.manualUrl}" class="btn btn-sm btn-primary mt-2" target="_blank"><i class="fas fa-download me-2"></i>Descargar manual</a>` : ''}
-                                                                                                </div>`;
+                                                                                                            <div class="text-start">
+                                                                                                                ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
+                                                                                                                ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
+                                                                                                                ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
+                                                                                                                ${info.roles?.length ? `
+                                                                                                                    <ul class="mb-3">
+                                                                                                                        ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
+                                                                                                                    </ul>` : ''}
+                                                                                                                ${info.order ? `<p><i class='fas fa-sort-amount-up me-2'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
+                                                                                                                ${info.manualUrl ? `<a href="${info.manualUrl}" class="btn btn-sm btn-primary mt-2" target="_blank"><i class="fas fa-download me-2"></i>Descargar manual</a>` : ''}
+                                                                                                            </div>`;
 
                 Swal.fire({
                     title: info.title || 'Ayuda del módulo',
@@ -545,25 +547,25 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
 
                     acciones.forEach(a => {
                         const card = `
-                                                                                            <div class="col-12 col-md-6 col-lg-4">
-                                                                                                <div class="card h-100 shadow-sm border-0">
-                                                                                                    <div class="card-body d-flex flex-column">
-                                                                                                        @* <h6 class="fw-semibold mb-1">${a.accion}</h6> *@
-                                                                                                        <h6 class="fw-semibold mb-1">${a.pagina}</h6>
+                                                                                                        <div class="col-12 col-md-6 col-lg-4">
+                                                                                                            <div class="card h-100 shadow-sm border-0">
+                                                                                                                <div class="card-body d-flex flex-column">
+                                                                                                                    @* <h6 class="fw-semibold mb-1">${a.accion}</h6> *@
+                                                                                                                    <h6 class="fw-semibold mb-1">${a.pagina}</h6>
 
-                                                                                                        <span class="badge bg-secondary align-self-start mb-3">
-                                                                                                            ${a.fecha}
-                                                                                                        </span>
+                                                                                                                    <span class="badge bg-secondary align-self-start mb-3">
+                                                                                                                        ${a.fecha}
+                                                                                                                    </span>
 
-                                                                                                        <button class="btn btn-sm btn-primary mt-auto"
-                                                                                                                data-controller="${a.controller}"
-                                                                                                                data-action="${a.action}"
-                                                                                                                onclick="irA(this)">
-                                                                                                            Reanudar
-                                                                                                        </button>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>`;
+                                                                                                                    <button class="btn btn-sm btn-primary mt-auto"
+                                                                                                                            data-controller="${a.controller}"
+                                                                                                                            data-action="${a.action}"
+                                                                                                                            onclick="irA(this)">
+                                                                                                                        Reanudar
+                                                                                                                    </button>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>`;
                         $contenedor.append(card);
                     });
 

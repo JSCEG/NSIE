@@ -1998,7 +1998,7 @@ function iniciarSankey() {
                 }
 
                 // Limpiar contenedor y renderizar tarjetas
-                $("#tarjetas-totales").html("");
+                $("#tarjetas-totales").html("").removeClass();
 
                 for (let nivel in totalPorNivel) {
                     const nivelId = nivel
@@ -2006,12 +2006,42 @@ function iniciarSankey() {
                         .replace(/ /g, "-")
                         .replace(/[^a-z0-9-]/g, "");
 
+                    // Determinar el ícono apropiado para cada nivel
+                    let icono = 'bi-bar-chart-line';
+                    switch (nivel) {
+                        case 'Nivel FEP - Fuentes de Energía Primaria':
+                            icono = 'bi-lightning-charge';
+                            break;
+                        case 'Nivel FOCAL - Sector Energético':
+                            icono = 'bi-building';
+                            break;
+                        case 'Nivel 1 - Provisión y Producción':
+                            icono = 'bi-gear';
+                            break;
+                        case 'Nivel 2 - Transformaciones':
+                            icono = 'bi-arrow-repeat';
+                            break;
+                        case 'Nivel 3 - Tipos de Energía':
+                            icono = 'bi-fuel-pump';
+                            break;
+                        case 'Nivel 4 - Distribución':
+                            icono = 'bi-diagram-3';
+                            break;
+                        case 'Nivel 5 - Uso Final':
+                            icono = 'bi-house-gear';
+                            break;
+                        default:
+                            icono = 'bi-bar-chart-line';
+                    }
+
                     $("#tarjetas-totales").append(`
-                        <div class="card shadow-sm m-2 border-0" style="min-width: 260px; flex: 1;">
-                            <div class="card-body text-center">
-                                <i class="bi bi-bar-chart-line fs-2 text-primary mb-2"></i>
-                                <h6 class="card-title text-primary">${nivel}</h6>
-                                <p class="card-text fs-5 fw-bold">${totalPorNivel[nivel]} PJ</p>
+                        <div class="sankey-card">
+                            <div class="card-body">
+                                <div class="card-icon">
+                                    <i class="bi ${icono} fs-4"></i>
+                                </div>
+                                <h6 class="card-title">${nivel}</h6>
+                                <p class="card-value">${totalPorNivel[nivel]} PJ</p>
                             </div>
                         </div>
                     `);
