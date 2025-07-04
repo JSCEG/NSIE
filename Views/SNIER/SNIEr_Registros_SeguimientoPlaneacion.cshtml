@@ -4,456 +4,458 @@
 @using Newtonsoft.Json
 
 @{
-	var httpContext = HttpContextAccessor.HttpContext;
-	var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
-	var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+    var httpContext = HttpContextAccessor.HttpContext;
+    var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
 
-	ViewData["Title"] = "Seguimiento a instrumentos de planeación energética y proyectos estratégicos";
-	ViewData["NombreUsuario"] = perfilUsuario?.Nombre;
-	ViewData["RolUsuario"] = perfilUsuario?.Rol;
-	ViewData["IDUsuario"] = perfilUsuario?.IdUsuario;
+    ViewData["Title"] = "Seguimiento a Instrumentos de Planeación Energética";
+    ViewData["NombreUsuario"] = perfilUsuario?.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario?.Rol;
+    ViewData["IDUsuario"] = perfilUsuario?.IdUsuario;
 
-	var header = new HeaderViewModel
-	{
-		Title = "📈 Seguimiento a Instrumentos de Planeación",
-		IconPath = "logo_snier.png",
-		Description = "Monitoreo cuantitativo y cualitativo del avance en el cumplimiento de metas y líneas de acción de los Instrumentos de Planeación Energética conforme al Artículo 27 del Reglamento.",
-		Section = "🧬 SNIEr > 📚 Registros con Información Estadística sobre",
-		ModuleInfo = JsonConvert.SerializeObject(new
-		{
-			title = "Seguimiento a Instrumentos de Planeación Energética",
-			description = "Sistema integral de monitoreo para PROSENER, Estrategia Nacional, PLATEASE, PLADESE y PLADESHi con seguimiento de metas, líneas de acción y proyectos estratégicos.",
-			functionality = "Dashboard interactivo con indicadores de avance, mapas de proyectos y seguimiento de cumplimiento normativo.",
-			stage = "Operativo",
-			roles = new[] {
-				new { icon = "users", text = "Unidades Responsables: Seguimiento de líneas de acción" },
-				new { icon = "eye", text = "Consejo de Planeación: Supervisión estratégica" },
-				new { icon = "chart-bar", text = "Público General: Consulta de avances" }
-			},
-			order = new { step = 1, description = "Módulo estratégico para el cumplimiento de metas nacionales" },
-			manualUrl = "/docs/seguimiento-planeacion"
-		})
-	};
+    var header = new HeaderViewModel
+    {
+        Title = "Seguimiento a Instrumentos de Planeación Energética",
+        IconPath = "conding.png",
+        Description = "Monitoreo y seguimiento de instrumentos de planeación energética y proyectos estratégicos nacionales",
+        Section = "🧬 SNIEr > 📚 Registros con Información Estadística > 📈 Seguimiento de Planeación",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Seguimiento a Instrumentos de Planeación Energética",
+            description = "Sistema integral de monitoreo cuantitativo y cualitativo del avance en el cumplimiento de metas y líneas de acción de los instrumentos de planeación energética.",
+            functionality = "Panel interactivo que presenta el seguimiento de PROSENER, Estrategia Nacional, PLATEASE, PLADESE y PLADESHi con indicadores de avance y cumplimiento normativo.",
+            stage = "Operativo",
+            roles = new[] {
+                new { icon = "clipboard-check", text = "Seguimiento: Monitoreo de metas y líneas de acción" },
+                new { icon = "graph-up-arrow", text = "Indicadores: Métricas de avance y cumplimiento" },
+                new { icon = "calendar-event", text = "Planeación: Instrumentos estratégicos nacionales" }
+            },
+            order = new { step = 3, description = "Panel de seguimiento de planeación energética disponible" },
+            manualUrl = "#"
+        })
+    };
 }
 
 @await Html.PartialAsync("_ViewHeader", header)
 
 <style>
-	/* Evitar zoom brusco en hover */
-	.navbar-brand:hover img {
-		transform: none !important;
-	}
-	
-	/* Estilos específicos para la vista */
-	.snier-kpi-card {
-		background: var(--white);
-		border: 1px solid var(--gray-200);
-		border-radius: 0.75rem;
-		box-shadow: var(--shadow-subtle);
-		transition: box-shadow 0.2s ease;
-	}
-	
-	.snier-kpi-card:hover {
-		box-shadow: var(--shadow-soft);
-	}
-	
-	.snier-section {
-		background: var(--gray-50);
-		border-radius: 1rem;
-		padding: 2rem;
-		margin-bottom: 2rem;
-		border: 1px solid var(--gray-200);
-	}
-	
-	.snier-timeline {
-		position: relative;
-		padding-left: 2rem;
-	}
-	
-	.snier-timeline::before {
-		content: '';
-		position: absolute;
-		left: 0.5rem;
-		top: 0;
-		bottom: 0;
-		width: 2px;
-		background: var(--snier-primary);
-	}
-	
-	.snier-timeline-item {
-		position: relative;
-		margin-bottom: 1.5rem;
-	}
-	
-	.snier-timeline-item::before {
-		content: '';
-		position: absolute;
-		left: -1.875rem;
-		top: 0.5rem;
-		width: 12px;
-		height: 12px;
-		background: var(--snier-primary);
-		border-radius: 50%;
-		border: 3px solid var(--white);
-	}
-	
-	.snier-progress-enhanced {
-		height: 24px;
-		border-radius: 12px;
-		background: var(--gray-200);
-		overflow: hidden;
-	}
-	
-	.snier-progress-bar {
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: white;
-		font-weight: 600;
-		font-size: 0.75rem;
-		text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-	}
+/* Estilos específicos para PowerBI responsivo */
+.powerbi-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 62.25%; /* Ratio 16:10 para PowerBI */
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+}
+
+.powerbi-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: var(--border-radius-lg);
+}
+
+.powerbi-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--gray-500);
+    z-index: 1;
+}
+
+.powerbi-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gray-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+
+.powerbi-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Responsive adjustments */
+@@media (max-width: 768px) {
+    .powerbi-container {
+        padding-bottom: 75%; /* Ratio más cuadrado para móviles */
+    }
+}
+
+@@media (max-width: 576px) {
+    .powerbi-container {
+        padding-bottom: 80%;
+        border-radius: var(--border-radius);
+    }
+}
+
+.stats-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-mini-item {
+    background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    border: 1px solid var(--gray-200);
+    transition: var(--transition);
+    border-left: 3px solid var(--snier-primary);
+}
+
+.stat-mini-item:hover {
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-2px);
+}
+
+.stat-mini-value {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--snier-primary);
+    margin-bottom: 0.25rem;
+}
+
+.stat-mini-label {
+    font-size: var(--font-size-xs);
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.instrument-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.instrument-prosener {
+    background: rgba(24, 156, 144, 0.1);
+    color: var(--snier-primary);
+    border: 1px solid rgba(24, 156, 144, 0.2);
+}
+
+.instrument-estrategia {
+    background: rgba(41, 74, 149, 0.1);
+    color: var(--snier-accent);
+    border: 1px solid rgba(41, 74, 149, 0.2);
+}
+
+.instrument-platease {
+    background: rgba(8, 145, 178, 0.1);
+    color: var(--snier-tertiary);
+    border: 1px solid rgba(8, 145, 178, 0.2);
+}
+
+.progress-indicator {
+    background: var(--gray-200);
+    border-radius: var(--border-radius);
+    height: 6px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--snier-primary), var(--snier-accent));
+    border-radius: var(--border-radius);
+    transition: width 0.3s ease;
+}
 </style>
 
-<div class="container ps-5 pe-5 mt-4">
-	<!-- Dashboard Principal de Instrumentos -->
-	<div class="snier-section">
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<h4 class="text-primary fw-bold mb-0">
-				<i class="bi bi-diagram-3-fill me-2"></i>
-				Dashboard por Instrumento de Planeación
-			</h4>
-			<div class="btn-group" role="group">
-				<button type="button" class="btn btn-outline-primary btn-sm active" data-instrument="all">
-					<i class="bi bi-grid-3x3-gap me-1"></i>Todos
-				</button>
-				<button type="button" class="btn btn-outline-primary btn-sm" data-instrument="prosener">PROSENER</button>
-				<button type="button" class="btn btn-outline-primary btn-sm" data-instrument="estrategia">Estrategia Nacional</button>
-				<button type="button" class="btn btn-outline-primary btn-sm" data-instrument="platease">PLATEASE</button>
-				<button type="button" class="btn btn-outline-primary btn-sm" data-instrument="pladese">PLADESE</button>
-				<button type="button" class="btn btn-outline-primary btn-sm" data-instrument="pladeshi">PLADESHi</button>
-			</div>
-		</div>
+<!-- Contenido principal -->
+<div class="container-fluid p-4">
+    <!-- Mini estadísticas -->
+    <div class="stats-mini-grid">
+        <div class="stat-mini-item">
+            <div class="stat-mini-value">5</div>
+            <div class="stat-mini-label">Instrumentos Monitoreados</div>
+        </div>
+        <div class="stat-mini-item">
+            <div class="stat-mini-value">100+</div>
+            <div class="stat-mini-label">Líneas de Acción</div>
+        </div>
+        <div class="stat-mini-item">
+            <div class="stat-mini-value">2024</div>
+            <div class="stat-mini-label">Año de Seguimiento</div>
+        </div>
+        <div class="stat-mini-item">
+            <div class="stat-mini-value">Tiempo Real</div>
+            <div class="stat-mini-label">Actualización</div>
+        </div>
+    </div>
 
-		<!-- KPIs Principales -->
-		<div class="row" id="kpi-cards">
-			<div class="col-md-3 mb-3">
-				<div class="snier-kpi-card p-4 text-center h-100">
-					<div class="d-flex justify-content-between align-items-start mb-3">
-						<span class="badge bg-success-subtle text-success">Art. 27</span>
-						<i class="bi bi-lightning-charge-fill text-warning fs-3"></i>
-					</div>
-					<h3 class="text-primary fw-bold mb-1">35.2%</h3>
-					<p class="text-muted small mb-3">Energías Limpias</p>
-					<div class="snier-progress-enhanced">
-						<div class="snier-progress-bar bg-success" style="width: 70.4%;">70.4%</div>
-					</div>
-					<small class="text-muted mt-2 d-block">Meta 2030: 50%</small>
-				</div>
-			</div>
-			<div class="col-md-3 mb-3">
-				<div class="snier-kpi-card p-4 text-center h-100">
-					<div class="d-flex justify-content-between align-items-start mb-3">
-						<span class="badge bg-info-subtle text-info">Art. 27</span>
-						<i class="bi bi-house-fill text-info fs-3"></i>
-					</div>
-					<h3 class="text-primary fw-bold mb-1">12.8%</h3>
-					<p class="text-muted small mb-3">Pobreza Energética</p>
-					<div class="snier-progress-enhanced">
-						<div class="snier-progress-bar bg-info" style="width: 42.7%;">42.7%</div>
-					</div>
-					<small class="text-muted mt-2 d-block">Meta 2030: 6%</small>
-				</div>
-			</div>
-			<div class="col-md-3 mb-3">
-				<div class="snier-kpi-card p-4 text-center h-100">
-					<div class="d-flex justify-content-between align-items-start mb-3">
-						<span class="badge bg-warning-subtle text-warning">Art. 27</span>
-						<i class="bi bi-speedometer2 text-warning fs-3"></i>
-					</div>
-					<h3 class="text-primary fw-bold mb-1">-2.1%</h3>
-					<p class="text-muted small mb-3">Intensidad Energética</p>
-					<div class="snier-progress-enhanced">
-						<div class="snier-progress-bar bg-warning" style="width: 35%;">35%</div>
-					</div>
-					<small class="text-muted mt-2 d-block">Meta 2030: -6%</small>
-				</div>
-			</div>
-			<div class="col-md-3 mb-3">
-				<div class="snier-kpi-card p-4 text-center h-100">
-					<div class="d-flex justify-content-between align-items-start mb-3">
-						<span class="badge bg-primary-subtle text-primary">Proyectos</span>
-						<i class="bi bi-geo-alt-fill text-primary fs-3"></i>
-					</div>
-					<h3 class="text-primary fw-bold mb-1">147</h3>
-					<p class="text-muted small mb-3">Proyectos Estratégicos</p>
-					<div class="d-flex justify-content-between small text-muted">
-						<span>🟢 89 Activos</span>
-						<span>🟡 58 En Progreso</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- Badges de instrumentos -->
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <span class="instrument-badge instrument-prosener">
+            <i class="bi bi-file-text me-1"></i>PROSENER
+        </span>
+        <span class="instrument-badge instrument-estrategia">
+            <i class="bi bi-flag me-1"></i>Estrategia Nacional
+        </span>
+        <span class="instrument-badge instrument-platease">
+            <i class="bi bi-graph-up me-1"></i>PLATEASE
+        </span>
+        <span class="instrument-badge instrument-prosener">
+            <i class="bi bi-lightning me-1"></i>PLADESE
+        </span>
+        <span class="instrument-badge instrument-estrategia">
+            <i class="bi bi-house me-1"></i>PLADESHi
+        </span>
+    </div>
 
-	<!-- Timeline de Hitos Importantes -->
-	<div class="snier-section">
-		<h5 class="text-primary fw-bold mb-4">
-			<i class="bi bi-clock-history me-2"></i>
-			Timeline de Hitos 2024
-		</h5>
-		<div class="snier-timeline">
-			<div class="snier-timeline-item">
-				<div class="d-flex justify-content-between align-items-start">
-					<div>
-						<h6 class="fw-bold mb-1">Actualización PROSENER</h6>
-						<p class="text-muted small mb-0">Revisión de metas de energías limpias para el periodo 2024-2030</p>
-					</div>
-					<span class="badge bg-success-subtle text-success">Completado</span>
-				</div>
-				<small class="text-muted">15 enero 2024</small>
-			</div>
-			<div class="snier-timeline-item">
-				<div class="d-flex justify-content-between align-items-start">
-					<div>
-						<h6 class="fw-bold mb-1">Informe de Avance PLATEASE</h6>
-						<p class="text-muted small mb-0">Evaluación semestral del progreso en proyectos de transición energética</p>
-					</div>
-					<span class="badge bg-warning-subtle text-warning">En Progreso</span>
-				</div>
-				<small class="text-muted">30 marzo 2024</small>
-			</div>
-			<div class="snier-timeline-item">
-				<div class="d-flex justify-content-between align-items-start">
-					<div>
-						<h6 class="fw-bold mb-1">Lanzamiento PLADESHi</h6>
-						<p class="text-muted small mb-0">Inicio del Plan de Desarrollo del Sistema de Hidrógeno</p>
-					</div>
-					<span class="badge bg-info-subtle text-info">Programado</span>
-				</div>
-				<small class="text-muted">15 junio 2024</small>
-			</div>
-		</div>
-	</div>
+    <!-- Indicador de progreso general -->
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <div class="d-flex align-items-center">
+                <span class="fw-semibold me-3">Avance General del Seguimiento:</span>
+                <div class="progress-indicator flex-grow-1 me-3">
+                    <div class="progress-bar" style="width: 78%"></div>
+                </div>
+                <span class="text-primary fw-bold">78%</span>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-primary btn-sm" onclick="toggleFullscreen()">
+                <i class="bi bi-arrows-fullscreen me-1"></i>
+                Pantalla Completa
+            </button>
+        </div>
+    </div>
 
-	<!-- Seguimiento de Metas Detallado -->
-	<div class="snier-section">
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<h5 class="text-primary fw-bold mb-0">
-				<i class="bi bi-graph-up-arrow me-2"></i>
-				Seguimiento de Metas (Art. 27)
-			</h5>
-			<div class="dropdown">
-				<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-					<i class="bi bi-calendar3 me-1"></i>2024
-				</button>
-				<ul class="dropdown-menu">
-					<li><a class="dropdown-item" href="#">2024</a></li>
-					<li><a class="dropdown-item" href="#">2023</a></li>
-					<li><a class="dropdown-item" href="#">2022</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-8 mb-4">
-				<div id="metasChart" style="height: 350px; background: white; border-radius: 0.75rem; border: 1px solid var(--gray-200);"></div>
-			</div>
-			<div class="col-lg-4 mb-4">
-				<div id="gaugeChart" style="height: 350px; background: white; border-radius: 0.75rem; border: 1px solid var(--gray-200);"></div>
-			</div>
-		</div>
-	</div>
+    <!-- Contenedor del PowerBI -->
+    <div class="powerbi-container" id="powerbiContainer">
+        <!-- Overlay de carga -->
+        <div class="powerbi-overlay" id="powerbiOverlay">
+            <div class="powerbi-loading">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <div>
+                    <h5 class="mb-2">Cargando Panel de Seguimiento</h5>
+                    <p class="small text-muted mb-0">Preparando indicadores de planeación...</p>
+                </div>
+            </div>
+        </div>
 
-	<!-- Líneas de Acción -->
-	<div class="snier-section">
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<h5 class="text-primary fw-bold mb-0">
-				<i class="bi bi-list-task me-2"></i>
-				Líneas de Acción por Unidad Responsable (Art. 26)
-			</h5>
-			<div class="d-flex gap-2">
-				<button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filtrosModal">
-					<i class="bi bi-funnel me-1"></i>Filtros
-				</button>
-				<button class="btn btn-sm btn-success" onclick="exportarLineasAccion()">
-					<i class="bi bi-download me-1"></i>Exportar
-				</button>
-			</div>
-		</div>
-		<div class="table-responsive" style="background: white; border-radius: 0.75rem; border: 1px solid var(--gray-200);">
-			<table id="lineasAccionTable" class="table table-hover mb-0">
-				<thead class="table-light">
-					<tr>
-						<th width="5%">#</th>
-						<th width="20%">Instrumento</th>
-						<th width="25%">Línea de Acción</th>
-						<th width="15%">Unidad Responsable</th>
-						<th width="10%">Estatus</th>
-						<th width="10%">Avance</th>
-						<th width="10%">Última Actualización</th>
-						<th width="5%">Acciones</th>
-					</tr>
-				</thead>
-				<tbody>
-					<!-- Datos se cargarán dinámicamente -->
-				</tbody>
-			</table>
-		</div>
-	</div>
+        <!-- iframe del PowerBI -->
+        <iframe 
+            id="powerbiFrame"
+            class="powerbi-iframe"
+            title="Seguimiento a Instrumentos de Planeación Energética" 
+            src="https://app.powerbi.com/view?r=eyJrIjoiYzkxYWZjOTYtNmUxMC00YTk2LThjZmMtMTJlYjVhNzJiZDg2IiwidCI6IjczMzY5OTZkLTMzNjctNDBhNC04NGFmLWRkMTI3NDY4YzA3OCIsImMiOjR9" 
+            allowfullscreen="true"
+            onload="hideLoadingOverlay()"
+            style="display: none;">
+        </iframe>
+    </div>
 
-	<!-- Proyectos Estratégicos -->
-	<div class="snier-section">
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<h5 class="text-primary fw-bold mb-0">
-				<i class="bi bi-geo-alt me-2"></i>
-				Mapa de Proyectos Estratégicos
-			</h5>
-			<div class="btn-group btn-group-sm" role="group">
-				<button type="button" class="btn btn-outline-primary active" data-map-filter="all">Todos</button>
-				<button type="button" class="btn btn-outline-success" data-map-filter="active">Activos</button>
-				<button type="button" class="btn btn-outline-warning" data-map-filter="progress">En Progreso</button>
-				<button type="button" class="btn btn-outline-secondary" data-map-filter="planned">Planeados</button>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-8 mb-4">
-				<div id="proyectosMap" style="height: 450px; border-radius: 0.75rem; border: 1px solid var(--gray-200);"></div>
-			</div>
-			<div class="col-lg-4 mb-4">
-				<div style="background: white; border-radius: 0.75rem; border: 1px solid var(--gray-200); padding: 1.5rem; height: 450px;">
-					<h6 class="text-primary fw-bold mb-3">
-						<i class="bi bi-clipboard-data me-2"></i>
-						Resumen de Proyectos
-					</h6>
-					<div class="row text-center mb-4">
-						<div class="col-4">
-							<div class="p-3 bg-success-subtle rounded">
-								<div class="fw-bold text-success fs-4">89</div>
-								<small class="text-muted">Activos</small>
-							</div>
-						</div>
-						<div class="col-4">
-							<div class="p-3 bg-warning-subtle rounded">
-								<div class="fw-bold text-warning fs-4">58</div>
-								<small class="text-muted">En Progreso</small>
-							</div>
-						</div>
-						<div class="col-4">
-							<div class="p-3 bg-secondary-subtle rounded">
-								<div class="fw-bold text-secondary fs-4">23</div>
-								<small class="text-muted">Planeados</small>
-							</div>
-						</div>
-					</div>
-					<div id="proyectosPorTipoChart" style="height: 200px;"></div>
-					<hr>
-					<h6 class="text-muted mb-3">Proyectos Prioritarios</h6>
-					<div class="snier-timeline">
-						<div class="snier-timeline-item">
-							<div class="d-flex justify-content-between align-items-center">
-								<div>
-									<div class="fw-semibold">Central Solar Sonora</div>
-									<small class="text-muted">1,200 MW - PVIRCE</small>
-								</div>
-								<span class="badge bg-success-subtle text-success">85%</span>
-							</div>
-						</div>
-						<div class="snier-timeline-item">
-							<div class="d-flex justify-content-between align-items-center">
-								<div>
-									<div class="fw-semibold">Gasoducto Tuxpan-Tula</div>
-									<small class="text-muted">Natural Gas - PAM</small>
-								</div>
-								<span class="badge bg-warning-subtle text-warning">67%</span>
-							</div>
-						</div>
-						<div class="snier-timeline-item">
-							<div class="d-flex justify-content-between align-items-center">
-								<div>
-									<div class="fw-semibold">Red Inteligente CDMX</div>
-									<small class="text-muted">Smart Grid - Quinquenal</small>
-								</div>
-								<span class="badge bg-info-subtle text-info">45%</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- Información adicional -->
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="alert alert-info border-0" style="background: rgba(24, 156, 144, 0.1);">
+                <div class="d-flex">
+                    <i class="bi bi-info-circle text-primary me-3 fs-4"></i>
+                    <div>
+                        <h6 class="alert-heading mb-2">Instrumentos de Planeación Monitoreados</h6>
+                        <p class="mb-1">
+                            <strong>PROSENER:</strong> Programa Sectorial de Energía - Estrategias y objetivos del sector energético
+                        </p>
+                        <p class="mb-1">
+                            <strong>Estrategia Nacional:</strong> Estrategia de Transición para Promover el Uso de Tecnologías y Combustibles más Limpios
+                        </p>
+                        <p class="mb-1">
+                            <strong>PLATEASE:</strong> Plataforma de Transparencia en Eficiencia y Ahorro de Energía en el Sector Eléctrico
+                        </p>
+                        <p class="mb-0">
+                            <strong>PLADESE/PLADESHi:</strong> Planes de Desarrollo del Sistema Eléctrico e Hidrocarburos
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0" style="background: var(--gray-50);">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="bi bi-clipboard-data me-2"></i>Métricas de Seguimiento
+                    </h6>
+                    <ul class="list-unstyled small mb-3">
+                        <li class="mb-1">
+                            <i class="bi bi-check-circle me-1 text-success"></i>
+                            Metas Cumplidas
+                        </li>
+                        <li class="mb-1">
+                            <i class="bi bi-clock me-1 text-warning"></i>
+                            Acciones en Proceso
+                        </li>
+                        <li class="mb-1">
+                            <i class="bi bi-exclamation-triangle me-1 text-danger"></i>
+                            Riesgos Identificados
+                        </li>
+                        <li class="mb-0">
+                            <i class="bi bi-calendar-check me-1 text-info"></i>
+                            Cronograma de Cumplimiento
+                        </li>
+                    </ul>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="downloadReport()">
+                            <i class="bi bi-file-earmark-excel me-1"></i>
+                            Descargar Reporte
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="shareReport()">
+                            <i class="bi bi-share me-1"></i>
+                            Compartir Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Modal de Filtros -->
-<div class="modal fade" id="filtrosModal" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">
-					<i class="bi bi-funnel me-2"></i>
-					Filtros de Líneas de Acción
-				</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-			</div>
-			<div class="modal-body">
-				<div class="mb-3">
-					<label class="form-label">Instrumento</label>
-					<select class="form-select" id="filtroInstrumento">
-						<option value="">Todos los instrumentos</option>
-						<option value="PROSENER">PROSENER</option>
-						<option value="Estrategia Nacional">Estrategia Nacional</option>
-						<option value="PLATEASE">PLATEASE</option>
-						<option value="PLADESE">PLADESE</option>
-						<option value="PLADESHi">PLADESHi</option>
-					</select>
-				</div>
-				<div class="mb-3">
-					<label class="form-label">Estatus</label>
-					<select class="form-select" id="filtroEstatus">
-						<option value="">Todos los estatus</option>
-						<option value="iniciada">Iniciada</option>
-						<option value="en-progreso">En Progreso</option>
-						<option value="completada">Completada</option>
-						<option value="pausada">Pausada</option>
-					</select>
-				</div>
-				<div class="mb-3">
-					<label class="form-label">Unidad Responsable</label>
-					<select class="form-select" id="filtroUnidad">
-						<option value="">Todas las unidades</option>
-						<option value="SENER">SENER</option>
-						<option value="CONUEE">CONUEE</option>
-						<option value="CFE">CFE</option>
-						<option value="PEMEX">PEMEX</option>
-						<option value="CRE">CRE</option>
-					</select>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary" onclick="aplicarFiltros()">Aplicar Filtros</button>
-			</div>
-		</div>
-	</div>
-</div>
+<script>
+// Función para ocultar el overlay de carga
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('powerbiOverlay');
+    const iframe = document.getElementById('powerbiFrame');
+    
+    if (overlay && iframe) {
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+            iframe.style.display = 'block';
+        }, 1500); // Pequeño delay para mejor UX
+    }
+}
 
-<!-- Modal de Detalle de Línea de Acción -->
-<div class="modal fade" id="detalleLineaModal" tabindex="-1">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">
-					<i class="bi bi-info-circle me-2"></i>
-					Detalle de Línea de Acción
-				</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-			</div>
-			<div class="modal-body" id="detalleLineaContent">
-				<!-- Contenido se carga dinámicamente -->
-			</div>
-		</div>
-	</div>
-</div>
+// Función para pantalla completa
+function toggleFullscreen() {
+    const container = document.getElementById('powerbiContainer');
+    
+    if (!document.fullscreenElement) {
+        container.requestFullscreen().then(() => {
+            container.style.position = 'fixed';
+            container.style.top = '0';
+            container.style.left = '0';
+            container.style.width = '100vw';
+            container.style.height = '100vh';
+            container.style.zIndex = '9999';
+            container.style.paddingBottom = '0';
+        }).catch(err => {
+            console.log('Error al entrar en pantalla completa:', err);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+// Listener para salir de pantalla completa
+document.addEventListener('fullscreenchange', function() {
+    const container = document.getElementById('powerbiContainer');
+    if (!document.fullscreenElement) {
+        // Restaurar estilos originales
+        container.style.position = '';
+        container.style.top = '';
+        container.style.left = '';
+        container.style.width = '';
+        container.style.height = '';
+        container.style.zIndex = '';
+        container.style.paddingBottom = '62.25%';
+    }
+});
+
+// Función para descargar reporte (placeholder)
+function downloadReport() {
+    Swal.fire({
+        title: 'Descarga de Reporte',
+        text: 'Esta funcionalidad estará disponible próximamente.',
+        icon: 'info',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: 'var(--snier-primary)'
+    });
+}
+
+// Función para compartir (placeholder)
+function shareReport() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Seguimiento a Instrumentos de Planeación Energética - SNIER',
+            text: 'Panel de seguimiento y monitoreo de instrumentos de planeación energética',
+            url: window.location.href
+        });
+    } else {
+        // Fallback para navegadores que no soportan Web Share API
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            Swal.fire({
+                title: 'Enlace Copiado',
+                text: 'El enlace ha sido copiado al portapapeles',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        });
+    }
+}
+
+// Inicialización cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si el iframe se carga correctamente
+    const iframe = document.getElementById('powerbiFrame');
+    
+    // Timeout de seguridad para ocultar el loading si el iframe no responde
+    setTimeout(() => {
+        if (document.getElementById('powerbiOverlay').style.opacity !== '0') {
+            hideLoadingOverlay();
+        }
+    }, 10000); // 10 segundos de timeout
+    
+    // Manejo responsive del iframe
+    function adjustIframeHeight() {
+        const container = document.getElementById('powerbiContainer');
+        if (window.innerWidth <= 768) {
+            container.style.paddingBottom = '75%';
+        } else if (window.innerWidth <= 576) {
+            container.style.paddingBottom = '80%';
+        } else {
+            container.style.paddingBottom = '62.25%';
+        }
+    }
+    
+    // Ajustar al cargar y al redimensionar
+    adjustIframeHeight();
+    window.addEventListener('resize', adjustIframeHeight);
+    
+    // Animar la barra de progreso al cargar
+    setTimeout(() => {
+        document.querySelector('.progress-bar').style.width = '78%';
+    }, 500);
+});
+</script>
+	
+
+
+
 
 <!-- Scripts -->
 <script src="https://code.highcharts.com/highcharts.js"></script>

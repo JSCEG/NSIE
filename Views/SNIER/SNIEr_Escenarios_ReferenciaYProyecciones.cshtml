@@ -4,66 +4,406 @@
 @using Newtonsoft.Json
 
 @{
-	var httpContext = HttpContextAccessor.HttpContext;
-	var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
-	var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+    var httpContext = HttpContextAccessor.HttpContext;
+    var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
 
-	ViewData["Title"] = "Escenario de referencia y escenarios a mediano y largo plazo del sector energético";
-	ViewData["NombreUsuario"] = perfilUsuario?.Nombre;
-	ViewData["RolUsuario"] = perfilUsuario?.Rol;
-	ViewData["IDUsuario"] = perfilUsuario?.IdUsuario;
+    ViewData["Title"] = "Escenarios del Sector Energético";
+    ViewData["NombreUsuario"] = perfilUsuario?.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario?.Rol;
+    ViewData["IDUsuario"] = perfilUsuario?.IdUsuario;
 
-	var header = new HeaderViewModel
-	{
-		Title = "Escenario de referencia y escenarios a mediano y largo plazo del sector energético",
-		IconPath = "conding.png",
-		Description = "Escenarios del sector energético - Esta sección del sitio se encuentra actualmente en desarrollo.",
-		Section = "🧬 SNIEr > 🧭 Escenarios del sector energético",
-		ModuleInfo = JsonConvert.SerializeObject(new
-		{
-			title = "Escenario de referencia y escenarios a mediano y largo plazo del sector energético",
-			description = "Escenarios del sector energético - La funcionalidad estará disponible próximamente como parte del desarrollo del SNIEr.",
-			functionality = "Esta sección alojará escenarios del sector energético aún no liberados al público.",
-			stage = "En construcción",
-			roles = new[] {
-new { icon = "hammer", text = "Equipo de Desarrollo: Módulo en implementación" },
-new { icon = "eye", text = "Consulta Pública: Pronto disponible para usuarios" }
-},
-			order = new { step = 0, description = "Planificado en la fase inicial del sistema" },
-			manualUrl = "#"
-		})
-	};
+    var header = new HeaderViewModel
+    {
+        Title = "Escenarios del Sector Energético",
+        IconPath = "conding.png",
+        Description = "Escenario de referencia y proyecciones a mediano y largo plazo del sector energético nacional",
+        Section = "🧬 SNIEr > 🧭 Escenarios del sector energético > 📊 Referencia y Proyecciones",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Escenarios del Sector Energético",
+            description = "Visualización interactiva de escenarios de referencia y proyecciones energéticas a mediano y largo plazo.",
+            functionality = "Panel que presenta escenarios base, alternativos y proyecciones temporales del sector energético nacional mediante herramientas analíticas avanzadas.",
+            stage = "Operativo",
+            roles = new[] {
+                new { icon = "graph-up", text = "Escenarios Base: Proyecciones de referencia del sector" },
+                new { icon = "clock-history", text = "Mediano/Largo Plazo: Horizontes temporales extendidos" },
+                new { icon = "bar-chart-line", text = "Análisis: Herramientas interactivas de visualización" }
+            },
+            order = new { step = 2, description = "Panel de escenarios energéticos disponible" },
+            manualUrl = "#"
+        })
+    };
 }
 
 @await Html.PartialAsync("_ViewHeader", header)
 
-<div class="container mb-5 ps-5 pe-5">
-	<div class="row">
-		<div class="col-12 col-md-10 col-lg-7 mx-auto">
-			<div class="app-card p-5 text-center shadow-sm border rounded-4 bg-white">
-				<div class="mb-4">
-					<img src="@Cdn.Url/img_snier/login/logo_snier.png" class="img-fluid" alt="Logo SNIER"
-						style="max-height: 100%;" />
-				</div>
+<style>
+/* Estilos específicos para PowerBI responsivo */
+.powerbi-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 62.25%; /* Ratio 16:10 para PowerBI */
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+}
 
-				<h5 class="text-muted mb-3">🧬 SNIEr > 🧭 Escenarios del sector energético > 📊 Escenario de referencia y escenarios a mediano y largo plazo del sector energético</h5>
-				<h6 class="text-muted mb-3">Estamos trabajando para habilitar esta funcionalidad pronto.</h6>
+.powerbi-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: var(--border-radius-lg);
+}
 
-				<div class="alert alert-info small">
-					<strong>Nota:</strong> Esta sección está en desarrollo como parte del sistema SNIEr.
-				</div>
+.powerbi-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--gray-500);
+    z-index: 1;
+}
 
-				<button class="btn btn-danger px-4 mt-3" onclick="goBack()" data-bs-toggle="tooltip"
-					title="Regresa a la vista anterior">
-					<i class="bi bi-arrow-left-circle-fill"></i> Regresar
-				</button>
-			</div>
-		</div>
-	</div>
+.powerbi-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gray-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+
+.powerbi-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Responsive adjustments */
+@@media (max-width: 768px) {
+    .powerbi-container {
+        padding-bottom: 75%; /* Ratio más cuadrado para móviles */
+    }
+}
+
+@@media (max-width: 576px) {
+    .powerbi-container {
+        padding-bottom: 80%;
+        border-radius: var(--border-radius);
+    }
+}
+
+.stats-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-mini-item {
+    background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    border: 1px solid var(--gray-200);
+    transition: var(--transition);
+    border-left: 3px solid var(--snier-primary);
+}
+
+.stat-mini-item:hover {
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-2px);
+}
+
+.stat-mini-value {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--snier-primary);
+    margin-bottom: 0.25rem;
+}
+
+.stat-mini-label {
+    font-size: var(--font-size-xs);
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.scenario-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.scenario-reference {
+    background: rgba(24, 156, 144, 0.1);
+    color: var(--snier-primary);
+    border: 1px solid rgba(24, 156, 144, 0.2);
+}
+
+.scenario-alternative {
+    background: rgba(41, 74, 149, 0.1);
+    color: var(--snier-accent);
+    border: 1px solid rgba(41, 74, 149, 0.2);
+}
+</style>
+
+<!-- Contenido principal -->
+<div class="container-fluid p-4">
+    <!-- Mini estadísticas -->
+    <div class="stats-mini-grid">
+        <div class="stat-mini-item">
+            <div class="stat-mini-value">2050</div>
+            <div class="stat-mini-label">Horizonte Temporal</div>
+        </div>
+        <div class="stat-mini-item">
+            <div class="stat-mini-value">3</div>
+            <div class="stat-mini-label">Escenarios Principales</div>
+        </div>
+        <div class="stat-mini-item">
+            <div class="stat-mini-value">Sectorial</div>
+            <div class="stat-mini-label">Alcance Energético</div>
+        </div>
+        <div class="stat-mini-item">
+            <div class="stat-mini-value">Interactivo</div>
+            <div class="stat-mini-label">Análisis Dinámico</div>
+        </div>
+    </div>
+
+    <!-- Badges de escenarios -->
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <span class="scenario-badge scenario-reference">
+            <i class="bi bi-graph-up me-1"></i>Escenario de Referencia
+        </span>
+        <span class="scenario-badge scenario-alternative">
+            <i class="bi bi-clock me-1"></i>Mediano Plazo (2030)
+        </span>
+        <span class="scenario-badge scenario-alternative">
+            <i class="bi bi-calendar-range me-1"></i>Largo Plazo (2050)
+        </span>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="d-flex justify-content-end gap-2 mb-3">
+        <button class="btn btn-primary btn-sm" onclick="toggleFullscreen()">
+            <i class="bi bi-arrows-fullscreen me-1"></i>
+            Pantalla Completa
+        </button>
+    </div>
+
+    <!-- Contenedor del PowerBI -->
+    <div class="powerbi-container" id="powerbiContainer">
+        <!-- Overlay de carga -->
+        <div class="powerbi-overlay" id="powerbiOverlay">
+            <div class="powerbi-loading">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <div>
+                    <h5 class="mb-2">Cargando Escenarios Energéticos</h5>
+                    <p class="small text-muted mb-0">Preparando análisis de proyecciones...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- iframe del PowerBI -->
+        <iframe 
+            id="powerbiFrame"
+            class="powerbi-iframe"
+            title="Escenarios del Sector Energético" 
+            src="https://app.powerbi.com/view?r=eyJrIjoiMjAyOTk2YzktZmMwNi00MGVhLWI5ZTgtNzc2YTExYTAxZmVjIiwidCI6IjczMzY5OTZkLTMzNjctNDBhNC04NGFmLWRkMTI3NDY4YzA3OCIsImMiOjR9" 
+            allowfullscreen="true"
+            onload="hideLoadingOverlay()"
+            style="display: none;">
+        </iframe>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="alert alert-info border-0" style="background: rgba(24, 156, 144, 0.1);">
+                <div class="d-flex">
+                    <i class="bi bi-info-circle text-primary me-3 fs-4"></i>
+                    <div>
+                        <h6 class="alert-heading mb-2">Información sobre los Escenarios</h6>
+                        <p class="mb-1">
+                            <strong>Escenario de Referencia:</strong> Proyección base considerando políticas actuales y tendencias históricas
+                        </p>
+                        <p class="mb-1">
+                            <strong>Mediano Plazo (2030):</strong> Escenarios alternativos con metas de transición energética
+                        </p>
+                        <p class="mb-0">
+                            <strong>Largo Plazo (2050):</strong> Visión estratégica con objetivos de carbono neutralidad
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0" style="background: var(--gray-50);">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="bi bi-graph-up me-2"></i>Indicadores Clave
+                    </h6>
+                    <ul class="list-unstyled small mb-3">
+                        <li class="mb-1">
+                            <i class="bi bi-lightning me-1 text-warning"></i>
+                            Demanda Energética
+                        </li>
+                        <li class="mb-1">
+                            <i class="bi bi-wind me-1 text-success"></i>
+                            Energías Renovables
+                        </li>
+                        <li class="mb-1">
+                            <i class="bi bi-cloud me-1 text-info"></i>
+                            Emisiones de GEI
+                        </li>
+                        <li class="mb-0">
+                            <i class="bi bi-graph-down me-1 text-danger"></i>
+                            Intensidad Energética
+                        </li>
+                    </ul>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="downloadReport()">
+                            <i class="bi bi-file-earmark-pdf me-1"></i>
+                            Descargar Análisis
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="shareReport()">
+                            <i class="bi bi-share me-1"></i>
+                            Compartir Escenarios
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-	function goBack() {
-		window.history.back();
-	}
+// Función para ocultar el overlay de carga
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('powerbiOverlay');
+    const iframe = document.getElementById('powerbiFrame');
+    
+    if (overlay && iframe) {
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+            iframe.style.display = 'block';
+        }, 1500); // Pequeño delay para mejor UX
+    }
+}
+
+// Función para pantalla completa
+function toggleFullscreen() {
+    const container = document.getElementById('powerbiContainer');
+    
+    if (!document.fullscreenElement) {
+        container.requestFullscreen().then(() => {
+            container.style.position = 'fixed';
+            container.style.top = '0';
+            container.style.left = '0';
+            container.style.width = '100vw';
+            container.style.height = '100vh';
+            container.style.zIndex = '9999';
+            container.style.paddingBottom = '0';
+        }).catch(err => {
+            console.log('Error al entrar en pantalla completa:', err);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+// Listener para salir de pantalla completa
+document.addEventListener('fullscreenchange', function() {
+    const container = document.getElementById('powerbiContainer');
+    if (!document.fullscreenElement) {
+        // Restaurar estilos originales
+        container.style.position = '';
+        container.style.top = '';
+        container.style.left = '';
+        container.style.width = '';
+        container.style.height = '';
+        container.style.zIndex = '';
+        container.style.paddingBottom = '62.25%';
+    }
+});
+
+// Función para descargar reporte (placeholder)
+function downloadReport() {
+    Swal.fire({
+        title: 'Descarga de Análisis',
+        text: 'Esta funcionalidad estará disponible próximamente.',
+        icon: 'info',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: 'var(--snier-primary)'
+    });
+}
+
+// Función para compartir (placeholder)
+function shareReport() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Escenarios del Sector Energético - SNIER',
+            text: 'Panel interactivo de escenarios energéticos de referencia y proyecciones',
+            url: window.location.href
+        });
+    } else {
+        // Fallback para navegadores que no soportan Web Share API
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            Swal.fire({
+                title: 'Enlace Copiado',
+                text: 'El enlace ha sido copiado al portapapeles',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        });
+    }
+}
+
+// Inicialización cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si el iframe se carga correctamente
+    const iframe = document.getElementById('powerbiFrame');
+    
+    // Timeout de seguridad para ocultar el loading si el iframe no responde
+    setTimeout(() => {
+        if (document.getElementById('powerbiOverlay').style.opacity !== '0') {
+            hideLoadingOverlay();
+        }
+    }, 10000); // 10 segundos de timeout
+    
+    // Manejo responsive del iframe
+    function adjustIframeHeight() {
+        const container = document.getElementById('powerbiContainer');
+        if (window.innerWidth <= 768) {
+            container.style.paddingBottom = '75%';
+        } else if (window.innerWidth <= 576) {
+            container.style.paddingBottom = '80%';
+        } else {
+            container.style.paddingBottom = '62.25%';
+        }
+    }
+    
+    // Ajustar al cargar y al redimensionar
+    adjustIframeHeight();
+    window.addEventListener('resize', adjustIframeHeight);
+});
 </script>
