@@ -1,18 +1,42 @@
+@inject IHttpContextAccessor HttpContextAccessor
+@using NSIE.Models
 @using Microsoft.AspNetCore.Http
 @using Newtonsoft.Json
-@using NSIE.Models
-@inject IHttpContextAccessor HttpContextAccessor
 
 @{
-  var httpContext = HttpContextAccessor.HttpContext;
-  var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
-  var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+	var httpContext = HttpContextAccessor.HttpContext;
+	var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+	var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
 
-  ViewData["NombreUsuario"] = perfilUsuario.Nombre;
-  ViewData["RolUsuario"] = perfilUsuario.Rol;
-  ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
-  ViewData["Title"] = "Atlas Nacional con Potencial de Energías Renovables e Inventario de Convencionales";
+	ViewData["Title"] = "AZEL - El inventario y el potencial de los recursos renovables";
+	ViewData["NombreUsuario"] = perfilUsuario?.Nombre;
+	ViewData["RolUsuario"] = perfilUsuario?.Rol;
+	ViewData["IDUsuario"] = perfilUsuario?.IdUsuario;
+
+	var header = new HeaderViewModel
+	{
+		Title = "AZEL",
+		IconPath = "conding.png",
+		Description = "El inventario y el potencial de los recursos renovables - Esta sección del sitio se encuentra actualmente en desarrollo.",
+		Section = "🧬 SNIEr > 🌱 El inventario y el potencial de los recursos renovables",
+		ModuleInfo = JsonConvert.SerializeObject(new
+		{
+			title = "AZEL",
+			description = "El inventario y el potencial de los recursos renovables - La funcionalidad estará disponible próximamente como parte del desarrollo del SNIEr.",
+			functionality = "Esta sección alojará el inventario y potencial de recursos renovables aún no liberado al público.",
+			stage = "En construcción",
+			roles = new[] {
+new { icon = "hammer", text = "Equipo de Desarrollo: Módulo en implementación" },
+new { icon = "eye", text = "Consulta Pública: Pronto disponible para usuarios" }
+},
+			order = new { step = 0, description = "Planificado en la fase inicial del sistema" },
+			manualUrl = "#"
+		})
+	};
 }
+
+@await Html.PartialAsync("_ViewHeader", header)
+
 <style>
   #map {
     height: 400px;
@@ -84,26 +108,6 @@
   }
 </style>
 
-<link rel="stylesheet" href="~/css/calculos_zonas.css" />
-<div class="text-center">
-  <h4 class="cp-section cp-grouping-section">
-    <img src="@Cdn.Url/img_snier/vistas/analisis.png" alt="Icono personalizado" class="iconomenu" /> @ViewData["Title"]
-  </h4>
-</div>
-
-<!-- Miga de Pan -->
-<div class="alert alert-light" role="alert">
-  <nav
-    style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-    aria-label="breadcrumb" style="padding-left:15px">
-    <ol class="breadcrumb lp-5">
-      <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
-      @* <li class="breadcrumb-item"><a href="@Url.Action("Menu_Eventos", "Eventos" )">Certificados de Energías
-            Limpias</a></li> *@
-      <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
-    </ol>
-  </nav>
-</div>
 <!-- Overlay de carga con spinner y barra de progreso (para el reporte) -->
 <!-- Overlay de carga con spinner y barra de progreso (para el reporte) -->
 <div id="loadingOverlay">
