@@ -212,5 +212,11 @@ namespace NSIE.Controllers
         {
             return View();
         }
+
+        // 🧬 SNIEr - 📊 Prospectivas Energéticas
+        public IActionResult SNIEr_Prospectivas_SectorElectrico()
+        {
+            return View();
+        }
     }
 }
