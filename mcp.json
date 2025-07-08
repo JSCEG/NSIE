@@ -1,0 +1,40 @@
+{
+    "mcpServers": {
+        "filesystem": {
+            "command": "npx",
+            "args": [
+                "@modelcontextprotocol/server-filesystem",
+                "c:\\Proyectos\\SNIER"
+            ],
+            "env": {
+                "MCP_FILESYSTEM_ROOT": "c:\\Proyectos\\SNIER"
+            }
+        },
+        "git": {
+            "command": "npx",
+            "args": [
+                "@modelcontextprotocol/server-git",
+                "--repository",
+                "c:\\Proyectos\\SNIER"
+            ]
+        },
+        "sql-snier": {
+            "command": "node",
+            "args": [
+                "mcp-sql-production.js"
+            ],
+            "env": {
+                "MCP_SQL_DATABASE": "BDPruebasSNIER"
+            }
+        },
+        "sql-local": {
+            "command": "node",
+            "args": [
+                "mcp-sql-local-v2.js"
+            ],
+            "env": {
+                "MCP_SQL_LOCAL": "true"
+            }
+        }
+    }
+}

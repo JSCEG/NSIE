@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
@@ -58,49 +59,96 @@ namespace NSIE.Servicios
                 string username = _configuration["EmailSettings:Username"];
                 string password = _configuration["EmailSettings:Password"];
 
-                string host;
-                int port;
-                bool enableSsl;
+                // Lista de configuraciones a probar en orden de prioridad
+                var configuracionesPrueba = new List<(string nombre, string host, int port, bool ssl)>();
 
-                if (tipoCuenta == "Office365")            // Tenants empresariales
+                if (tipoCuenta == "Proton")
                 {
-                    host = _configuration["EmailSettings:SmtpOffice365:Host"];
-                    port = int.Parse(_configuration["EmailSettings:SmtpOffice365:Port"]);
-                    enableSsl = bool.Parse(_configuration["EmailSettings:SmtpOffice365:EnableSsl"]);
+                    configuracionesPrueba.Add(("Proton",
+                        _configuration["EmailSettings:SmtpProton:Host"],
+                        int.Parse(_configuration["EmailSettings:SmtpProton:Port"]),
+                        bool.Parse(_configuration["EmailSettings:SmtpProton:EnableSsl"])));
                 }
-                else if (tipoCuenta == "Exchange")        // Servidor on-prem interno
+                else if (tipoCuenta == "Gmail")
                 {
-                    host = _configuration["EmailSettings:SmtpExchange:Host"];
-                    port = int.Parse(_configuration["EmailSettings:SmtpExchange:Port"]);
-                    enableSsl = bool.Parse(_configuration["EmailSettings:SmtpExchange:EnableSsl"]);
+                    configuracionesPrueba.Add(("Gmail",
+                        _configuration["EmailSettings:SmtpGmail:Host"],
+                        int.Parse(_configuration["EmailSettings:SmtpGmail:Port"]),
+                        bool.Parse(_configuration["EmailSettings:SmtpGmail:EnableSsl"])));
                 }
-                else if (tipoCuenta == "OutlookBasic")    // NUEVO: cuentas @outlook.com / @hotmail
+                else if (tipoCuenta == "Office365")
                 {
-                    host = _configuration["EmailSettings:SmtpOutlook:Host"];
-                    port = int.Parse(_configuration["EmailSettings:SmtpOutlook:Port"]);
-                    enableSsl = bool.Parse(_configuration["EmailSettings:SmtpOutlook:EnableSsl"]);
+                    configuracionesPrueba.Add(("Office365",
+                        _configuration["EmailSettings:SmtpOffice365:Host"],
+                        int.Parse(_configuration["EmailSettings:SmtpOffice365:Port"]),
+                        bool.Parse(_configuration["EmailSettings:SmtpOffice365:EnableSsl"])));
+
+                    // Fallback a Exchange interno sin SSL
+                    configuracionesPrueba.Add(("Exchange-NoSSL",
+                        _configuration["EmailSettings:SmtpExchange:Host"],
+                        25, false));
                 }
-                else
+                else if (tipoCuenta == "Exchange")
                 {
-                    throw new Exception($"Tipo de cuenta no soportado: {tipoCuenta}");
+                    configuracionesPrueba.Add(("Exchange",
+                        _configuration["EmailSettings:SmtpExchange:Host"],
+                        int.Parse(_configuration["EmailSettings:SmtpExchange:Port"]),
+                        bool.Parse(_configuration["EmailSettings:SmtpExchange:EnableSsl"])));
+                }
+                else if (tipoCuenta == "OutlookBasic")
+                {
+                    configuracionesPrueba.Add(("Outlook",
+                        _configuration["EmailSettings:SmtpOutlook:Host"],
+                        int.Parse(_configuration["EmailSettings:SmtpOutlook:Port"]),
+                        bool.Parse(_configuration["EmailSettings:SmtpOutlook:EnableSsl"])));
                 }
 
-                using var client = new SmtpClient(host, port)
-                {
-                    Credentials = new NetworkCredential(username, password),
-                    EnableSsl = enableSsl
-                };
+                Exception ultimoError = null;
 
-                var mailMessage = new MailMessage
+                foreach (var config in configuracionesPrueba)
                 {
-                    From = new MailAddress(username),
-                    Subject = asunto,
-                    Body = cuerpo,
-                    IsBodyHtml = true
-                };
-                mailMessage.To.Add(destinatario);
+                    try
+                    {
+                        Console.WriteLine($"Intentando envío con: {config.nombre} ({config.host}:{config.port})");
 
-                await client.SendMailAsync(mailMessage);
+                        using var client = new SmtpClient(config.host, config.port)
+                        {
+                            Credentials = new NetworkCredential(username, password),
+                            EnableSsl = config.ssl,
+                            Timeout = 30000,
+                            DeliveryMethod = SmtpDeliveryMethod.Network
+                        };
+
+                        var mailMessage = new MailMessage
+                        {
+                            From = new MailAddress(username),
+                            Subject = asunto,
+                            Body = cuerpo,
+                            IsBodyHtml = true
+                        };
+                        mailMessage.To.Add(destinatario);
+
+                        await client.SendMailAsync(mailMessage);
+                        Console.WriteLine($"✅ Email enviado exitosamente usando {config.nombre}");
+                        return; // Éxito, salir del bucle
+                    }
+                    catch (Exception ex)
+                    {
+                        ultimoError = ex;
+                        Console.WriteLine($"❌ Error con {config.nombre}: {ex.Message}");
+
+                        // Si es un error de autenticación, intentar siguiente configuración
+                        if (ex.Message.Contains("authentication") || ex.Message.Contains("5.7."))
+                        {
+                            continue;
+                        }
+                        // Para otros errores, también continuar
+                        continue;
+                    }
+                }
+
+                // Si llegamos aquí, todas las configuraciones fallaron
+                throw new Exception($"No se pudo enviar el email con ninguna configuración. Último error: {ultimoError?.Message}");
             }
             catch (Exception ex)
             {

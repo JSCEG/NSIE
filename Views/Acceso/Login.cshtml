@@ -286,6 +286,34 @@
             z-index: -1;
         }
 
+        /* Hero video container */
+        .hero-video-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Estilos para los controles del video */
+        .hero-video::-webkit-media-controls-panel {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-video::-webkit-media-controls-play-button,
+        .hero-video::-webkit-media-controls-volume-slider,
+        .hero-video::-webkit-media-controls-timeline {
+            filter: invert(1);
+        }
+
         /* Responsive adjustments */
         @@media (max-width: 768px) {
             .hero-section {
@@ -298,6 +326,11 @@
 
             .stats-item {
                 margin-bottom: 1rem;
+            }
+
+            .hero-video-container {
+                max-width: 100%;
+                margin-top: 2rem;
             }
         }
 
@@ -765,7 +798,18 @@
                     </div>
                 </div>
                 <div class="col-lg-6" data-aos="fade-left">
-                    <img src="@cdn/img_snier/login/logo_snier.png" alt="SNIER Dashboard" class="img-fluid">
+                    <div class="hero-video-container">
+                        <video class="hero-video" controls poster="@cdn/img_snier/login/logo_snier.png">
+                            <source src="https://cdn.sassoapps.com/video/SNIER%202025%20Julio.mp4" type="video/mp4">
+                            <p>Tu navegador no soporta videos HTML5. <a
+                                    href="https://cdn.sassoapps.com/video/SNIER%202025%20Julio.mp4">Descarga el
+                                    video</a>.</p>
+                        </video>
+                        <div class="text-center mt-3">
+                            <small class="text-white-50">Sistema Nacional de Información Energética - Video Oficial
+                                2025</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1274,7 +1318,7 @@
     <!-- Login Section -->
     <section class="form-section" id="acceso">
         <video autoplay muted loop id="video-bg">
-            <source src="@cdn/video/Login_snier.mp4" type="video/mp4">
+            <source src="https://cdn.sassoapps.com/video/SNIER%202025%20Julio.mp4" type="video/mp4">
         </video>
         <div class="container">
             <div class="row justify-content-center">

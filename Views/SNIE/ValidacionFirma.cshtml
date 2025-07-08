@@ -17,274 +17,1559 @@
 @{
     var header = new HeaderViewModel
     {
-        Title = "Validación Técnica",
+        Title = "Coordinación y Seguimiento de Observaciones",
         IconPath = "validacion_info.png",
-        Description = "Supervisa la calidad y consistencia de la información cargada.",
-        Section = "🧾 Carga de Información, Validación y Oficios",
+        Description = "Gestiona el intercambio de observaciones técnicas y coordina correcciones con entidades emisoras.",
+        Section = "🔄 Coordinación Interinstitucional y Seguimiento",
         ModuleInfo = JsonConvert.SerializeObject(new
         {
-            title = "Validación Técnica",
-            description = "Sistema de validación y control de calidad de información energética.",
-            functionality = "Realiza validaciones técnicas y detecta incongruencias.",
-            stage = "Post-carga",
+            title = "Coordinación de Observaciones",
+            description = "Sistema de seguimiento de observaciones técnicas y comunicación con entidades emisoras.",
+            functionality = "Gestiona observaciones, solicitudes de aclaración, visitas de verificación y correcciones.",
+            stage = "Post-validación inicial",
             roles = new[] {
-                new { icon = "building", text = "SENER: Supervisión general" },
-                new { icon = "check-double", text = "Unidad SNIEr: Control de calidad" },
-                new { icon = "user-shield", text = "TICs: Soporte técnico" },
-                new { icon = "users-cog", text = "Validadores Técnicos: Verificación" },
-                new { icon = "balance-scale", text = "Dirección Jurídica: Cumplimiento" },
-                new { icon = "chart-line", text = "Planeación: Congruencia" }
+                new { icon = "comments", text = "Unidad SNIEr: Envío y seguimiento de observaciones" },
+                new { icon = "building", text = "Entidades: Respuesta a observaciones y correcciones" },
+                new { icon = "user-check", text = "Verificadores: Visitas de verificación cuando aplica" },
+                new { icon = "clock", text = "Coordinación: Control de tiempos de respuesta" }
             },
-            order = new { step = 2, description = "Garantiza calidad y congruencia de datos (Art. 75)" }
+            order = new { step = 3, description = "Coordina la resolución de inconsistencias detectadas (Art. 75 RLPT)" }
         }),
-        LegalDescription = "Proceso de validación técnica conforme al Art. 75 del Reglamento para asegurar la calidad de datos.",
+        LegalDescription = "Coordinación interinstitucional para resolución de observaciones técnicas conforme al Art. 75 del RLPT.",
         Fundamentos = new List<FundamentoLegal> {
-            new() { Reference = "Art. 75 Reglamento", Description = "Establece los criterios de validación y control de calidad" }
+            new() { Reference = "Art. 75 Reglamento", Description = "Establece procedimientos de validación y coordinación técnica" },
+            new() { Reference = "Lineamientos SNIEr", Description = "Plazos y seguimiento de observaciones técnicas" }
         }
     };
 }
 
 @await Html.PartialAsync("_ViewHeader", header)
 
+<!-- Referencias adicionales para el dashboard de coordinación -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+<!-- Estilos personalizados para coordinación de observaciones -->
+<style>
+    .coordination-metric {
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-rgb) 100%);
+        color: white;
+        position: relative;
+        overflow: hidden;
+        border: none;
+    }
+    .coordination-metric::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 80px;
+        height: 80px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 50%;
+        transform: translate(25px, -25px);
+    }
+    .coordination-metric:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+    .metric-number {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin: 0.5rem 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .metric-label {
+        font-size: 0.95rem;
+        margin: 0;
+        opacity: 0.95;
+        font-weight: 500;
+    }
+    .metric-icon {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.8rem;
+        opacity: 0.4;
+    }
+    
+    .workflow-diagram {
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border: 1px solid #e9ecef;
+    }
+    
+    .workflow-step {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+    }
+    .workflow-step:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-color: #007bff;
+    }
+    .workflow-step.active {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+    }
+    .workflow-step.completed {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+    }
+    .workflow-step.pending {
+        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        color: #212529;
+    }
+    
+    .coordination-card {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    .coordination-card:hover {
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-color: #007bff;
+        transform: translateY(-2px);
+    }
+    
+    .status-indicator {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .filter-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid #dee2e6;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .communication-panel {
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 0;
+    }
+    
+    .message-thread {
+        list-style: none;
+        padding: 1rem;
+        margin: 0;
+    }
+    
+    .message-item {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border-radius: 10px;
+        position: relative;
+    }
+    
+    .message-outgoing {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-left: 4px solid #2196f3;
+        margin-left: 2rem;
+    }
+    
+    .message-incoming {
+        background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+        border-left: 4px solid #9c27b0;
+        margin-right: 2rem;
+    }
+    
+    .verification-panel {
+        background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+        border: 2px solid #ff9800;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+    }
+    
+    .normative-reference {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border: 2px solid #007bff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    .normative-reference:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,123,255,0.2);
+        border-color: #0056b3;
+    }
+    
+    .detail-panel {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-top: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .response-time-indicator {
+        padding: 0.4rem 1rem;
+        border-radius: 25px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .time-excellent { background: #d4edda; color: #155724; }
+    .time-good { background: #fff3cd; color: #856404; }
+    .time-delayed { background: #f8d7da; color: #721c24; }
+    
+    .pending-bg { background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%); }
+    .sent-bg { background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); }
+    .verification-bg { background: linear-gradient(135deg, #fd7e14 0%, #e8590c 100%); }
+    .correction-bg { background: linear-gradient(135deg, #6f42c1 0%, #5a31a8 100%); }
+    .response-bg { background: linear-gradient(135deg, #20c997 0%, #1abc9c 100%); }
 
-<div class="container ps-5 pe-5">
-    <div class="alert alert-info">
-        <strong>Instrucciones:</strong>
-        <ul class="mb-0">
-            <li>Revisa los archivos pendientes y cambia su estado a <strong>Revisado</strong> o
-                <strong>Correcto</strong> antes de firmar.
-            </li>
-            <li>Haz clic en el botón de firma, proporciona tu <strong>.cer</strong>, <strong>.key</strong> y contraseña.
-            </li>
-            <li>Se simulará la firma y se abrirá un acuse en PDF en una nueva pestaña.</li>
-        </ul>
+    /* Animaciones y transiciones mejoradas */
+    .coordination-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .coordination-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .action-buttons .btn {
+        margin: 2px;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+    }
+    
+    .action-buttons .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    /* Mejoras para el panel de comunicación */
+    .detail-panel {
+        animation: slideInUp 0.5s ease-out;
+    }
+    
+    @@keyframes slideInUp {
+        from {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    /* Estilos para elementos de lista */
+    .list-group-item {
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .list-group-item:hover {
+        border-left-color: #007bff;
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+    
+    /* Indicadores de estado mejorados */
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+    }
+    
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .coordination-metric {
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+        }
+        
+        .metric-number {
+            font-size: 2.2rem;
+        }
+        
+        .workflow-step {
+            margin-bottom: 1rem;
+            padding: 1rem;
+        }
+        
+        .action-buttons .btn {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+    }
+</style>
+
+<div class="container-fluid px-4">
+    
+    <!-- Sección de Referencia Normativa -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="normative-reference">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="mb-2"><i class="fas fa-handshake me-2"></i>Marco de Coordinación Interinstitucional</h5>
+                        <p class="mb-2">La coordinación para resolución de observaciones técnicas se fundamenta en las Disposiciones Normativas del Consejo y procedimientos establecidos para garantizar la calidad de la información del SNIE.</p>
+                        <small><i class="fas fa-info-circle me-1"></i>Acceso directo a formatos, guías e instructivos para el intercambio técnico</small>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button class="btn btn-primary btn-lg me-2">
+                            <i class="fas fa-file-contract me-2"></i>Disposiciones Normativas
+                        </button>
+                        <button class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-clipboard-list me-2"></i>Procedimientos
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="mt-4">
-        <h5>Archivos para Validar y Firmar</h5>
-        <table class="table table-striped" id="tablaArchivos">
-            <thead>
-                <tr>
-                    <th>Archivo</th>
-                    <th>Fecha de Carga</th>
-                    <th>Dependencia</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><a href="https://excel.officeapps.live.com/x/_layouts/XlRemoteInterlink.aspx"
-                            target="_blank">balance_sener_abril2025.xlsx</a></td>
-                    <td>2025-04-21 10:42 AM</td>
-                    <td>SENER</td>
-                    <td>
-                        <select class="form-select form-select-sm">
-                            <option>Pendiente</option>
-                            <option>Revisado</option>
-                            <option>Correcto</option>
-                        </select>
-                    </td>
-                    <td>
-                        <button class="btn btn-outline-success btn-sm btn-firmar" title="Firmar"><i
-                                class="bi bi-pencil-square"></i></button>
-                        <button class="btn btn-outline-danger btn-sm btn-eliminar" title="Eliminar"><i
-                                class="bi bi-trash"></i></button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- Métricas Clave de Coordinación -->
+    <div class="row mb-4">
+        <div class="col-md-2">
+            <div class="coordination-metric pending-bg">
+                <i class="fas fa-exclamation-circle metric-icon"></i>
+                <h3 class="metric-number">34</h3>
+                <p class="metric-label">Observaciones Pendientes</p>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="coordination-metric sent-bg">
+                <i class="fas fa-paper-plane metric-icon"></i>
+                <h3 class="metric-number">67</h3>
+                <p class="metric-label">Solicitudes Enviadas</p>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="coordination-metric verification-bg">
+                <i class="fas fa-user-check metric-icon"></i>
+                <h3 class="metric-number">8</h3>
+                <p class="metric-label">Verificaciones Solicitadas</p>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="coordination-metric correction-bg">
+                <i class="fas fa-edit metric-icon"></i>
+                <h3 class="metric-number">19</h3>
+                <p class="metric-label">En Corrección</p>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="coordination-metric response-bg">
+                <i class="fas fa-clock metric-icon"></i>
+                <h3 class="metric-number">4.2</h3>
+                <p class="metric-label">Días Promedio Respuesta</p>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="coordination-metric" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                <i class="fas fa-check-double metric-icon"></i>
+                <h3 class="metric-number">156</h3>
+                <p class="metric-label">Observaciones Resueltas</p>
+            </div>
+        </div>
     </div>
+
+    <!-- Gráfico de Flujo de Trabajo -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="workflow-diagram">
+                <h5 class="mb-4"><i class="fas fa-project-diagram me-2"></i>Flujo de Trabajo - Estados de Coordinación</h5>
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <div class="workflow-step active">
+                            <i class="fas fa-search fa-2x mb-2"></i>
+                            <h6>Observación Detectada</h6>
+                            <small>34 series</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="workflow-step pending">
+                            <i class="fas fa-comment-dots fa-2x mb-2"></i>
+                            <h6>Observaciones Enviadas</h6>
+                            <small>28 series</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="workflow-step">
+                            <i class="fas fa-reply fa-2x mb-2"></i>
+                            <h6>Respuesta Recibida</h6>
+                            <small>15 series</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="workflow-step">
+                            <i class="fas fa-tools fa-2x mb-2"></i>
+                            <h6>Corrección Pendiente</h6>
+                            <small>19 series</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="workflow-step">
+                            <i class="fas fa-user-shield fa-2x mb-2"></i>
+                            <h6>En Verificación</h6>
+                            <small>8 series</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="workflow-step completed">
+                            <i class="fas fa-check-circle fa-2x mb-2"></i>
+                            <h6>Resuelto/Validado</h6>
+                            <small>156 series</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Indicadores de progreso -->
+                <div class="mt-4">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <canvas id="workflowChart" style="height: 200px;"></canvas>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h6>Eficiencia del Proceso</h6>
+                                <div class="progress mb-2" style="height: 20px;">
+                                    <div class="progress-bar bg-success" style="width: 78%">78%</div>
+                                </div>
+                                <small class="text-muted">Series resueltas satisfactoriamente</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros y Búsqueda -->
+    <div class="filter-section">
+        <h6><i class="fas fa-filter me-2"></i>Filtros de Coordinación y Seguimiento</h6>
+        <div class="row g-3">
+            <div class="col-md-2">
+                <label class="form-label">Entidad Emisora</label>
+                <select class="form-select" id="filtroEntidad">
+                    <option value="">Todas las entidades</option>
+                    <option value="pemex">PEMEX</option>
+                    <option value="cfe">CFE</option>
+                    <option value="sener">SENER</option>
+                    <option value="SEMARNAT">SEMARNAT</option>
+                    <option value="cnh">CNH</option>
+                    <option value="conuee">CONUEE</option>
+                    <option value="cenace">CENACE</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Estado de Coordinación</label>
+                <select class="form-select" id="filtroEstado">
+                    <option value="">Todos los estados</option>
+                    <option value="observaciones_enviadas">Observaciones Enviadas</option>
+                    <option value="aclaracion_recibida">Aclaración Recibida</option>
+                    <option value="correccion_pendiente">Corrección Pendiente</option>
+                    <option value="en_verificacion">En Proceso de Verificación</option>
+                    <option value="resuelto">Resuelto</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Tipo de Inconsistencia</label>
+                <select class="form-select" id="filtroInconsistencia">
+                    <option value="">Todos los tipos</option>
+                    <option value="formato">Formato</option>
+                    <option value="datos_faltantes">Datos Faltantes</option>
+                    <option value="rango_invalido">Rango Inválido</option>
+                    <option value="consistencia_logica">Consistencia Lógica</option>
+                    <option value="estructura">Estructura</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Búsqueda</label>
+                <input type="text" class="form-control" id="busquedaTexto" placeholder="ID de serie o palabra clave...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Período de Interacción</label>
+                <div class="row g-1">
+                    <div class="col-6">
+                        <input type="date" class="form-control" id="fechaInicio">
+                    </div>
+                    <div class="col-6">
+                        <input type="date" class="form-control" id="fechaFin">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12 text-end">
+                <button class="btn btn-primary" id="aplicarFiltros">
+                    <i class="fas fa-search me-2"></i>Aplicar Filtros
+                </button>
+                <button class="btn btn-outline-secondary" id="limpiarFiltros">
+                    <i class="fas fa-broom me-2"></i>Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Series con Observaciones -->
+    <div class="coordination-card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-comments me-2"></i>Series con Observaciones Pendientes o en Proceso</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="tablaCoordinacion">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID Serie</th>
+                            <th>Serie Energética</th>
+                            <th>Entidad Emisora</th>
+                            <th>Período</th>
+                            <th>Estado Coordinación</th>
+                            <th>Última Interacción</th>
+                            <th>Tiempo Respuesta</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>SNE-2025-015</code></td>
+                            <td>Producción de Hidrocarburos</td>
+                            <td><span class="badge bg-warning">PEMEX</span></td>
+                            <td>Q4 2024</td>
+                            <td>
+                                <span class="status-indicator" style="background: #ffc107;"></span>
+                                <span class="badge bg-warning">Observaciones Enviadas</span>
+                            </td>
+                            <td>2025-01-18 14:30</td>
+                            <td><span class="response-time-indicator time-good">3 días</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-primary" onclick="verObservaciones('SNE-2025-015')">
+                                    <i class="fas fa-comments"></i> Ver/Añadir
+                                </button>
+                                <button class="btn btn-sm btn-info" onclick="recordarEmisor('SNE-2025-015')">
+                                    <i class="fas fa-bell"></i> Recordar
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>SNE-2025-022</code></td>
+                            <td>Generación Eléctrica por Fuente</td>
+                            <td><span class="badge bg-primary">CFE</span></td>
+                            <td>Anual 2024</td>
+                            <td>
+                                <span class="status-indicator" style="background: #17a2b8;"></span>
+                                <span class="badge bg-info">Aclaración Recibida</span>
+                            </td>
+                            <td>2025-01-19 09:45</td>
+                            <td><span class="response-time-indicator time-excellent">1 día</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-success" onclick="marcarResuelto('SNE-2025-022')">
+                                    <i class="fas fa-check"></i> Resuelto
+                                </button>
+                                <button class="btn btn-sm btn-primary" onclick="verObservaciones('SNE-2025-022')">
+                                    <i class="fas fa-comments"></i> Ver
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>SNE-2025-031</code></td>
+                            <td>Consumo de Energía por Sector</td>
+                            <td><span class="badge bg-info">CONUEE</span></td>
+                            <td>Mensual Dic-2024</td>
+                            <td>
+                                <span class="status-indicator" style="background: #6f42c1;"></span>
+                                <span class="badge bg-secondary">Corrección Pendiente</span>
+                            </td>
+                            <td>2025-01-16 16:20</td>
+                            <td><span class="response-time-indicator time-delayed">6 días</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-warning" onclick="solicitarVerificacion('SNE-2025-031')">
+                                    <i class="fas fa-user-check"></i> Verificación
+                                </button>
+                                <button class="btn btn-sm btn-info" onclick="recordarEmisor('SNE-2025-031')">
+                                    <i class="fas fa-bell"></i> Recordar
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Detalle y Comunicación (oculto inicialmente) -->
+    <div id="panelComunicacion" class="detail-panel" style="display: none;">
+        <div class="row">
+            <div class="col-md-6">
+                <h5><i class="fas fa-clipboard-check me-2"></i>Detalles de Observaciones - <span id="serieSeleccionada"></span></h5>
+                
+                <!-- Información de la Serie -->
+                <div class="mb-4">
+                    <h6>Información de la Serie</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>ID:</strong> <span id="detalleId"></span></p>
+                            <p><strong>Serie:</strong> <span id="detalleSerie"></span></p>
+                            <p><strong>Entidad:</strong> <span id="detalleEntidad"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Período:</strong> <span id="detallePeriodo"></span></p>
+                            <p><strong>Estado:</strong> <span id="detalleEstado"></span></p>
+                            <p><strong>Última Interacción:</strong> <span id="detalleUltimaInteraccion"></span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observaciones Detectadas -->
+                <div class="mb-4">
+                    <h6>Observaciones Detectadas</h6>
+                    <div class="list-group" id="listaObservaciones">
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Inconsistencia en datos de capacidad</h6>
+                                <small class="text-danger">Crítica</small>
+                            </div>
+                            <p class="mb-1">Valor fuera de rango en la fila 47, columna 'Capacidad_MW': 15,847 MW excede el límite técnico establecido.</p>
+                            <small class="text-muted">Referencia: Disposición Normativa DN-001/2024 - Rangos de Capacidad</small>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Datos faltantes en series temporales</h6>
+                                <small class="text-warning">Menor</small>
+                            </div>
+                            <p class="mb-1">Datos faltantes para el periodo Noviembre 2024 en el sector 'Industrial'.</p>
+                            <small class="text-muted">Referencia: Formato EST-003 - Completitud de Series</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel de Subida de Correcciones -->
+                <div class="mb-4">
+                    <h6>Panel de Subida de Correcciones (Emisor)</h6>
+                    <div class="border rounded p-3" style="background: #f8f9fa;">
+                        <div class="mb-3">
+                            <label class="form-label">Archivo Corregido</label>
+                            <input type="file" class="form-control" accept=".csv,.xlsx,.xls">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Comentarios de la Corrección</label>
+                            <textarea class="form-control" rows="3" placeholder="Describa las correcciones realizadas..."></textarea>
+                        </div>
+                        <button class="btn btn-success">
+                            <i class="fas fa-upload me-2"></i>Cargar Corrección
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Herramientas de Colaboración -->
+                <div>
+                    <h6>Herramientas de Colaboración</h6>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <select class="form-select">
+                                <option>Asignar a miembro del equipo...</option>
+                                <option>Ana García - Validador Senior</option>
+                                <option>Carlos López - Especialista Energético</option>
+                                <option>María Rodríguez - Coordinador Técnico</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-outline-primary w-100">
+                                <i class="fas fa-user-tag me-2"></i>Asignar Tarea
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- Sección de Mensajes/Historial de Comunicación -->
+                <div class="mb-4">
+                    <h6>Historial de Comunicación</h6>
+                    <div class="communication-panel">
+                        <ul class="message-thread">
+                            <li class="message-item message-outgoing">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <strong>Unidad SNIEr - Ana García</strong>
+                                    <small class="text-muted">18/01/2025 14:30</small>
+                                </div>
+                                <p class="mb-1">Se detectaron inconsistencias en los valores de capacidad instalada. Los valores en la fila 47 exceden los límites técnicos establecidos en la DN-001/2024.</p>
+                                <small class="text-muted">
+                                    <i class="fas fa-paperclip me-1"></i>Adjunto: observaciones_detalladas.pdf
+                                </small>
+                            </li>
+                            <li class="message-item message-incoming">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <strong>PEMEX - Ing. Roberto Martínez</strong>
+                                    <small class="text-muted">19/01/2025 09:15</small>
+                                </div>
+                                <p class="mb-1">Agradecemos la observación. Se revisaron los datos y efectivamente existe un error de transcripción. Se procederá a la corrección inmediata.</p>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>Estado: En corrección
+                                </small>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Nueva comunicación -->
+                <div class="mb-4">
+                    <h6>Enviar Mensaje</h6>
+                    <div class="mb-3">
+                        <textarea class="form-control" rows="4" placeholder="Escriba su mensaje a la entidad emisora..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <input type="file" class="form-control" multiple>
+                        <small class="text-muted">Adjunte documentos de referencia (formatos, guías, etc.)</small>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-md-8">
+                            <select class="form-select">
+                                <option>Prioridad del mensaje...</option>
+                                <option value="baja">Baja - Información general</option>
+                                <option value="normal">Normal - Aclaración requerida</option>
+                                <option value="alta">Alta - Corrección urgente</option>
+                                <option value="critica">Crítica - Suspensión de validación</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary w-100">
+                                <i class="fas fa-paper-plane me-2"></i>Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referencias a Disposiciones Normativas -->
+                <div>
+                    <h6>Referencias Normativas</h6>
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">DN-001/2024 - Rangos de Capacidad</h6>
+                                <small><i class="fas fa-external-link-alt"></i></small>
+                            </div>
+                            <p class="mb-1">Especificaciones técnicas para valores de capacidad instalada</p>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Formato EST-003 - Series Temporales</h6>
+                                <small><i class="fas fa-download"></i></small>
+                            </div>
+                            <p class="mb-1">Formato oficial para entrega de series energéticas</p>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Guía de Validación GV-002</h6>
+                                <small><i class="fas fa-file-pdf"></i></small>
+                            </div>
+                            <p class="mb-1">Procedimientos de validación y criterios de calidad</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Acciones del Panel -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-outline-secondary me-2" onclick="cerrarPanelComunicacion()">
+                        <i class="fas fa-times me-2"></i>Cerrar Panel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<!-- Modal para firma electrónica -->
-<div class="modal fade" id="modalFirma" tabindex="-1" aria-labelledby="modalFirmaLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Modal de Validación con e.firma -->
+<div class="modal fade" id="modalFirmaDigital" tabindex="-1" aria-labelledby="modalFirmaDigitalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalFirmaLabel">Firma con e.firma</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalFirmaDigitalLabel">
+                    <i class="fas fa-certificate me-2"></i>Firma Digital - Resolución de Observaciones
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formFirma">
-                    <div class="mb-3">
-                        <label for="archivoKey" class="form-label">Archivo .key</label>
-                        <input type="file" class="form-control" id="archivoKey" required>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Validación requerida:</strong> Para formalizar la resolución de observaciones se requiere firma digital con certificados SAT válidos.
+                </div>
+
+                <!-- Información de la acción -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card border-primary">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-file-contract me-2"></i>Documento a Firmar</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Acción:</strong> Resolución de Observaciones</p>
+                                        <p><strong>Serie:</strong> <span id="serieParaFirmar">SNE-2025-015</span></p>
+                                        <p><strong>Entidad:</strong> <span id="entidadParaFirmar">PEMEX</span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Fecha:</strong> <span id="fechaFirma"></span></p>
+                                        <p><strong>Responsable:</strong> <span id="responsableFirma"></span></p>
+                                        <p><strong>Tipo:</strong> Validación Técnica Final</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="archivoCer" class="form-label">Archivo .cer</label>
-                        <input type="file" class="form-control" id="archivoCer" required>
+                </div>
+
+                <!-- Formulario de e.firma -->
+                <form id="formEfirma" class="needs-validation" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="archivoKey" class="form-label">
+                                    <i class="fas fa-key me-2"></i>Archivo de Clave Privada (.key)
+                                </label>
+                                <input type="file" class="form-control" id="archivoKey" accept=".key" required>
+                                <div class="invalid-feedback">
+                                    Por favor seleccione su archivo .key
+                                </div>
+                                <small class="text-muted">Archivo de clave privada emitido por el SAT</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="archivoCer" class="form-label">
+                                    <i class="fas fa-certificate me-2"></i>Certificado Digital (.cer)
+                                </label>
+                                <input type="file" class="form-control" id="archivoCer" accept=".cer" required>
+                                <div class="invalid-feedback">
+                                    Por favor seleccione su archivo .cer
+                                </div>
+                                <small class="text-muted">Certificado digital emitido por el SAT</small>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" required>
+                        <label for="passwordKey" class="form-label">
+                            <i class="fas fa-lock me-2"></i>Contraseña de la Clave Privada
+                        </label>
+                        <input type="password" class="form-control" id="passwordKey" required>
+                        <div class="invalid-feedback">
+                            La contraseña es requerida para validar la clave privada
+                        </div>
+                        <small class="text-muted">Contraseña asignada a su clave privada</small>
+                    </div>
+
+                    <!-- Información del certificado (se llena automáticamente) -->
+                    <div id="infoCertificado" class="alert alert-success" style="display: none;">
+                        <h6><i class="fas fa-check-circle me-2"></i>Certificado Validado</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Titular:</strong> <span id="titularCert"></span></p>
+                                <p><strong>RFC:</strong> <span id="rfcCert"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Vigencia:</strong> <span id="vigenciaCert"></span></p>
+                                <p><strong>Emisor:</strong> SAT - Servicio de Administración Tributaria</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumen de la firma -->
+                    <div class="card border-secondary mt-3">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0"><i class="fas fa-file-signature me-2"></i>Datos a Firmar</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <textarea class="form-control mb-3" rows="4" readonly id="datosFirma">
+RESOLUCIÓN DE OBSERVACIONES TÉCNICAS
+Serie: SNE-2025-015 - Producción de Hidrocarburos
+Entidad Emisora: PEMEX
+Observaciones resueltas satisfactoriamente conforme a DN-001/2024
+Validación técnica completada por Unidad SNIEr
+Fecha: 2025-01-20 15:30:00
+                                    </textarea>
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Este texto será firmado digitalmente y generará un sello digital único
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="btnConfirmarFirma">Firmar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-success" id="btnFirmarDigital">
+                    <i class="fas fa-signature me-2"></i>Firmar Digitalmente
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // Variables globales para el sistema de coordinación
+        let tablaCoordinacion;
+        let workflowChart;
+        
         $(document).ready(function () {
-            // Inicializar DataTable
-            const tabla = $('#tablaArchivos').DataTable({
+            // Inicializar DataTable para coordinación
+            tablaCoordinacion = $('#tablaCoordinacion').DataTable({
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json' },
-                columns: [
-                    { data: 'archivo' },
-                    { data: 'fecha' },
-                    { data: 'dependencia' },
-                    { data: 'estado' },
-                    { data: 'acciones', orderable: false }
+                pageLength: 10,
+                responsive: true,
+                order: [[5, 'desc']], // Ordenar por última interacción
+                columnDefs: [
+                    { targets: 7, orderable: false } // Columna de acciones no ordenable
                 ]
             });
 
-            // Manejador de eliminación
-            $(document).on('click', '.btn-eliminar', function () {
-                const fila = $(this).closest('tr');
-                const nombreArchivo = $(fila).find('td:first').text();
+            // Inicializar gráfico de flujo de trabajo
+            initWorkflowChart();
 
-                Swal.fire({
-                    title: '¿Eliminar archivo?',
-                    text: `¿Está seguro de eliminar "${nombreArchivo}"?`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#dc3545',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Sí, eliminar',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        tabla.row(fila).remove().draw();
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Archivo eliminado',
-                            text: 'El archivo ha sido eliminado correctamente',
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                    }
-                });
-            });
+            // Configurar filtros en tiempo real
+            setupFilters();
 
-            // Validar estado antes de firmar
-            $(document).on('click', '.btn-firmar', function () {
-                const fila = $(this).closest('tr');
-                const estado = $(fila).find('select').val();
+            // Configurar fecha actual por defecto
+            const hoy = new Date().toISOString().split('T')[0];
+            $('#fechaFin').val(hoy);
+            
+            const fechaInicio = new Date();
+            fechaInicio.setMonth(fechaInicio.getMonth() - 1);
+            $('#fechaInicio').val(fechaInicio.toISOString().split('T')[0]);
+        });
 
-                if (estado === 'Pendiente') {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Validación pendiente',
-                        text: 'Debe cambiar el estado del archivo antes de firmarlo'
-                    });
-                    return;
-                }
+        // Función para ver/añadir observaciones de una serie
+        function verObservaciones(idSerie) {
+            mostrarPanelComunicacion(idSerie);
+        }
 
-                $('#modalFirma').modal('show');
-            });
-
-            // Simular proceso de firma
-            $('#btnConfirmarFirma').on('click', async function () {
-                const form = document.getElementById('formFirma');
-                if (!form.checkValidity()) {
-                    form.classList.add('was-validated');
-                    return;
-                }
-
-                const key = $('#archivoKey').val();
-                const cer = $('#archivoCer').val();
-                const pass = $('#password').val();
-
-                if (!key || !cer || !pass) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Campos incompletos',
-                        text: 'Por favor complete todos los campos requeridos'
-                    });
-                    return;
-                }
-
-                $('#modalFirma').modal('hide');
-
-                // Simular proceso de firma
-                Swal.fire({
-                    title: 'Procesando firma...',
-                    html: `
-                        <div class="progress mb-3">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                                 role="progressbar" style="width: 0%">
-                            </div>
+        // Función para enviar recordatorio al emisor
+        function recordarEmisor(idSerie) {
+            Swal.fire({
+                title: 'Enviar Recordatorio',
+                html: `
+                    <div class="text-start">
+                        <p>¿Desea enviar un recordatorio a la entidad emisora para la serie <strong>${idSerie}</strong>?</p>
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de recordatorio:</label>
+                            <select class="form-select" id="tipoRecordatorio">
+                                <option value="amigable">Recordatorio amigable (primer aviso)</option>
+                                <option value="formal">Recordatorio formal (segundo aviso)</option>
+                                <option value="urgente">Recordatorio urgente (tiempo límite)</option>
+                            </select>
                         </div>
-                        <p>Validando certificados...</p>
-                    `,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        const barra = Swal.getHtmlContainer().querySelector('.progress-bar');
-                        let progreso = 0;
-                        const intervalo = setInterval(() => {
-                            if (progreso < 100) {
-                                progreso += 5;
-                                barra.style.width = `${progreso}%`;
-                            }
-                        }, 100);
+                        <div class="mb-3">
+                            <label class="form-label">Mensaje adicional (opcional):</label>
+                            <textarea class="form-control" id="mensajeRecordatorio" rows="3" 
+                                      placeholder="Agregue información específica sobre la urgencia..."></textarea>
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fas fa-paper-plane me-2"></i>Enviar Recordatorio',
+                cancelButtonText: 'Cancelar',
+                preConfirm: () => {
+                    const tipo = document.getElementById('tipoRecordatorio').value;
+                    const mensaje = document.getElementById('mensajeRecordatorio').value;
+                    return { tipo, mensaje };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Simular envío de recordatorio
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Recordatorio Enviado',
+                        text: `Se ha enviado el recordatorio a la entidad emisora para la serie ${idSerie}`,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // Actualizar última interacción en la tabla
+                    actualizarUltimaInteraccion(idSerie);
+                }
+            });
+        }
+
+        // Función para marcar como resuelto (con e.firma)
+        function marcarResuelto(idSerie) {
+            // Preparar datos para el modal de firma
+            const datosSerieSimulados = {
+                'SNE-2025-015': { serie: 'Producción de Hidrocarburos', entidad: 'PEMEX' },
+                'SNE-2025-022': { serie: 'Generación Eléctrica por Fuente', entidad: 'CFE' },
+                'SNE-2025-031': { serie: 'Consumo de Energía por Sector', entidad: 'CONUEE' }
+            };
+
+            const datos = datosSerieSimulados[idSerie] || datosSerieSimulados['SNE-2025-015'];
+
+            // Llenar datos en el modal
+            $('#serieParaFirmar').text(`${idSerie} - ${datos.serie}`);
+            $('#entidadParaFirmar').text(datos.entidad);
+            $('#fechaFirma').text(new Date().toLocaleString('es-MX'));
+            $('#responsableFirma').text('Ana García - Validador Senior');
+
+            // Actualizar textarea con datos específicos
+            $('#datosFirma').val(`RESOLUCIÓN DE OBSERVACIONES TÉCNICAS
+Serie: ${idSerie} - ${datos.serie}
+Entidad Emisora: ${datos.entidad}
+Observaciones resueltas satisfactoriamente conforme a DN-001/2024
+Validación técnica completada por Unidad SNIEr
+Responsable: Ana García - Validador Senior
+Fecha: ${new Date().toLocaleString('es-MX')}`);
+
+            // Mostrar el modal
+            $('#modalFirmaDigital').modal('show');
+        }
+
+        // Función para solicitar verificación
+        function solicitarVerificacion(idSerie) {
+            Swal.fire({
+                title: 'Solicitar Verificación',
+                html: `
+                    <div class="text-start">
+                        <p>Se iniciará un proceso de verificación in-situ para la serie <strong>${idSerie}</strong></p>
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de verificación:</label>
+                            <select class="form-select" id="tipoVerificacion">
+                                <option value="documental">Verificación documental</option>
+                                <option value="presencial">Verificación presencial in-situ</option>
+                                <option value="tecnica">Verificación técnica especializada</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Justificación:</label>
+                            <textarea class="form-control" id="justificacionVerificacion" rows="3" required
+                                      placeholder="Explique la razón de la verificación..."></textarea>
+                        </div>
+                        <div class="alert alert-info">
+                            <small><i class="fas fa-info-circle me-1"></i>
+                            Se asignará automáticamente un verificador disponible del equipo SNIEr</small>
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fas fa-user-check me-2"></i>Solicitar Verificación',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#fd7e14'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const justificacion = document.getElementById('justificacionVerificacion').value;
+                    if (!justificacion.trim()) {
+                        Swal.fire('Error', 'La justificación es requerida', 'error');
+                        return;
                     }
-                });
 
-                // Simular tiempo de proceso
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                    // Simular solicitud de verificación
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Verificación Solicitada',
+                        html: `
+                            <p>Se ha iniciado el proceso de verificación para la serie ${idSerie}</p>
+                            <p><strong>Verificador asignado:</strong> Ing. Carlos López</p>
+                            <p><strong>Fecha estimada:</strong> ${obtenerFechaEstimada()}</p>
+                        `,
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
 
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Firma exitosa!',
-                    text: 'El documento ha sido firmado correctamente',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Ver acuse'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.open('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', '_blank');
-                    }
-                });
+                    // Actualizar estado en la tabla
+                    actualizarEstadoSerie(idSerie, 'En Verificación');
+                    
+                    // Actualizar métricas
+                    actualizarMetricas('verificacion');
+                }
+            });
+        }
 
-                // Limpiar formulario
-                form.reset();
-                form.classList.remove('was-validated');
+        // Función para mostrar el panel de comunicación
+        function mostrarPanelComunicacion(idSerie) {
+            // Datos simulados de la serie
+            const datosSerieSimulados = {
+                'SNE-2025-015': {
+                    id: 'SNE-2025-015',
+                    serie: 'Producción de Hidrocarburos',
+                    entidad: 'PEMEX',
+                    periodo: 'Q4 2024',
+                    estado: 'Observaciones Enviadas',
+                    ultimaInteraccion: '2025-01-18 14:30'
+                },
+                'SNE-2025-022': {
+                    id: 'SNE-2025-022',
+                    serie: 'Generación Eléctrica por Fuente',
+                    entidad: 'CFE',
+                    periodo: 'Anual 2024',
+                    estado: 'Aclaración Recibida',
+                    ultimaInteraccion: '2025-01-19 09:45'
+                },
+                'SNE-2025-031': {
+                    id: 'SNE-2025-031',
+                    serie: 'Consumo de Energía por Sector',
+                    entidad: 'CONUEE',
+                    periodo: 'Mensual Dic-2024',
+                    estado: 'Corrección Pendiente',
+                    ultimaInteraccion: '2025-01-16 16:20'
+                }
+            };
+
+            const datos = datosSerieSimulados[idSerie] || datosSerieSimulados['SNE-2025-015'];
+
+            // Llenar datos en el panel
+            $('#serieSeleccionada').text(datos.id);
+            $('#detalleId').text(datos.id);
+            $('#detalleSerie').text(datos.serie);
+            $('#detalleEntidad').text(datos.entidad);
+            $('#detallePeriodo').text(datos.periodo);
+            $('#detalleEstado').html(`<span class="badge bg-warning">${datos.estado}</span>`);
+            $('#detalleUltimaInteraccion').text(datos.ultimaInteraccion);
+
+            // Mostrar panel con animación
+            $('#panelComunicacion').slideDown(500);
+            
+            // Scroll suave al panel
+            $('html, body').animate({
+                scrollTop: $('#panelComunicacion').offset().top - 100
+            }, 800);
+        }
+
+        // Función para cerrar el panel de comunicación
+        function cerrarPanelComunicacion() {
+            $('#panelComunicacion').slideUp(500);
+        }
+
+        // Configurar filtros en tiempo real
+        function setupFilters() {
+            $('#aplicarFiltros').on('click', function() {
+                aplicarFiltros();
             });
 
-            // Actualizar estado en la tabla
-            $(document).on('change', 'select', function() {
-                const nuevoEstado = $(this).val();
-                const color = {
-                    'Pendiente': 'secondary',
-                    'Revisado': 'warning',
-                    'Correcto': 'success'
-                }[nuevoEstado];
-                
-                $(this).removeClass('text-bg-secondary text-bg-warning text-bg-success')
-                       .addClass(`text-bg-${color}`);
+            $('#limpiarFiltros').on('click', function() {
+                limpiarFiltros();
+            });
+
+            // Filtros en tiempo real
+            $('#busquedaTexto').on('keyup', function() {
+                tablaCoordinacion.search($(this).val()).draw();
+            });
+        }
+
+        // Función para aplicar filtros
+        function aplicarFiltros() {
+            const entidad = $('#filtroEntidad').val();
+            const estado = $('#filtroEstado').val();
+            const inconsistencia = $('#filtroInconsistencia').val();
+            const fechaInicio = $('#fechaInicio').val();
+            const fechaFin = $('#fechaFin').val();
+
+            // Aplicar filtros personalizados
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                if (settings.nTable.id !== 'tablaCoordinacion') {
+                    return true;
+                }
+
+                let cumple = true;
+
+                // Filtro por entidad
+                if (entidad && data[2].toLowerCase().indexOf(entidad.toLowerCase()) === -1) {
+                    cumple = false;
+                }
+
+                // Filtro por estado
+                if (estado && data[4].toLowerCase().indexOf(estado.replace('_', ' ').toLowerCase()) === -1) {
+                    cumple = false;
+                }
+
+                return cumple;
+            });
+
+            tablaCoordinacion.draw();
+
+            // Mostrar mensaje de filtros aplicados
+            toastr.success('Filtros aplicados correctamente', 'Filtros');
+        }
+
+        // Función para limpiar filtros
+        function limpiarFiltros() {
+            $('#filtroEntidad').val('');
+            $('#filtroEstado').val('');
+            $('#filtroInconsistencia').val('');
+            $('#busquedaTexto').val('');
+            
+            // Limpiar filtros personalizados
+            $.fn.dataTable.ext.search.pop();
+            
+            tablaCoordinacion.search('').draw();
+            
+            toastr.info('Filtros limpiados', 'Filtros');
+        }
+
+        // Inicializar gráfico de flujo de trabajo
+        function initWorkflowChart() {
+            const ctx = document.getElementById('workflowChart').getContext('2d');
+            workflowChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Observaciones Resueltas',
+                        data: [12, 19, 23, 17, 28, 24],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Observaciones Pendientes',
+                        data: [8, 11, 6, 14, 9, 12],
+                        borderColor: '#ffc107',
+                        backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Funciones auxiliares
+        function actualizarUltimaInteraccion(idSerie) {
+            const ahora = new Date().toLocaleString('es-MX');
+            // Buscar y actualizar la fila correspondiente
+            tablaCoordinacion.rows().every(function() {
+                const data = this.data();
+                if (data[0].includes(idSerie)) {
+                    data[5] = ahora;
+                    this.data(data).draw();
+                    return false;
+                }
+            });
+        }
+
+        function eliminarFilaTabla(idSerie) {
+            tablaCoordinacion.rows().every(function() {
+                const data = this.data();
+                if (data[0].includes(idSerie)) {
+                    this.remove();
+                    return false;
+                }
+            });
+            tablaCoordinacion.draw();
+        }
+
+        function actualizarEstadoSerie(idSerie, nuevoEstado) {
+            tablaCoordinacion.rows().every(function() {
+                const data = this.data();
+                if (data[0].includes(idSerie)) {
+                    const badgeClass = {
+                        'En Verificación': 'bg-warning',
+                        'Resuelto': 'bg-success',
+                        'Corrección Pendiente': 'bg-secondary'
+                    }[nuevoEstado] || 'bg-info';
+                    
+                    data[4] = `<span class="status-indicator" style="background: #fd7e14;"></span>
+                               <span class="badge ${badgeClass}">${nuevoEstado}</span>`;
+                    this.data(data).draw();
+                    return false;
+                }
+            });
+        }
+
+        function actualizarMetricas(tipo) {
+            // Simular actualización de métricas
+            const metricas = {
+                'resuelto': () => {
+                    const actual = parseInt($('.coordination-metric').last().find('.metric-number').text());
+                    $('.coordination-metric').last().find('.metric-number').text(actual + 1);
+                },
+                'verificacion': () => {
+                    const verificaciones = parseInt($('.verification-bg .metric-number').text());
+                    $('.verification-bg .metric-number').text(verificaciones + 1);
+                }
+            };
+            
+            if (metricas[tipo]) {
+                metricas[tipo]();
+            }
+        }
+
+        function obtenerFechaEstimada() {
+            const fecha = new Date();
+            fecha.setDate(fecha.getDate() + 7); // 7 días a partir de hoy
+            return fecha.toLocaleDateString('es-MX');
+        }
+
+        // Configurar toastr para notificaciones
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+
+        // Funcionalidad de e.firma
+        $(document).ready(function() {
+            // Validación en tiempo real de archivos
+            $('#archivoKey, #archivoCer').on('change', function() {
+                validarArchivos();
+            });
+
+            // Proceso de firma digital
+            $('#btnFirmarDigital').on('click', function() {
+                procesarFirmaDigital();
+            });
+
+            // Limpiar modal al cerrar
+            $('#modalFirmaDigital').on('hidden.bs.modal', function() {
+                limpiarModalFirma();
             });
         });
+
+        function validarArchivos() {
+            const archivoKey = $('#archivoKey')[0].files[0];
+            const archivoCer = $('#archivoCer')[0].files[0];
+
+            if (archivoKey && archivoCer) {
+                // Simular validación de certificados
+                setTimeout(() => {
+                    $('#infoCertificado').show();
+                    $('#titularCert').text('ANA GARCIA RODRIGUEZ');
+                    $('#rfcCert').text('GARA850315ABC');
+                    $('#vigenciaCert').text('2023-03-15 a 2027-03-15');
+                    
+                    toastr.success('Certificados validados correctamente', 'e.firma');
+                }, 1000);
+            }
+        }
+
+        function procesarFirmaDigital() {
+            const form = document.getElementById('formEfirma');
+            
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+
+            const archivoKey = $('#archivoKey')[0].files[0];
+            const archivoCer = $('#archivoCer')[0].files[0];
+            const password = $('#passwordKey').val();
+            const datosAFirmar = $('#datosFirma').val();
+
+            if (!archivoKey || !archivoCer || !password) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Campos incompletos',
+                    text: 'Por favor complete todos los campos requeridos para la firma digital'
+                });
+                return;
+            }
+
+            // Cerrar modal y mostrar proceso de firma
+            $('#modalFirmaDigital').modal('hide');
+
+            // Simular proceso de firma con barra de progreso
+            Swal.fire({
+                title: 'Procesando Firma Digital...',
+                html: `
+                    <div class="progress mb-3" style="height: 25px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                             role="progressbar" style="width: 0%">
+                            <span class="progress-text">0%</span>
+                        </div>
+                    </div>
+                    <div id="firmaStatus">
+                        <p><i class="fas fa-key me-2"></i>Validando clave privada...</p>
+                    </div>
+                `,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    simularProcesoFirma();
+                }
+            });
+        }
+
+        function simularProcesoFirma() {
+            const barra = Swal.getHtmlContainer().querySelector('.progress-bar');
+            const texto = Swal.getHtmlContainer().querySelector('.progress-text');
+            const status = Swal.getHtmlContainer().querySelector('#firmaStatus p');
+            
+            const pasos = [
+                { progreso: 20, mensaje: 'Validando certificado digital...' },
+                { progreso: 40, mensaje: 'Verificando contraseña...' },
+                { progreso: 60, mensaje: 'Generando hash de datos...' },
+                { progreso: 80, mensaje: 'Aplicando firma digital...' },
+                { progreso: 100, mensaje: 'Generando sello digital...' }
+            ];
+
+            let indice = 0;
+            const intervalo = setInterval(() => {
+                if (indice < pasos.length) {
+                    const paso = pasos[indice];
+                    barra.style.width = `${paso.progreso}%`;
+                    texto.textContent = `${paso.progreso}%`;
+                    status.innerHTML = `<i class="fas fa-cog fa-spin me-2"></i>${paso.mensaje}`;
+                    indice++;
+                } else {
+                    clearInterval(intervalo);
+                    // Mostrar resultado exitoso
+                    setTimeout(() => {
+                        mostrarResultadoFirma();
+                    }, 500);
+                }
+            }, 800);
+        }
+
+        function mostrarResultadoFirma() {
+            const selloDigital = generarSelloDigital();
+            const idSerie = $('#serieParaFirmar').text().split(' - ')[0];
+
+            Swal.fire({
+                icon: 'success',
+                title: '¡Firma Digital Exitosa!',
+                html: `
+                    <div class="text-start">
+                        <div class="alert alert-success">
+                            <h6><i class="fas fa-certificate me-2"></i>Resolución Firmada Digitalmente</h6>
+                            <p><strong>Serie:</strong> ${$('#serieParaFirmar').text()}</p>
+                            <p><strong>Firmante:</strong> ${$('#responsableFirma').text()}</p>
+                            <p><strong>Fecha:</strong> ${$('#fechaFirma').text()}</p>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-fingerprint me-2"></i>Sello Digital</h6>
+                            </div>
+                            <div class="card-body">
+                                <code style="font-size: 0.8rem; word-break: break-all;">
+                                    ${selloDigital}
+                                </code>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Este sello garantiza la autenticidad e integridad del documento conforme a la NOM-151-SCFI-2016
+                            </small>
+                        </div>
+                    </div>
+                `,
+                width: '600px',
+                showCancelButton: true,
+                confirmButtonText: '<i class="fas fa-download me-2"></i>Descargar Acuse',
+                cancelButtonText: '<i class="fas fa-check me-2"></i>Continuar',
+                confirmButtonColor: '#007bff',
+                cancelButtonColor: '#28a745'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Simular descarga de acuse
+                    descargarAcuseFirma(idSerie, selloDigital);
+                }
+                
+                // Actualizar estado en la tabla
+                eliminarFilaTabla(idSerie);
+                actualizarMetricas('resuelto');
+                
+                toastr.success(`Serie ${idSerie} resuelta y firmada digitalmente`, 'Proceso Completado');
+            });
+        }
+
+        function generarSelloDigital() {
+            // Generar un sello digital simulado (en producción sería el hash real)
+            const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+            let sello = '';
+            for (let i = 0; i < 344; i++) {
+                sello += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+            }
+            return sello;
+        }
+
+        function descargarAcuseFirma(idSerie, sello) {
+            // Simular descarga de acuse de firma
+            const contenidoAcuse = `
+ACUSE DE RESOLUCIÓN DE OBSERVACIONES
+====================================
+
+Serie: ${$('#serieParaFirmar').text()}
+Entidad: ${$('#entidadParaFirmar').text()}
+Fecha de Resolución: ${$('#fechaFirma').text()}
+Responsable: ${$('#responsableFirma').text()}
+
+SELLO DIGITAL:
+${sello}
+
+Este documento es válido conforme a la NOM-151-SCFI-2016
+            `;
+
+            const blob = new Blob([contenidoAcuse], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Acuse_Resolucion_${idSerie.replace('-', '_')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            toastr.info('Acuse de firma descargado', 'Descarga');
+        }
+
+        function limpiarModalFirma() {
+            // Limpiar formulario
+            const form = document.getElementById('formEfirma');
+            form.reset();
+            form.classList.remove('was-validated');
+            
+            // Ocultar información del certificado
+            $('#infoCertificado').hide();
+            
+            // Limpiar campos
+            $('#titularCert, #rfcCert, #vigenciaCert').text('');
+        }
     </script>
 }
 
-<style>
-    select.form-select {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
-        border-radius: 0.2rem;
-    }
-
-    .text-bg-secondary { background-color: #6c757d; color: white; }
-    .text-bg-warning { background-color: #ffc107; color: black; }
-    .text-bg-success { background-color: #198754; color: white; }
-
-    .progress { height: 20px; }
-    .progress-bar { transition: width 0.5s ease; }
-</style>

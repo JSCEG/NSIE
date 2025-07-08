@@ -25,6 +25,328 @@ function iniciarSankey() {
         isDragging = false;
     });
 
+    // FUNCIÓN CORREGIDA PARA ACTUALIZAR TARJETAS CON EL AÑO CORRECTO
+    function actualizarTarjetasConAño(selectedYear) {
+        // Mostrar el div de depuración
+        $("#debug-totales").show();
+        $("#debug-year").text(selectedYear);
+        $("#debug-lista").html('<div class="text-info">Cargando datos...</div>');
+
+        let tempCombinedData = [];
+        let completedRequests = 0;
+        const totalRequests = 5;
+
+        // Variables para cálculos adicionales (como en la función original)
+        let tempNombren = [];
+        let tempContadorCombus = 0;
+        let tempContadorPlant = 0;
+        let tempContadorEl = 0;
+        let tempDist = 0;
+        let tempRnt = 0;
+
+        function checkIfComplete() {
+            completedRequests++;
+            if (completedRequests === totalRequests) {
+                procesarDatosCompletos();
+            }
+        }
+
+        function procesarDatosCompletos() {
+            // Agregar Nivel 1 - Provisión y Producción (calculado)
+            if (tempNombren.length > 0) {
+                tempNombren.forEach(function (nombre) {
+                    let valor = 0;
+                    if (nombre === "Combustible") {
+                        valor = tempContadorCombus;
+                    } else if (nombre === "Calor") {
+                        valor = tempContadorPlant;
+                    } else if (nombre === "Electricidad") {
+                        valor = tempContadorEl;
+                    }
+
+                    tempCombinedData.push({
+                        año: selectedYear,
+                        nivel: "Nivel 1 - Provisión y Producción",
+                        dato: nombre,
+                        valor: valor,
+                    });
+                });
+            }
+
+            // Agregar Nivel 4 - Distribución (calculado)
+            tempCombinedData.push({
+                año: selectedYear,
+                nivel: "Nivel 4 - Distribución",
+                dato: "Distribución",
+                valor: tempDist,
+            });
+            tempCombinedData.push({
+                año: selectedYear,
+                nivel: "Nivel 4 - Distribución",
+                dato: "Centrales Eléctricas",
+                valor: tempRnt,
+            });
+
+            // Calcular totales por nivel
+            const totalPorNivel = {};
+
+            tempCombinedData.forEach(item => {
+                if (!totalPorNivel[item.nivel]) {
+                    totalPorNivel[item.nivel] = 0;
+                }
+                totalPorNivel[item.nivel] += parseFloat(item.valor);
+            });
+
+            // Actualizar div de depuración con totales calculados
+            let debugInfo = `
+                <div class="mb-2">
+                    <strong>Año seleccionado:</strong> ${selectedYear}
+                </div>
+                <div class="mb-2">
+                    <strong>Total de datos procesados:</strong> ${tempCombinedData.length} registros
+                </div>
+                <div class="mb-3">
+                    <strong>Totales calculados por nivel:</strong>
+                </div>
+            `;
+
+            for (let nivel in totalPorNivel) {
+                debugInfo += `
+                    <div class="alert alert-info py-2 mb-2">
+                        <strong>${nivel}:</strong> ${totalPorNivel[nivel].toFixed(1)} PJ
+                    </div>
+                `;
+            }
+
+            $("#debug-lista").html(debugInfo);
+
+            // Verificar si hay datos
+            const hayDatos = Object.keys(totalPorNivel).length > 0;
+
+            if (!hayDatos) {
+                $("#tarjetas-totales").html(`
+                    <div class="alert alert-warning w-100 text-center" role="alert">
+                        No hay datos disponibles para el año ${selectedYear}.
+                    </div>
+                `);
+                return;
+            }
+
+            // Limpiar contenedor y renderizar tarjetas
+            $("#tarjetas-totales").html("").removeClass();
+
+            for (let nivel in totalPorNivel) {
+                // Determinar el ícono apropiado para cada nivel
+                let icono = 'bi-bar-chart-line';
+                switch (nivel) {
+                    case 'Nivel FEP - Fuentes de Energía Primaria':
+                        icono = 'bi-lightning-charge';
+                        break;
+                    case 'Nivel FOCAL - Sector Energético':
+                        icono = 'bi-building';
+                        break;
+                    case 'Nivel 1 - Provisión y Producción':
+                        icono = 'bi-gear';
+                        break;
+                    case 'Nivel 2 - Transformaciones':
+                        icono = 'bi-arrow-repeat';
+                        break;
+                    case 'Nivel 3 - Tipos de Energía':
+                        icono = 'bi-fuel-pump';
+                        break;
+                    case 'Nivel 4 - Distribución':
+                        icono = 'bi-diagram-3';
+                        break;
+                    case 'Nivel 5 - Uso Final':
+                        icono = 'bi-house-gear';
+                        break;
+                    default:
+                        icono = 'bi-bar-chart-line';
+                }
+
+                $("#tarjetas-totales").append(`
+                    <div class="sankey-card">
+                        <div class="card-body">
+                            <div class="card-icon">
+                                <i class="bi ${icono} fs-4"></i>
+                            </div>
+                            <h6 class="card-title">${nivel}</h6>
+                            <p class="card-value">${totalPorNivel[nivel].toFixed(1)} PJ</p>
+                        </div>
+                    </div>
+                `);
+            }
+
+            // Añadir efectos adicionales después de crear las tarjetas
+            setTimeout(() => {
+                $('.sankey-card').each(function (index) {
+                    const $card = $(this);
+                    const value = parseFloat($card.find('.card-value').text());
+
+                    // Destacar valores altos con efecto de pulso
+                    if (value > 8000) {
+                        $card.find('.card-value').addClass('highlight');
+                    }
+
+                    // Agregar tooltip con información adicional
+                    $card.attr('title', `${$card.find('.card-title').text()}: ${value.toFixed(1)} Petajoules`)
+                        .tooltip({
+                            placement: 'top',
+                            trigger: 'hover'
+                        });
+                });
+            }, 1000);
+        }
+
+        // 1. Obtener datos de FEP
+        $.ajax({
+            url: "/Sankey/NodosTablaFep",
+            type: "GET",
+            datatype: "json",
+            success: function (data1) {
+                var filteredData1 = data1.filter(function (item) {
+                    return item.año == selectedYear;
+                });
+
+                filteredData1.forEach(function (item1) {
+                    tempCombinedData.push({
+                        año: item1.año,
+                        nivel: "Nivel FEP - Fuentes de Energía Primaria",
+                        dato: item1.feP_Nombre_sin_espacios,
+                        valor: item1.valor,
+                    });
+                });
+                checkIfComplete();
+            },
+            error: function () { checkIfComplete(); }
+        });
+
+        // 2. Obtener datos de Sector (incluye cálculos para Nivel 1)
+        $.ajax({
+            url: "/Sankey/NodosTablaSector",
+            type: "GET",
+            datatype: "json",
+            success: function (data2) {
+                var filteredData2 = data2.filter(function (item) {
+                    return item.año == selectedYear;
+                });
+
+                // Calcular contadores como en la función original
+                let contadorPet = 0;
+                let contadorCombus = 0;
+                let contadorPlant = 0;
+                let contadorEl = 0;
+
+                filteredData2.forEach(function (item2) {
+                    tempCombinedData.push({
+                        año: item2.año,
+                        nivel: "Nivel FOCAL - Sector Energético",
+                        dato: item2.sector_Nombre_SE,
+                        valor: item2.valor,
+                    });
+
+                    // Calcular contadores como en la función original
+                    if (item2.tipo_SE === "Sector petróleo y gas") {
+                        contadorPet += item2.valor;
+                        if (item2.sector_Nombre_SE === "Coquizadoras" || item2.sector_Nombre_SE === "Refinerias y despuntadoras") {
+                            contadorCombus += item2.valor;
+                        }
+                        if (item2.sector_Nombre_SE === "Plantas de gas y fraccionadoras") {
+                            contadorPlant += item2.valor;
+                        }
+                    } else {
+                        contadorEl += item2.valor;
+                    }
+                });
+
+                // Guardar para el cálculo del Nivel 1
+                tempNombren = ["Combustible", "Calor", "Electricidad"];
+                tempContadorCombus = contadorCombus;
+                tempContadorPlant = contadorPlant;
+                tempContadorEl = contadorEl;
+
+                checkIfComplete();
+            },
+            error: function () { checkIfComplete(); }
+        });
+
+        // 3. Obtener datos de Transformaciones
+        $.ajax({
+            url: "/Sankey/NodosTablaTransformacion",
+            type: "GET",
+            datatype: "json",
+            success: function (data3) {
+                var filteredData3 = data3.filter(function (item) {
+                    return item.año == selectedYear;
+                });
+
+                filteredData3.forEach(function (item3) {
+                    tempCombinedData.push({
+                        año: item3.año,
+                        nivel: "Nivel 2 - Transformaciones",
+                        dato: item3.transformacion_Nombre_SE,
+                        valor: item3.valor,
+                    });
+                });
+                checkIfComplete();
+            },
+            error: function () { checkIfComplete(); }
+        });
+
+        // 4. Obtener datos de Tipos (incluye cálculos para Nivel 4)
+        $.ajax({
+            url: "/Sankey/NodosTablaTipos",
+            type: "GET",
+            datatype: "json",
+            success: function (data4) {
+                var filteredData4 = data4.filter(function (item) {
+                    return item.año == selectedYear;
+                });
+
+                filteredData4.forEach(function (item4) {
+                    // Calcular el total como en la función original
+                    let valorTotal = item4.cargaPico + item4.intermitente + item4.cargaBase + item4.gasSeco + item4.gasLP + item4.petrolíferos;
+
+                    tempCombinedData.push({
+                        año: item4.año,
+                        nivel: "Nivel 3 - Tipos de Energía",
+                        dato: "Tipos de Energía",
+                        valor: valorTotal,
+                    });
+
+                    // Calcular dist y rnt para el Nivel 4
+                    tempDist = item4.petrolíferos + item4.gasSeco + item4.gasLP;
+                    tempRnt = item4.cargaPico + item4.cargaBase + item4.intermitente;
+                });
+                checkIfComplete();
+            },
+            error: function () { checkIfComplete(); }
+        });
+
+        // 5. Obtener datos de Uso Final
+        $.ajax({
+            url: "/Sankey/NodosTablaUso",
+            type: "GET",
+            datatype: "json",
+            success: function (data5) {
+                var filteredData5 = data5.filter(function (item) {
+                    return item.año == selectedYear;
+                });
+
+                filteredData5.forEach(function (item5) {
+                    tempCombinedData.push({
+                        año: item5.año,
+                        nivel: "Nivel 5 - Uso Final",
+                        dato: item5.usoFinal_Nombre_SE,
+                        valor: item5.valor,
+                    });
+                });
+                checkIfComplete();
+            },
+            error: function () { checkIfComplete(); }
+        });
+    }
+
     //Para pantalla Completa
     function togglePantallaCompleta() {
         var elem = document.getElementById("flujoPantallaCompleta");
@@ -60,6 +382,24 @@ function iniciarSankey() {
     document
         .getElementById("btnPantallaCompleta")
         .addEventListener("click", togglePantallaCompleta);
+
+    // Funcionalidad para el botón de ocultar/mostrar depuración
+    $(document).on('click', '#btn-ocultar-debug', function () {
+        $('#debug-totales').hide();
+    });
+
+    $(document).on('click', '#btn-mostrar-debug', function () {
+        if ($('#debug-totales').is(':visible')) {
+            $('#debug-totales').hide();
+            $(this).html('<i class="bi bi-bug"></i> Debug');
+        } else {
+            $('#debug-totales').show();
+            $(this).html('<i class="bi bi-bug-fill"></i> Ocultar Debug');
+            // Forzar actualización de debug con el año actual
+            var currentYear = $("#year").val();
+            actualizarTarjetasConAño(currentYear);
+        }
+    });
 
     //Fin Para pantalla Completa
 
@@ -3588,12 +3928,16 @@ function iniciarSankey() {
             .then(() => transformaciones())
             .then(() => tiposEnergia())
             .then(() => usosFinales())
-            .then(() => tablaFinal())
+            .then(() => {
+                tablaFinal(yearSelect);
+                // Actualizar las tarjetas con el año correcto
+                actualizarTarjetasConAño(yearSelect);
+            })
             .catch((error) => {
                 console.error("Error en la cadena de promesas:", error);
             });
 
-        function tablaFinal() {
+        function tablaFinal(selectedYear) {
             const nivelOrden = {
                 "Nivel FEP - Fuentes de Energía Primaria": 1,
                 "Nivel FOCAL - Sector Energético": 2,
@@ -3613,10 +3957,10 @@ function iniciarSankey() {
                 success: function (data1) {
                     // Filtra los datos de la primera tabla según el año seleccionado
                     var filteredData1 = data1.filter(function (item) {
-                        return item.año == yearSelect;
+                        return item.año == selectedYear;
                     });
 
-                    console.log("Datos filtrados: ", yearSelect);
+                    console.log("Datos filtrados: ", selectedYear);
 
                     let cont = 0;
 
@@ -3675,7 +4019,7 @@ function iniciarSankey() {
                     success: function (data2) {
                         // Filtra los datos de la segunda tabla según el año seleccionado
                         var filteredData2 = data2.filter(function (item) {
-                            return item.año == yearSelect;
+                            return item.año == selectedYear;
                         });
 
                         // Crear un objeto para realizar la agrupación y cálculo de sumas

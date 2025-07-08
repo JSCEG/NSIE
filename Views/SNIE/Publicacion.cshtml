@@ -9,133 +9,1751 @@
     var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
     ViewData["NombreUsuario"] = perfilUsuario.Nombre;
     ViewData["RolUsuario"] = perfilUsuario.Rol;
-    ViewData["Title"] = "Publicación y Autorización de la Información";
+    ViewData["Title"] = "Portal Público SNIER - Datos Energéticos de México";
+
+    var header = new HeaderViewModel
+    {
+        Title = "Portal Público de Datos Energéticos",
+        IconPath = "conding.png",
+        Description = "Acceso público a la información oficial del sector energético mexicano. Datos validados y actualizados del Sistema Nacional de Información Energética.",
+        Section = "🌐 Portal Público y Transparencia",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Portal de Datos Públicos",
+            description = "Plataforma de acceso público para consulta, visualización y descarga de datos energéticos oficiales.",
+            functionality = "Exploración de datos, visualizaciones interactivas, descargas y acceso vía API.",
+            stage = "Información publicada y validada",
+            roles = new[] {
+                new { icon = "users", text = "Público en general: Consulta y descarga libre" },
+                new { icon = "chart-bar", text = "Investigadores: Análisis y estudios sectoriales" },
+                new { icon = "building", text = "Sector privado: Decisiones de inversión" },
+                new { icon = "graduation-cap", text = "Sector académico: Investigación y enseñanza" }
+            },
+            order = new { step = 5, description = "Portal final de transparencia y acceso público a datos validados" }
+        }),
+        LegalDescription = "Portal oficial de transparencia del sector energético mexicano conforme a la Ley General de Transparencia y Acceso a la Información Pública.",
+        Fundamentos = new List<FundamentoLegal> {
+            new() { Reference = "Ley de Transición Energética", Description = "Establece la obligación de publicar información energética" },
+            new() { Reference = "Ley General de Transparencia", Description = "Garantiza el acceso público a la información gubernamental" }
+        }
+    };
 }
 
-<div class="container-fluid py-4 px-5">
-    <div class="text-center mb-4" data-aos="fade-down">
-        <h2 class="fw-bold">
-            <i class="fas fa-globe text-primary me-2"></i>
-            Publicación de Resultados y Seguimiento
-        </h2>
-        <p class="text-muted">Visualiza quién autorizó la publicación, cuándo y dónde se encuentra disponible la
-            información publicada.</p>
-    </div>
+@await Html.PartialAsync("_ViewHeader", header)
 
-    <!-- Filtros -->
-    <div class="row mb-4" data-aos="fade-right">
-        <div class="col-md-4">
-            <label class="form-label">Filtrar por Dependencia:</label>
-            <select class="form-select">
-                <option>SENER</option>
-                <option>CRE</option>
-                <option>CFE</option>
-                <option>CONUEE</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">Filtrar por Año:</label>
-            <select class="form-select">
-                <option>2023</option>
-                <option>2022</option>
-                <option>2021</option>
-            </select>
-        </div>
-        <div class="col-md-4 d-flex align-items-end">
-            <button class="btn btn-outline-primary w-100"><i class="fas fa-search"></i> Aplicar Filtros</button>
-        </div>
-    </div>
+<!-- Referencias adicionales para el portal público -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<link rel="stylesheet" href="~/css/snier.css" asp-append-version="true">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
-    <!-- Tabla de Publicaciones -->
-    <div class="card shadow-sm mb-5" data-aos="fade-up">
-        <div class="card-header bg-info text-white">
-            <i class="fas fa-database me-2"></i> Histórico de Publicaciones
+<div class="container-fluid px-4">
+    
+    <!-- Hero Section con Búsqueda Principal -->
+    <div class="search-hero" data-aos="fade-down">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold mb-3">
+                <i class="fas fa-database me-3"></i>Portal de Datos Energéticos de México
+            </h2>
+            <p class="fs-5 mb-0">Acceso público a la información oficial del sector energético</p>
+            <small class="opacity-75">Fuente: Sistema Nacional de Información Energética (SNIER)</small>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Serie de Datos</th>
-                            <th>Dependencia Origen</th>
-                            <th>Fecha de Autorización</th>
-                            <th>Autorizado por</th>
-                            <th>Publicado en</th>
-                            <th>URL de Consulta</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Consumo Eléctrico Residencial</td>
-                            <td>CRE</td>
-                            <td>2025-05-10</td>
-                            <td>Consejo Energético Nacional</td>
-                            <td>Plataforma SNIEr</td>
-                            <td><a href="#" target="_blank">https://snie.gob.mx/series/cer</a></td>
-                            <td><span class="badge bg-success">Publicado</span></td>
-                        </tr>
-                        <tr>
-                            <td>Producción de Hidrocarburos</td>
-                            <td>PEMEX</td>
-                            <td>2025-04-22</td>
-                            <td>Unidad de Planeación Energética</td>
-                            <td>Portal Oficial</td>
-                            <td><a href="#" target="_blank">https://energia.gob.mx/balance2025</a></td>
-                            <td><span class="badge bg-warning text-dark">En proceso</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+        
+        <div class="search-container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-white border-0">
+                            <i class="fas fa-search text-primary"></i>
+                        </span>
+                        <input type="text" class="form-control border-0" id="busquedaPrincipal" 
+                               placeholder="Buscar series de datos, indicadores, reportes..."
+                               style="box-shadow: none;">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary btn-lg w-100 rounded-pill" id="btnBuscar">
+                        <i class="fas fa-search me-2"></i>Buscar Datos
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Línea de tiempo de autorizaciones -->
-    <div class="mb-5" data-aos="zoom-in">
-        <h5 class="fw-semibold">Trazabilidad de Publicación</h5>
-        <ul class="timeline">
-            <li>
-                <span class="badge bg-secondary">2025-04-01</span>
-                <strong>Serie enviada por CFE</strong>: Demanda nacional actualizada enviada para revisión.
-            </li>
-            <li>
-                <span class="badge bg-primary">2025-04-10</span>
-                <strong>Revisión por Planeación</strong>: Validación de congruencia con tendencias 2022.
-            </li>
-            <li>
-                <span class="badge bg-success">2025-05-10</span>
-                <strong>Autorización del Consejo</strong>: Publicación aprobada por el pleno.
-            </li>
-            <li>
-                <span class="badge bg-info">2025-05-12</span>
-                <strong>Publicación oficial</strong>: Disponible en el Portal SNIEr.
-            </li>
-        </ul>
+    <!-- Dashboard de Métricas Públicas -->
+    <div class="row mb-5" data-aos="fade-up">
+        <div class="col-md-3">
+            <div class="public-metric">
+                <i class="fas fa-chart-line metric-icon"></i>
+                <h3 class="metric-number">1,247</h3>
+                <p class="metric-label">Series Publicadas</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="public-metric">
+                <i class="fas fa-sync-alt metric-icon"></i>
+                <h3 class="metric-number">15/01/25</h3>
+                <p class="metric-label">Última Actualización</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="public-metric">
+                <i class="fas fa-download metric-icon"></i>
+                <h3 class="metric-number">89.2K</h3>
+                <p class="metric-label">Descargas del Mes</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="public-metric">
+                <i class="fas fa-calendar-check metric-icon"></i>
+                <h3 class="metric-number">156</h3>
+                <p class="metric-label">Actualizadas (30 días)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido Reciente -->
+    <div class="recent-carousel" data-aos="fade-right">
+        <h5 class="mb-4"><i class="fas fa-star me-2"></i>Series Más Consultadas y Contenido Reciente</h5>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="carousel-item-custom">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="fw-bold">Producción de Energía Eléctrica</h6>
+                        <span class="badge bg-success">Actualizado</span>
+                    </div>
+                    <p class="text-muted small mb-3">Generación por fuente energética, capacidad instalada y factores de planta.</p>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">12,847 consultas</small>
+                        <small class="text-primary">Actualizado: 10/01/25</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="carousel-item-custom">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="fw-bold">Balance Nacional de Energía</h6>
+                        <span class="badge bg-warning">Nuevo</span>
+                    </div>
+                    <p class="text-muted small mb-3">Flujos energéticos por sector, transformación y consumo final.</p>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">8,231 consultas</small>
+                        <small class="text-primary">Actualizado: 08/01/25</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="carousel-item-custom">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="fw-bold">Precios de Combustibles</h6>
+                        <span class="badge bg-info">Popular</span>
+                    </div>
+                    <p class="text-muted small mb-3">Precios históricos de gasolinas, diésel y gas LP por región.</p>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">15,692 consultas</small>
+                        <small class="text-primary">Actualizado: 12/01/25</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros Avanzados -->
+    <div class="row mb-4" data-aos="fade-left">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header" style="background: #343a40; color: white;">
+                    <h6 class="mb-0"><i class="fas fa-sliders-h me-2"></i>Explorar por Categorías Energéticas</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Tema/Categoría</label>
+                            <select class="form-select" id="filtroCategoria">
+                                <option value="">Todas las categorías</option>
+                                <option value="inventario">Inventario y potencial de recursos renovables</option>
+                                <option value="origen_destino">Origen y destino de la energía</option>
+                                <option value="mercado_electrico">Desempeño del Mercado Eléctrico Mayorista</option>
+                                <option value="planeacion">Instrumentos de Planeación Energética</option>
+                                <option value="innovacion">Proyectos de innovación y desarrollo tecnológico</option>
+                                <option value="eficiencia">Eficiencia Energética</option>
+                                <option value="cel">Certificados de Energías Limpias (CEL)</option>
+                                <option value="tecnologias">Catálogo de tecnologías</option>
+                                <option value="escenarios">Escenarios prospectivos</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Período</label>
+                            <select class="form-select" id="filtroPeriodo">
+                                <option value="">Todos los períodos</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="historico">Histórico</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Entidad Generadora</label>
+                            <select class="form-select" id="filtroEntidad">
+                                <option value="">Todas las entidades</option>
+                                <option value="pemex">PEMEX</option>
+                                <option value="cfe">CFE</option>
+                                <option value="conuee">CONUEE</option>
+                                <option value="cenace">CENACE</option>
+                                <option value="cenagas">CENAGAS</option>
+                                <option value="cne">CNE</option>
+                                <option value="litiomx">LitioMX</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Tipo de Dato</label>
+                            <select class="form-select" id="filtroTipo">
+                                <option value="">Todos los tipos</option>
+                                <option value="series">Series históricas</option>
+                                <option value="proyecciones">Proyecciones</option>
+                                <option value="reportes">Reportes</option>
+                                <option value="estadisticas">Estadísticas</option>
+                                <option value="geoespacial">Información geoespacial</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button class="btn btn-primary w-100" id="aplicarFiltrosPublicos">
+                                <i class="fas fa-filter me-2"></i>Filtrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Listado de Series de Datos -->
+    <div class="card border-0 shadow-sm mb-4" data-aos="fade-up">
+        <div class="card-header" style="background: #343a40; color: white;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-table me-2"></i>Series de Datos Disponibles</h5>
+                <div>
+                    <button class="btn btn-light btn-sm me-2" id="vistaTabla">
+                        <i class="fas fa-table"></i> Tabla
+                    </button>
+                    <button class="btn btn-outline-light btn-sm" id="vistaCuadricula">
+                        <i class="fas fa-th"></i> Cuadrícula
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- Vista de Tabla -->
+            <div id="tablaView" class="table-responsive">
+                <table class="table table-hover" id="tablaDatosPublicos">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Serie de Datos</th>
+                            <th>Descripción</th>
+                            <th>Frecuencia</th>
+                            <th>Última Actualización</th>
+                            <th>Cobertura Temporal</th>
+                            <th>Etiquetas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Producción de Energía Eléctrica</strong><br>
+                                <small class="text-muted">CFE - Generación Nacional</small>
+                            </td>
+                            <td>Generación eléctrica por tecnología y región geográfica</td>
+                            <td><span class="frequency-badge bg-success text-white">Mensual</span></td>
+                            <td>15/01/2025</td>
+                            <td>2010 - 2024</td>
+                            <td>
+                                <span class="badge bg-light text-dark">electricidad</span>
+                                <span class="badge bg-light text-dark">CFE</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-action btn-sm" onclick="verDetalles('energia-electrica')">
+                                    <i class="fas fa-eye"></i> Ver
+                                </button>
+                                <button class="btn btn-success btn-action btn-sm" onclick="visualizar('energia-electrica')">
+                                    <i class="fas fa-chart-bar"></i> Gráfico
+                                </button>
+                                <button class="btn btn-info btn-action btn-sm" onclick="descargar('energia-electrica')">
+                                    <i class="fas fa-download"></i> CSV
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Balance Nacional de Energía</strong><br>
+                                <small class="text-muted">SENER - Balance Oficial</small>
+                            </td>
+                            <td>Flujos energéticos nacionales por fuente y sector de consumo</td>
+                            <td><span class="frequency-badge bg-warning text-dark">Anual</span></td>
+                            <td>10/01/2025</td>
+                            <td>1990 - 2023</td>
+                            <td>
+                                <span class="badge bg-light text-dark">balance</span>
+                                <span class="badge bg-light text-dark">consumo</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-action btn-sm" onclick="verDetalles('balance-nacional')">
+                                    <i class="fas fa-eye"></i> Ver
+                                </button>
+                                <button class="btn btn-success btn-action btn-sm" onclick="visualizar('balance-nacional')">
+                                    <i class="fas fa-chart-line"></i> Gráfico
+                                </button>
+                                <button class="btn btn-info btn-action btn-sm" onclick="descargar('balance-nacional')">
+                                    <i class="fas fa-download"></i> Excel
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Precios de Combustibles</strong><br>
+                                <small class="text-muted">CRE - Precios Regulados</small>
+                            </td>
+                            <td>Precios al público de gasolinas, diésel y gas LP por entidad federativa</td>
+                            <td><span class="frequency-badge bg-info text-white">Semanal</span></td>
+                            <td>12/01/2025</td>
+                            <td>2017 - 2025</td>
+                            <td>
+                                <span class="badge bg-light text-dark">precios</span>
+                                <span class="badge bg-light text-dark">combustibles</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-action btn-sm" onclick="verDetalles('precios-combustibles')">
+                                    <i class="fas fa-eye"></i> Ver
+                                </button>
+                                <button class="btn btn-success btn-action btn-sm" onclick="visualizar('precios-combustibles')">
+                                    <i class="fas fa-map"></i> Mapa
+                                </button>
+                                <button class="btn btn-info btn-action btn-sm" onclick="descargar('precios-combustibles')">
+                                    <i class="fas fa-download"></i> JSON
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Vista de Cuadrícula (oculta por defecto) -->
+            <div id="cuadriculaView" class="row" style="display: none;">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="data-card">
+                        <div class="data-card-header">
+                            <h6 class="fw-bold mb-2">Producción de Energía Eléctrica</h6>
+                            <span class="frequency-badge bg-success text-white">Mensual</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-muted small mb-3">Generación eléctrica por tecnología y región geográfica</p>
+                            <div class="mb-3">
+                                <small class="text-muted">Última actualización: 15/01/2025</small><br>
+                                <small class="text-muted">Cobertura: 2010 - 2024</small>
+                            </div>
+                            <div class="mb-3">
+                                <span class="badge bg-light text-dark">electricidad</span>
+                                <span class="badge bg-light text-dark">CFE</span>
+                            </div>
+                            <div class="text-center">
+                                <button class="btn btn-primary btn-action btn-sm">
+                                    <i class="fas fa-eye"></i> Ver
+                                </button>
+                                <button class="btn btn-success btn-action btn-sm">
+                                    <i class="fas fa-chart-bar"></i> Gráfico
+                                </button>
+                                <button class="btn btn-info btn-action btn-sm">
+                                    <i class="fas fa-download"></i> CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Más tarjetas se agregarían aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Secciones Adicionales del Portal -->
+    
+    <!-- FAQ - Preguntas Frecuentes -->
+    <div class="row mb-5" data-aos="fade-up">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header" style="background: #6c757d; color: white;">
+                    <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>Preguntas Frecuentes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq1">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                                    ¿Cómo puedo acceder a los datos del SNIER?
+                                </button>
+                            </h2>
+                            <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Los datos del SNIER están disponibles de forma libre y gratuita. Puede consultarlos directamente en este portal, descargarlos en diferentes formatos (CSV, Excel, JSON) o acceder mediante nuestra API REST. No se requiere registro para consultas básicas.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                                    ¿Con qué frecuencia se actualizan los datos?
+                                </button>
+                            </h2>
+                            <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    La frecuencia de actualización varía según el tipo de información: datos de precios se actualizan semanalmente, información de generación eléctrica mensualmente, y balances energéticos anualmente. Cada serie muestra claramente su periodicidad de actualización.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                                    ¿Puedo usar estos datos para investigación comercial?
+                                </button>
+                            </h2>
+                            <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Sí, los datos son de dominio público y pueden utilizarse libremente para investigación, análisis comercial y desarrollo de aplicaciones. Solo se requiere citar apropiadamente la fuente: Sistema Nacional de Información Energética (SNIER).
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq4">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                                    ¿Cómo reporto errores o sugiero mejoras?
+                                </button>
+                            </h2>
+                            <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Puede contactarnos através del formulario de contacto en este portal, enviar un correo a <strong>soporte@SNIER.gob.mx</strong> o llamar a nuestra línea de atención al público. Valoramos todos los comentarios para mejorar continuamente nuestros servicios.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Noticias y Anuncios -->
+    <div class="row mb-5" data-aos="fade-right">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header" style="background: #495057; color: white;">
+                    <h5 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Noticias y Anuncios</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 bg-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <span class="badge bg-success">Nuevo</span>
+                                        <small class="text-muted">15/01/2025</small>
+                                    </div>
+                                    <h6 class="card-title">Actualización del Portal SNIER</h6>
+                                    <p class="card-text small">Nueva interfaz de usuario con mejores funcionalidades de búsqueda y visualización de datos energéticos.</p>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Leer más</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 bg-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <span class="badge bg-warning">Importante</span>
+                                        <small class="text-muted">10/01/2025</small>
+                                    </div>
+                                    <h6 class="card-title">Nuevas Series de Datos</h6>
+                                    <p class="card-text small">Se han agregado 25 nuevas series de datos sobre eficiencia energética y energías renovables.</p>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Ver series</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 bg-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <span class="badge bg-info">API</span>
+                                        <small class="text-muted">05/01/2025</small>
+                                    </div>
+                                    <h6 class="card-title">API v2.0 Disponible</h6>
+                                    <p class="card-text small">Nueva versión de la API con endpoints optimizados y mejor documentación técnica.</p>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Documentación</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información Legal y Transparencia -->
+    <div class="row mb-5" data-aos="fade-left">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header" style="background: #343a40; color: white;">
+                    <h5 class="mb-0"><i class="fas fa-gavel me-2"></i>Marco Legal y Transparencia</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Fundamento Legal</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Ley de Transición Energética:</strong> Establece la obligación de mantener actualizado el SNIER
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Ley General de Transparencia:</strong> Garantiza el acceso público a la información gubernamental
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Ley de Datos Abiertos:</strong> Promueve la disponibilidad de datos en formatos abiertos
+                        </li>
+                    </ul>
+                    
+                    <h6 class="mt-4">Política de Privacidad</h6>
+                    <p class="small">
+                        Este portal no recopila información personal de los usuarios. Las consultas son anónimas y no se almacenan datos de navegación personal. 
+                        Para más información, consulte nuestra <a href="#" class="text-primary">política de privacidad completa</a>.
+                    </p>
+                    
+                    <h6 class="mt-3">Términos de Uso</h6>
+                    <p class="small">
+                        Los datos están disponibles bajo licencia de datos abiertos. Puede usar, modificar y distribuir libremente citando la fuente. 
+                        <a href="#" class="text-primary">Ver términos completos</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header" style="background: #28a745; color: white;">
+                    <h5 class="mb-0"><i class="fas fa-envelope me-2"></i>Contacto y Soporte</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Información de Contacto</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-envelope text-primary me-2"></i>
+                            <strong>Email:</strong> soporte@SNIER.gob.mx
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-phone text-primary me-2"></i>
+                            <strong>Teléfono:</strong> 55-5000-6000 ext. 1234
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-clock text-primary me-2"></i>
+                            <strong>Horario:</strong> Lun-Vie 9:00-18:00
+                        </li>
+                    </ul>
+                    
+                    <h6 class="mt-4">Formulario de Contacto</h6>
+                    <form id="contactForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control form-control-sm" placeholder="Nombre completo" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control form-control-sm" placeholder="Correo electrónico" required>
+                        </div>
+                        <div class="mb-3">
+                            <select class="form-select form-select-sm" required>
+                                <option value="">Tipo de consulta</option>
+                                <option value="datos">Consulta sobre datos</option>
+                                <option value="tecnico">Soporte técnico</option>
+                                <option value="sugerencia">Sugerencia</option>
+                                <option value="error">Reporte de error</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control form-control-sm" rows="3" placeholder="Mensaje" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Enviar Mensaje
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal de Detalle de Serie -->
+<div class="modal fade" id="modalDetalleSerie" tabindex="-1" aria-labelledby="modalDetalleSerieLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" style="max-height: 90vh; overflow-y: auto;">
+        <div class="modal-content" style="max-height: 90vh;">
+            <div class="modal-header" style="background: #343a40; color: white;">
+                <h5 class="modal-title" id="modalDetalleSerieLabel">
+                    <i class="fas fa-chart-line me-2"></i>Detalle de Serie de Datos
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height: calc(90vh - 120px); overflow-y: auto;">
+                <!-- Metadatos Completos -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <h6><i class="fas fa-info-circle me-2"></i>Información General</h6>
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <h5 id="detalleNombreSerie">Producción de Energía Eléctrica</h5>
+                                <p id="detalleDescripcionSerie" class="text-muted">
+                                    Generación eléctrica nacional por tecnología de generación y región geográfica. 
+                                    Incluye datos de capacidad instalada, generación neta y factores de planta.
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Fuente Original:</strong> <span id="detalleFuente">CFE - Comisión Federal de Electricidad</span></p>
+                                        <p><strong>Metodología:</strong> <span id="detalleMetodologia">Medición directa en centrales generadoras</span></p>
+                                        <p><strong>Unidades:</strong> <span id="detalleUnidades">GWh (Gigawatts-hora)</span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Frecuencia:</strong> <span id="detalleFrecuencia">Mensual</span></p>
+                                        <p><strong>Última Actualización:</strong> <span id="detalleUltimaActualizacion">15/01/2025</span></p>
+                                        <p><strong>Cobertura Temporal:</strong> <span id="detalleCobertura">2010 - 2024</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-tags me-2"></i>Clasificación</h6>
+                        <div class="mb-3" id="detalleEtiquetas">
+                            <span class="badge bg-primary">electricidad</span>
+                            <span class="badge bg-secondary">CFE</span>
+                            <span class="badge bg-success">nacional</span>
+                            <span class="badge bg-info">generación</span>
+                        </div>
+                        
+                        <h6><i class="fas fa-download me-2"></i>Opciones de Descarga</h6>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary" onclick="descargarFormato('csv')">
+                                <i class="fas fa-file-csv me-2"></i>Descargar CSV
+                            </button>
+                            <button class="btn btn-outline-success" onclick="descargarFormato('excel')">
+                                <i class="fas fa-file-excel me-2"></i>Descargar Excel
+                            </button>
+                            <button class="btn btn-outline-info" onclick="descargarFormato('json')">
+                                <i class="fas fa-file-code me-2"></i>Descargar JSON
+                            </button>
+                            <button class="btn btn-outline-warning" onclick="mostrarAPI()">
+                                <i class="fas fa-code me-2"></i>Acceso vía API
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs de Contenido -->
+                <ul class="nav nav-tabs" id="detalleTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="visualizacion-tab" data-bs-toggle="tab" data-bs-target="#visualizacion" type="button" role="tab">
+                            <i class="fas fa-chart-bar me-2"></i>Visualización
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="datos-tab" data-bs-toggle="tab" data-bs-target="#datos" type="button" role="tab">
+                            <i class="fas fa-table me-2"></i>Datos Crudos
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="mapa-tab" data-bs-toggle="tab" data-bs-target="#mapa" type="button" role="tab">
+                            <i class="fas fa-map me-2"></i>Mapa Interactivo
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="detalleTabContent">
+                    <!-- Tab de Visualización -->
+                    <div class="tab-pane fade show active" id="visualizacion" role="tabpanel">
+                        <div class="p-3">
+                            <div class="mb-3">
+                                <label class="form-label">Tipo de Gráfico:</label>
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" name="tipoGrafico" id="lineas" checked>
+                                    <label class="btn btn-outline-primary" for="lineas">
+                                        <i class="fas fa-chart-line"></i> Líneas
+                                    </label>
+                                    <input type="radio" class="btn-check" name="tipoGrafico" id="barras">
+                                    <label class="btn btn-outline-primary" for="barras">
+                                        <i class="fas fa-chart-bar"></i> Barras
+                                    </label>
+                                    <input type="radio" class="btn-check" name="tipoGrafico" id="area">
+                                    <label class="btn btn-outline-primary" for="area">
+                                        <i class="fas fa-chart-area"></i> Área
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- Contenedor con altura fija para el gráfico -->
+                            <div class="chart-container" style="position: relative; height: 400px; max-height: 400px; overflow: hidden; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 10px;">
+                                <canvas id="graficoDetalle" style="max-height: 380px !important; max-width: 100% !important;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab de Datos Crudos -->
+                    <div class="tab-pane fade" id="datos" role="tabpanel">
+                        <div class="p-3">
+                            <div class="table-responsive" style="max-height: 400px;">
+                                <table class="table table-sm table-striped" id="tablaDatosCrudos">
+                                    <thead class="table-dark sticky-top">
+                                        <tr>
+                                            <th>Año</th>
+                                            <th>Mes</th>
+                                            <th>Tecnología</th>
+                                            <th>Región</th>
+                                            <th>Generación (GWh)</th>
+                                            <th>Capacidad (MW)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>2024</td>
+                                            <td>Diciembre</td>
+                                            <td>Hidroeléctrica</td>
+                                            <td>Nacional</td>
+                                            <td>3,247.8</td>
+                                            <td>12,844</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2024</td>
+                                            <td>Diciembre</td>
+                                            <td>Termoeléctrica</td>
+                                            <td>Nacional</td>
+                                            <td>18,934.2</td>
+                                            <td>38,757</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2024</td>
+                                            <td>Diciembre</td>
+                                            <td>Eólica</td>
+                                            <td>Nacional</td>
+                                            <td>2,156.4</td>
+                                            <td>8,128</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2024</td>
+                                            <td>Diciembre</td>
+                                            <td>Solar</td>
+                                            <td>Nacional</td>
+                                            <td>1,893.7</td>
+                                            <td>6,942</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab de Mapa -->
+                    <div class="tab-pane fade" id="mapa" role="tabpanel">
+                        <div class="p-3">
+                            <div class="alert alert-info">
+                                <i class="fas fa-map-marked-alt me-2"></i>
+                                <strong>Mapa Interactivo:</strong> Visualización geográfica de la generación eléctrica por entidad federativa.
+                            </div>
+                            <div id="mapaDetalle" style="height: 400px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <div class="text-center text-muted">
+                                    <i class="fas fa-map fa-3x mb-3"></i>
+                                    <p>Mapa interactivo se cargaría aquí</p>
+                                    <small>Funcionalidad disponible en la implementación completa</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de Cita Obligatoria -->
+                <div class="alert alert-primary mt-4">
+                    <h6><i class="fas fa-quote-left me-2"></i>Cita Obligatoria</h6>
+                    <p class="mb-2"><strong>Fuente:</strong> Sistema Nacional de Información Energética (SNIER)</p>
+                    <p class="mb-0"><strong>URL:</strong> <code>https://SNIER.gob.mx/series/<span id="urlSerie">energia-electrica</span></code></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" onclick="compartirSerie()">
+                    <i class="fas fa-share-alt me-2"></i>Compartir
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
-<style>
-    .timeline {
-        list-style: none;
-        padding-left: 0;
-        border-left: 4px solid #dee2e6;
-        margin-left: 1rem;
-    }
+@section Scripts {
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    .timeline li {
-        position: relative;
-        margin-bottom: 1.5rem;
-        padding-left: 1rem;
-    }
+    <script>
+        $(document).ready(function() {
+            // Inicializar animaciones
+            AOS.init({
+                duration: 800,
+                once: true
+            });
 
-    .timeline li::before {
-        content: "";
-        position: absolute;
-        top: 0.3rem;
-        left: -0.75rem;
-        width: 1rem;
-        height: 1rem;
-        background-color: #0d6efd;
-        border-radius: 50%;
-    }
-</style>
+            // Datos simulados para el portal
+            const seriesDatos = [
+                {
+                    id: 'energia-electrica',
+                    nombre: 'Producción de Energía Eléctrica',
+                    descripcion: 'Generación eléctrica nacional por tecnología de generación y región geográfica. Incluye datos de capacidad instalada, generación neta y factores de planta.',
+                    fuente: 'CFE - Comisión Federal de Electricidad',
+                    frecuencia: 'Mensual',
+                    ultimaActualizacion: '15/01/2025',
+                    cobertura: '2010 - 2024',
+                    unidades: 'GWh (Gigawatts-hora)',
+                    metodologia: 'Medición directa en centrales generadoras',
+                    etiquetas: ['electricidad', 'CFE', 'nacional', 'generación'],
+                    categoria: 'origen_destino',
+                    entidad: 'cfe',
+                    tipo: 'series'
+                },
+                {
+                    id: 'balance-nacional',
+                    nombre: 'Balance Nacional de Energía',
+                    descripcion: 'Flujos energéticos nacionales por fuente y sector de consumo final.',
+                    fuente: 'SENER - Secretaría de Energía',
+                    frecuencia: 'Anual',
+                    ultimaActualizacion: '10/01/2025',
+                    cobertura: '1990 - 2023',
+                    unidades: 'PJ (Petajoules)',
+                    metodologia: 'Compilación de estadísticas energéticas nacionales',
+                    etiquetas: ['balance', 'consumo', 'nacional', 'SENER'],
+                    categoria: 'origen_destino',
+                    entidad: 'sener',
+                    tipo: 'series'
+                },
+                {
+                    id: 'precios-combustibles',
+                    nombre: 'Precios de Combustibles',
+                    descripcion: 'Precios al público de gasolinas, diésel y gas LP por entidad federativa.',
+                    fuente: 'CRE - Comisión Reguladora de Energía',
+                    frecuencia: 'Semanal',
+                    ultimaActualizacion: '12/01/2025',
+                    cobertura: '2017 - 2025',
+                    unidades: 'Pesos mexicanos por litro',
+                    metodologia: 'Reporte de precios máximos autorizados',
+                    etiquetas: ['precios', 'combustibles', 'CRE', 'regional'],
+                    categoria: 'mercado_electrico',
+                    entidad: 'cre',
+                    tipo: 'series'
+                },
+                {
+                    id: 'renovables-capacidad',
+                    nombre: 'Capacidad de Energías Renovables',
+                    descripcion: 'Capacidad instalada de tecnologías de energías limpias por tipo y ubicación.',
+                    fuente: 'CENACE - Centro Nacional de Control de Energía',
+                    frecuencia: 'Trimestral',
+                    ultimaActualizacion: '05/01/2025',
+                    cobertura: '2015 - 2024',
+                    unidades: 'MW (Megawatts)',
+                    metodologia: 'Registro de centrales en operación comercial',
+                    etiquetas: ['renovables', 'capacidad', 'CENACE', 'limpias'],
+                    categoria: 'inventario',
+                    entidad: 'cenace',
+                    tipo: 'series'
+                },
+                {
+                    id: 'eficiencia-sectorial',
+                    nombre: 'Indicadores de Eficiencia Energética',
+                    descripcion: 'Indicadores de intensidad energética por sector económico.',
+                    fuente: 'CONUEE - Comisión Nacional para el Uso Eficiente de la Energía',
+                    frecuencia: 'Anual',
+                    ultimaActualizacion: '20/12/2024',
+                    cobertura: '2008 - 2023',
+                    unidades: 'MJ/Peso de PIB',
+                    metodologia: 'Cálculo de intensidad energética sectorial',
+                    etiquetas: ['eficiencia', 'intensidad', 'CONUEE', 'sectorial'],
+                    categoria: 'eficiencia',
+                    entidad: 'conuee',
+                    tipo: 'estadisticas'
+                }
+            ];
+
+            // Inicializar DataTable
+            let tablaDatos = $('#tablaDatosPublicos').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                },
+                responsive: true,
+                pageLength: 10,
+                order: [[3, 'desc']] // Ordenar por fecha de actualización
+            });
+
+            // Búsqueda principal
+            $('#btnBuscar').click(function() {
+                const termino = $('#busquedaPrincipal').val();
+                if (termino.trim() === '') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Búsqueda vacía',
+                        text: 'Por favor ingrese un término de búsqueda.'
+                    });
+                    return;
+                }
+                
+                realizarBusqueda(termino);
+            });
+
+            $('#busquedaPrincipal').keypress(function(e) {
+                if (e.which == 13) {
+                    $('#btnBuscar').click();
+                }
+            });
+
+            // Aplicar filtros
+            $('#aplicarFiltrosPublicos').click(function() {
+                const filtros = {
+                    categoria: $('#filtroCategoria').val(),
+                    periodo: $('#filtroPeriodo').val(),
+                    entidad: $('#filtroEntidad').val(),
+                    tipo: $('#filtroTipo').val()
+                };
+                
+                aplicarFiltros(filtros);
+            });
+
+            // Cambiar vista tabla/cuadrícula
+            $('#vistaTabla').click(function() {
+                $('#tablaView').show();
+                $('#cuadriculaView').hide();
+                $(this).removeClass('btn-outline-light').addClass('btn-light');
+                $('#vistaCuadricula').removeClass('btn-light').addClass('btn-outline-light');
+            });
+
+            $('#vistaCuadricula').click(function() {
+                $('#tablaView').hide();
+                $('#cuadriculaView').show();
+                $(this).removeClass('btn-outline-light').addClass('btn-light');
+                $('#vistaTabla').removeClass('btn-light').addClass('btn-outline-light');
+                generarVistaCuadricula();
+            });
+
+            // Funciones de búsqueda y filtrado
+            function realizarBusqueda(termino) {
+                Swal.fire({
+                    title: 'Buscando...',
+                    text: `Buscando "${termino}" en la base de datos`,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Simular búsqueda
+                setTimeout(() => {
+                    const resultados = seriesDatos.filter(serie => 
+                        serie.nombre.toLowerCase().includes(termino.toLowerCase()) ||
+                        serie.descripcion.toLowerCase().includes(termino.toLowerCase()) ||
+                        serie.etiquetas.some(etiqueta => etiqueta.toLowerCase().includes(termino.toLowerCase()))
+                    );
+
+                    Swal.close();
+                    
+                    if (resultados.length > 0) {
+                        actualizarTablaResultados(resultados);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Búsqueda completada',
+                            text: `Se encontraron ${resultados.length} serie(s) de datos.`,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Sin resultados',
+                            text: 'No se encontraron series de datos que coincidan con su búsqueda.'
+                        });
+                    }
+                }, 1500);
+            }
+
+            function aplicarFiltros(filtros) {
+                let resultados = seriesDatos;
+
+                if (filtros.categoria) {
+                    resultados = resultados.filter(serie => serie.categoria === filtros.categoria);
+                }
+                if (filtros.entidad) {
+                    resultados = resultados.filter(serie => serie.entidad === filtros.entidad);
+                }
+                if (filtros.tipo) {
+                    resultados = resultados.filter(serie => serie.tipo === filtros.tipo);
+                }
+
+                actualizarTablaResultados(resultados);
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Filtros aplicados',
+                    text: `Se encontraron ${resultados.length} serie(s) que cumplen los criterios.`,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+
+            function actualizarTablaResultados(resultados) {
+                tablaDatos.clear();
+                
+                resultados.forEach(serie => {
+                    const etiquetasHtml = serie.etiquetas.map(etiqueta => 
+                        `<span class="badge bg-light text-dark">${etiqueta}</span>`
+                    ).join(' ');
+                    
+                    const frecuenciaClass = {
+                        'Mensual': 'bg-success text-white',
+                        'Anual': 'bg-warning text-dark',
+                        'Semanal': 'bg-info text-white',
+                        'Trimestral': 'bg-primary text-white'
+                    }[serie.frecuencia] || 'bg-secondary text-white';
+
+                    tablaDatos.row.add([
+                        `<strong>${serie.nombre}</strong><br><small class="text-muted">${serie.fuente}</small>`,
+                        serie.descripcion,
+                        `<span class="frequency-badge ${frecuenciaClass}">${serie.frecuencia}</span>`,
+                        serie.ultimaActualizacion,
+                        serie.cobertura,
+                        etiquetasHtml,
+                        `<button class="btn btn-primary btn-action btn-sm" onclick="verDetalles('${serie.id}')">
+                            <i class="fas fa-eye"></i> Ver
+                        </button>
+                        <button class="btn btn-success btn-action btn-sm" onclick="visualizar('${serie.id}')">
+                            <i class="fas fa-chart-bar"></i> Gráfico
+                        </button>
+                        <button class="btn btn-info btn-action btn-sm" onclick="descargar('${serie.id}')">
+                            <i class="fas fa-download"></i> CSV
+                        </button>`
+                    ]);
+                });
+                
+                tablaDatos.draw();
+            }
+
+            function generarVistaCuadricula() {
+                const container = $('#cuadriculaView');
+                container.empty();
+                
+                seriesDatos.forEach(serie => {
+                    const frecuenciaClass = {
+                        'Mensual': 'bg-success text-white',
+                        'Anual': 'bg-warning text-dark',
+                        'Semanal': 'bg-info text-white',
+                        'Trimestral': 'bg-primary text-white'
+                    }[serie.frecuencia] || 'bg-secondary text-white';
+
+                    const etiquetasHtml = serie.etiquetas.map(etiqueta => 
+                        `<span class="badge bg-light text-dark">${etiqueta}</span>`
+                    ).join(' ');
+
+                    const card = `
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="data-card">
+                                <div class="data-card-header">
+                                    <h6 class="fw-bold mb-2">${serie.nombre}</h6>
+                                    <span class="frequency-badge ${frecuenciaClass}">${serie.frecuencia}</span>
+                                </div>
+                                <div class="p-3">
+                                    <p class="text-muted small mb-3">${serie.descripcion}</p>
+                                    <div class="mb-3">
+                                        <small class="text-muted">Última actualización: ${serie.ultimaActualizacion}</small><br>
+                                        <small class="text-muted">Cobertura: ${serie.cobertura}</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        ${etiquetasHtml}
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-primary btn-action btn-sm" onclick="verDetalles('${serie.id}')">
+                                            <i class="fas fa-eye"></i> Ver
+                                        </button>
+                                        <button class="btn btn-success btn-action btn-sm" onclick="visualizar('${serie.id}')">
+                                            <i class="fas fa-chart-bar"></i> Gráfico
+                                        </button>
+                                        <button class="btn btn-info btn-action btn-sm" onclick="descargar('${serie.id}')">
+                                            <i class="fas fa-download"></i> CSV
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.append(card);
+                });
+            }
+
+            // Inicializar con todos los datos
+            actualizarTablaResultados(seriesDatos);
+
+            // Formulario de contacto
+            $('#contactForm').submit(function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    nombre: $(this).find('input[type="text"]').val(),
+                    email: $(this).find('input[type="email"]').val(),
+                    tipo: $(this).find('select').val(),
+                    mensaje: $(this).find('textarea').val()
+                };
+
+                // Validar formulario
+                if (!formData.nombre || !formData.email || !formData.tipo || !formData.mensaje) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Campos incompletos',
+                        text: 'Por favor complete todos los campos del formulario.'
+                    });
+                    return;
+                }
+
+                // Simular envío
+                Swal.fire({
+                    title: 'Enviando mensaje...',
+                    text: 'Por favor espere mientras procesamos su consulta',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Mensaje enviado',
+                        text: 'Gracias por contactarnos. Le responderemos dentro de las próximas 24 horas.',
+                        confirmButtonText: 'Entendido'
+                    });
+                    
+                    // Limpiar formulario
+                    $('#contactForm')[0].reset();
+                }, 2000);
+            });
+
+            // Animaciones adicionales para las nuevas secciones
+            $('.accordion-button').click(function() {
+                $(this).find('i').toggleClass('fa-rotate-180');
+            });
+        });
+
+        // Funciones globales para acciones
+        function verDetalles(serieId) {
+            const serie = obtenerSeriePorId(serieId);
+            if (!serie) return;
+
+            // Llenar el modal con los datos de la serie
+            $('#modalDetalleSerieLabel').html(`<i class="fas fa-chart-line me-2"></i>${serie.nombre}`);
+            $('#detalleNombreSerie').text(serie.nombre);
+            $('#detalleDescripcionSerie').text(serie.descripcion);
+            $('#detalleFuente').text(serie.fuente);
+            $('#detalleMetodologia').text(serie.metodologia);
+            $('#detalleUnidades').text(serie.unidades);
+            $('#detalleFrecuencia').text(serie.frecuencia);
+            $('#detalleUltimaActualizacion').text(serie.ultimaActualizacion);
+            $('#detalleCobertura').text(serie.cobertura);
+            $('#urlSerie').text(serie.id);
+
+            // Actualizar etiquetas
+            const etiquetasHtml = serie.etiquetas.map(etiqueta => 
+                `<span class="badge bg-primary">${etiqueta}</span>`
+            ).join(' ');
+            $('#detalleEtiquetas').html(etiquetasHtml);
+
+            // Mostrar el modal
+            $('#modalDetalleSerie').modal('show');
+
+            // Event listener para cuando el modal se muestre completamente
+            $('#modalDetalleSerie').off('shown.bs.modal').on('shown.bs.modal', function () {
+                // Forzar actualización del gráfico después de que el modal esté completamente visible
+                setTimeout(() => {
+                    if (window.graficoDetalleInstance) {
+                        window.graficoDetalleInstance.resize();
+                        window.graficoDetalleInstance.update('none');
+                    }
+                }, 100);
+            });
+
+            // Generar gráfico cuando se active la pestaña de visualización
+            setTimeout(() => {
+                generarGraficoDetalle(serie);
+            }, 500);
+        }
+
+        function visualizar(serieId) {
+            const serie = obtenerSeriePorId(serieId);
+            if (!serie) return;
+
+            Swal.fire({
+                title: `Visualizando: ${serie.nombre}`,
+                html: `
+                    <div style="position: relative; height: 400px;">
+                        <canvas id="graficoRapido"></canvas>
+                    </div>
+                `,
+                width: '80%',
+                showConfirmButton: false,
+                showCloseButton: true,
+                didOpen: () => {
+                    generarGraficoRapido(serie);
+                }
+            });
+        }
+
+        function descargar(serieId) {
+            const serie = obtenerSeriePorId(serieId);
+            if (!serie) return;
+
+            Swal.fire({
+                title: 'Opciones de Descarga',
+                html: `
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" onclick="descargarFormato('csv', '${serieId}')">
+                            <i class="fas fa-file-csv me-2"></i>Descargar CSV
+                        </button>
+                        <button class="btn btn-outline-success" onclick="descargarFormato('excel', '${serieId}')">
+                            <i class="fas fa-file-excel me-2"></i>Descargar Excel
+                        </button>
+                        <button class="btn btn-outline-info" onclick="descargarFormato('json', '${serieId}')">
+                            <i class="fas fa-file-code me-2"></i>Descargar JSON
+                        </button>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true
+            });
+        }
+
+        function descargarFormato(formato, serieId) {
+            const serie = obtenerSeriePorId(serieId);
+            if (!serie) return;
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Descarga Iniciada',
+                text: `Se ha iniciado la descarga de "${serie.nombre}" en formato ${formato.toUpperCase()}.`,
+                timer: 3000,
+                showConfirmButton: false
+            });
+
+            // Simular descarga
+            console.log(`Descargando ${serie.nombre} en formato ${formato}`);
+        }
+
+        function mostrarAPI() {
+            Swal.fire({
+                title: 'Acceso vía API',
+                html: `
+                    <div class="text-start">
+                        <h6>Endpoint REST:</h6>
+                        <code>GET https://api.SNIER.gob.mx/v1/series/{id}</code>
+                        
+                        <h6 class="mt-3">Ejemplo cURL:</h6>
+                        <pre class="bg-light p-2 rounded"><code>curl -X GET "https://api.SNIER.gob.mx/v1/series/energia-electrica" \\
+  -H "Accept: application/json"</code></pre>
+                        
+                        <h6 class="mt-3">Respuesta JSON:</h6>
+                        <pre class="bg-light p-2 rounded"><code>{
+  "id": "energia-electrica",
+  "nombre": "Producción de Energía Eléctrica",
+  "datos": [...],
+  "metadatos": {...}
+}</code></pre>
+                    </div>
+                `,
+                width: '70%',
+                showConfirmButton: false,
+                showCloseButton: true
+            });
+        }
+
+        function compartirSerie() {
+            const url = window.location.href;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Portal SNIER - Serie de Datos',
+                    text: 'Consulta esta serie de datos energéticos en el Portal SNIER',
+                    url: url
+                });
+            } else {
+                // Fallback: copiar al portapapeles
+                navigator.clipboard.writeText(url).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'URL Copiada',
+                        text: 'La URL se ha copiado al portapapeles.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                });
+            }
+        }
+
+        // Funciones auxiliares
+        function obtenerSeriePorId(id) {
+            const seriesDatos = [
+                {
+                    id: 'energia-electrica',
+                    nombre: 'Producción de Energía Eléctrica',
+                    descripcion: 'Generación eléctrica nacional por tecnología de generación y región geográfica. Incluye datos de capacidad instalada, generación neta y factores de planta.',
+                    fuente: 'CFE - Comisión Federal de Electricidad',
+                    frecuencia: 'Mensual',
+                    ultimaActualizacion: '15/01/2025',
+                    cobertura: '2010 - 2024',
+                    unidades: 'GWh (Gigawatts-hora)',
+                    metodologia: 'Medición directa en centrales generadoras',
+                    etiquetas: ['electricidad', 'CFE', 'nacional', 'generación']
+                },
+                {
+                    id: 'balance-nacional',
+                    nombre: 'Balance Nacional de Energía',
+                    descripcion: 'Flujos energéticos nacionales por fuente y sector de consumo final.',
+                    fuente: 'SENER - Secretaría de Energía',
+                    frecuencia: 'Anual',
+                    ultimaActualizacion: '10/01/2025',
+                    cobertura: '1990 - 2023',
+                    unidades: 'PJ (Petajoules)',
+                    metodologia: 'Compilación de estadísticas energéticas nacionales',
+                    etiquetas: ['balance', 'consumo', 'nacional', 'SENER']
+                },
+                {
+                    id: 'precios-combustibles',
+                    nombre: 'Precios de Combustibles',
+                    descripcion: 'Precios al público de gasolinas, diésel y gas LP por entidad federativa.',
+                    fuente: 'CRE - Comisión Reguladora de Energía',
+                    frecuencia: 'Semanal',
+                    ultimaActualizacion: '12/01/2025',
+                    cobertura: '2017 - 2025',
+                    unidades: 'Pesos mexicanos por litro',
+                    metodologia: 'Reporte de precios máximos autorizados',
+                    etiquetas: ['precios', 'combustibles', 'CRE', 'regional']
+                }
+            ];
+            
+            return seriesDatos.find(serie => serie.id === id);
+        }
+
+        function generarGraficoDetalle(serie) {
+            const ctx = document.getElementById('graficoDetalle');
+            if (!ctx) return;
+
+            // Datos simulados para el gráfico
+            const datos = generarDatosSimulados(serie);
+
+            if (window.graficoDetalleInstance) {
+                window.graficoDetalleInstance.destroy();
+            }
+
+            window.graficoDetalleInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: datos.labels,
+                    datasets: [{
+                        label: serie.nombre,
+                        data: datos.values,
+                        borderColor: 'rgb(0, 123, 255)',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${serie.nombre} - Tendencia Temporal`,
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: true,
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            title: {
+                                display: true,
+                                text: serie.unidades,
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            radius: 4,
+                            hoverRadius: 6
+                        }
+                    }
+                }
+            });
+
+            // Escuchar cambios en el tipo de gráfico
+            $('input[name="tipoGrafico"]').off('change').change(function() {
+                const tipo = $(this).attr('id');
+                if (window.graficoDetalleInstance) {
+                    window.graficoDetalleInstance.config.type = tipo === 'lineas' ? 'line' : 
+                                                               tipo === 'barras' ? 'bar' : 'line';
+                    if (tipo === 'area') {
+                        window.graficoDetalleInstance.config.data.datasets[0].fill = true;
+                    } else {
+                        window.graficoDetalleInstance.config.data.datasets[0].fill = false;
+                    }
+                    window.graficoDetalleInstance.update();
+                    
+                    // Forzar redimensionamiento después del cambio
+                    setTimeout(() => {
+                        window.graficoDetalleInstance.resize();
+                    }, 100);
+                }
+            });
+        }
+
+        function generarGraficoRapido(serie) {
+            const ctx = document.getElementById('graficoRapido');
+            if (! ctx) return;
+
+            const datos = generarDatosSimulados(serie);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: datos.labels.slice(-12), // Últimos 12 puntos
+                    datasets: [{
+                        label: serie.nombre,
+                        data: datos.values.slice(-12),
+                        backgroundColor: 'rgba(0, 123, 255, 0.6)',
+                        borderColor: 'rgb(0, 123, 255)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${serie.nombre} - Vista Rápida`
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function generarDatosSimulados(serie) {
+            const labels = [];
+            const values = [];
+            const fechaInicio = new Date(2020, 0, 1);
+            const fechaFin = new Date();
+            
+            let fecha = new Date(fechaInicio);
+            let valorBase = 1000;
+            
+            while (fecha <= fechaFin) {
+                labels.push(fecha.toLocaleDateString('es-MX', {
+                    year: 'numeric',
+                    month: 'short'
+                }));
+                
+                // Generar valor simulado con tendencia y variación
+                valorBase += (Math.random() - 0.5) * 100;
+                values.push(Math.max(0, valorBase));
+                
+                // Incrementar fecha según frecuencia
+                if (serie.frecuencia === 'Mensual') {
+                    fecha.setMonth(fecha.getMonth() + 1);
+                } else if (serie.frecuencia === 'Trimestral') {
+                    fecha.setMonth(fecha.getMonth() + 3);
+                } else if (serie.frecuencia === 'Anual') {
+                    fecha.setFullYear(fecha.getFullYear() + 1);
+                } else {
+                    fecha.setDate(fecha.getDate() + 7); // Semanal
+                }
+            }
+            
+            return { labels, values };
+        }
+
+        // Animación de métricas al cargar
+        function animarMetricas() {
+            $('.metric-number').each(function() {
+                const $this = $(this);
+                const valor = $this.text().replace(/[^\d]/g, '');
+                if (valor) {
+                    $this.text('0');
+                    $({ counter: 0 }).animate({
+                        counter: parseInt(valor)
+                    }, {
+                        duration: 2000,
+                        easing: 'swing',
+                        step: function() {
+                            $this.text(Math.ceil(this.counter).toLocaleString());
+                        }
+                    });
+                }
+            });
+        }
+
+        // Ejecutar animación al cargar
+        setTimeout(animarMetricas, 1000);
+
+        // Funcionalidades adicionales del portal público
+        
+        // Búsquedas rápidas por categoría
+        function busquedaRapida(categoria) {
+            $('#filtroCategoria').val(categoria);
+            $('#aplicarFiltrosPublicos').click();
+        }
+
+        // Estadísticas en tiempo real (simuladas)
+        function actualizarEstadisticas() {
+            setInterval(() => {
+                // Simular incremento en descargas
+                const descargasElement = $('.public-metric:contains("Descargas") .metric-number');
+                if (descargasElement.length) {
+                    let valor = parseFloat(descargasElement.text().replace('K', '')) + 0.1;
+                    descargasElement.text(valor.toFixed(1) + 'K');
+                }
+            }, 30000); // Cada 30 segundos
+        }
+
+        // Feedback y rating del portal
+        function mostrarFeedback() {
+            Swal.fire({
+                title: 'Califique nuestro portal',
+                html: `
+                    <div class="text-center mb-3">
+                        <div class="rating-stars">
+                            <i class="fas fa-star star-rating" data-rating="1"></i>
+                            <i class="fas fa-star star-rating" data-rating="2"></i>
+                            <i class="fas fa-star star-rating" data-rating="3"></i>
+                            <i class="fas fa-star star-rating" data-rating="4"></i>
+                            <i class="fas fa-star star-rating" data-rating="5"></i>
+                        </div>
+                    </div>
+                    <textarea class="form-control" placeholder="Comentarios adicionales (opcional)" rows="3"></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Enviar Calificación',
+                cancelButtonText: 'Cancelar',
+                didOpen: () => {
+                    $('.star-rating').click(function() {
+                        const rating = $(this).data('rating');
+                        $('.star-rating').removeClass('text-warning').addClass('text-muted');
+                        for (let i = 1; i <= rating; i++) {
+                            $(`.star-rating[data-rating="${i}"]`).removeClass('text-muted').addClass('text-warning');
+                        }
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Gracias por su feedback',
+                        text: 'Su opinión nos ayuda a mejorar continuamente el portal.',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        // Exportar múltiples series
+        function exportarMultiple() {
+            Swal.fire({
+                title: 'Exportación Masiva',
+                html: `
+                    <div class="text-start">
+                        <p>Seleccione las series que desea exportar:</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="energia-electrica" id="exp1">
+                            <label class="form-check-label" for="exp1">Producción de Energía Eléctrica</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="balance-nacional" id="exp2">
+                            <label class="form-check-label" for="exp2">Balance Nacional de Energía</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="precios-combustibles" id="exp3">
+                            <label class="form-check-label" for="exp3">Precios de Combustibles</label>
+                        </div>
+                        <hr>
+                        <label class="form-label">Formato de exportación:</label>
+                        <select class="form-select" id="formatoExportacion">
+                            <option value="zip">ZIP con múltiples CSV</option>
+                            <option value="excel">Archivo Excel con pestañas</option>
+                            <option value="json">JSON consolidado</option>
+                        </select>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Exportar Seleccionadas',
+                cancelButtonText: 'Cancelar',
+                preConfirm: () => {
+                    const seleccionadas = [];
+                    $('input[type="checkbox"]:checked').each(function() {
+                        seleccionadas.push($(this).val());
+                    });
+                    
+                    if (seleccionadas.length === 0) {
+                        Swal.showValidationMessage('Debe seleccionar al menos una serie');
+                        return false;
+                    }
+                    
+                    return {
+                        series: seleccionadas,
+                        formato: $('#formatoExportacion').val()
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Exportación iniciada',
+                        text: `Se ha iniciado la exportación de ${result.value.series.length} serie(s) en formato ${result.value.formato.toUpperCase()}.`,
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        // Tour guiado del portal
+        function iniciarTour() {
+            const steps = [
+                {
+                    element: '.search-hero',
+                    title: 'Búsqueda Principal',
+                    content: 'Utilice la barra de búsqueda para encontrar series específicas de datos energéticos.'
+                },
+                {
+                    element: '.public-metric:first',
+                    title: 'Métricas del Portal',
+                    content: 'Aquí puede ver estadísticas en tiempo real sobre el contenido disponible.'
+                },
+                {
+                    element: '#filtroCategoria',
+                    title: 'Filtros Avanzados',
+                    content: 'Use los filtros para explorar datos por categoría, período y entidad generadora.'
+                },
+                {
+                    element: '#tablaDatosPublicos',
+                    title: 'Explorador de Datos',
+                    content: 'Navegue por todas las series disponibles. Puede cambiar entre vista de tabla y cuadrícula.'
+                }
+            ];
+
+            let currentStep = 0;
+            
+            function mostrarStep(step) {
+                const elemento = $(steps[step].element);
+                if (elemento.length) {
+                    $('html, body').animate({
+                        scrollTop: elemento.offset().top - 100
+                    }, 500);
+                    
+                    elemento.addClass('tour-highlight');
+                    
+                    Swal.fire({
+                        title: steps[step].title,
+                        text: steps[step].content,
+                        showCancelButton: true,
+                        confirmButtonText: currentStep < steps.length - 1 ? 'Siguiente' : 'Finalizar',
+                        cancelButtonText: 'Saltar tour',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        elemento.removeClass('tour-highlight');
+                        
+                        if (result.isConfirmed && currentStep < steps.length - 1) {
+                            currentStep++;
+                            mostrarStep(currentStep);
+                        } else if (result.isConfirmed) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Tour completado!',
+                                text: 'Ya conoce las principales funcionalidades del portal SNIER.',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                }
+            }
+            
+            mostrarStep(0);
+        }
+
+        // Inicializar estadísticas en tiempo real
+        actualizarEstadisticas();
+
+        // Agregar botones de acción flotantes
+        $('body').append(`
+            <div class="floating-actions" style="position: fixed; bottom: 50vh; right: 20px; z-index: 1000; transform: translateY(50%);">
+                <div class="btn-group-vertical">
+                    <button class="btn btn-primary btn-sm mb-2" onclick="mostrarFeedback()" title="Calificar portal">
+                        <i class="fas fa-star"></i>
+                    </button>
+                    <button class="btn btn-info btn-sm mb-2" onclick="exportarMultiple()" title="Exportación masiva">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="btn btn-success btn-sm" onclick="iniciarTour()" title="Tour guiado">
+                        <i class="fas fa-question"></i>
+                    </button>
+                </div>
+            </div>
+        `);
+
+        // Listener para redimensionar gráficos cuando cambie el tamaño de la ventana
+        $(window).resize(function() {
+            if (window.graficoDetalleInstance && $('#modalDetalleSerie').hasClass('show')) {
+                setTimeout(() => {
+                    window.graficoDetalleInstance.resize();
+                }, 100);
+            }
+        });
+
+    </script>
+}

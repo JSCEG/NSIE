@@ -88,8 +88,8 @@
 }
 
 /* =====================================================
-                       BASE STYLES - SNIER THEME
-                       ===================================================== */
+                               BASE STYLES - SNIER THEME
+                               ===================================================== */
 * {
     box-sizing: border-box;
 }
@@ -101,7 +101,7 @@ body {
     line-height: 1.6;
     color: var(--gray-800);
     /* @* background: var(--gradient-ocean);
-                        *@ background: rgba(255, 255, 255, 0.1); */
+                                *@ background: rgba(255, 255, 255, 0.1); */
     background: transparent;
     padding-top: var(--header-height);
     overflow-x: hidden;
@@ -109,8 +109,8 @@ body {
 }
 
 /* =====================================================
-                       HEADER - ELEGANT SNIER DESIGN
-                       ===================================================== */
+                               HEADER - ELEGANT SNIER DESIGN
+                               ===================================================== */
 .header-custom {
     height: var(--header-height);
     background: linear-gradient(to right, #022336, #043B4A);
@@ -145,8 +145,8 @@ body {
 }
 
 /* =====================================================
-                       SIDEBAR - ELEGANT GLASS MORPHISM
-                       ===================================================== */
+                               SIDEBAR - ELEGANT GLASS MORPHISM
+                               ===================================================== */
 .sidebar-desktop {
     width: var(--sidebar-width);
     background: rgba(255, 255, 255, 0.4);
@@ -168,7 +168,7 @@ body {
     min-height: calc(100vh - var(--header-height) - var(--footer-height));
     padding-bottom: var(--footer-height);
     /* @* background: rgba(255, 255, 255, 0.1);
-                        *@ */
+                                *@ */
 }
 
 .footer-custom {
@@ -236,15 +236,15 @@ body.sidebar-collapsed .main-content {
 
 
 /* ==============================
-   NAVIGATION ROOT LEVEL - PROFESIONAL & ELEGANTE
- 
-/* =====================================================
-   NAVIGATION COMPLETE - SNIER ELEGANT THEME
-   ===================================================== */
+           NAVIGATION ROOT LEVEL - PROFESIONAL & ELEGANTE
+         
+        /* =====================================================
+           NAVIGATION COMPLETE - SNIER ELEGANT THEME
+           ===================================================== */
 
 /* ==============================
-   BASE STYLES
-   ============================== */
+           BASE STYLES
+           ============================== */
 .nav-link,
 .submenu-toggle,
 .submenu-link {
@@ -259,8 +259,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* ==============================
-      MAIN NAVIGATION LINKS
-      ============================== */
+              MAIN NAVIGATION LINKS
+              ============================== */
 .nav-link,
 .submenu-toggle {
     border-radius: var(--border-radius);
@@ -320,8 +320,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* ==============================
-      SUBMENU STYLES
-      ============================== */
+              SUBMENU STYLES
+              ============================== */
 .submenu-link {
     padding: 0.6rem 1rem 0.6rem 2.75rem;
     font-size: var(--font-size-sm);
@@ -373,8 +373,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* ==============================
-      SPECIAL EFFECTS
-      ============================== */
+              SPECIAL EFFECTS
+              ============================== */
 /* Ripple effect */
 .nav-link::after,
 .submenu-toggle::after,
@@ -407,8 +407,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* ==============================
-      SUBMENU ANIMATION
-      ============================== */
+              SUBMENU ANIMATION
+              ============================== */
 .submenu {
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -430,8 +430,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* ==============================
-      NAVIGATION STRUCTURE
-      ============================== */
+              NAVIGATION STRUCTURE
+              ============================== */
 /* Section dividers */
 .nav-item:not(:last-child) {
     margin-bottom: 1px;
@@ -464,8 +464,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* ==============================
-      CHEVRON/ARROW STYLES
-      ============================== */
+              CHEVRON/ARROW STYLES
+              ============================== */
 .submenu-arrow {
     transition: var(--transition-smooth);
     opacity: 0.6;
@@ -495,8 +495,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* ==============================
-      ACCESSIBILITY & STATES
-      ============================== */
+              ACCESSIBILITY & STATES
+              ============================== */
 /* Focus states */
 .nav-link:focus-visible,
 .submenu-toggle:focus-visible,
@@ -524,8 +524,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* ==============================
-      DARK MODE SUPPORT
-      ============================== */
+              DARK MODE SUPPORT
+              ============================== */
 @media (prefers-color-scheme: dark) {
 
     .nav-link,
@@ -568,8 +568,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* ==============================
-      RESPONSIVE ADJUSTMENTS
-      ============================== */
+              RESPONSIVE ADJUSTMENTS
+              ============================== */
 @media (max-width: 992px) {
 
     .nav-link,
@@ -606,8 +606,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* ==============================
-      PERFORMANCE OPTIMIZATION
-      ============================== */
+              PERFORMANCE OPTIMIZATION
+              ============================== */
 @media (prefers-reduced-motion: reduce) {
 
     .nav-link,
@@ -629,8 +629,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* =====================================================
-                       BUTTONS - SNIER STYLE
-                       ===================================================== */
+                               BUTTONS - SNIER STYLE
+                               ===================================================== */
 .btn {
     border-radius: var(--border-radius);
     font-weight: var(--font-weight-medium);
@@ -719,8 +719,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* =====================================================
-                       DROPDOWNS - ELEGANT GLASS EFFECT
-                       ===================================================== */
+                               DROPDOWNS - ELEGANT GLASS EFFECT
+                               ===================================================== */
 .dropdown-menu {
     border: none;
     box-shadow: var(--shadow-strong);
@@ -749,16 +749,16 @@ body.sidebar-collapsed .main-content {
 }
 
 /* =====================================================
-                       OFFCANVAS - MOBILE SIDEBAR
-                       ===================================================== */
+                               OFFCANVAS - MOBILE SIDEBAR
+                               ===================================================== */
 .offcanvas-custom {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
 }
 
 /* =====================================================
-                       SCROLLBAR PERSONALIZADO
-                       ===================================================== */
+                               SCROLLBAR PERSONALIZADO
+                               ===================================================== */
 .custom-scroll {
     scrollbar-width: thin;
     scrollbar-color: rgba(30, 126, 140, 0.3) transparent;
@@ -783,8 +783,8 @@ body.sidebar-collapsed .main-content {
 }
 
 /* =====================================================
-                       FORM ELEMENTS - SNIER STYLE
-                       ===================================================== */
+                               FORM ELEMENTS - SNIER STYLE
+                               ===================================================== */
 .form-control {
     font-size: var(--font-size-sm);
     padding: 0.4rem 0.6rem;
@@ -801,11 +801,11 @@ body.sidebar-collapsed .main-content {
 }
 
 /* =====================================================
-                       ANIMATED PARTICLES BACKGROUND
-                       ===================================================== */
+                               ANIMATED PARTICLES BACKGROUND
+                               ===================================================== */
 body::before {
     /* @* content: '';
-                        *@ position: fixed; */
+                                *@ position: fixed; */
     top: 0;
     left: 0;
     width: 100%;
@@ -839,8 +839,8 @@ body::before {
 }
 
 /* =====================================================
-                       SECTION HEADERS - ELEGANT TYPOGRAPHY
-                       ===================================================== */
+                               SECTION HEADERS - ELEGANT TYPOGRAPHY
+                               ===================================================== */
 .section-header {
     font-family: var(--font-family-display);
     font-weight: var(--font-weight-bold);
@@ -853,8 +853,8 @@ body::before {
 }
 
 /* =====================================================
-                       RESPONSIVE DESIGN
-                       ===================================================== */
+                               RESPONSIVE DESIGN
+                               ===================================================== */
 @media (max-height: 600px) and (orientation: landscape) {
     .main-container {
         align-items: flex-start;
@@ -881,8 +881,8 @@ body::before {
 }
 
 /* =====================================================
-                       DARK MODE SUPPORT
-                       ===================================================== */
+                               DARK MODE SUPPORT
+                               ===================================================== */
 @media (prefers-color-scheme: dark) {
     :root {
         --gray-50: #111827;
@@ -892,8 +892,8 @@ body::before {
 }
 
 /* =====================================================
-                       LINK ANIMATIONS - CALLING ATTENTION
-                       ===================================================== */
+                               LINK ANIMATIONS - CALLING ATTENTION
+                               ===================================================== */
 .snier-link {
     color: #9f2241;
     text-decoration: none;
@@ -966,8 +966,8 @@ body::before {
 }
 
 /* ================================
-                Botones DataTables
-                ================================ */
+                        Botones DataTables
+                        ================================ */
 .dt-button {
     background: var(--gradient-snier) !important;
     color: var(--white) !important;
@@ -1020,8 +1020,8 @@ body::before {
 }
 
 /* ================================
-                Paginación DataTables
-                ================================ */
+                        Paginación DataTables
+                        ================================ */
 .dataTables_paginate .paginate_button {
     background-color: var(--gray-200);
     color: var(--gray-800);
@@ -1108,13 +1108,13 @@ body::before {
 
 
 /* =====================================================
-                   TABLES - SCROLLABLE AND RESPONSIVE
-                   ===================================================== */
+                           TABLES - SCROLLABLE AND RESPONSIVE
+                           ===================================================== */
 /*Marca de agua PDF*/
 /* CSS para ocultar la marca de agua en la vista normal */
 /*.watermark {
-                       display: none;
-                    }*/
+                               display: none;
+                            }*/
 
 .watermark-container {
     position: fixed;
@@ -1165,8 +1165,8 @@ body::before {
 }
 
 /* =====================================================
-                               ICONOS CSS SNIER - ELEGANT THEME
-                               ===================================================== */
+                                       ICONOS CSS SNIER - ELEGANT THEME
+                                       ===================================================== */
 
 .iconomenu {
     width: 56px !important;
@@ -1204,8 +1204,8 @@ body::before {
 
 
 /* =====================================================
-                   DIAGRAMA SEM 
-         ===================================================== */
+                           DIAGRAMA SEM 
+                 ===================================================== */
 /* Diagrama SEM */
 .diagram {
     display: flex;
@@ -1542,9 +1542,9 @@ body::before {
     height: 46px;
     font-weight: bold;
     /* border-radius: 8px;
-              transition: transform 0.3s ease;
-               border-bottom: 2px solid transparent;
-               margin-top: 20px;*/
+                      transition: transform 0.3s ease;
+                       border-bottom: 2px solid transparent;
+                       margin-top: 20px;*/
     transition: background-color 0.3s ease, color 0.3s ease;
     /* Transición suave */
     text-align: center;
@@ -1603,7 +1603,7 @@ body::before {
     border-radius: 16px;
     height: 26px;
     /* transition: transform 0.3s ease;
-                   border-bottom: 2px solid transparent;*/
+                           border-bottom: 2px solid transparent;*/
 }
 
 .btn-d-verde:hover {
@@ -1613,7 +1613,7 @@ body::before {
     /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);*/
     width: 100%;
     /* border-radius: 8px;
-                   border-bottom: 2px solid #257400;*/
+                           border-bottom: 2px solid #257400;*/
 }
 
 /* Naranja */
@@ -1652,7 +1652,7 @@ body::before {
     font-weight: bold;
     /* Peso de fuente ajustado */
     /*
-                   transform: scale(1.1);*/
+                           transform: scale(1.1);*/
     /*color: #dcc8a3 !important;*/
     /*text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);*/
     width: 100%;
@@ -1662,8 +1662,8 @@ body::before {
 
 
 /* =====================================================
-                       Sankey 
-             ===================================================== */
+                               Sankey 
+                     ===================================================== */
 
 /* Sankey - estilos específicos */
 .map-container_sankey {
@@ -1844,8 +1844,8 @@ body::before {
 }
 
 /* =====================================================
-                       Sankey - estilos específicos
-                       ===================================================== */
+                               Sankey - estilos específicos
+                               ===================================================== */
 #sankeySvg g {
     cursor: pointer;
 }
@@ -2436,8 +2436,8 @@ span {
 }
 
 /* =====================================================
-                    SNIER VIEWS - DASHBOARD SPECIFIC STYLES
-                    ===================================================== */
+                            SNIER VIEWS - DASHBOARD SPECIFIC STYLES
+                            ===================================================== */
 
 /* Prevenir zoom brusco en navbar brand */
 .navbar-brand:hover {
@@ -2532,8 +2532,8 @@ span {
 }
 
 /* =====================================================
-           BOOTSTRAP COMPATIBILITY FIXES
-           ===================================================== */
+                   BOOTSTRAP COMPATIBILITY FIXES
+                   ===================================================== */
 
 /* Fix for Bootstrap buttons */
 .btn {
@@ -2610,8 +2610,8 @@ span {
 }
 
 /* =====================================================
-           TIMELINE COMPONENT - SNIER STYLE
-           ===================================================== */
+                   TIMELINE COMPONENT - SNIER STYLE
+                   ===================================================== */
 
 .timeline {
     position: relative;
@@ -2733,8 +2733,8 @@ span {
 }
 
 /* =====================================================
-           SECTION STYLES - NO CARDS PREFERENCE
-           ===================================================== */
+                   SECTION STYLES - NO CARDS PREFERENCE
+                   ===================================================== */
 
 .content-section {
     background: var(--white);

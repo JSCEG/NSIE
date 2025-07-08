@@ -218,5 +218,75 @@ namespace NSIE.Controllers
         {
             return View();
         }
+
+        // Nuevo método para obtener datos reales de demanda del MEM
+        [HttpGet]
+        public async Task<IActionResult> DemandaMEM(string inicio, string fin)
+        {
+            try
+            {
+                // Validar fechas
+                if (!DateTime.TryParse(inicio, out DateTime fechaInicio) || !DateTime.TryParse(fin, out DateTime fechaFin))
+                {
+                    return Json(new { success = false, message = "Fechas inválidas" });
+                }
+
+                // Conexión a la base de datos
+                using var connection = new SqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                // Consulta SQL (reutilizando la lógica del MIMController)
+                var query = @"
+                    SELECT 
+                        Fecha,
+                        [CEN], [ORI], [OCC], [NOR], [NTE], [NES], [BCA], [BCS], [PEN]
+                    FROM DemandaDiaria 
+                    WHERE Fecha BETWEEN @inicio AND @fin 
+                    ORDER BY Fecha";
+
+                var resultados = await connection.QueryAsync<DemandaDiaria>(query, new { inicio = fechaInicio, fin = fechaFin });
+
+                // Formatear datos para Highcharts
+                var fechas = resultados.Select(r => r.Fecha.ToString("yyyy-MM-dd")).ToArray();
+                var series = new[]
+                {
+                    new { name = "CEN", data = resultados.Select(r => (decimal?)r.CEN).ToArray() },
+                    new { name = "ORI", data = resultados.Select(r => (decimal?)r.ORI).ToArray() },
+                    new { name = "OCC", data = resultados.Select(r => (decimal?)r.OCC).ToArray() },
+                    new { name = "NOR", data = resultados.Select(r => (decimal?)r.NOR).ToArray() },
+                    new { name = "NTE", data = resultados.Select(r => (decimal?)r.NTE).ToArray() },
+                    new { name = "NES", data = resultados.Select(r => (decimal?)r.NES).ToArray() },
+                    new { name = "BCA", data = resultados.Select(r => (decimal?)r.BCA).ToArray() },
+                    new { name = "BCS", data = resultados.Select(r => (decimal?)r.BCS).ToArray() },
+                    new { name = "PEN", data = resultados.Select(r => (decimal?)r.PEN).ToArray() }
+                };
+
+                // Calcular totales para KPIs
+                var totalDemanda = resultados.Sum(r => r.CEN + r.ORI + r.OCC + r.NOR + r.NTE + r.NES + r.BCA + r.BCS + r.PEN);
+                var demandaMaxima = resultados.Max(r => r.CEN + r.ORI + r.OCC + r.NOR + r.NTE + r.NES + r.BCA + r.BCS + r.PEN);
+                var demandaMinima = resultados.Min(r => r.CEN + r.ORI + r.OCC + r.NOR + r.NTE + r.NES + r.BCA + r.BCS + r.PEN);
+                var demandaPromedio = resultados.Average(r => r.CEN + r.ORI + r.OCC + r.NOR + r.NTE + r.NES + r.BCA + r.BCS + r.PEN);
+
+                return Json(new
+                {
+                    success = true,
+                    fechas,
+                    series,
+                    kpis = new
+                    {
+                        totalDemanda = Math.Round(totalDemanda, 0),
+                        demandaMaxima = Math.Round(demandaMaxima, 0),
+                        demandaMinima = Math.Round(demandaMinima, 0),
+                        demandaPromedio = Math.Round(demandaPromedio, 0),
+                        totalRegistros = resultados.Count()
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener datos de demanda del MEM");
+                return Json(new { success = false, message = "Error al obtener los datos" });
+            }
+        }
     }
 }

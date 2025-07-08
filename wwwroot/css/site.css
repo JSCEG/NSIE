@@ -910,7 +910,7 @@ footer {
     font-weight: bold;
     margin-top: 20px;
     text-align: center;
-    /* Centrar n mero horizontalmente */
+    /* Centrar nmero horizontalmente */
 }
 
 /*Tabs*/
@@ -1860,7 +1860,6 @@ mapid,
     background-color: #6c757d;
     /* Un gris más oscuro y elegante */
     color: #f0f0f0;
-    font-weight: bold;
 }
 
 /* @* Gris *@ */
@@ -3770,3 +3769,118 @@ html:-ms-fullscreen {
     color: #ffffff !important;
     width: 100%;
 }
+
+/* =====================================================
+   ESTILOS GLOBALES PARA POPUPS LEAFLET - SNIER MEM
+   ===================================================== */
+
+/* Mejorar el estilo base de los popups de Leaflet */
+.leaflet-popup-content-wrapper {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(24, 156, 144, 0.2);
+    padding: 0;
+    overflow: visible;
+    max-width: 350px !important;
+    min-width: 280px !important;
+    max-height: 450px !important;
+}
+
+/* Forzar que el popup no se salga de la pantalla */
+.leaflet-popup {
+    z-index: 1000 !important;
+    max-height: 80vh !important;
+    overflow: visible !important;
+}
+
+.leaflet-popup-content {
+    margin: 20px;
+    line-height: 1.4;
+    font-size: 14px;
+    max-width: none !important;
+    white-space: normal;
+    max-height: 350px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #189c90 #f0f0f0;
+}
+
+/* Estilo personalizado para scrollbar webkit */
+.leaflet-popup-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.leaflet-popup-content::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+
+.leaflet-popup-content::-webkit-scrollbar-thumb {
+    background: #189c90;
+    border-radius: 3px;
+}
+
+.leaflet-popup-content::-webkit-scrollbar-thumb:hover {
+    background: #147a70;
+}
+
+.leaflet-popup-tip {
+    background: white;
+    border: 1px solid rgba(24, 156, 144, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo del botón de cerrar */
+.leaflet-popup-close-button {
+    color: #666;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 4px 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.2s ease;
+}
+
+.leaflet-popup-close-button:hover {
+    background: #f44336;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Estilos específicos para popups del MEM dentro de Leaflet */
+.leaflet-popup-content .popup-content-mem {
+    margin: -20px;
+    border-radius: 12px;
+    overflow: visible;
+    min-width: 280px;
+    max-width: 350px;
+    width: auto;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Asegurar que los popups tengan z-index alto */
+.leaflet-popup {
+    z-index: 1000 !important;
+}
+
+/* Mejorar la legibilidad en popups pequeños */
+@media (max-width: 768px) {
+    .leaflet-popup-content {
+        margin: 15px;
+        font-size: 13px;
+    }
+
+    .leaflet-popup-content-wrapper {
+        min-width: 260px !important;
+        max-width: 320px !important;
+    }
+
+    .popup-content-mem {
+        min-width: 240px !important;
+        max-width: 300px !important;
+    }
+}
+
+/* ===================================================== */

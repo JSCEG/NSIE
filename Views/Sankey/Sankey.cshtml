@@ -110,16 +110,42 @@ new() { Reference = "Art. 70 Reglamento", Description = "Establece los lineamien
         <div class="alert alert-light border-0 shadow-sm" role="alert"
             style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);">
             <div class="text-center mb-3">
-                <h3 class="alert-heading text-primary fw-bold">
-                    <i class="bi bi-graph-up me-2"></i>Totales por Nivel Energético
-                </h3>
-                <p class="text-muted mb-0">Visualización de los totales energéticos por cada nivel del Balance Nacional
-                    de Energía</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div></div>
+                    <div>
+                        <h3 class="alert-heading text-primary fw-bold mb-0">
+                            <i class="bi bi-graph-up me-2"></i>Totales por Nivel Energético
+                        </h3>
+                        <p class="text-muted mb-0">Visualización de los totales energéticos por cada nivel del Balance
+                            Nacional
+                            de Energía</p>
+                    </div>
+                    <div>
+                        <button id="btn-mostrar-debug" class="btn btn-sm btn-outline-info">
+                            <i class="bi bi-bug"></i> Debug
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div id="tarjetas-totales"
                 class="d-flex flex-wrap justify-content-center align-items-stretch gap-3 mt-4 mb-4">
                 <!-- Las tarjetas se generarán aquí dinámicamente -->
+            </div>
+
+            <!-- Div de depuración para mostrar totales en forma de lista -->
+            <div id="debug-totales" class="mt-4 p-3 border rounded bg-light" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-muted mb-0">
+                        <i class="bi bi-bug me-2"></i>Depuración de Totales por Año: <span id="debug-year"></span>
+                    </h6>
+                    <button id="btn-ocultar-debug" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-eye-slash"></i> Ocultar
+                    </button>
+                </div>
+                <div id="debug-lista">
+                    <!-- Los totales de depuración se mostrarán aquí -->
+                </div>
             </div>
         </div>
 
