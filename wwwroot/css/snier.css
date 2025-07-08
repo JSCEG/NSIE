@@ -2884,3 +2884,132 @@ span {
         transform: scale(1.05);
     }
 }
+
+/* Hero logo styles */
+.hero-logo {
+    height: 55px;
+    width: auto;
+    filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.3));
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.hero-logo:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.4));
+}
+
+/* Responsive adjustments for logo */
+@media (max-width: 768px) {
+    .hero-logo {
+        height: 45px;
+        margin-bottom: 1rem;
+    }
+
+    .hero-content .d-flex {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .hero-logo.me-4 {
+        margin-right: 0 !important;
+    }
+}
+
+/* Hero section spacing fixes */
+.hero-section .row {
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.hero-section .col-lg-6 {
+    padding: 0 2rem;
+}
+
+.hero-content {
+    padding-right: 3rem;
+}
+
+/* Adjust title size for better fit */
+.hero-content h1 {
+    font-size: 2.8rem;
+    line-height: 1.2;
+}
+
+/* Better spacing for hero elements */
+.hero-content .d-flex {
+    margin-bottom: 2rem;
+}
+
+.hero-content p.lead {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* Video container adjustments */
+.hero-video-container {
+    margin-left: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .hero-content h1 {
+        font-size: 2.4rem;
+    }
+
+    .hero-content {
+        padding-right: 1.5rem;
+    }
+
+    .hero-video-container {
+        margin-left: 1rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .hero-content {
+        padding-right: 0;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .hero-video-container {
+        margin-left: 0;
+    }
+
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+}
+
+/* Hero title container */
+.hero-title-container {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.hero-title {
+    flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
+    font-size: 2.4rem;
+}
+
+/* Ensure title doesn't overflow */
+@media (max-width: 1400px) {
+    .hero-title {
+        font-size: 2.0rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+
+    .hero-logo {
+        height: 50px;
+    }
+}

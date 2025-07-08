@@ -22,6 +22,9 @@
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
+    <!-- Particles.js for modern background effects -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap"
@@ -65,6 +68,9 @@
             padding: 8rem 0 6rem;
             position: relative;
             overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
         }
 
         .hero-section::before {
@@ -74,14 +80,147 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://cdn.sassoapps.com/img_sankey/energy-pattern.png') center/cover;
-            opacity: 0.1;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(33, 109, 146, 0.2) 0%, transparent 50%);
             z-index: 0;
+            animation: gradientFlow 15s ease-in-out infinite;
+        }
+
+        @@keyframes gradientFlow {
+
+            0%,
+            100% {
+                background:
+                    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(33, 109, 146, 0.2) 0%, transparent 50%);
+            }
+
+            50% {
+                background:
+                    radial-gradient(circle at 80% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                    radial-gradient(circle at 20% 80%, rgba(255, 119, 48, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 60% 60%, rgba(33, 109, 146, 0.2) 0%, transparent 50%);
+            }
+        }
+
+        /* Particles container */
+        #particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            /* Permite que los eventos de mouse pasen a través */
+        }
+
+        /* Texto destacado debajo del video */
+        .video-description {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .video-description:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .video-description small {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .hero-content {
             position: relative;
-            z-index: 1;
+            z-index: 2;
+            pointer-events: auto;
+            /* Asegura que el contenido sea interactivo */
+        }
+
+        /* Asegurar que el video sea clickeable */
+        .hero-video-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            z-index: 3;
+            /* Z-index más alto que las partículas */
+            pointer-events: auto;
+            /* Asegura interactividad completa */
+        }
+
+        /* Modern text highlight */
+        .text-gradient {
+            color: #ffffff;
+            /* Removimos el text-shadow y la animación glow */
+        }
+
+        /* Modern buttons */
+        .modern-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(33, 109, 146, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modern-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .modern-btn:hover::before {
+            left: 100%;
+        }
+
+        .modern-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(33, 109, 146, 0.4);
+        }
+
+        .modern-btn-outline {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .modern-btn-outline:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* Modern badge */
+        .bg-primary-soft {
+            background: rgba(33, 109, 146, 0.15) !important;
+            border: 1px solid rgba(33, 109, 146, 0.3);
+            backdrop-filter: blur(10px);
         }
 
         .btn-primary {
@@ -177,16 +316,38 @@
 
         .login-card {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2;
+            position: relative;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg,
+                    var(--primary-color),
+                    var(--primary-light),
+                    var(--primary-color));
             z-index: 1;
         }
 
         .login-card:hover {
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+            box-shadow:
+                0 35px 70px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
 
         .input-group-text {
@@ -292,15 +453,65 @@
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+        }
+
+        .hero-video-container:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 35px 70px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-video-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg,
+                    rgba(33, 109, 146, 0.05),
+                    rgba(129, 195, 201, 0.05),
+                    transparent,
+                    rgba(33, 109, 146, 0.05));
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .hero-video-container:hover::before {
+            opacity: 1;
         }
 
         .hero-video {
             width: 100%;
             height: auto;
             display: block;
+            position: relative;
+            z-index: 4;
+            /* Mayor que el contenedor */
+        }
+
+        /* Asegurar que todos los controles del video funcionen */
+        .hero-video::-webkit-media-controls,
+        .hero-video::-webkit-media-controls-panel,
+        .hero-video::-webkit-media-controls-play-button,
+        .hero-video::-webkit-media-controls-volume-slider,
+        .hero-video::-webkit-media-controls-timeline {
+            z-index: 5 !important;
+            pointer-events: auto !important;
         }
 
         /* Estilos para los controles del video */
@@ -786,28 +997,46 @@
 
     <!-- Hero Section -->
     <section class="hero-section" id="inicio">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 hero-content" data-aos="fade-right">
-                    <h1 class="display-4 fw-bold mb-4">Sistema Nacional de Información Energética</h1>
-                    <p class="lead mb-4">Plataforma oficial para integrar, analizar y transparentar toda la información
-                        energética de México</p>
-                    <div class="d-flex flex-wrap gap-3">
-                        <a href="#acceso" class="btn btn-primary btn-lg">Acceder al sistema</a>
-                        <a href="#modulos" class="btn btn-outline-light btn-lg">Ver módulos</a>
+        <div id="particles-js"></div>
+        <div class="container-fluid px-4">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 hero-content" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="d-flex align-items-center mb-4 hero-title-container">
+                        <img src="@cdn/img_snier/login/logo_snier.png" alt="SNIER Logo" class="hero-logo me-3"
+                            data-aos="zoom-in" data-aos-delay="100">
+                        <h1 class="display-5 fw-bold mb-0 hero-title" data-aos="fade-up" data-aos-delay="200">
+                            Sistema Nacional de
+                            <span class="text-gradient">Información Energética</span>
+                        </h1>
+                    </div>
+                    <p class="lead mb-4" data-aos="fade-up" data-aos-delay="400">
+                        Plataforma oficial para integrar, analizar y transparentar toda la información
+                        energética de México con tecnología de vanguardia
+                    </p>
+                    <div class="d-flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay="600">
+                        <a href="#acceso" class="btn btn-primary btn-lg modern-btn">
+                            <i class="bi bi-play-circle me-2"></i>Acceder al sistema
+                        </a>
+                        <a href="#modulos" class="btn btn-outline-light btn-lg modern-btn-outline">
+                            <i class="bi bi-grid-3x3-gap me-2"></i>Ver módulos
+                        </a>
                     </div>
                 </div>
-                <div class="col-lg-6" data-aos="fade-left">
+                <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
                     <div class="hero-video-container">
-                        <video class="hero-video" controls poster="@cdn/img_snier/login/logo_snier.png">
+                        <video class="hero-video" controls autoplay muted poster="@cdn/img_snier/login/logo_snier.png">
                             <source src="https://cdn.sassoapps.com/video/SNIER%202025%20Julio.mp4" type="video/mp4">
                             <p>Tu navegador no soporta videos HTML5. <a
                                     href="https://cdn.sassoapps.com/video/SNIER%202025%20Julio.mp4">Descarga el
                                     video</a>.</p>
                         </video>
-                        <div class="text-center mt-3">
-                            <small class="text-white-50">Sistema Nacional de Información Energética - Video Oficial
-                                2025</small>
+                        <div class="video-description text-center">
+                            <small class="d-flex align-items-center justify-content-center">
+                                <i class="bi bi-camera-video me-2"></i>
+                                <strong>Sistema Nacional de Información Energética</strong>
+                                <span class="mx-2">•</span>
+                                <em>Video Oficial 2025</em>
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -1602,6 +1831,64 @@
             easing: 'ease-in-out'
         });
 
+        // Initialize Particles.js with the classic node-link interactive effect
+        if (typeof particlesJS !== 'undefined') {
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 100, // Adjusted for performance with line linking
+                        density: { enable: true, value_area: 800 }
+                    },
+                    color: { value: '#ffffff' },
+                    shape: {
+                        type: 'circle'
+                    },
+                    opacity: {
+                        value: 0.5, // Increased for better visibility
+                        random: false,
+                        anim: { enable: false }
+                    },
+                    size: {
+                        value: 3, // Slightly larger particles
+                        random: true,
+                        anim: { enable: false }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: '#ffffff',
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2, // Adjusted speed for a classic feel
+                        direction: 'none',
+                        random: false,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: true, mode: 'grab' }, // Grab mode creates interactive lines
+                        onclick: { enable: true, mode: 'push' },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 140,
+                            line_opacity: 1
+                        },
+                        push: { particles_nb: 4 }
+                    }
+                },
+                retina_detect: true
+            });
+        }
+
         // Toggle password visibility
         function togglePassword() {
             const input = document.getElementById("claveInput");
@@ -1619,20 +1906,51 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
             });
         });
 
-        // Change navbar style on scroll
+        // Typing animation for main title
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing animation on page load
+        window.addEventListener('load', function () {
+            const titleElement = document.querySelector('.text-gradient');
+            if (titleElement) {
+                const originalText = titleElement.textContent;
+                setTimeout(() => {
+                    typeWriter(titleElement, originalText, 80);
+                }, 1000);
+            }
+        });
+
+        // Change navbar style on scroll with modern effect
         window.addEventListener('scroll', function () {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 50) {
-                navbar.style.backgroundColor = 'var(--primary-dark)';
-                navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                navbar.style.backgroundColor = 'rgba(13, 75, 110, 0.95)';
+                navbar.style.backdropFilter = 'blur(20px)';
+                navbar.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
             } else {
                 navbar.style.backgroundColor = 'rgba(13, 75, 110, 0.9)';
+                navbar.style.backdropFilter = 'blur(10px)';
                 navbar.style.boxShadow = 'none';
             }
         });
