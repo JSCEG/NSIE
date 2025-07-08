@@ -35,6 +35,29 @@
             "env": {
                 "MCP_SQL_LOCAL": "true"
             }
+        },
+        "sql-analytics": {
+            "command": "npx",
+            "args": [
+                "@modelcontextprotocol/server-sqlite",
+                "--db-path",
+                "analytics.db"
+            ],
+            "env": {
+                "MCP_ANALYTICS_MODE": "true",
+                "SNIER_DB_SERVER": "servidorsqljavidev.database.windows.net",
+                "SNIER_DB_NAME": "BDPruebasSNIER"
+            }
+        },
+        "excel-reports": {
+            "command": "npx",
+            "args": [
+                "@modelcontextprotocol/server-excel"
+            ],
+            "env": {
+                "EXCEL_OUTPUT_DIR": "c:\\Proyectos\\SNIER\\Reportes",
+                "EXCEL_TEMPLATE_DIR": "c:\\Proyectos\\SNIER\\Templates"
+            }
         }
     }
 }

@@ -1045,30 +1045,45 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="py-5" style="background-color: var(--light-color);">
+    <section class="stats-section text-white text-center py-5" style="
+    background: linear-gradient(
+      135deg,
+      rgba(13, 75, 110, 0.95) 0%,   /* Azul navbar */
+      rgba(10, 60, 88, 0.9) 25%,    /* Azul más oscuro */
+      rgba(8, 45, 66, 0.95) 50%,    /* Azul muy oscuro */
+      rgba(13, 75, 110, 0.9) 75%,   /* Azul navbar */
+      rgba(15, 85, 125, 0.95) 100%  /* Azul ligeramente más claro */
+    );
+    background-size: 300% 300%;
+    animation: gradientShift 8s ease-in-out infinite;
+  ">
         <div class="container">
-            <div class="row g-4">
-                <div class="col-md-3" data-aos="fade-up">
+            <div class="row">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up">
                     <div class="stats-item">
-                        <div class="stats-number text-primary">15+</div>
+                        <i class="bi bi-grid-3x3-gap-fill stats-icon"></i>
+                        <div class="stats-number">15+</div>
                         <div class="stats-label">Módulos especializados</div>
                     </div>
                 </div>
-                <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="stats-item">
-                        <div class="stats-number text-primary">500K+</div>
+                        <i class="bi bi-server stats-icon"></i>
+                        <div class="stats-number">500K+</div>
                         <div class="stats-label">Registros energéticos</div>
                     </div>
                 </div>
-                <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
                     <div class="stats-item">
-                        <div class="stats-number text-primary">32</div>
+                        <i class="bi bi-geo-alt-fill stats-icon"></i>
+                        <div class="stats-number">32</div>
                         <div class="stats-label">Entidades federativas</div>
                     </div>
                 </div>
-                <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
                     <div class="stats-item">
-                        <div class="stats-number text-primary">24/7</div>
+                        <i class="bi bi-clock-history stats-icon"></i>
+                        <div class="stats-number">24/7</div>
                         <div class="stats-label">Datos actualizados</div>
                     </div>
                 </div>
