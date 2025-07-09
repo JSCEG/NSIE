@@ -1,0 +1,44 @@
+/*
+ * ==========================================================================
+ * ESTILOS PARA PESTAÑAS (TABS)
+ * ==========================================================================
+ */
+
+/* 1. Contenedor de la navegación de pestañas */
+.nav-tabs {
+    border-bottom: 2px solid var(--color-borde);
+}
+
+/* 2. Enlace de la pestaña (.nav-link) */
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    /* Alinea el borde inferior con el del contenedor */
+    padding: 0.75rem 1.25rem;
+    color: var(--texto-secundario);
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+/* 3. Estado hover y focus del enlace */
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
+    border-bottom-color: var(--color-primario);
+    color: var(--color-primario);
+    isolation: isolate;
+    /* Para el z-index */
+}
+
+/* 4. Pestaña activa (.nav-link.active) */
+.nav-tabs .nav-link.active {
+    color: var(--color-primario);
+    background-color: transparent;
+    border-color: transparent;
+    border-bottom: 2px solid var(--color-primario);
+}
+
+/* 5. Contenido de las pestañas (.tab-content) */
+.tab-content {
+    padding-top: 1.5rem;
+}

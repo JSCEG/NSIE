@@ -1,0 +1,96 @@
+/*
+ * ==========================================================================
+ * ESTILOS DEFINITIVOS PARA MAPAS LEAFLET Y SUS CONTROLES (MOBILE-FIRST)
+ * ==========================================================================
+ */
+
+/* --- Selectores para todos los mapas --- */
+#map,
+#map_presionagua,
+#map_disponibilidad,
+#map_geotermia,
+#map_radiacion,
+#map_viento,
+#map_subestaciones,
+#map_lineas,
+#map_centrales,
+#map_potencial_electrico,
+#mapa_pozos,
+#mapa_contratos,
+#mapa_asignaciones,
+#mapa_permisos,
+#mapa_distribucion,
+#mapa_expendio,
+#mapa_transporte,
+#mapa_almacenamiento,
+#mapa_comercializacion,
+#mapa_regasificacion,
+#mapa_compresion,
+#mapa_licuefaccion,
+#mapa_otros {
+    width: 100%;
+    /* El ancho siempre es responsivo */
+    border-radius: var(--radio-borde);
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--color-borde);
+    background-color: #eaf0f5;
+}
+
+/* ... (aquí van todos los demás estilos de controles, popups, etc. que ya teníamos) ... */
+.leaflet-container {
+    border-radius: var(--radio-borde);
+}
+
+.leaflet-control {
+    box-shadow: var(--sombra-suave);
+    border-radius: var(--radio-borde) !important;
+    border: 1px solid var(--color-borde);
+}
+
+.leaflet-bar a,
+.leaflet-bar a:hover {
+    color: var(--color-fondo-oscuro);
+    background-color: white;
+    width: 38px;
+    height: 38px;
+    line-height: 38px;
+    font-size: 1.4rem;
+}
+
+/* ... etc ... */
+
+/* -----------------------------------------
+   [NUEVO] LAYOUT RESPONSIVO DEL MAPA (ALTURAS)
+   ----------------------------------------- */
+
+/* 1. Altura para MÓVILES (por defecto) */
+#map,
+#map_presionagua,
+/* ... y todos los demás IDs ... */
+#mapa_otros {
+    height: 400px;
+    /* Una altura cómoda para ver en vertical */
+}
+
+/* 2. Altura para TABLETS (a partir de 768px de ancho) */
+@media (min-width: 768px) {
+
+    #map,
+    #map_presionagua,
+    /* ... y todos los demás IDs ... */
+    #mapa_otros {
+        height: 550px;
+    }
+}
+
+/* 3. Altura para ESCRITORIOS (a partir de 1200px de ancho) */
+@media (min-width: 1200px) {
+
+    #map,
+    #map_presionagua,
+    /* ... y todos los demás IDs ... */
+    #mapa_otros {
+        height: 650px;
+        /* Más altura para aprovechar el espacio horizontal */
+    }
+}

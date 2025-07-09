@@ -1,0 +1,49 @@
+/*
+ * ==========================================================================
+ * LAYOUT FINAL - LA ÚNICA FUENTE DE VERDAD
+ * ==========================================================================
+ */
+
+/* --- 1. VARIABLES DE TAMAÑO --- */
+:root {
+  --header-height: 65px;
+  --sidebar-width: 260px;
+}
+
+/* --- 2. REGLAS SOLO PARA ESCRITORIO --- */
+@media (min-width: 992px) {
+
+  #sidebarDesktop {
+    position: fixed;
+    /* ¡La clave! Lo ancla a la pantalla */
+    top: var(--header-height);
+    left: 0;
+    height: calc(100vh - var(--header-height));
+    width: var(--sidebar-width);
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+  }
+
+  .main-content {
+    padding-top: var(--header-height);
+    margin-left: var(--sidebar-width);
+    transition: margin-left 0.3s ease-in-out;
+  }
+
+  /* --- ESTADO COLAPSADO --- */
+  body.sidebar-collapsed #sidebarDesktop {
+    transform: translateX(-100%);
+  }
+
+  body.sidebar-collapsed .main-content {
+    margin-left: 0;
+  }
+}
+
+/* --- 3. REGLAS PARA MÓVIL --- */
+@media (max-width: 991.98px) {
+  .main-content {
+    margin-left: 0;
+    padding-top: var(--header-height);
+  }
+}

@@ -182,8 +182,10 @@
     <header class="header-custom navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container-fluid px-3">
             <!-- Botón toggle -->
-            <button id="sidebarToggle" class="btn sidebar-toggle me-3" type="button">
-                <i class="bi bi-list"></i>
+            <button id="sidebarToggle" class="btn sidebar-toggle-pro me-3" type="button" aria-label="Toggle Menu">
+                <span class="line line-1"></span>
+                <span class="line line-2"></span>
+                <span class="line line-3"></span>
             </button>
 
             <!-- Logo/Marca SNIER -->
@@ -201,7 +203,7 @@
                 <form class="d-none d-md-flex me-3" role="search">
                     <div class="input-group input-group-sm">
                         <input class="form-control" type="search" placeholder="Buscar..." aria-label="Buscar">
-                        <button class="btn btn-primary" type="submit">
+                        <button class="btn btn-header" type="submit">
                             <i class="bi bi-search"></i>
                         </button>
                     </div>
@@ -211,7 +213,7 @@
                 @if (perfilUsuario.Rol != "0")
                 {
                     <div class="app-utility-item app-notifications-dropdown dropdown me-3">
-                        <a class="btn btn-primary position-relative dropdown-toggle no-toggle-arrow"
+                        <a class="btn btn-header position-relative dropdown-toggle no-toggle-arrow"
                             id="notifications-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                             aria-expanded="false" title="Notificaciones">
 
@@ -253,7 +255,7 @@
 
                 <!-- Perfil de usuario -->
                 <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown"
+                    <button class="btn btn-header dropdown-toggle" type="button" id="userDropdown"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle me-2"></i>
                         <span class="d-none d-md-inline">@ViewData["NombreUsuario"]</span>
@@ -350,7 +352,7 @@
                                                     data-bs-toggle="collapse" 
                                                     data-bs-target="#@moduloIdMobile"
                                                     aria-expanded="@(isModuloActivo.ToString().ToLower())">
-                                                <span><i class="bi bi-box me-2"></i>@modulo.Title</span>
+                                                <span><i class=""></i>@modulo.Title</span>
                                                 <i class="bi bi-chevron-down"></i>
                                             </button>
 
@@ -375,7 +377,7 @@
                                             @if (modulo.EsExterno)
                                             {
                                                 <a class="nav-link" href="@modulo.Action" target="_blank" rel="noopener noreferrer">
-                                                    <i class="bi bi-box me-2"></i>@modulo.Title <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                    <i class=""></i>@modulo.Title <i class="bi bi-box-arrow-up-right ms-1"></i>
                                                 </a>
                                             }
                                             else
@@ -383,7 +385,7 @@
                                                 <a class="nav-link @(isModuloActivo ? "active" : "")"
                                                    asp-controller="@modulo.Controller"
                                                    asp-action="@modulo.Action">
-                                                    <i class="bi bi-box me-2"></i>@modulo.Title
+                                                    <i class=""></i>@modulo.Title
                                                 </a>
                                             }
                                         }
@@ -539,7 +541,7 @@
 
 
     <!-- CONTENIDO PRINCIPAL -->
-    <main class="main-content p-0">
+    <main class="main-content content">
         <div id="page-preloader" style="display:flex;">
             <div class="spinner"></div>
             <img src="@Cdn.Url/img_snier/login/logo_snier.png" alt="Logo de la empresa" class="preloader-logo">
@@ -555,7 +557,7 @@
         @RenderBody()
 
         <!-- Footer -->
-        <footer class="footer-snier text-white pt-4 pb-0" style="background: linear-gradient(to right, #022336, #043B4A); position: relative;">
+        <footer class="footer-snier text-white pt-4 pb-0" style="background: linear-gradient(to right, #022336, #0b8aae); position: relative;">
             <div class="container-fluid px-5">
                 <div class="row">
                     <div class="col-md-4 mb-4">
@@ -1141,6 +1143,8 @@
             sidebarToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                  // Esta línea la añades para la animación del botón
+                this.classList.toggle('is-active'); 
                 
                 if (window.innerWidth >= 992) {
                     // Desktop: toggle sidebar

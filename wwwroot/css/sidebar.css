@@ -1,0 +1,238 @@
+/*
+ * ==========================================================================
+ * REDISEÑO VISUAL DEL SIDEBAR - V5 "PRO" (con Mini-Sidebar y Tooltips)
+ * ==========================================================================
+ */
+
+/* -----------------------------------------
+   [1] CONTENEDOR PRINCIPAL
+   ----------------------------------------- */
+#sidebarDesktop {
+    background: linear-gradient(175deg, var(--color-fondo-oscuro) 0%, #001f3d 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    overflow-y: auto;
+    /* La lógica de posicionamiento y ancho está en layout-maestro.css */
+}
+
+/* ==========================================================================
+ * CORRECCIÓN DE Z-INDEX PARA SIDEBAR DE ESCRITORIO
+ * ==========================================================================
+ */
+
+@media (min-width: 992px) {
+
+    /* --- SIDEBAR --- */
+    #sidebarDesktop {
+        /* Posicionamiento anclado */
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+
+        /* Capa de apilamiento (z-index) */
+        /* Un valor menor que el del header (1030) pero mayor que el contenido (que por defecto es 0) */
+        z-index: 1020;
+
+        /* Tamaño */
+        height: calc(100vh - var(--header-height));
+        width: var(--sidebar-width);
+
+        /* Animación */
+        transform: translateX(0);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    /* -----------------------------------------
+   [2] NAVEGACIÓN Y ENLACES
+   ----------------------------------------- */
+    #sidebarDesktop .nav-link,
+    #sidebarDesktop .submenu-toggle {
+        display: flex;
+        align-items: center;
+        padding: 14px 25px;
+        margin: 4px 10px;
+        border-radius: var(--radio-borde);
+        color: rgba(255, 255, 255, 0.75);
+        font-weight: 500;
+        text-decoration: none;
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+        position: relative;
+        /* Necesario para el tooltip */
+        white-space: nowrap;
+        /* Evita que el texto se rompa al colapsar */
+    }
+
+    /* --- Iconos (adaptados a tu estructura) --- */
+    #sidebarDesktop .nav-link i,
+    #sidebarDesktop .submenu-toggle .d-flex i,
+    #sidebarDesktop .submenu-toggle .submenu-arrow {
+        margin-right: 15px;
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+        opacity: 0.8;
+        transition: all 0.3s ease;
+    }
+
+    /* --- Efecto Hover --- */
+    #sidebarDesktop .nav-link:hover,
+    #sidebarDesktop .submenu-toggle:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: white;
+        border-left-color: var(--color-primario);
+    }
+
+    body:not(.sidebar-collapsed) #sidebarDesktop .nav-link:hover,
+    body:not(.sidebar-collapsed) #sidebarDesktop .submenu-toggle:hover {
+        transform: translateX(5px);
+    }
+
+
+    #sidebarDesktop .nav-link:hover i,
+    #sidebarDesktop .submenu-toggle:hover i {
+        opacity: 1;
+    }
+
+    /* --- Estado Activo --- */
+    #sidebarDesktop li.active>.nav-link,
+    #sidebarDesktop .nav-link.active,
+    #sidebarDesktop .submenu-toggle.active-section {
+        background-color: rgba(139, 195, 74, 0.1);
+        color: white;
+        font-weight: 600;
+        border-left-color: var(--color-primario);
+    }
+
+    #sidebarDesktop li.active>.nav-link i,
+    #sidebarDesktop .nav-link.active i,
+    #sidebarDesktop .submenu-toggle.active-section i {
+        opacity: 1;
+        color: var(--color-primario);
+    }
+
+    /* --- Indicador de submenú abierto --- */
+    #sidebarDesktop .submenu-toggle[aria-expanded="true"] {
+        background-color: rgba(0, 0, 0, 0.1);
+        color: white;
+    }
+
+    /* -----------------------------------------
+   [3] SUBMENÚS
+   ----------------------------------------- */
+    #sidebarDesktop .submenu {
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 10px 0;
+        margin: 0 10px 5px 15px;
+        border-radius: var(--radio-borde);
+        border-left: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #sidebarDesktop .submenu-link {
+        display: block;
+        padding: 10px 20px 10px 30px;
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.9rem;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+
+    #sidebarDesktop .submenu-link:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    #sidebarDesktop .submenu-link.active {
+        color: var(--color-primario);
+        font-weight: 600;
+    }
+
+    /* -----------------------------------------
+   [4] MODO COLAPSADO (MINI-SIDEBAR) Y TOOLTIPS
+   ----------------------------------------- */
+
+    /* Ocultar texto y flechas en modo colapsado */
+    body.sidebar-collapsed #sidebarDesktop .nav-link-text,
+    body.sidebar-collapsed #sidebarDesktop .submenu-arrow {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+        transition: opacity 0.2s ease, width 0.2s ease;
+    }
+
+    /* Centrar el ícono cuando el texto desaparece */
+    body.sidebar-collapsed #sidebarDesktop .nav-link,
+    body.sidebar-collapsed #sidebarDesktop .submenu-toggle {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Tooltip */
+    body.sidebar-collapsed #sidebarDesktop .nav-link::after,
+    body.sidebar-collapsed #sidebarDesktop .submenu-toggle::after {
+        content: attr(data-title);
+        /* Leemos el atributo data-title */
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-left: 15px;
+        /* Espacio entre el ícono y el tooltip */
+        background-color: #212529;
+        color: white;
+        padding: 6px 12px;
+        border-radius: var(--radio-borde);
+        font-size: 0.85rem;
+        font-weight: 500;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        pointer-events: none;
+        z-index: 100;
+    }
+
+    body.sidebar-collapsed #sidebarDesktop .nav-link:hover::after,
+    body.sidebar-collapsed #sidebarDesktop .submenu-toggle:hover::after {
+        opacity: 1;
+        visibility: visible;
+        transition-delay: 0.3s;
+        /* Pequeño retraso para que no sea molesto */
+    }
+
+
+    /* -----------------------------------------
+   [5] SCROLLBAR Y TÍTULOS DE SECCIÓN
+   ----------------------------------------- */
+    #sidebarDesktop .section-header {
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 25px 20px 10px 20px;
+        white-space: nowrap;
+    }
+
+    body.sidebar-collapsed #sidebarDesktop .section-header {
+        text-align: center;
+        padding: 25px 10px 10px 10px;
+    }
+
+
+    #sidebarDesktop::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #sidebarDesktop::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    #sidebarDesktop::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+    }
+
+    #sidebarDesktop::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(255, 255, 255, 0.4);
+    }

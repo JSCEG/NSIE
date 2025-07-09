@@ -1,0 +1,126 @@
+/*
+ * ==========================================================================
+ * ESTILOS PARA TABLAS DE DATOS (BOOTSTRAP + DATATABLES)
+ * ==========================================================================
+ */
+
+/* -----------------------------------------
+   1. CONTENEDOR DE LA TABLA Y PAGINACIÓN
+   ----------------------------------------- */
+.dataTables_wrapper {
+    width: 100%;
+}
+
+/* Contenedor para los controles superiores (búsqueda, mostrar entradas) */
+.dataTables_wrapper .row:first-child {
+    margin-bottom: 1.5rem;
+}
+
+/* Contenedor para los controles inferiores (info, paginación) */
+.dataTables_wrapper .row:last-child {
+    margin-top: 1.5rem;
+    align-items: center;
+}
+
+/* -----------------------------------------
+   2. ESTILO DE LA TABLA PRINCIPAL
+   ----------------------------------------- */
+.table {
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    box-shadow: var(--sombra-suave);
+    overflow: hidden;
+    /* Asegura que los bordes redondeados se apliquen bien */
+}
+
+/* Encabezado de la tabla (thead) */
+.table thead th {
+    background-color: var(--color-fondo);
+    /* Fondo gris claro */
+    color: var(--color-fondo-oscuro);
+    /* Texto en azul oscuro */
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-primario);
+    /* Borde inferior verde */
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* Cuerpo de la tabla (tbody) */
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+/* Efecto hover en las filas */
+.table tbody tr:hover {
+    background-color: rgba(139, 195, 74, 0.1);
+    /* Verde muy sutil */
+}
+
+/* Celdas de la tabla */
+.table td,
+.table th {
+    vertical-align: middle;
+    padding: 0.85rem 1rem;
+}
+
+/* Estilo para filas impares (cebreado) */
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* -----------------------------------------
+   3. ESTILO DE LOS CONTROLES DE DATATABLES
+   ----------------------------------------- */
+
+/* Input de búsqueda */
+.dataTables_filter input {
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 0.5rem 0.75rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dataTables_filter input:focus {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 0.2rem rgba(139, 195, 74, 0.25);
+    outline: none;
+}
+
+/* Menú para mostrar "X" entradas */
+.dataTables_length select {
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-borde);
+    padding: 0.5rem 0.75rem;
+}
+
+.dataTables_length select:focus {
+    border-color: var(--color-primario);
+    outline: none;
+}
+
+
+/* Paginación */
+.page-item .page-link {
+    color: var(--color-primario);
+    border-color: var(--color-borde);
+}
+
+.page-item.active .page-link {
+    background-color: var(--color-primario);
+    border-color: var(--color-primario);
+    color: white;
+}
+
+.page-item:not(.active) .page-link:hover {
+    background-color: #f8f9fa;
+}
+
+
+/* -----------------------------------------
+   4. RESPONSIVIDAD
+   ----------------------------------------- */
+/* Para pantallas pequeñas, hacemos que la tabla sea desplazable horizontalmente */
+.table-responsive {
+    border-radius: var(--radio-borde);
+}
