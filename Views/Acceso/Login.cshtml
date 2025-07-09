@@ -29,931 +29,11 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap"
         rel="stylesheet">
+    <!-- SNIER System CSS - Incluye todos los estilos del sistema -->
+    <link rel="stylesheet" href="~/css/snier.css" asp-append-version="true" />
 
+    <!-- Única personalización específica para Botpress -->
     <style>
-        :root {
-            --primary-color: #216d92;
-            --primary-light: #81c3c9;
-            --primary-dark: #0d4b6e;
-            --secondary-color: #FF9800;
-            --dark-color: #1A3E4C;
-            --light-color: #F8F9FA;
-            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-        }
-
-        .bpComposerFooter {
-            display: none !important;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            color: #333;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-        }
-
-        .hero-section {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 8rem 0 6rem;
-            position: relative;
-            overflow: hidden;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background:
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(33, 109, 146, 0.2) 0%, transparent 50%);
-            z-index: 0;
-            animation: gradientFlow 15s ease-in-out infinite;
-        }
-
-        @@keyframes gradientFlow {
-
-            0%,
-            100% {
-                background:
-                    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.15) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, rgba(33, 109, 146, 0.2) 0%, transparent 50%);
-            }
-
-            50% {
-                background:
-                    radial-gradient(circle at 80% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                    radial-gradient(circle at 20% 80%, rgba(255, 119, 48, 0.15) 0%, transparent 50%),
-                    radial-gradient(circle at 60% 60%, rgba(33, 109, 146, 0.2) 0%, transparent 50%);
-            }
-        }
-
-        /* Particles container */
-        #particles-js {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            /* Permite que los eventos de mouse pasen a través */
-        }
-
-        /* Texto destacado debajo del video */
-        .video-description {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            margin-top: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .video-description:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .video-description small {
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 500;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            pointer-events: auto;
-            /* Asegura que el contenido sea interactivo */
-        }
-
-        /* Asegurar que el video sea clickeable */
-        .hero-video-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            z-index: 3;
-            /* Z-index más alto que las partículas */
-            pointer-events: auto;
-            /* Asegura interactividad completa */
-        }
-
-        /* Modern text highlight */
-        .text-gradient {
-            color: #ffffff;
-            /* Removimos el text-shadow y la animación glow */
-        }
-
-        /* Modern buttons */
-        .modern-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            border: none;
-            border-radius: 50px;
-            padding: 1rem 2rem;
-            font-weight: 600;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 8px 25px rgba(33, 109, 146, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .modern-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.6s;
-        }
-
-        .modern-btn:hover::before {
-            left: 100%;
-        }
-
-        .modern-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(33, 109, 146, 0.4);
-        }
-
-        .modern-btn-outline {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .modern-btn-outline:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-3px);
-        }
-
-        /* Modern badge */
-        .bg-primary-soft {
-            background: rgba(33, 109, 146, 0.15) !important;
-            border: 1px solid rgba(33, 109, 146, 0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            border-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(33, 109, 146, 0.3);
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-            color: white;
-        }
-
-        .feature-card {
-            border: none;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            height: 100%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid var(--primary-light);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .section-title {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 2rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: var(--primary-color);
-        }
-
-        .testimonial-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            height: 100%;
-        }
-
-        .testimonial-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary-light);
-        }
-
-        .form-section {
-            background: url('https://cdn.sassoapps.com/img_sankey/energy-bg.jpg') center/cover;
-            position: relative;
-            padding: 6rem 0;
-        }
-
-        .form-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(13, 75, 110, 0.9);
-            z-index: 0;
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            box-shadow:
-                0 25px 50px rgba(0, 0, 0, 0.15),
-                0 0 0 1px rgba(255, 255, 255, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 2;
-            position: relative;
-        }
-
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg,
-                    var(--primary-color),
-                    var(--primary-light),
-                    var(--primary-color));
-            z-index: 1;
-        }
-
-        .login-card:hover {
-            transform: translateY(-5px);
-            box-shadow:
-                0 35px 70px rgba(0, 0, 0, 0.2),
-                0 0 0 1px rgba(255, 255, 255, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .input-group-text {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-        }
-
-        .form-control {
-            border-left: none;
-            padding-left: 0;
-        }
-
-        .form-control:focus {
-            box-shadow: none;
-            border-color: #ced4da;
-        }
-
-        .stats-item {
-            text-align: center;
-            padding: 2rem 1rem;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-        }
-
-        .stats-item:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .stats-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-
-        .stats-label {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .nav-pills .nav-link.active {
-            background-color: var(--primary-color);
-        }
-
-        .nav-pills .nav-link {
-            color: var(--dark-color);
-        }
-
-        footer {
-            background-color: var(--dark-color);
-            color: white;
-            padding: 4rem 0 2rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: white;
-            padding-left: 5px;
-        }
-
-        .social-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            margin-right: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .social-icon:hover {
-            background: var(--primary-light);
-            transform: translateY(-3px);
-        }
-
-        /* Video background for login */
-        #video-bg {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-            z-index: -1;
-        }
-
-        /* Hero video container */
-        .hero-video-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow:
-                0 25px 50px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10;
-        }
-
-        .hero-video-container:hover {
-            transform: translateY(-5px);
-            box-shadow:
-                0 35px 70px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-
-        .hero-video-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg,
-                    rgba(33, 109, 146, 0.05),
-                    rgba(129, 195, 201, 0.05),
-                    transparent,
-                    rgba(33, 109, 146, 0.05));
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .hero-video-container:hover::before {
-            opacity: 1;
-        }
-
-        .hero-video {
-            width: 100%;
-            height: auto;
-            display: block;
-            position: relative;
-            z-index: 4;
-            /* Mayor que el contenedor */
-        }
-
-        /* Asegurar que todos los controles del video funcionen */
-        .hero-video::-webkit-media-controls,
-        .hero-video::-webkit-media-controls-panel,
-        .hero-video::-webkit-media-controls-play-button,
-        .hero-video::-webkit-media-controls-volume-slider,
-        .hero-video::-webkit-media-controls-timeline {
-            z-index: 5 !important;
-            pointer-events: auto !important;
-        }
-
-        /* Estilos para los controles del video */
-        .hero-video::-webkit-media-controls-panel {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        .hero-video::-webkit-media-controls-play-button,
-        .hero-video::-webkit-media-controls-volume-slider,
-        .hero-video::-webkit-media-controls-timeline {
-            filter: invert(1);
-        }
-
-        /* Responsive adjustments */
-        @@media (max-width: 768px) {
-            .hero-section {
-                padding: 6rem 0 4rem;
-            }
-
-            .hero-section h1 {
-                font-size: 2.2rem;
-            }
-
-            .stats-item {
-                margin-bottom: 1rem;
-            }
-
-            .hero-video-container {
-                max-width: 100%;
-                margin-top: 2rem;
-            }
-        }
-
-        /* Estilos mejorados para los módulos */
-        .section-title::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
-            z-index: -1;
-        }
-
-        .module-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            height: 100%;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .module-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .module-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .module-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(33, 109, 146, 0.15);
-        }
-
-        .module-icon-wrapper {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .module-card:hover .module-icon-wrapper {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .module-icon {
-            font-size: 2rem;
-            color: white;
-        }
-
-        .module-card h4 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--dark-color);
-            line-height: 1.3;
-        }
-
-        .module-card p {
-            color: #666;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .module-footer {
-            margin-top: auto;
-            padding-top: 1rem;
-        }
-
-        .governance-section {
-            background: linear-gradient(135deg, rgba(33, 109, 146, 0.05), rgba(129, 195, 201, 0.05));
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            margin-top: 3rem;
-        }
-
-        .governance-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem 1.5rem;
-            text-align: center;
-            height: 100%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .governance-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(33, 109, 146, 0.15);
-            border-color: var(--primary-light);
-        }
-
-        .governance-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            transition: transform 0.3s ease;
-        }
-
-        .governance-card:hover .governance-icon {
-            transform: scale(1.1);
-        }
-
-        .governance-icon i {
-            font-size: 1.5rem;
-            color: white;
-        }
-
-        .governance-card h5 {
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--dark-color);
-        }
-
-        .governance-card p {
-            color: #666;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /* Mejoras para las tarjetas de flujo principal */
-        .governance-card.bg-success,
-        .governance-card.bg-primary,
-        .governance-card.bg-warning,
-        .governance-card.bg-info,
-        .governance-card.bg-secondary,
-        .governance-card.bg-dark {
-            border: none;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .governance-card.bg-success:hover,
-        .governance-card.bg-primary:hover,
-        .governance-card.bg-warning:hover,
-        .governance-card.bg-info:hover,
-        .governance-card.bg-secondary:hover,
-        .governance-card.bg-dark:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-        }
-
-        .governance-card h6 {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            line-height: 1.3;
-        }
-
-        .governance-card p.small {
-            font-size: 0.8rem;
-            opacity: 0.9;
-            margin-bottom: 0;
-        }
-
-        /* Responsive adjustments */
-        @@media (max-width: 768px) {
-            .governance-card h6 {
-                font-size: 0.85rem;
-            }
-
-            .governance-card p.small {
-                font-size: 0.75rem;
-            }
-        }
-
-        /* Opción 1: Timeline */
-        .functions-timeline {
-            position: relative;
-        }
-
-        .function-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 12px;
-            border-left: 4px solid var(--primary-color);
-            transition: all 0.3s ease;
-        }
-
-        .function-item:hover {
-            transform: translateX(10px);
-            box-shadow: 0 8px 25px rgba(33, 109, 146, 0.15);
-        }
-
-        .function-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            flex-shrink: 0;
-        }
-
-        .function-icon i {
-            font-size: 1.5rem;
-            color: white;
-        }
-
-        .function-content h6 {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--dark-color);
-        }
-
-        .function-content p {
-            color: #666;
-            margin-bottom: 0;
-            font-size: 0.9rem;
-        }
-
-        .function-highlight {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            border-radius: 16px;
-            color: white;
-            text-align: center;
-        }
-
-        .function-icon-large {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 2rem;
-        }
-
-        .function-icon-large i {
-            font-size: 2rem;
-            color: white;
-        }
-
-        /* Opción 2: Grid */
-        .functions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .function-tile {
-            background: white;
-            padding: 2rem 1.5rem;
-            border-radius: 12px;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .function-tile:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary-light);
-            box-shadow: 0 15px 30px rgba(33, 109, 146, 0.15);
-        }
-
-        .function-tile i {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .function-tile h6 {
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: var(--dark-color);
-        }
-
-        .function-tile p {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0;
-        }
-
-        .function-tile-wide {
-            grid-column: span 2;
-        }
-
-        /* Opción 3: Lista compacta (RECOMENDADA) */
-        .functions-list {
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 16px;
-            padding: 2rem;
-        }
-
-        .function-row {
-            display: flex;
-            align-items: center;
-            padding: 1.5rem;
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .function-row:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(33, 109, 146, 0.1);
-            border-color: var(--primary-light);
-        }
-
-        .function-badge {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .function-badge i {
-            font-size: 1.5rem;
-            color: white;
-        }
-
-        .function-info h6 {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--dark-color);
-            font-size: 1rem;
-        }
-
-        .function-info p {
-            color: #666;
-            margin-bottom: 0;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .function-featured {
-            background: linear-gradient(135deg, rgba(33, 109, 146, 0.1), rgba(129, 195, 201, 0.1));
-            border: 2px solid var(--primary-light);
-        }
-
-        .function-badge-large {
-            width: 80px;
-            height: 80px;
-        }
-
-        .function-badge-large i {
-            font-size: 2rem;
-        }
-
-        /* Responsive */
-        @@media (max-width: 768px) {
-            .function-item {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .function-icon {
-                margin-right: 0;
-                margin-bottom: 1rem;
-            }
-
-            .function-row {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .function-badge {
-                margin-right: 0;
-                margin-bottom: 1rem;
-            }
-
-            .function-tile-wide {
-                grid-column: span 1;
-            }
-        }
-    </style>
-    <style>
-        /* Oculta el texto 'by Botpress' forzadamente */
         a[href*="https://botpress.com/?from=webchat"] {
             display: none !important;
         }
@@ -963,11 +43,10 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top"
-        style="background-color: rgba(13, 75, 110, 0.9); backdrop-filter: blur(10px);">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="@cdn/img_snier/login/logo_snier.png" alt="SNIER" height="40" style="height:64px">
+                <img src="@cdn/img_snier/login/logo_snier.png" alt="SNIER" class="navbar-logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -983,9 +62,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#beneficios">Beneficios</a>
                     </li>
-                    @* <li class="nav-item">
-                        <a class="nav-link" href="#testimonios">Testimonios</a>
-                    </li> *@
                     <li class="nav-item">
                         <a class="nav-link" href="#acceso">Acceso</a>
                     </li>
@@ -1001,41 +77,45 @@
         <div class="container-fluid px-4">
             <div class="row align-items-center g-5">
                 <div class="col-lg-6 hero-content" data-aos="fade-right" data-aos-duration="1000">
-                    <div class="d-flex align-items-center mb-4 hero-title-container">
-                        <img src="@cdn/img_snier/login/logo_snier.png" alt="SNIER Logo" class="hero-logo me-3"
+                    <div class="hero-title-container">
+                        <img src="@cdn/img_snier/login/logo_snier.png" alt="SNIER Logo" class="hero-logo"
                             data-aos="zoom-in" data-aos-delay="100">
-                        <h1 class="display-5 fw-bold mb-0 hero-title" data-aos="fade-up" data-aos-delay="200">
+                        <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200">
                             Sistema Nacional de
                             <span class="text-gradient">Información Energética</span>
                         </h1>
                     </div>
-                    <p class="lead mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <p class="hero-description" data-aos="fade-up" data-aos-delay="400">
                         Plataforma oficial para integrar, analizar y transparentar toda la información
                         energética de México con tecnología de vanguardia
                     </p>
-                    <div class="d-flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay="600">
-                        <a href="#acceso" class="btn btn-primary btn-lg modern-btn">
-                            <i class="bi bi-play-circle me-2"></i>Acceder al sistema
+                    <div class="hero-actions" data-aos="fade-up" data-aos-delay="600">
+                        <a href="#acceso" class="login-btn-primary">
+                            <i class="bi bi-play-circle"></i>Acceder al sistema
                         </a>
-                        <a href="#modulos" class="btn btn-outline-light btn-lg modern-btn-outline">
-                            <i class="bi bi-grid-3x3-gap me-2"></i>Ver módulos
+                        <a href="#modulos" class="login-btn-outline">
+                            <i class="bi bi-grid-3x3-gap"></i>Ver módulos
                         </a>
                     </div>
                 </div>
                 <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
-                    <div class="hero-video-container">
-                        <video class="hero-video" controls autoplay muted poster="@cdn/img_snier/login/logo_snier.png">
+                    <div class="login-video-container">
+                        <video class="login-video" controls autoplay muted loop
+                            poster="@cdn/img_snier/login/logo_snier.png" preload="auto">
                             <source src="https://cdn.sassoapps.com/video/SNIER%202025%20Julio.mp4" type="video/mp4">
-                            <p>Tu navegador no soporta videos HTML5. <a
-                                    href="https://cdn.sassoapps.com/video/SNIER%202025%20Julio.mp4">Descarga el
-                                    video</a>.</p>
+                            <p>Tu navegador no soporta videos HTML5.
+                                <a href="https://cdn.sassoapps.com/video/SNIER%202025%20Julio.mp4">Descarga el
+                                    video</a>.
+                            </p>
                         </video>
-                        <div class="video-description text-center">
-                            <small class="d-flex align-items-center justify-content-center">
+                        <div class="login-video-description">
+                            <small class="text-shadow">
                                 <i class="bi bi-camera-video me-2"></i>
                                 <strong>Sistema Nacional de Información Energética</strong>
                                 <span class="mx-2">•</span>
                                 <em>Video Oficial 2025</em>
+                                <span class="mx-2">•</span>
+                                <span class="badge bg-success">HD</span>
                             </small>
                         </div>
                     </div>
@@ -1045,18 +125,7 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="stats-section text-white text-center py-5" style="
-    background: linear-gradient(
-      135deg,
-      rgba(13, 75, 110, 0.95) 0%,   /* Azul navbar */
-      rgba(10, 60, 88, 0.9) 25%,    /* Azul más oscuro */
-      rgba(8, 45, 66, 0.95) 50%,    /* Azul muy oscuro */
-      rgba(13, 75, 110, 0.9) 75%,   /* Azul navbar */
-      rgba(15, 85, 125, 0.95) 100%  /* Azul ligeramente más claro */
-    );
-    background-size: 300% 300%;
-    animation: gradientShift 8s ease-in-out infinite;
-  ">
+    <section class="stats-section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-6" data-aos="fade-up">
@@ -1091,21 +160,22 @@
         </div>
     </section>
 
-    <!-- Modules Section - Versión Mejorada -->
-    <section class="py-5" id="modulos" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <!-- Modules Section -->
+    <section class="modules-section" id="modulos">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="section-title position-relative">
+                <h2 class="section-title">
                     <span class="bg-light px-4">Módulos del SNIER</span>
                 </h2>
-                <p class="lead text-muted">Explora las herramientas especializadas del Sistema Nacional de Información
+                <p class="section-description">Explora las herramientas especializadas del Sistema Nacional de
+                    Información
                     Energética
                 </p>
             </div>
 
             <!-- Módulos Principales -->
             <div class="mb-5">
-                <h3 class="text-center mb-4  fw-bold">📊 Módulos de Información</h3>
+                <h3 class="modules-category-title">📊 Módulos de Información</h3>
                 <div class="row g-4">
                     <!-- El inventario y el potencial de los recursos renovables -->
                     <div class="col-lg-4 col-md-6" data-aos="fade-up">
@@ -1118,7 +188,7 @@
                                 transformación,
                                 transporte, almacenamiento, distribución y consumo final.</p>
                             <div class="module-footer">
-                                <span class="badge bg-success">Disponible</span>
+                                <span class="badge badge-success">Disponible</span>
                             </div>
                         </div>
                     </div>
@@ -1577,17 +647,16 @@
                     <div class="login-card p-4 p-md-5 mb-4 mb-lg-0">
                         <div class="text-center mb-4">
                             <img src="@cdn/img_snier/login/logo_snier.png" class="img-fluid mb-3"
-                                style="max-width: 120px;">
-                            <h4 class="fw-bold" style="color: var(--primary-color);">Iniciar sesión</h4>
+                                style="max-width: 120px;" alt="SNIER Logo">
+                            <h4 class="fw-bold text-primary">Iniciar sesión</h4>
                             <p class="text-muted">Accede con tu cuenta o entra en modo consulta pública</p>
                         </div>
 
-                        <ul class="nav nav-pills nav-fill mb-3" id="loginTabs" role="tablist">
+                        <ul class="nav nav-pills nav-fill login-tabs mb-3" id="loginTabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link @(ViewData["Mensaje"] == null ? "active" : "")"
                                     id="consulta-tab" data-bs-toggle="pill" data-bs-target="#consultaPublica"
-                                    type="button" role="tab">Consulta
-                                    Pública</button>
+                                    type="button" role="tab">Consulta Pública</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link @(ViewData["Mensaje"] != null ? "active" : "")" id="acceso-tab"
@@ -1599,19 +668,19 @@
                         <div class="tab-content" id="loginTabContent">
                             <div class="tab-pane fade @(ViewData["Mensaje"] == null ? "show active" : "")"
                                 id="consultaPublica" role="tabpanel">
-                                <div class="alert alert-info text-center">
-                                    <strong>Consulta pública</strong><br />Haz clic en el botón para ingresar sin
-                                    cuenta.
+                                <div class="login-alert login-alert-info text-center">
+                                    <strong>Consulta pública</strong><br />
+                                    Haz clic en el botón para ingresar sin cuenta.
                                 </div>
-                                <a class="btn btn-primary w-100"
-                                    href="@Url.Action("AccesoComoInvitado", "Acceso")">Entrar como
-                                    Invitado</a>
+                                <a class="login-btn-primary w-100" href="@Url.Action("AccesoComoInvitado", "Acceso")">
+                                    Entrar como Invitado
+                                </a>
                             </div>
 
                             <div class="tab-pane fade @(ViewData["Mensaje"] != null ? "show active" : "")"
                                 id="accesoSENER" role="tabpanel">
                                 <form action="@Url.Action("Login", "Acceso")" method="post">
-                                    <div class="mb-3">
+                                    <div class="login-form-group">
                                         <label for="Correo" class="form-label">Correo o RFC</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bi bi-person"></i></span>
@@ -1620,7 +689,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="mb-3">
+                                    <div class="login-form-group">
                                         <label for="claveInput" class="form-label">Contraseña</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bi bi-lock"></i></span>
@@ -1634,20 +703,25 @@
 
                                     @if (ViewData["Mensaje"] != null)
                                     {
-                                        <div class="alert alert-danger text-center">
+                                        <div class="login-alert login-alert-danger text-center">
                                             <i class="bi bi-exclamation-circle me-2"></i>@ViewData["Mensaje"]
                                         </div>
                                     }
 
                                     <div class="d-grid mb-2">
-                                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                                        <button type="submit" class="login-btn-primary">Iniciar Sesión</button>
                                     </div>
                                     <div class="text-center mb-2">
-                                        <a href="@Url.Action("ForgotPassword", "Acceso")">¿Olvidaste tu contraseña?</a>
+                                        <a href="@Url.Action("ForgotPassword", "Acceso")" class="text-decoration-none">
+                                            ¿Olvidaste tu contraseña?
+                                        </a>
                                     </div>
                                     <div class="text-center">
-                                        <span>¿No tienes cuenta? <a href="@Url.Action("Registro", "Acceso")">Regístrate
-                                                aquí</a></span>
+                                        <span>¿No tienes cuenta?
+                                            <a href="@Url.Action("Registro", "Acceso")" class="text-decoration-none">
+                                                Regístrate aquí
+                                            </a>
+                                        </span>
                                     </div>
                                 </form>
                             </div>
@@ -1677,7 +751,7 @@
                             <h5 class="fw-bold mb-3">¿Eres una institución?</h5>
                             <p class="mb-3">Solicita una cuenta institucional con privilegios especiales para carga de
                                 datos.</p>
-                            <a href="#" class="btn btn-primary">Registrate</a>
+                            <a href="@Url.Action("Registro", "Acceso")" class="btn btn-primary">Regístrate</a>
                         </div>
                     </div>
 
@@ -1759,8 +833,8 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-5 text-center text-white" style="background: rgba(0,0,0,0.85);">
-        <div class=" container">
+    <section class="py-5 text-center text-white bg-dark">
+        <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8" data-aos="zoom-in">
                     <h2 class="fw-bold mb-4">¿Listo para explorar el sector energético mexicano?</h2>
