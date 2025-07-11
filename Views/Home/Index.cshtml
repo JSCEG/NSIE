@@ -42,39 +42,12 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
     nombreUsuario.Contains("consult"));
 }
 
-<style>
-    /* Estilos personalizados */
-    .card-hover {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
-    }
-
-    .hero-gradient {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    }
-
-    .badge-custom {
-        font-weight: 500;
-        letter-spacing: 0.5px;
-    }
-
-    @@media (prefers-reduced-motion) {
-        [data-aos] {
-            opacity: 1 !important;
-            transform: none !important;
-            transition: none !important;
-        }
-    }
-</style>
 
 @await Html.PartialAsync("_ViewHeader", header)
 
 <!-- HERO PRINCIPAL MEJORADO -->
-<section id="hero" class="py-5 hero-gradient text-center position-relative overflow-hidden">
+<section id="hero" class="py-5 text-center">
+    <div id="particles-js-home"></div>
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-lg-8" data-aos="zoom-in">
@@ -82,7 +55,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                     alt="Logo SNIEr - Sistema Nacional de Información Energética" loading="lazy" width="320"
                     height="auto">
 
-                <h1 class="display-5 fw-bold mb-3">
+                <h1 class="display-5 fw-bold mb-3 text-white">
                     @if (esConsultaPublica)
                     {
                         <text>Bienvenido a la Consulta Pública</text>
@@ -100,16 +73,16 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                         <text>Bienvenido, @nombreUsuario</text>
                     }
                 </h1>
-                <p class="lead mb-4">El SNIEr es la fuente oficial de información del sector energético en México.</p>
+                <p class="lead mb-4 text-white-50">El SNIEr es la fuente oficial de información del sector energético en
+                    México.</p>
                 <div class="d-flex gap-2 justify-content-center">
                     <a href="#modulos" class="btn btn-primary btn-lg px-4">Explorar módulos</a>
-                    <a href="#ayuda" class="btn btn-outline-primary btn-lg px-4">¿Cómo usar?</a>
+                    <a href="#ayuda" class="btn btn-outline-light btn-lg px-4">¿Cómo usar?</a>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 <!-- QUE ES EL SNIER - MEJORADO -->
 @* <section id="que-es" class="py-5 bg-white" aria-labelledby="queEsHeading">
     <div class="container">
@@ -329,7 +302,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                     </div>
                     <div class="carousel-inner rounded-3 overflow-hidden shadow">
                         <div class="carousel-item active">
-                            <img src="https://images.pexels.com/photos/414837/pexels-photo-414837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                            <img src="https://images.pexels.com/photos/9893729/pexels-photo-9893729.jpeg"
                                 class="d-block w-100" alt="Infraestructura energética en México" loading="lazy">
                             <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
                                 <h5 style="color:white">Infraestructura energética</h5>
@@ -460,7 +433,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
 </section>
 *@
 <!-- BLOQUE DE AYUDA - MEJORADO -->
-<section id="ayuda" class="py-5 bg-light" aria-labelledby="ayudaHeading">
+<section id="ayuda" class="py-5 bg-light ps-5 pe-5" aria-labelledby="ayudaHeading">
     <div class="container">
         <div class="row align-items-center g-4">
             <div class="col-lg-6" data-aos="fade-right">
@@ -487,483 +460,69 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
 </section>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-        // Función para mostrar ayuda del módulo (existente)
+        // Función para mostrar ayuda del módulo (sin cambios)
         function mostrarAyudaModulo(infoJson) {
             try {
                 const info = typeof infoJson === 'string' ? JSON.parse(infoJson) : infoJson;
                 const html = `
-                                                                                                                <div class="text-start">
-                                                                                                                    ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
-                                                                                                                    ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
-                                                                                                                    ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
-                                                                                                                    ${info.roles?.length ? `
-                                                                                                                        <ul class="mb-3">
-                                                                                                                            ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
-                                                                                                                        </ul>` : ''}
-                                                                                                                    ${info.order ? `<p><i class='fas fa-sort-amount-up me-2'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
-                                                                                                                    ${info.manualUrl ? `<a href="${info.manualUrl}" class="btn btn-sm btn-primary mt-2" target="_blank"><i class="fas fa-download me-2"></i>Descargar manual</a>` : ''}
-                                                                                                                </div>`;
+                                        <div class="text-start">
+                                            ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
+                                            ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
+                                            ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
+                                            ${info.roles?.length ? `
+                                                <ul>
+                                                    ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
+                                                </ul>` : ''}
+                                            ${info.order ? `<p><i class='fas fa-sort-amount-up'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
+                                        </div>`;
 
                 Swal.fire({
                     title: info.title || 'Ayuda del módulo',
                     html: html,
                     confirmButtonText: 'Cerrar',
                     confirmButtonColor: '#6c757d',
-                    backdrop: true,
-                    width: '600px'
+                    backdrop: true
                 });
             } catch (e) {
-                console.error("Error al mostrar ayuda del módulo:", e);
-                Swal.fire('Error', 'No se pudo cargar la información del módulo', 'error');
+                console.error("Error al parsear o mostrar la ayuda del módulo:", e);
+                Swal.fire('Error', 'No se pudo mostrar la información de ayuda.', 'error');
             }
         }
 
-        // Script para cargar últimas acciones (existente pero mejorado)
-        $(function () {
+        // --- SCRIPT DE PARTICLES.JS SIMPLIFICADO Y CORREGIDO ---
+        document.addEventListener('DOMContentLoaded', function () {
+            const particlesDiv = document.getElementById('particles-js-home');
 
-            const $seccion = $('#continuar');
-            const $contenedor = $('#tarjetas-acciones');
-            const $loader = $('<div id="loader-continua" class="text-center py-3">Cargando…</div>');
-
-            $seccion.prepend($loader);
-
-            $.ajax({
-                url: '@Url.Action("GetUltimasAcciones", "Bitacora")',
-                data: { top: 5 },            // cambia el TOP si lo requieres
-                dataType: 'json',
-
-                beforeSend: () => {
-                    $seccion.hide();
-                    $loader.show();
-                },
-
-                success: acciones => {
-
-                    if (!acciones || !acciones.length) {
-                        $loader.text('Sin actividad reciente.');
-                        return;
-                    }
-
-                    acciones.forEach(a => {
-                        const card = `
-                                                                                                            <div class="col-12 col-md-6 col-lg-4">
-                                                                                                                <div class="card h-100 shadow-sm border-0">
-                                                                                                                    <div class="card-body d-flex flex-column">
-                                                                                                                        @* <h6 class="fw-semibold mb-1">${a.accion}</h6> *@
-                                                                                                                        <h6 class="fw-semibold mb-1">${a.pagina}</h6>
-
-                                                                                                                        <span class="badge bg-secondary align-self-start mb-3">
-                                                                                                                            ${a.fecha}
-                                                                                                                        </span>
-
-                                                                                                                        <button class="btn btn-sm btn-primary mt-auto"
-                                                                                                                                data-controller="${a.controller}"
-                                                                                                                                data-action="${a.action}"
-                                                                                                                                onclick="irA(this)">
-                                                                                                                            Reanudar
-                                                                                                                        </button>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </div>`;
-                        $contenedor.append(card);
-                    });
-
-                    $seccion.fadeIn();
-                },
-
-                error: (xhr, status, err) => {
-                    console.error('Error al cargar últimas acciones:', err);
-                    $loader.text('No fue posible cargar la actividad.');
-                },
-
-                complete: () => $loader.hide()
-            });
-        });
-
-        /**
-         * Redirige a /{Controller}/{Action}
-         * Ajusta si usas áreas o parámetros extra.
-         */
-        function irA(btn) {
-            const controller = btn.dataset.controller;
-            const action = btn.dataset.action;
-
-            if (controller && action) {
-                window.location.href = `/${controller}/${action}`;
-            } else {
-                console.warn('Datos de ruta incompletos');
-            }
-        }
-
-
-    </script>
-
-    <!-- ====================== INDICADORES DEMO (JS COMPLETO) ====================== -->
-    <script>
-        (() => {
-            /* --------------------------------------------------------------------
-             * VARIABLES GLOBALES
-             * ------------------------------------------------------------------ */
-            let mainChart, miniChart1, miniChart2, miniChart3;
-
-            /* --------------------------------------------------------------------
-             * EVENTOS INICIALES
-             * ------------------------------------------------------------------ */
-            document.addEventListener('DOMContentLoaded', initCharts);
-
-            /* --------------------------------------------------------------------
-             * FUNCIÓN: inicializa gráficos y temporizadores
-             * ------------------------------------------------------------------ */
-            function initCharts() {
-
-                /* 1. Gráfico principal */
-                mainChart = Highcharts.chart('chartContainer', {
-                    chart: { type: 'spline', zoomType: 'x' },
-                    title: null,
-                    subtitle: { text: 'Datos sintéticos demo', align: 'right' },
-                    xAxis: { categories: [], crosshair: true },
-                    yAxis: { title: { text: 'Valor (unidades)' }, min: 0 },
-                    tooltip: { shared: true },
-                    legend: { align: 'center', verticalAlign: 'bottom' },
-                    exporting: { enabled: false }
-                });
-
-                /* 2. Mini-gráficos base (arrancan vacíos) */
-                miniChart1 = Highcharts.chart('miniChart1', {
-                    chart: { type: 'column', height: 150 },
-                    title: null,
-                    xAxis: { categories: ['Hidro', 'Térmica', 'Eólica', 'Solar'] },
-                    yAxis: { title: null },
-                    series: [{ name: 'Generación', data: [0, 0, 0, 0] }],
-                    credits: { enabled: false },
-                    legend: { enabled: false }
-                });
-
-                miniChart2 = Highcharts.chart('miniChart2', {
-                    chart: { type: 'pie', height: 150 },
-                    title: null,
-                    plotOptions: { pie: { dataLabels: { enabled: false } } },
-                    series: [{ name: 'Consumo', data: [] }],
-                    credits: { enabled: false },
-                    legend: { enabled: false }
-                });
-
-                miniChart3 = Highcharts.chart('miniChart3', {
-                    chart: { type: 'areaspline', height: 150 },
-                    title: null,
-                    xAxis: { categories: [] },
-                    yAxis: { title: null },
-                    series: [{ name: 'Emisiones', data: [] }],
-                    credits: { enabled: false },
-                    legend: { enabled: false }
-                });
-
-                /* 3. Botón “Actualizar” con popup     */
-                document.getElementById('actualizarGrafico')
-                    .addEventListener('click', () => refreshCharts(true));
-
-                /* 4. Primera carga silenciosa + refresco cada 60 s */
-                refreshCharts(false);                   // sin popup
-                setInterval(() => refreshCharts(false), 60000);
-            }
-
-            /* --------------------------------------------------------------------
-             * FUNCIÓN: genera y dibuja datos demo
-             * @@param mostrarPopup(bool) => si true, lanza SweetAlert
-                * ------------------------------------------------------------------ */
-            function refreshCharts(mostrarPopup = false) {
-
-                /* 1. Lectura de filtros */
-                const tipo = document.getElementById('tipoIndicador').value; // produccion, consumo…
-                const periodo = document.getElementById('periodo').value;       // anual, trimestral, mensual
-
-                /* 2. Categorías y series sintéticas */
-                const categories = generarCategorias(periodo);
-                const serieA = generarSerieAleatoria(categories.length, 25000, 45000);
-                const serieB = generarSerieAleatoria(categories.length, 18000, 30000);
-
-                /* 3. Actualiza el gráfico principal */
-                mainChart.update({
-                    xAxis: { categories },
-                    series: [{
-                        name: nombreSerieA(tipo),
-                        data: serieA
-                    }, {
-                        name: nombreSerieB(tipo),
-                        data: serieB
-                    }]
-                }, true, true, false);   // redraw=true, oneToOne=true, animation=false
-
-                /* 4. Mini-gráficos sincronizados */
-                miniChart1.series[0].setData([
-                    rand(5000, 20000), rand(5000, 20000), rand(1000, 6000), rand(1000, 6000)
-                ]);
-
-                miniChart2.update({
-                    series: [{
-                        data: [
-                            { name: 'Industrial', y: rand(30, 50) },
-                            { name: 'Residencial', y: rand(20, 40) },
-                            { name: 'Comercial', y: rand(10, 20) },
-                            { name: 'Otros', y: rand(5, 15) }
-                        ]
-                    }]
-                });
-
-                miniChart3.update({
-                    xAxis: { categories },
-                    series: [{ name: 'Emisiones', data: generarSerieAleatoria(categories.length, 80, 140) }]
-                });
-
-                /* 5. Fecha/hora de la última actualización */
-                document.getElementById('chartLastUpdate').textContent =
-                    `Última actualización: ${new Date().toLocaleString()}`;
-
-                /* 6. Popup opcional solo al pulsar el botón */
-                if (mostrarPopup) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Datos demo actualizados',
-                        timer: 1200,
-                        showConfirmButton: false
-                    });
-                }
-            }
-
-            /* --------------------------------------------------------------------
-             * UTILIDADES DE DATOS DEMO
-             * ------------------------------------------------------------------ */
-            function generarCategorias(periodo) {
-                const ahora = new Date();
-                const year = ahora.getFullYear();
-
-                if (periodo === 'anual') {
-                    return [year - 4, year - 3, year - 2, year - 1, year].map(String);
-                }
-
-                if (periodo === 'trimestral') {
-                    const out = [];
-                    for (let y = year - 1; y <= year; y++) {
-                        ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => out.push(`${y}-${q}`));
-                    }
-                    return out;
-                }
-
-                /* mensual → 12 meses abreviados */
-                return ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-            }
-
-            function generarSerieAleatoria(n, min, max) {
-                return Array.from({ length: n }, () => rand(min, max));
-            }
-
-            function rand(min, max) {
-                return Math.floor(Math.random() * (max - min + 1)) + min;
-            }
-
-            function nombreSerieA(tipo) {
-                switch (tipo) {
-                    case 'consumo': return 'Energía Consumida';
-                    case 'renovable': return 'Capacidad Renovable';
-                    case 'precios': return 'Precio Promedio';
-                    default: return 'Energía Eléctrica';
-                }
-            }
-            function nombreSerieB(tipo) {
-                switch (tipo) {
-                    case 'consumo': return 'Picos de Demanda';
-                    case 'renovable': return 'Instalaciones';
-                    case 'precios': return 'Tarifa Residencial';
-                    default: return 'Hidrocarburos';
-                }
-            }
-
-        })();
-    </script>
-    <!-- ==================== FIN INDICADORES DEMO ==================== -->
-
-
-
-    @*Script de Pantalla Completa*@
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const mapElement = document.getElementById('map');
-            const fullscreenButton = document.getElementById('fullscreen-btn');
-            const searchContainer = document.getElementById('search-container');
-            const mainContainer = document.getElementById('main-container');
-            const fullscreenElements = document.createElement('div');
-            fullscreenElements.id = 'fullscreen-elements';
-
-            const originalMapParent = mapElement.parentNode;
-            const originalSearchParent = searchContainer.parentNode;
-            const originalMapNextSibling = mapElement.nextSibling;
-            const originalSearchNextSibling = searchContainer.nextSibling;
-
-            fullscreenButton.addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    mainContainer.appendChild(fullscreenElements); // Asegurarnos de que fullscreenElements esté en el DOM
-                    fullscreenElements.appendChild(searchContainer);
-                    fullscreenElements.appendChild(mapElement);
-                    fullscreenElements.requestFullscreen().catch(err => {
-                        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-                    });
-                } else {
-                    document.exitFullscreen();
-                }
-            });
-
-            document.addEventListener('fullscreenchange', (event) => {
-                if (document.fullscreenElement) {
-                    fullscreenButton.textContent = "Salir de Pantalla Completa";
-                    mainContainer.classList.add('fullscreen-active');
-                    mapElement.style.height = "calc(100vh - 60px)";
-                    searchContainer.style.backgroundColor = "white";
-                } else {
-                    fullscreenButton.textContent = "Pantalla Completa";
-                    if (originalSearchNextSibling) {
-                        originalSearchParent.insertBefore(searchContainer, originalSearchNextSibling);
-                    } else {
-                        originalSearchParent.appendChild(searchContainer);
-                    }
-                    if (originalMapNextSibling) {
-                        originalMapParent.insertBefore(mapElement, originalMapNextSibling);
-                    } else {
-                        originalMapParent.appendChild(mapElement);
-                    }
-                    mainContainer.classList.remove('fullscreen-active');
-                    mapElement.style.height = "500px";
-
-                    // Asegurarse de que los estilos se restablezcan
-                    fullscreenElements.style.height = 'auto'; // Restablecer altura a su valor inicial
-                }
-            });
-        });
-    </script>
-
-    @*Shapes Estados*@
-    <script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/estadosminlight.js"></script>
-    <script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/municipiosminlight.js"></script>
-
-
-
-    @*Ductos*@
-    @*Petrolíferos*@
-    <script src="@Cdn.Url/Geovisualizador/data/ductos_petroliferos_4326_0.js"></script>
-    @*Gas L.P.*@
-    <script src="@Cdn.Url/Geovisualizador/data/ductos_glp_4326_0.js"></script>
-    <script>
-        window.userRole = @ViewData["RolUsuario"]; // Define userRole globalmente
-        console.log(window.userRole);
-
-    </script>
-
-
-    <script type="text/javascript" src="/js/configura_mapa.js"></script>
-    <script type="text/javascript" src="/js/I_petroliferos.js"></script>
-    <script>
-        var userRole = @ViewData["RolUsuario"]; // Define userRole desde el servidor
-
-        // Solo cargar el gráfico si el usuario tiene rol 1
-        if (userRole === 1) {
-            // Datos sintéticos
-            // Generar datos sintéticos
-            var preciosPorEF = [
-                { EfNombre: "CIUDAD DE MÉXICO", PrecioRegular: 19.87, PrecioPremium: 21.95, PrecioDiesel: 20.45 },
-                { EfNombre: "GUANAJUATO", PrecioRegular: 20.12, PrecioPremium: 22.34, PrecioDiesel: 19.78 },
-                { EfNombre: "VERACRUZ DE IGNACIO DE LA LLAVE", PrecioRegular: 19.92, PrecioPremium: 21.50, PrecioDiesel: 20.30 },
-                { EfNombre: "CHIAPAS", PrecioRegular: 20.40, PrecioPremium: 22.10, PrecioDiesel: 20.00 },
-                { EfNombre: "JALISCO", PrecioRegular: 20.25, PrecioPremium: 22.45, PrecioDiesel: 20.12 },
-                { EfNombre: "MÉXICO", PrecioRegular: 20.05, PrecioPremium: 22.00, PrecioDiesel: 20.25 },
-                { EfNombre: "QUINTANA ROO", PrecioRegular: 19.95, PrecioPremium: 21.75, PrecioDiesel: 20.10 },
-                { EfNombre: "TABASCO", PrecioRegular: 20.10, PrecioPremium: 22.30, PrecioDiesel: 19.85 },
-                { EfNombre: "PUEBLA", PrecioRegular: 19.89, PrecioPremium: 21.95, PrecioDiesel: 20.20 },
-                { EfNombre: "MICHOACÁN DE OCAMPO", PrecioRegular: 20.20, PrecioPremium: 22.50, PrecioDiesel: 19.95 },
-                { EfNombre: "TAMAULIPAS", PrecioRegular: 20.30, PrecioPremium: 22.40, PrecioDiesel: 20.00 },
-                { EfNombre: "NUEVO LEÓN", PrecioRegular: 20.50, PrecioPremium: 22.80, PrecioDiesel: 20.25 },
-                { EfNombre: "GUERRERO", PrecioRegular: 20.15, PrecioPremium: 22.35, PrecioDiesel: 20.10 },
-                { EfNombre: "BAJA CALIFORNIA", PrecioRegular: 20.45, PrecioPremium: 22.75, PrecioDiesel: 20.20 },
-                { EfNombre: "HIDALGO", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.15 },
-                { EfNombre: "MORELOS", PrecioRegular: 20.05, PrecioPremium: 22.00, PrecioDiesel: 19.90 },
-                { EfNombre: "COAHUILA", PrecioRegular: 20.35, PrecioPremium: 22.65, PrecioDiesel: 20.30 },
-                { EfNombre: "SONORA", PrecioRegular: 20.25, PrecioPremium: 22.50, PrecioDiesel: 20.15 },
-                { EfNombre: "YUCATÁN", PrecioRegular: 19.85, PrecioPremium: 21.75, PrecioDiesel: 20.00 },
-                { EfNombre: "DURANGO", PrecioRegular: 20.10, PrecioPremium: 22.25, PrecioDiesel: 20.05 },
-                { EfNombre: "ZACATECAS", PrecioRegular: 20.20, PrecioPremium: 22.35, PrecioDiesel: 20.10 },
-                { EfNombre: "COLIMA", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.20 },
-                { EfNombre: "CHIHUAHUA", PrecioRegular: 20.35, PrecioPremium: 22.60, PrecioDiesel: 20.10 },
-                { EfNombre: "BAJA CALIFORNIA SUR", PrecioRegular: 20.50, PrecioPremium: 22.75, PrecioDiesel: 20.30 },
-                { EfNombre: "SINALOA", PrecioRegular: 20.15, PrecioPremium: 22.40, PrecioDiesel: 20.05 },
-                { EfNombre: "NAYARIT", PrecioRegular: 20.25, PrecioPremium: 22.50, PrecioDiesel: 19.95 },
-                { EfNombre: "QUERÉTARO", PrecioRegular: 20.05, PrecioPremium: 22.20, PrecioDiesel: 20.10 },
-                { EfNombre: "OAXACA", PrecioRegular: 20.00, PrecioPremium: 22.15, PrecioDiesel: 19.85 },
-                { EfNombre: "SAN LUIS POTOSÍ", PrecioRegular: 20.30, PrecioPremium: 22.55, PrecioDiesel: 20.10 },
-                { EfNombre: "TLAXCALA", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.00 },
-                { EfNombre: "CAMPECHE", PrecioRegular: 20.20, PrecioPremium: 22.40, PrecioDiesel: 20.15 },
-                { EfNombre: "AGUASCALIENTES", PrecioRegular: 20.10, PrecioPremium: 22.30, PrecioDiesel: 20.05 },
-            ];
-
-
-            // Procesar datos para el gráfico
-            var categories = preciosPorEF.map(item => item.EfNombre);
-            var regularData = preciosPorEF.map(item => item.PrecioRegular);
-            var premiumData = preciosPorEF.map(item => item.PrecioPremium);
-            var dieselData = preciosPorEF.map(item => item.PrecioDiesel);
-
-            // Configurar y renderizar el gráfico
-            Highcharts.chart('graficoPrecios', {
-                chart: {
-                    type: 'line',
-                },
-                title: {
-                    text: 'Proyectos por Entidad Federativa'
-                },
-                xAxis: {
-                    categories: categories,
-                    title: {
-                        text: 'Entidad Federativa'
-                    }
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: 'Precio ($MXN)'
-                    }
-                },
-                tooltip: {
-                    shared: true,
-                    valueSuffix: ' MXN'
-                },
-                plotOptions: {
-                    column: {
-                        dataLabels: {
-                            enabled: true,
-                            format: '${point.y:.2f} MXN'
+            if (typeof particlesJS !== 'undefined' && particlesDiv) {
+                console.log('[particles.js] Inicializando en #particles-js-home');
+                particlesJS("particles-js-home", {
+                    "particles": {
+                        "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                        "color": { "value": "#ffffff" },
+                        "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" }, "polygon": { "nb_sides": 5 } },
+                        "opacity": { "value": 0.5, "random": false, "anim": { "enable": false, "speed": 1, "opacity_min": 0.1, "sync": false } },
+                        "size": { "value": 3, "random": true, "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false } },
+                        "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+                        "move": { "enable": true, "speed": 6, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 } }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+                        "modes": {
+                            "grab": { "distance": 400, "line_linked": { "opacity": 1 } },
+                            "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 },
+                            "repulse": { "distance": 200, "duration": 0.4 },
+                            "push": { "particles_nb": 4 },
+                            "remove": { "particles_nb": 2 }
                         }
-                    }
-                },
-                series: [
-                    {
-                        name: 'En curso',
-                        data: regularData,
-                        color: '#1f77b4' // Azul
                     },
-                    {
-                        name: 'Cancelado',
-                        data: premiumData,
-                        color: '#ff7f0e' // Naranja
-                    },
-                    {
-                        name: 'Terminado',
-                        data: dieselData,
-                        color: '#2ca02c' // Verde
-                    }
-                ]
-            });
-        }
+                    "retina_detect": true
+                });
+            } else {
+                console.error('[particles.js] No se pudo inicializar. Revisa que la librería esté cargada y el div #particles-js-home exista.');
+            }
+        });
     </script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
-
-
 }

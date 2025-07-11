@@ -77,17 +77,17 @@ body.login-page {
 }
 
 /* -----------------------------------------
-   [4] HERO SECTION CON PARTÍCULAS
+   [4] HERO SECTION CON PARTÍCULAS AZULES
    ----------------------------------------- */
 .hero-section {
-    background: var(--gradient-hero);
-    color: var(--texto-sobre-color);
-    padding: 8rem 0 6rem;
     position: relative;
-    overflow: hidden;
-    min-height: 100vh;
     display: flex;
     align-items: center;
+    min-height: 100vh;
+    padding: 8rem 0 6rem;
+    background: linear-gradient(to right, #022336, #0b8aae);
+    color: var(--texto-sobre-color);
+    overflow: hidden;
 }
 
 .hero-section::before {
@@ -98,26 +98,31 @@ body.login-page {
     width: 100%;
     height: 100%;
     background:
-        radial-gradient(circle at 20% 80%, rgba(139, 195, 74, 0.3) 0%, transparent 50%),
+        /* Tono azul claro reemplazando el verde */
+        radial-gradient(circle at 20% 80%, rgba(66, 153, 225, 0.3) 0%, transparent 50%),
+        /* Tono azul oscuro (original) */
         radial-gradient(circle at 80% 20%, rgba(0, 45, 86, 0.4) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(96, 96, 96, 0.2) 0%, transparent 50%);
-    z-index: 0;
+        /* Tono azul muy claro (casi blanco) reemplazando el gris */
+        radial-gradient(circle at 40% 40%, rgba(173, 216, 230, 0.2) 0%, transparent 50%);
     animation: gradientFlow 15s ease-in-out infinite;
+    z-index: 0;
+    /* Asegúrate de que el contenido del hero esté por encima con un z-index superior */
 }
 
 @keyframes gradientFlow {
-
-    0%,
-    100% {
-        background:
-            radial-gradient(circle at 20% 80%, rgba(139, 195, 74, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(0, 45, 86, 0.4) 0%, transparent 50%),
-            radial-gradient(circle at 40% 40%, rgba(96, 96, 96, 0.2) 0%, transparent 50%);
-    }
-
     50% {
         background:
-            radial-gradient(circle at 80% 20%, rgba(139, 195, 74, 0.3) 0%, transparent 50%),
+            /* Las posiciones de los gradientes se invierten, manteniendo los nuevos colores */
+            radial-gradient(circle at 80% 20%, rgba(66, 153, 225, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 20% 80%, rgba(0, 45, 86, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 60% 60%, rgba(173, 216, 230, 0.2) 0%, transparent 50%);
+    }
+}
+
+@keyframes gradientFlow {
+    50% {
+        background:
+            radial-gradient(circle at 80% 20%, rgba(66, 153, 225, 0.3) 0%, transparent 50%),
             radial-gradient(circle at 20% 80%, rgba(0, 45, 86, 0.4) 0%, transparent 50%),
             radial-gradient(circle at 60% 60%, rgba(96, 96, 96, 0.2) 0%, transparent 50%);
     }
@@ -149,7 +154,7 @@ body.login-page {
 }
 
 .hero-logo {
-    height: 80px;
+    height: 180px;
     transition: transform 0.3s ease;
 }
 
