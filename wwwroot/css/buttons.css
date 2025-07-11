@@ -12,32 +12,39 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     text-align: center;
     vertical-align: middle;
     cursor: pointer;
     user-select: none;
     background-color: transparent;
     border: 1px solid transparent;
-    padding: 0.5rem 1rem;
-    font-size: 0.95rem;
-    border-radius: var(--radio-borde);
-    transition: all 0.2s ease-in-out;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-base);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-smooth);
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn:focus {
     outline: 0;
-    box-shadow: 0 0 0 0.25rem rgba(139, 195, 74, 0.5);
+    box-shadow: 0 0 0 0.25rem rgba(139, 195, 74, 0.25);
     /* Sombra de foco con el color primario */
 }
 
+.btn:hover {
+    text-decoration: none;
+}
+
 .btn i {
-    margin-right: 0.5rem;
+    margin-right: var(--spacing-xs);
+    /* Ajuste para un espaciado más sutil */
 }
 
 /* --------------------------------------------------------------------------
-   [2] BOTONES SÓLIDOS (CON FONDO)
+   [2] BOTONES SÓLIDOS (CON FONDO) - ¡CON EFECTO GRADIENTE EN HOVER!
    Variantes para acciones principales.
 -------------------------------------------------------------------------- */
 /* --- Primario (Verde Logo) --- */
@@ -45,15 +52,14 @@
     color: var(--texto-sobre-color);
     background-color: var(--color-primario);
     border-color: var(--color-primario);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
-    color: var(--texto-sobre-color);
-    background-color: #7ab53a;
-    border-color: #72a937;
+    background-image: linear-gradient(to right, var(--color-primario-600), var(--color-primario-700));
+    border-color: var(--color-primario-700);
     transform: translateY(-2px);
-    /* Efecto de elevación */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-lg);
 }
 
 /* --- Secundario (Gris Logo) --- */
@@ -61,14 +67,14 @@
     color: var(--texto-sobre-color);
     background-color: var(--color-secundario);
     border-color: var(--color-secundario);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:hover {
-    color: var(--texto-sobre-color);
-    background-color: #5a6268;
+    background-image: linear-gradient(to right, #5a6268, #545b62);
     border-color: #545b62;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
 }
 
 /* --- Peligro (Rojo) --- */
@@ -76,14 +82,60 @@
     color: var(--texto-sobre-color);
     background-color: var(--color-peligro);
     border-color: var(--color-peligro);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-danger:hover {
-    color: var(--texto-sobre-color);
-    background-color: #c82333;
+    background-image: linear-gradient(to right, #c82333, #bd2130);
     border-color: #bd2130;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-lg);
+}
+
+/* --- Éxito (Verde Estándar) --- */
+.btn-success {
+    color: var(--texto-sobre-color);
+    background-color: var(--color-exito);
+    border-color: var(--color-exito);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-success:hover {
+    background-image: linear-gradient(to right, #157347, #146c43);
+    border-color: #146c43;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* --- Advertencia (Amarillo) --- */
+.btn-warning {
+    color: var(--texto-principal);
+    /* Texto oscuro para contraste */
+    background-color: var(--color-advertencia);
+    border-color: var(--color-advertencia);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-warning:hover {
+    background-image: linear-gradient(to right, #ffca2c, #ffc720);
+    border-color: #ffc720;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* --- Información (Azul Claro) --- */
+.btn-info {
+    color: var(--texto-sobre-color);
+    background-color: var(--color-info);
+    border-color: var(--color-info);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-info:hover {
+    background-image: linear-gradient(to right, #0aa2b8, #0a95a9);
+    border-color: #0a95a9;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 /* --------------------------------------------------------------------------
@@ -121,7 +173,7 @@
     transform: scaleX(0);
     /* Empieza sin ancho */
     transform-origin: left;
-    transition: transform 0.3s ease-in-out;
+    transition: transform var(--transition-smooth);
     z-index: -1;
 }
 
@@ -186,7 +238,7 @@
 }
 
 .btn-outline-warning:hover {
-    color: #212529;
+    color: var(--texto-principal);
     background-color: var(--color-advertencia);
 }
 
@@ -211,79 +263,28 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     cursor: pointer;
     user-select: none;
     border: 1px solid transparent;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    border-radius: var(--radio-borde);
-    transition: all 0.2s ease-in-out;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-base);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-smooth);
     text-decoration: none !important;
-    margin: 0 0.25rem;
+    margin: 0 var(--spacing-xs);
     color: var(--texto-sobre-color);
     background-color: var(--color-secundario);
     border-color: var(--color-secundario);
+    box-shadow: var(--shadow-sm);
 }
 
 .dt-button:hover {
-    color: var(--texto-sobre-color);
-    background-color: #5a6268;
+    background-image: linear-gradient(to right, #5a6268, #545b62);
     border-color: #545b62;
     transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
-
-/* --- Éxito (Verde Estándar) --- */
-.btn-success {
-    color: var(--texto-sobre-color);
-    background-color: var(--color-exito);
-    border-color: var(--color-exito);
-}
-
-.btn-success:hover {
-    color: var(--texto-sobre-color);
-    background-color: #157347;
-    border-color: #146c43;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* --- Advertencia (Amarillo) --- */
-.btn-warning {
-    color: #212529;
-    /* Texto oscuro para contraste */
-    background-color: var(--color-advertencia);
-    border-color: var(--color-advertencia);
-}
-
-.btn-warning:hover {
-    color: #212529;
-    background-color: #ffca2c;
-    border-color: #ffc720;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* --- Información (Azul Claro) --- */
-.btn-info {
-    color: var(--texto-sobre-color);
-    background-color: var(--color-info);
-    border-color: var(--color-info);
-}
-
-.btn-info:hover {
-    color: var(--texto-sobre-color);
-    background-color: #0aa2b8;
-    border-color: #0aa2b8;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-/*
- * ==========================================================================
- * INTEGRACIÓN CON JQUERY DATATABLES (V2 - CORREGIDO)
- * ==========================================================================
- */
 
 /*
  * ==========================================================================
@@ -298,8 +299,7 @@
 }
 
 .dt-buttons .buttons-excel:hover {
-    background-color: #147a3a !important;
-    /* Un verde más oscuro */
+    background-image: linear-gradient(to right, #147a3a, #136e35) !important;
     border-color: #136e35 !important;
 }
 
@@ -310,21 +310,18 @@
 }
 
 .dt-buttons .buttons-pdf:hover {
-    background-color: #c82333 !important;
-    /* Un rojo más oscuro */
+    background-image: linear-gradient(to right, #c82333, #bd2130) !important;
     border-color: #bd2130 !important;
 }
 
 /* --- Botón de CSV (Azul de Acento) --- */
-/* Nota: Usaremos el color azul oscuro del logo para este */
 .dt-buttons .buttons-csv {
     background-color: var(--color-fondo-oscuro) !important;
     border-color: var(--color-fondo-oscuro) !important;
 }
 
 .dt-buttons .buttons-csv:hover {
-    background-color: #001f3d !important;
-    /* Un azul aún más oscuro */
+    background-image: linear-gradient(to right, #001f3d, #001a33) !important;
     border-color: #001a33 !important;
 }
 
@@ -335,7 +332,7 @@
 }
 
 .dt-buttons .buttons-copy:hover {
-    background-color: #343a40 !important;
+    background-image: linear-gradient(to right, #343a40, #23272b) !important;
     border-color: #23272b !important;
 }
 
@@ -346,6 +343,6 @@
 }
 
 .dt-buttons .buttons-print:hover {
-    background-color: #0aa2b8 !important;
+    background-image: linear-gradient(to right, #0aa2b8, #0a95a9) !important;
     border-color: #0a95a9 !important;
 }

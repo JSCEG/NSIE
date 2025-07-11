@@ -1,26 +1,51 @@
 @model List<NSIE.Models.SeccionConModulos>
+@using NSIE.Models
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
+
 @{
     ViewData["Title"] = "Gestión de Secciones";
+
+    var perfilJson = HttpContextAccessor.HttpContext.Session.GetString("PerfilUsuario");
+    var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilJson);
+    ViewData["NombreUsuario"] = perfilUsuario.Nombre;
+    ViewData["RolUsuario"] = perfilUsuario.Rol;
+    ViewData["MercadoUsuario"] = perfilUsuario.Mercado_ID;
+
+    var header = new HeaderViewModel
+    {
+        Title = ViewData["Title"].ToString(),
+        IconPath = "secciones.png", // Ruta relativa desde img_snier
+        Description = "Administra las secciones principales del sistema, su orden y módulos asociados.",
+        Section = "Administración",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Gestión de Secciones",
+            description = "Herramienta integral para la administración y organización de las secciones del SNIEr.",
+            functionality = "Permite crear, editar, activar/desactivar, eliminar y reordenar las secciones, así como gestionar los módulos asociados a cada una.",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "user-shield", text = "Administradores: Control total sobre las secciones y su contenido." },
+                new { icon = "eye", text = "Usuarios: Visualización de las secciones y módulos disponibles." }
+            },
+            order = new { step = 1, description = "Módulo central para la estructura de navegación del sitio." },
+            manualUrl = "/Documentos/ManualGestionSecciones.pdf" // Asumiendo que existe un manual específico
+        })
+    };
+}
+@{
+    var idUsuario = Convert.ToInt32(ViewData["IDUsuario"]);
+    var rolUsuario = perfilUsuario?.Rol;
+    var nombreUsuario = perfilUsuario?.Nombre?.ToString(); var esConsultaPublica = (rolUsuario == "10" ||
+    nombreUsuario.Contains("consult"));
 }
 
-<!-- Título a ancho completo SIN contenedor -->
-<div class="text-center mb-4">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="@Cdn.Url/img_snier/vistas/iconos/secciones.png" class="iconomenu" alt="Secciones">
-        @ViewData["Title"]
-    </h3>
-</div>
+@await Html.PartialAsync("_ViewHeader", header)
 
 <!-- Contenedor principal con padding lateral DESDE breadcrumb en adelante -->
 <div class="container-fluid ps-5 pe-5">
 
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Secciones</li>
-        </ol>
-    </nav>
 
     <!-- Header con estadísticas y controles -->
     <div class="row mb-4">

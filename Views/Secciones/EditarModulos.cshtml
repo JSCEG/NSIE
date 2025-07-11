@@ -1,28 +1,39 @@
 @model NSIE.Models.SeccionConModulos
 @using NSIE.Models
 @using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
 
 @{
     ViewData["Title"] = $"Módulos de la Sección: {Model.Titulo}";
+
+    var header = new HeaderViewModel
+    {
+        Title = ViewData["Title"].ToString(),
+        IconPath = "modulos.png", // Ruta relativa desde img_snier
+        Description = $"Administra los módulos asociados a la sección: {Model.Titulo}.",
+        Section = $"Administración > Secciones > {Model.Titulo}",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = $"Módulos de la Sección: {Model.Titulo}",
+            description = $"Aquí puedes gestionar los módulos que pertenecen a la sección '{Model.Titulo}'. Puedes crear nuevos módulos, editar los existentes, y organizar sus vistas.",
+            functionality = "Creación, edición, eliminación y gestión de vistas para cada módulo dentro de la sección.",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "user-shield", text = "Administradores: Gestión completa de módulos y vistas." },
+                new { icon = "eye", text = "Usuarios: Visualización de módulos y sus vistas." }
+            },
+            order = new { step = 2, description = "Gestión de contenido detallado por sección." },
+            manualUrl = "/Documentos/ManualGestionModulos.pdf" // Placeholder for a specific manual
+        })
+    };
 }
 
 @Html.AntiForgeryToken()
 
-<div class="text-center mb-4">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="@Cdn.Url/img_snier/vistas/iconos/modulos.png" class="iconomenu" alt="Módulos">
-        @ViewData["Title"]
-    </h3>
-</div>
+@await Html.PartialAsync("_ViewHeader", header)
 
-<!-- Breadcrumb -->
-<nav aria-label="breadcrumb" class="mb-3">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Secciones" asp-action="Index">Secciones</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Módulos</li>
-    </ol>
-</nav>
+<div class="pe-5 ps-5">
 
 <!-- Información de la sección y botón nuevo módulo -->
 <div class="row mb-4">
@@ -133,6 +144,8 @@ else
         </div>
     </div>
 </div>
+5</div>
+
 
 @section Scripts {
     <!-- DataTables CSS y JS -->

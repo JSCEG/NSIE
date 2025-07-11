@@ -9,7 +9,7 @@
    ----------------------------------------- */
 .offcanvas-custom {
     /* Fondo con un gradiente sutil para dar profundidad visual */
-    background: linear-gradient(175deg, var(--color-fondo-oscuro) 0%, #001f3d 100%);
+    background: linear-gradient(175deg, var(--color-fondo-oscuro) 0%, var(--color-oscuro-900) 100%);
     color: rgba(255, 255, 255, 0.8);
     /* Color de texto base */
 
@@ -22,31 +22,33 @@
    ----------------------------------------- */
 .offcanvas-custom .offcanvas-header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-md) var(--spacing-lg);
 }
 
 .offcanvas-custom .offcanvas-title {
-    color: white;
-    font-weight: 600;
+    color: var(--texto-sobre-color);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-xl);
 }
 
 /* --- Botón de cerrar (la 'X') - MEJORADO --- */
 .offcanvas-custom .btn-close {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-full);
     width: 40px;
     height: 40px;
-    padding: 10px;
+    padding: 0;
     opacity: 0.8;
-    transition: all 0.3s ease;
+    transition: all var(--transition-fast);
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
 }
 
 .offcanvas-custom .btn-close:hover,
 .offcanvas-custom .btn-close:focus {
     opacity: 1;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: var(--color-primario);
     transform: rotate(90deg);
-    box-shadow: none;
+    box-shadow: var(--shadow-md);
 }
 
 
@@ -67,18 +69,23 @@
 .offcanvas-custom .nav-link,
 .offcanvas-custom .submenu-toggle {
     color: rgba(255, 255, 255, 0.75);
-    font-weight: 500;
-    padding: 12px 20px;
+    font-weight: var(--font-weight-medium);
+    padding: var(--spacing-md) var(--spacing-lg);
     border-left: 4px solid transparent;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    /* Centrar verticalmente */
 }
 
 .offcanvas-custom .nav-link i,
 .offcanvas-custom .submenu-toggle i {
-    padding-top: 0.2em;
-    margin-right: 12px;
+    margin-right: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+    width: 20px;
+    text-align: center;
+    opacity: 0.8;
+    transition: all var(--transition-fast);
 }
 
 .offcanvas-custom .nav-link span,
@@ -88,15 +95,15 @@
 }
 
 .offcanvas-custom .nav-link:hover {
-    color: white;
-    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--texto-sobre-color);
+    background-color: rgba(255, 255, 255, 0.08);
     border-left-color: var(--color-primario);
 }
 
 .offcanvas-custom .nav-link.active {
-    color: white;
-    font-weight: 600;
-    background-color: rgba(139, 195, 74, 0.1);
+    color: var(--texto-sobre-color);
+    font-weight: var(--font-weight-semibold);
+    background-color: rgba(var(--color-primario-rgb), 0.15);
     border-left-color: var(--color-primario);
 }
 
@@ -108,14 +115,14 @@
 }
 
 .offcanvas-custom .collapse .nav-link {
-    padding-left: 35px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.9rem;
+    padding-left: var(--spacing-xl);
+    color: rgba(255, 255, 255, 0.65);
+    font-size: var(--font-size-sm);
 }
 
 .offcanvas-custom .collapse .nav-link.active {
     color: var(--color-primario);
-    background-color: transparent;
+    background-color: rgba(var(--color-primario-rgb), 0.05);
     border-left-color: transparent;
 }
 
@@ -124,12 +131,14 @@
    ----------------------------------------- */
 .offcanvas-custom hr {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: var(--spacing-lg) 0;
 }
 
 .offcanvas-custom .section-header {
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 600;
-    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-xs);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
+    padding: var(--spacing-lg) var(--spacing-md) var(--spacing-sm) var(--spacing-md);
 }

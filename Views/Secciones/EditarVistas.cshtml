@@ -1,129 +1,144 @@
 @model NSIE.Models.Modulo
 @using NSIE.Models
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+
 @{
     ViewData["Title"] = $"Vistas del Módulo: {Model.Title}";
     var vistas = ViewData["Vistas"] as List<NSIE.Models.ModulosVista> ?? new List<NSIE.Models.ModulosVista>();
+
+    var header = new HeaderViewModel
+    {
+        Title = ViewData["Title"].ToString(),
+        IconPath = "vistas.png", // Ruta relativa desde img_snier
+        Description = $"Administra las vistas asociadas al módulo: {Model.Title}.",
+        Section = $"Administración > Secciones > {Model.Title} > {Model.Title}",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = $"Vistas del Módulo: {Model.Title}",
+            description = $"Aquí puedes gestionar las vistas que pertenecen al módulo '{Model.Title}'. Puedes crear nuevas vistas, editar las existentes, y definir sus propiedades como roles y perfiles.",
+            functionality = "Creación, edición y eliminación de vistas; asignación de controladores, acciones, roles y perfiles; configuración de vistas externas.",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "user-shield", text = "Administradores: Gestión completa de vistas." },
+                new { icon = "eye", text = "Usuarios: Acceso a las vistas según sus permisos." }
+            },
+            order = new { step = 3, description = "Configuración detallada de los accesos y funcionalidades del sistema." },
+            manualUrl = "/Documentos/ManualGestionVistas.pdf" // Placeholder for a specific manual
+        })
+    };
 }
 
-<div class="text-center mb-4">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="@Cdn.Url/img_snier/vistas/iconos/vistas.png" class="iconomenu" alt="Editar vistas">
-        @ViewData["Title"]
-    </h3>
-</div>
+@Html.AntiForgeryToken()
 
-<!-- Breadcrumb -->
-<nav aria-label="breadcrumb" class="mb-3">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
-        <li class="breadcrumb-item"><a asp-controller="Secciones" asp-action="Index">Secciones</a></li>
-        <li class="breadcrumb-item"><a asp-action="EditarModulos" asp-route-id="@Model.SeccionId">Módulos</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Vistas</li>
-    </ol>
-</nav>
+@await Html.PartialAsync("_ViewHeader", header)
 
-<!-- Header con información y botón -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="mb-1">
-            <i class="fas fa-cube text-primary"></i>
-            @Model.Title
-        </h4>
-        <p class="text-muted mb-0">Total de Vistas: @vistas.Count</p>
+
+<div class="ps-5 pe-5"> 
+    <!-- Header con información y botón -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-1">
+                <i class="fas fa-cube text-primary"></i>
+                @Model.Title
+            </h4>
+            <p class="text-muted mb-0">Total de Vistas: @vistas.Count</p>
+        </div>
+        <button id="btnAddVista" data-url="@Url.Action("CrearVista", "Secciones", new { moduloId = Model.Id })"
+            class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Nueva Vista
+        </button>
     </div>
-    <button id="btnAddVista" data-url="@Url.Action("CrearVista", "Secciones", new { moduloId = Model.Id })"
-        class="btn btn-success">
-        <i class="bi bi-plus-circle"></i> Nueva Vista
-    </button>
-</div>
 
-<!-- Tabla de Vistas (sin card) -->
+    <!-- Tabla de Vistas (sin card) -->
 @if (vistas.Any())
 {
-    <table id="tablaVistas" class="table table-striped table-hover w-100">
-        <thead class="table-dark">
-            <tr>
-                <th style="width:5%">#</th>
-                <th style="width:25%">Título</th>
-                <th style="width:15%">Controller</th>
-                <th style="width:15%">Action</th>
-                <th style="width:10%">Roles</th>
-                <th style="width:10%">Perfiles</th>
-                <th style="width:8%">Externo</th>
-                <th style="width:8%">Activa</th>
-                <th style="width:4%">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var vista in vistas)
-            {
+        <table id="tablaVistas" class="table table-striped table-hover w-100">
+            <thead class="table-dark">
                 <tr>
-                    <td>@vista.Orden</td>
-                    <td><strong>@vista.Titulo</strong></td>
-                    <td><code>@vista.Controller</code></td>
-                    <td><code>@vista.Action</code></td>
-                    <td>
-                        <span class="badge bg-info">@(string.IsNullOrEmpty(vista.Roles) ? "Todos" : vista.Roles)</span>
-                    </td>
-                    <td>
-                        <span class="badge bg-secondary">@(string.IsNullOrEmpty(vista.Perfiles) ? "Todos" :
-                                                vista.Perfiles)</span>
-            </td>
-            <td>
-                @if (vista.EsExterno)
-                        {
-                            <span class="badge bg-warning">
-                                <i class="fas fa-external-link-alt"></i> Sí
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-light text-dark">No</span>
-                        }
-                    </td>
-                    <td>
-                        <span class="badge @(vista.Activa ? "bg-success" : "bg-danger")">
-                            @(vista.Activa ? "Sí" : "No")
-                        </span>
-                    </td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <button class="btn btn-sm btn-outline-primary js-edit"
-                                data-url="@Url.Action("ModalEditarVista", new { id = vista.VistaId })" title="Editar vista">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger js-delete"
-                                data-url="@Url.Action("EliminarVista", new { id = vista.VistaId })" title="Eliminar vista">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
+                    <th style="width:5%">#</th>
+                    <th style="width:25%">Título</th>
+                    <th style="width:15%">Controller</th>
+                    <th style="width:15%">Action</th>
+                    <th style="width:10%">Roles</th>
+                    <th style="width:10%">Perfiles</th>
+                    <th style="width:8%">Externo</th>
+                    <th style="width:8%">Activa</th>
+                    <th style="width:4%">Acciones</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var vista in vistas)
+                {
+                    <tr>
+                        <td>@vista.Orden</td>
+                        <td><strong>@vista.Titulo</strong></td>
+                        <td><code>@vista.Controller</code></td>
+                        <td><code>@vista.Action</code></td>
+                        <td>
+                            <span class="badge bg-info">@(string.IsNullOrEmpty(vista.Roles) ? "Todos" : vista.Roles)</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">@(string.IsNullOrEmpty(vista.Perfiles) ? "Todos" :
+                                                        vista.Perfiles)</span>
+                        </td>
+                        <td>
+                            @if (vista.EsExterno)
+                            {
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-external-link-alt"></i> Sí
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-light text-dark">No</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge @(vista.Activa ? "bg-success" : "bg-danger")">
+                                @(vista.Activa ? "Sí" : "No")
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-sm btn-outline-primary js-edit"
+                                    data-url="@Url.Action("ModalEditarVista", new { id = vista.VistaId })" title="Editar vista">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger js-delete"
+                                    data-url="@Url.Action("EliminarVista", new { id = vista.VistaId })" title="Eliminar vista">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 }
 else
 {
-    <div class="alert alert-info">
-        <i class="fas fa-info-circle"></i>
-        <strong>Sin vistas registradas</strong><br>
-        No hay vistas registradas para este módulo. Haz clic en "Nueva Vista" para agregar la primera.
-    </div>
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>Sin vistas registradas</strong><br>
+            No hay vistas registradas para este módulo. Haz clic en "Nueva Vista" para agregar la primera.
+        </div>
 }
 
-<!-- Modal para crear/editar vista -->
-<div class="modal fade" id="vistaModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div id="contenidoModalVista">
-                <!-- Aquí se carga el contenido dinámico -->
+    <!-- Modal para crear/editar vista -->
+    <div class="modal fade" id="vistaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div id="contenidoModalVista">
+                    <!-- Aquí se carga el contenido dinámico -->
+                </div>
             </div>
         </div>
     </div>
-</div>
 
+</div>
 @section Scripts {
+
     <!-- DataTables CSS y JS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <script type="text/javascript" charset="utf8"
