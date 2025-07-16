@@ -79,8 +79,8 @@
                 
                     var resetZoomControl = L.control({ position: 'topleft' });
                     resetZoomControl.onAdd = function (map) {
-                        var div = L.DomUtil.create('div', 'reset-zoom-control');
-                        div.innerHTML = '<button class="btn btn-cre-rojo-home"><i class="bi bi-house-door"></i></button>';
+                        var div = L.DomUtil.create('div', 'leaflet-control-custom');
+                        div.innerHTML = '<button class="btn"><i class="bi bi-house-door"></i></button>';
                         div.firstChild.onclick = function() {
                             resetZoom(map);
                         };

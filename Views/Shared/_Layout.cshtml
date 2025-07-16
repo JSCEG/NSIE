@@ -179,7 +179,7 @@
 
 <body>
     <!-- Header -->
-    <header class="header-custom navbar navbar-expand-lg navbar-light fixed-top">
+    <header class="header-custom navbar navbar-expand-lg navbar-light fixed-top>
         <div class="container-fluid px-3">
             <!-- Botón toggle -->
             <button id="sidebarToggle" class="btn sidebar-toggle-pro me-3" type="button" aria-label="Toggle Menu">
@@ -218,7 +218,7 @@
                             aria-expanded="false" title="Notificaciones">
 
                             <!-- Ícono blanco -->
-                            <i class="bi bi-bell text-white"></i>
+                            <i class="bi bi-bell"></i>
 
                             <!-- Badge dinámico -->
                             <span class="icon-badge hidden" id="notification-count">0</span>
@@ -260,7 +260,10 @@
                         <i class="bi bi-person-circle me-2"></i>
                         <span class="d-none d-md-inline">@ViewData["NombreUsuario"]</span>
                     </button>
+
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    @if (perfilUsuario.Rol != "0")
+                    {
                         <li>
                             <h6 class="dropdown-header">@ViewData["NombreUsuario"]</h6>
                         </li>
@@ -277,6 +280,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
+                    }
                         <li><a class="dropdown-item text-danger" asp-area="" asp-controller="Acceso"
                                 asp-action="CerrarSesion"> 🚪 Salir</a></li>
                     </ul>
@@ -284,6 +288,7 @@
             </div>
         </div>
     </header>
+    <script src="~/js/header-scroll.js"></script>
     <script>
         window.addEventListener('scroll', function () {
             const header = document.querySelector('.header-fijo');
@@ -1171,11 +1176,10 @@
             });
         });
     </script>
-
-<script>
-    const seccionesDebug = @Html.Raw(JsonConvert.SerializeObject(seccionesUsuario));
-    console.log("Secciones cargadas:", seccionesDebug);
-</script>
+    <script>
+        const seccionesDebug = @Html.Raw(JsonConvert.SerializeObject(seccionesUsuario));
+        console.log("Secciones cargadas:", seccionesDebug);
+    </script>
     <script src="https://cdn.botpress.cloud/webchat/v3.0/inject.js" defer></script>
     <script src="https://files.bpcontent.cloud/2025/07/03/06/20250703065244-GFQSQ0GG.js" defer></script>
    

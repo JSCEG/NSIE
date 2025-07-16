@@ -249,3 +249,36 @@
         width: 100%;
     }
 }
+
+/* -----------------------------------------
+   7. Botón Personalizado de Centrar Mapa (Home)
+   ----------------------------------------- */
+.leaflet-control-custom {
+    background-color: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.leaflet-control-custom:hover {
+    background-color: var(--color-primario-50);
+    border-color: var(--color-primario-200);
+    transform: scale(1.05);
+}
+
+.leaflet-control-custom svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: var(--texto-principal);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke var(--transition-fast);
+}
+
+.leaflet-control-custom:hover svg {
+    stroke: var(--color-primario);
+}

@@ -2,6 +2,7 @@
    NAVBAR - Modern & Impressive
    ===================================================== */
 .navbar {
+
     transition: background-color 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
     padding-top: var(--spacing-md);
     padding-bottom: var(--spacing-md);
@@ -17,7 +18,8 @@
 }
 
 .navbar-logo {
-    height: 40px; /* Adjust as needed */
+    height: 40px;
+    /* Adjust as needed */
     transition: transform var(--transition-fast);
 }
 
@@ -57,14 +59,18 @@
 
 .navbar-nav .nav-link:hover {
     color: var(--texto-sobre-color) !important;
-    text-decoration: none; /* Ensure no underline on hover */
+    text-decoration: none;
+    /* Ensure no underline on hover */
 }
 
 .navbar-nav .nav-link.active {
     color: var(--texto-sobre-color) !important;
-    text-decoration: none; /* Ensure no underline when active */
-    border: none; /* Explicitly remove any border */
-    box-shadow: none; /* Explicitly remove any box-shadow */
+    text-decoration: none;
+    /* Ensure no underline when active */
+    border: none;
+    /* Explicitly remove any border */
+    box-shadow: none;
+    /* Explicitly remove any box-shadow */
 }
 
 .navbar .btn-primary {

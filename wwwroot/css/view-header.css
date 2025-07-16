@@ -11,7 +11,7 @@
     /* Fondo blanco */
     border-radius: var(--radio-borde);
     border: 1px solid var(--color-borde);
-    margin-bottom: 1.5rem;
+    margin-bottom: 0px;
     /* Espacio debajo del header */
     padding: 1.5rem;
 }
@@ -78,4 +78,13 @@
 /* Separador de las migas de pan */
 .header-fijo .breadcrumb-item+.breadcrumb-item::before {
     color: var(--texto-secundario);
+}
+
+.header-custom.header-scrolled .input-group .form-control {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #000;
+}
+
+.header-custom.header-scrolled .input-group .form-control::placeholder {
+    color: #444;
 }

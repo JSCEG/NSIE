@@ -42,7 +42,7 @@ new { icon = "eye", text = "Consulta Pública: Acceso abierto a usuarios" }
             <h2>Bienvenido a AZEL</h2>
             <p>Esta es la sección pública del inventario y el potencial de los recursos renovables. Aquí podrás
                 consultar información relevante sobre los recursos renovables disponibles.</p>
-            <p>Para más información, por favor contacta con el administrador del sistema.</p>
+
         </div>
     </div>
 </div>
@@ -57,12 +57,16 @@ new { icon = "eye", text = "Consulta Pública: Acceso abierto a usuarios" }
             <div class="navbarmapag">
 
 
-                <a id="electricidad" class="icono-texto">
-                    <img src="/img/fotovoltaica.png" alt="Icono personalizado" class="iconomenu" />
-                    <span>Solar Fotovoltaica</span>
-
-                    <div id="total_electricidad"></div>
-                </a>
+                <div id="tarjeta-permisos" class="card shadow-sm mb-3" style="max-width: 320px;">
+                    <div class="card-body d-flex align-items-center">
+                        <img id="icono-permiso" src="https://cdn.sassoapps.com/img_snier/vistas/fotovoltaica.png"
+                            alt="Icono recurso" style="width:48px;height:48px;margin-right:16px;">
+                        <div>
+                            <h5 id="titulo-permiso" class="card-title mb-1">Solar Fotovoltaica</h5>
+                            <div id="total-permisos" class="h4 mb-0">Total de Permisos: 0</div>
+                        </div>
+                    </div>
+                </div>
 
 
             </div>
@@ -75,20 +79,21 @@ new { icon = "eye", text = "Consulta Pública: Acceso abierto a usuarios" }
                     <div class="col">
                         <div class="app-card app-card-chart h-100 shadow-sm">
                             <!-- Buscador y Pantalla Completa en la misma fila -->
-                            <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
-                                <div class="search-container p-3" id="search-container">
-                                    <label class="form-label">Buscar en el Mapa:</label>
-                                    <div class="busqueda-container">
-                                        <input type="text" id="busquedaGeneralInput" class="form-control"
-                                            placeholder="Número de Permiso, Entidad Federativa o Municipio">
+                            <div class="map-controls-container p-3">
+                                <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
+                                    <div class="search-container" id="search-container">
+                                        <label class="form-label">Buscar en el Mapa:</label>
+                                        <div class="input-group">
+                                            <input type="text" id="busquedaGeneralInput" class="form-control"
+                                                placeholder="Número de Permiso, Entidad Federativa o Municipio">
+                                            <button class="btn btn-primary" onclick="buscarGeneral()">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                        </div>
                                         <div id="autocomplete-list" class="autocomplete-items"></div>
-                                        <button class="btn btn-primary" onclick="buscarGeneral()"
-                                            style="width:10% !important">
-                                            <i class="bi bi-search"></i>
-                                        </button>
                                     </div>
+                                    <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
                                 </div>
-                                <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
                             </div>
 
                             <!-- Mapa full width -->
@@ -97,235 +102,228 @@ new { icon = "eye", text = "Consulta Pública: Acceso abierto a usuarios" }
                                     <div id="map" class="p-3 bg"></div>
                                 </div>
                             </div>
-                            <div class="leyenda pt-3">
-                                <p>Mayor Concentración</p>
-                                <p>Concentración Promedio</p>
-                                <p>Menor Concentración</p>
-                                <p> Ductos</p>
-                            </div>
-                            <!-- Leyendas y KML debajo del mapa -->
-                            <div class="row mt-3">
-                                <div class="col-12 d-flex flex-wrap align-items-start gap-3">
-                                    <div>
-                                        <table id="simbol-fotovoltaico" cellspacing="0" border="0">
-                                            <colgroup width="86"></colgroup>
-                                            <colgroup span="6" width="85"></colgroup>
-                                            <tr>
-                                                <td colspan=7 height="17" align="center" valign=middle><span
-                                                        style="font-family:Patria;">Potencial fotovoltaico [kWh/kWp]
-                                                        Fuente: <a href='https://globalsolaratlas.info/download/world'
-                                                            target='_blank'>globalsolaratlas.info</a></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td height="17" align="left" bgcolor="#000080"></td>
-                                                <td align="left" bgcolor="#0000FF"></td>
-                                                <td align="left" bgcolor="#00FFFF"></td>
-                                                <td align="left" bgcolor="#00FF00"></td>
-                                                <td align="left" bgcolor="#FFFF00"></td>
-                                                <td align="left" bgcolor="#FFA500"></td>
-                                                <td align="left" bgcolor="#FF0000"></td>
-                                            </tr>
-                                            <tr>
-                                                <td height="17" align="center"><span
-                                                        style="font-family:Patria Light;">3.22</span></td>
-                                                <td align="center"><span style="font-family:Patria Light;">3.63</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">4.04</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">4.44</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">4.85</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">5.26</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">5.67</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td height="17" align="center"><span
-                                                        style="font-family:Patria Light;">Bajo</span></td>
-                                                <td align="center"><span style="font-family:Patria Light;"></span></td>
-                                                <td align="center"><span
-                                                        style="font-family:Patria Light;">Moderado</span></td>
-                                                <td align="center"><span style="font-family:Patria Light;"></span></td>
-                                                <td align="center"><span style="font-family:Patria Light;">Bueno</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">Alto</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">Muy
-                                                        alto</span></td>
-                                            </tr>
-                                        </table>
-                                        <div id="rampa-fotovoltaico" class="color-ramp mb-2">
-                                            <!-- Sustituye la siguiente línea por la imagen o HTML de la rampa real -->
-                                            <img src="/img/rampa_fotovoltaico.png" alt="Rampa de colores Fotovoltaico"
-                                                style="max-width: 220px;">
-                                        </div>
-                                        <table id="simbol-radiacion" cellspacing="0" border="0" style="display:none;">
-                                            <colgroup width="103"></colgroup>
-                                            <colgroup span="7" width="85"></colgroup>
-                                            <tr>
-                                                <td colspan=7 height="17" align="center" valign=middle><span
-                                                        style="font-family:Patria;">Radioación horizontal [kWh/m²]
-                                                        Fuente: <a href='https://globalsolaratlas.info/download/world'
-                                                            target='_blank'>globalsolaratlas.info</a></span></td>
-                                                <td align="left"></td>
-                                            </tr>
-                                            <tr>
-                                                <td height="17" align="left" bgcolor="#4169E1"></td>
-                                                <td align="left" bgcolor="#1E90FF"></td>
-                                                <td align="left" bgcolor="#3CB371"></td>
-                                                <td align="left" bgcolor="#ADFF2F"></td>
-                                                <td align="left" bgcolor="#FFFF00"></td>
-                                                <td align="left" bgcolor="#FFA500"></td>
-                                                <td align="left" bgcolor="#FF4500"></td>
-                                                <td align="left" bgcolor="#B22222"></td>
-                                            </tr>
-                                            <tr>
-                                                <td height="17" align="center"><span
-                                                        style="font-family:Patria Light;">3.58</span></td>
-                                                <td align="center"><span style="font-family:Patria Light;">3.99</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">4.39</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">4.8</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">5.2</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">5.61</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">6.01</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">6.42</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td height="17" align="center"><span
-                                                        style="font-family:Patria Light;">Bajo</span></td>
-                                                <td align="center"><span style="font-family:Patria Light;"></span></td>
-                                                <td align="center"><span
-                                                        style="font-family:Patria Light;">Moderado</span></td>
-                                                <td align="center"><span style="font-family:Patria Light;"></span></td>
-                                                <td align="center"><span style="font-family:Patria Light;">Bueno</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;"></span></td>
-                                                <td align="center"><span style="font-family:Patria Light;">Alto</span>
-                                                </td>
-                                                <td align="center"><span style="font-family:Patria Light;">Muy
-                                                        alto</span></td>
-                                            </tr>
-                                        </table>
-                                        <div id="rampa-radiacion" class="color-ramp mb-2" style="display:none;">
-                                            <!-- Sustituye la siguiente línea por la imagen o HTML de la rampa real -->
-                                            <img src="/img/rampa_radiacion.png" alt="Rampa de colores Radiación"
-                                                style="max-width: 220px;">
-                                        </div>
-                                        <table id="simbol-viento" cellspacing="0" border="0" style="display:none;">
-                                            <colgroup span="5" width="93"></colgroup>
-                                            <tr>
-                                                <td colspan=5 height="17" align="center" valign=middle><span
-                                                        style="font-family:Patria;">Velocidad de viento [m/s] Fuente: <a
-                                                            href='https://globalwindatlas.info/es/download/gis-files'
-                                                            target='_blank'>globalwindatlas.info</a></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td height="17" align="left" bgcolor="#F6EFF7"></td>
-                                                <td align="left" bgcolor="#BDC9E1"></td>
-                                                <td align="left" bgcolor="#67A9CF"></td>
-                                                <td align="left" bgcolor="#1C9099"></td>
-                                                <td align="left" bgcolor="#016C59"></td>
-                                            </tr>
-                                            <tr>
-                                                <td height="17" align="center"><span
-                                                        style="font-family:Patria;">&lt;3</span></td>
-                                                <td align="center"><span style="font-family:Patria;">6</span></td>
-                                                <td align="center"><span style="font-family:Patria;">9</span></td>
-                                                <td align="center"><span style="font-family:Patria;">12</span></td>
-                                                <td align="center"><span style="font-family:Patria;">15&lt;</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan=5 rowspan=3 height="51" align="center" valign=middle><span
-                                                        style="font-family:Patria Light;">La velocidad del viento se
-                                                        incrementa conforme aumenta la altura, hay más densidad y
-                                                        potencial aprovechable.</span></td>
-                                            </tr>
-                                        </table>
-                                        <div id="rampa-viento" class="color-ramp mb-2" style="display:none;">
-                                            <!-- Sustituye la siguiente línea por la imagen o HTML de la rampa real -->
-                                            <img src="/img/rampa_viento.png" alt="Rampa de colores Viento"
-                                                style="max-width: 220px;">
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <div class="mt-4" id="kml-upload-container">
-                                            <div class="alert alert-info p-2" style="font-size: 0.95em;">
-                                                <b>Sube tu archivo KML:</b> El archivo se mostrará sobre el mapa y el
-                                                visor
-                                                se centrará en él.<br>
-                                                <ul class="mb-1">
-                                                    <li>Solo se acepta formato <b>.kml</b></li>
-                                                    <li>El archivo debe contener geometría válida (puntos, líneas o
-                                                        polígonos)</li>
-                                                    <li>El KML se mostrará siempre encima de las capas base</li>
-                                                </ul>
-                                            </div>
-                                            <input type="text" id="nombreProyectoKML" class="form-control mb-2"
-                                                placeholder="Nombre de tu proyecto (opcional)" maxlength="100" />
-                                            <input type="file" id="kmlFileInput" accept=".kml"
-                                                class="form-control mb-2" />
-                                            <button class="btn btn-primary w-100" id="btnCargarKML">Cargar KML</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Gráfico full width debajo de leyendas -->
-                            <div class="row mt-4">
-                                <div class="col-12">
-                                    <div id="grafico"></div>
-                                </div>
-                            </div>
                         </div>
 
                     </div>
                 </div>
+                <div class="leyenda pt-3">
+                    <p>Mayor Concentración</p>
+                    <p>Concentración Promedio</p>
+                    <p>Menor Concentración</p>
+                    <p> Ductos</p>
+                </div>
+                <!-- Leyendas y KML debajo del mapa -->
+                <div class="row mt-3">
+                    <div class="col-12 d-flex flex-wrap align-items-start gap-3">
+                        <div>
+                            <div id="simbol-fotovoltaico" class="color-ramp-container">
+                                <div class="color-ramp-title">
+                                    Potencial fotovoltaico [kWh/kWp] Fuente: <a
+                                        href='https://globalsolaratlas.info/download/world'
+                                        target='_blank'>globalsolaratlas.info</a>
+                                </div>
+                                <div class="color-gradient-bar fotovoltaico-gradient"></div>
+                                <div class="color-labels values">
+                                    <span>3.22</span>
+                                    <span>3.63</span>
+                                    <span>4.04</span>
+                                    <span>4.44</span>
+                                    <span>4.85</span>
+                                    <span>5.26</span>
+                                    <span>5.67</span>
+                                </div>
+                                <div class="color-labels categories">
+                                    <span>Bajo</span>
+                                    <span></span>
+                                    <span>Moderado</span>
+                                    <span></span>
+                                    <span>Bueno</span>
+                                    <span>Alto</span>
+                                    <span>Muy alto</span>
+                                </div>
+                            </div>
+
+                            <div id="simbol-radiacion" class="color-ramp-container" style="display:none;">
+                                <div class="color-ramp-title">
+                                    Radioación horizontal [kWh/m²] Fuente: <a
+                                        href='https://globalsolaratlas.info/download/world'
+                                        target='_blank'>globalsolaratlas.info</a>
+                                </div>
+                                <div class="color-gradient-bar radiacion-gradient"></div>
+                                <div class="color-labels values">
+                                    <span>3.58</span>
+                                    <span>3.99</span>
+                                    <span>4.39</span>
+                                    <span>4.8</span>
+                                    <span>5.2</span>
+                                    <span>5.61</span>
+                                    <span>6.01</span>
+                                    <span>6.42</span>
+                                </div>
+                                <div class="color-labels categories">
+                                    <span>Bajo</span>
+                                    <span></span>
+                                    <span>Moderado</span>
+                                    <span></span>
+                                    <span>Bueno</span>
+                                    <span></span>
+                                    <span>Alto</span>
+                                    <span>Muy alto</span>
+                                </div>
+                            </div>
+
+                            <div id="simbol-viento" class="color-ramp-container" style="display:none;">
+                                <div class="color-ramp-title">
+                                    Velocidad de viento [m/s] Fuente: <a
+                                        href='https://globalwindatlas.info/es/download/gis-files'
+                                        target='_blank'>globalwindatlas.info</a>
+                                </div>
+                                <div class="color-gradient-bar viento-gradient"></div>
+                                <div class="color-labels values">
+                                    <span>&lt;3</span>
+                                    <span>6</span>
+                                    <span>9</span>
+                                    <span>12</span>
+                                    <span>15&lt;</span>
+                                </div>
+                                <div class="color-ramp-description">
+                                    La velocidad del viento se incrementa conforme aumenta la altura, hay más densidad y
+                                    potencial aprovechable.
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Nueva sección para Capas y KML -->
+                <div class="row mt-3" id="capas-kml-section">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">Cargar Archivo KML</div>
+                            <div class="card-body">
+                                <div class="alert alert-info p-2" style="font-size: 0.95em;">
+                                    <b>Sube tu archivo KML:</b> El archivo se mostrará sobre el mapa y el
+                                    visor se centrará en él.<br>
+                                    <ul class="mb-1">
+                                        <li>Solo se acepta formato <b>.kml</b></li>
+                                        <li>El archivo debe contener geometría válida (puntos, líneas o
+                                            polígonos)</li>
+                                        <li>El KML se mostrará siempre encima de las capas base</li>
+                                    </ul>
+                                </div>
+                                <label for="nombreProyectoKML" class="form-label fw-bold">Nombre del proyecto:</label>
+                                <input type="text" id="nombreProyectoKML" class="form-control mb-2"
+                                    placeholder="Ej: Proyecto Eólico La Venta" maxlength="100" required />
+                                <input type="file" id="kmlFileInput" accept=".kml" class="form-control mb-2" />
+                                <button class="btn btn-primary w-100" id="btnCargarKML">Cargar KML</button>
+                                <div id="kml-alert-container" class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">Capas Disponibles</div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush" id="layer-list">
+                                    <!-- Las capas se añadirán aquí dinámicamente con JS -->
+                                    <script>
+                                        // Lista de capas raster reales (7 capas, igual que en ponerLinksDescargaDirectos)
+                                        const capasRaster = [
+                                            {
+                                                nombre: '🌞 Potencial Fotovoltaico',
+                                                url: 'https://cdn.sassoapps.com/Geovisualizador/rasters/potencialfotovoltaico_4326_0.png'
+                                            },
+                                            {
+                                                nombre: '☀️ Radiación Horizontal',
+                                                url: 'https://cdn.sassoapps.com/Geovisualizador/rasters/radiacionhorizontal_4326_0.png'
+                                            },
+                                            {
+                                                nombre: '💨 Velocidad de Viento 10m',
+                                                url: 'https://cdn.sassoapps.com/Geovisualizador/rasters/Velocidaddevientoa10mdealtura_4.png'
+                                            },
+                                            {
+                                                nombre: '💨 Velocidad de Viento 50m',
+                                                url: 'https://cdn.sassoapps.com/Geovisualizador/rasters/Velocidaddevientoa50mdealtura_3.png'
+                                            },
+                                            {
+                                                nombre: '💨 Velocidad de Viento 100m',
+                                                url: 'https://cdn.sassoapps.com/Geovisualizador/rasters/Velocidaddevientoa100mdealtura_2.png'
+                                            },
+                                            {
+                                                nombre: '💨 Velocidad de Viento 150m',
+                                                url: 'https://cdn.sassoapps.com/Geovisualizador/rasters/Velocidaddevientoa150mdealtura_1.png'
+                                            },
+                                            {
+                                                nombre: '💨 Velocidad de Viento 200m',
+                                                url: 'https://cdn.sassoapps.com/Geovisualizador/rasters/Velocidaddevientoa200mdealtura_0.png'
+                                            }
+                                        ];
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            const ul = document.getElementById('layer-list');
+                                            if (ul && capasRaster.length > 0) {
+                                                capasRaster.forEach(capa => {
+                                                    const li = document.createElement('li');
+                                                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                                                    li.innerHTML = `<span>${capa.nombre}</span> <a href="${capa.url}" class="btn btn-sm btn-outline-primary" target="_blank" download>Descargar</a>`;
+                                                    ul.appendChild(li);
+                                                });
+                                            }
+                                        });
+                                    </script>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico full width debajo de leyendas -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div id="grafico"></div>
+                    </div>
+                </div>
             </div>
+
         </div>
-    </section>
+</div>
+</div>
+</div>
+</section>
 
-    <style>
-        #fullscreen-search-container {
-            background-color: white;
-        }
+<style>
+    #fullscreen-search-container {
+        background-color: white;
+    }
 
-        #fullscreen-elements {
-            display: flex;
-            flex-direction: column;
-            height: auto;
-            /* Valor inicial para cuando no esté en pantalla completa */
-        }
+    #fullscreen-elements {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        /* Valor inicial para cuando no esté en pantalla completa */
+    }
 
-        #fullscreen-last-update,
-        #fullscreen-select,
-        #fullscreen-search-container {
-            flex-shrink: 0;
-        }
+    #fullscreen-last-update,
+    #fullscreen-select,
+    #fullscreen-search-container {
+        flex-shrink: 0;
+    }
 
-        #map {
-            flex-grow: 1;
-        }
+    #map {
+        flex-grow: 1;
+    }
 
-        #main-container.fullscreen-active #fullscreen-elements {
-            height: 100vh;
-        }
+    #main-container.fullscreen-active #fullscreen-elements {
+        height: 100vh;
+    }
 
-        #main-container.fullscreen-active #map {
-            height: calc(100vh - 60px);
-        }
+    #main-container.fullscreen-active #map {
+        height: calc(100vh - 60px);
+    }
 
-        #main-container:not(.fullscreen-active) #map {
-            height: 500px;
-        }
-    </style>
+    #main-container:not(.fullscreen-active) #map {
+        height: 500px;
+    }
+</style>
 
 
 </div>
@@ -393,8 +391,12 @@ new { icon = "eye", text = "Consulta Pública: Acceso abierto a usuarios" }
 
 
 
+<link rel="stylesheet" href="~/css/mapa_azel.css" />
+<link rel="stylesheet" href="~/css/leaflet.easyPrint.css" />
+
 @section scripts {
     <script type="text/javascript" src="/js/configura_mapa.js"></script>
+    <script type="text/javascript" src="/js/leaflet.easyPrint.min.js"></script>
     <script type="text/javascript" src="/js/leaflet-kml.js"></script>
     <script type="text/javascript" src="/js/I_azel_publico.js"></script>
     <script>
@@ -405,17 +407,39 @@ new { icon = "eye", text = "Consulta Pública: Acceso abierto a usuarios" }
             const btn = document.getElementById('btnCargarKML');
             const input = document.getElementById('kmlFileInput');
             const nombreInput = document.getElementById('nombreProyectoKML');
+            const alertContainer = document.getElementById('kml-alert-container');
+
+            const showAlert = (message, type) => {
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = [
+                    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                    `   <div>${message}</div>`,
+                    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                    '</div>'
+                ].join('');
+                alertContainer.innerHTML = '';
+                alertContainer.append(wrapper);
+            };
+
             btn?.addEventListener('click', function () {
-                if (!input.files || !input.files[0]) {
-                    alert('Selecciona un archivo KML primero.');
-                    return;
-                }
-                const file = input.files[0];
-                if (!file.name.toLowerCase().endsWith('.kml')) {
-                    alert('Solo se acepta formato .kml');
-                    return;
-                }
                 const nombreProyecto = nombreInput.value.trim();
+                const file = input.files[0];
+
+                if (!nombreProyecto) {
+                    showAlert('Por favor, introduce un nombre para el proyecto.', 'warning');
+                    return;
+                }
+
+                if (!file) {
+                    showAlert('Selecciona un archivo KML primero.', 'warning');
+                    return;
+                }
+
+                if (!file.name.toLowerCase().endsWith('.kml')) {
+                    showAlert('Solo se acepta formato .kml', 'danger');
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     try {
@@ -428,39 +452,36 @@ new { icon = "eye", text = "Consulta Pública: Acceso abierto a usuarios" }
                         kmlLayer = new L.KML(e.target.result);
                         if (typeof mapas !== 'undefined' && mapas[0]) {
                             mapas[0].addLayer(kmlLayer);
-                            // Centrar el mapa en el KML
                             const bounds = kmlLayer.getBounds();
                             if (bounds.isValid()) {
                                 mapas[0].fitBounds(bounds);
                             }
-                            // Si hay nombre de proyecto, poner marcador especial
-                            if (nombreProyecto) {
-                                // Buscar el centroide del primer polígono, línea o punto
-                                let latlng = null;
-                                kmlLayer.eachLayer(function (layer) {
-                                    if (!latlng) {
-                                        if (layer.getLatLng) {
-                                            latlng = layer.getLatLng();
-                                        } else if (layer.getBounds) {
-                                            latlng = layer.getBounds().getCenter();
-                                        }
+                            let latlng = null;
+                            kmlLayer.eachLayer(function (layer) {
+                                if (!latlng) {
+                                    if (layer.getLatLng) {
+                                        latlng = layer.getLatLng();
+                                    } else if (layer.getBounds) {
+                                        latlng = layer.getBounds().getCenter();
                                     }
-                                });
-                                if (latlng) {
-                                    // Icono especial (puedes personalizar la URL)
+                                }
+                            });
+                            if (latlng) {
+                                // Icono especial (puedes personalizar la URL)
                                     const icon = L.icon({
-                                        iconUrl: '/img/marker_proyecto.png', // Cambia por tu icono si lo tienes
+                                        iconUrl: 'https://cdn.sassoapps.com/img_snier/vistas/Solicitudes.png',
                                         iconSize: [36, 36],
                                         iconAnchor: [18, 36],
                                         popupAnchor: [0, -36]
                                     });
-                                    kmlProjectMarker = L.marker(latlng, { icon: icon }).addTo(mapas[0]);
-                                    kmlProjectMarker.bindPopup('<b>' + nombreProyecto + '</b>');
-                                }
+                                kmlProjectMarker = L.marker(latlng, { icon: icon }).addTo(mapas[0]);
+                                kmlProjectMarker.bindPopup('<b>' + nombreProyecto + '</b>');
                             }
+                            showAlert(`El proyecto "${nombreProyecto}" se ha cargado correctamente.`, 'success');
+                            document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
                         }
                     } catch (err) {
-                        alert('Error al cargar el archivo KML. ¿Es válido?');
+                        showAlert('Error al cargar el archivo KML. Asegúrate de que sea un archivo válido.', 'danger');
                     }
                 };
                 reader.readAsText(file);
