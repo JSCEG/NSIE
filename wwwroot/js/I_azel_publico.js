@@ -1,3 +1,22 @@
+// --- Botón personalizado para centrar el mapa (Home) ---
+function agregarBotonCentrarMapa() {
+    if (!window.L || !mapas || !mapas[0]) return;
+    var homeControl = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function (map) {
+            var container = L.DomUtil.create('div', 'leaflet-control leaflet-bar leaflet-control-custom');
+            container.title = 'Centrar mapa';
+            container.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="12" x2="16" y2="12"/></svg>';
+            container.style.cursor = 'pointer';
+            container.onclick = function () {
+                // Ajusta los valores a la vista inicial de tu mapa
+                map.setView([23.6345, -102.5528], 5); // México
+            };
+            return container;
+        }
+    });
+    mapas[0].addControl(new homeControl());
+}
 //Campos Visbles de los popup*@
 
 //
@@ -652,23 +671,22 @@ function CargaElectricidad() {
 
                 //******Tarjetas Totales******///
 
-                // Contar el número total de elementos en el array 'response'
+                // Contar el número total de elementos en el array 'datosExpendios'
                 var totalElementos = datosExpendios.length;
-                te = datosExpendios.length;
-                //teg = response;
                 // Formatear el número con separadores de miles
                 var totalFormateado = totalElementos.toLocaleString();
 
-                console.log("Total de elementos en 'response' formateado:", totalFormateado);
+                console.log("Total de permisos (Solar Fotovoltaica) formateado:", totalFormateado);
 
-                // Mostrar este total formateado en el elemento span
-                var totalElectricidad = document.getElementById('total_electricidad');
-                totalElectricidad.textContent = "Total de Permisos: " + totalFormateado;
+                // Actualizar la tarjeta de permisos
+                const tarjetaTitulo = document.getElementById('titulo-permiso');
+                const tarjetaTotal = document.getElementById('total-permisos');
+                const tarjetaIcono = document.getElementById('icono-permiso');
 
-                // Ocultar los demás elementos
-                //document.getElementById('total_petroliferos').style.display = 'none';
-                //document.getElementById('total_glp').style.display = 'none';
-                //document.getElementById('total_gn').style.display = 'none';
+                if (tarjetaTitulo) tarjetaTitulo.textContent = 'Solar Fotovoltaica';
+                if (tarjetaIcono) tarjetaIcono.src = 'https://cdn.sassoapps.com/img_snier/vistas/fotovoltaica.png';
+                if (tarjetaTotal) tarjetaTotal.textContent = "Proyectos Autorizados: " + totalFormateado;
+
 
                 //******Fin Tarjetas Totales******///
 
@@ -719,92 +737,103 @@ function CargaElectricidad() {
                 var options = {
                     chart: {
                         type: 'column',
-                        backgroundColor: '#ffffff'  // Color de fondo del gráfico
+                        backgroundColor: 'transparent',
+                        style: {
+                            fontFamily: 'inherit'
+                        },
+                        borderRadius: 10
                     },
                     title: {
-                        text: 'Total de Permisos Vigentes de Electricidad por Entidad Federativa'
+                        text: 'Total de Proyectos Autorizados por Entidad Federativa',
+                        style: {
+                            color: '#333',
+                            fontSize: '18px',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    subtitle: {
+                        text: 'Fuente: Solar Fotovoltaica',
+                        style: {
+                            color: '#666'
+                        }
                     },
                     xAxis: {
-                        categories: convencional.categories
+                        categories: convencional.categories,
+                        labels: {
+                            style: {
+                                color: '#666'
+                            }
+                        }
                     },
                     yAxis: {
                         title: {
-                            text: 'Número de permisos'
-                        }
+                            text: 'Número de Proyectos',
+                            style: {
+                                color: '#666'
+                            }
+                        },
+                        gridLineColor: '#e6e6e6'
                     },
                     series: [{
-                        name: 'Permisos',
+                        name: 'Proyectos Autorizados',
                         data: dataPermisos,
-                        color: '#1a8092ff',
+                        color: {
+                            linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+                            stops: [
+                                [0, '#4facfe'],
+                                [1, '#00f2fe']
+                            ]
+                        },
                         dataLabels: {
-                            enabled: true,   // Habilita las etiquetas de datos
-                            rotation: 0,     // Rota las etiquetas (en este caso, no hay rotación)
-                            color: '#000000', // Color del texto de las etiquetas
-                            align: 'center',  // Alinea las etiquetas al centro
-                            format: '{point.y:,.0f}',  // Formato con separador de miles
-                            y: 10, // Posiciona las etiquetas un poco arriba del tope de la columna
+                            enabled: true,
+                            rotation: 0,
+                            color: '#333',
+                            align: 'center',
+                            format: '{point.y:,.0f}',
+                            y: -15,
                             style: {
-                                fontSize: '13px', // Tamaño de la fuente de las etiquetas
-                                fontFamily: 'Verdana, sans-serif' // Tipo de letra de las etiquetas
-                            }
+                                fontSize: '11px',
+                                fontWeight: 'bold'
+                            },
+                            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                            padding: 3,
+                            borderRadius: 3
                         }
                     }],
                     tooltip: {
-                        formatter: function () {
-                            return '<b>' + this.x + '</b><br/>' +
-                                this.series.name + ': ' + Highcharts.numberFormat(this.y, 0);  // Usando separador de miles
-
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        style: {
+                            color: '#f0f0f0'
+                        },
+                        headerFormat: '<span style="font-size: 12px">{point.key}</span><br/>',
+                        pointFormat: '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y:,.0f}</b>'
+                    },
+                    plotOptions: {
+                        series: {
+                            animation: {
+                                duration: 1000
+                            },
+                            states: {
+                                hover: {
+                                    brightness: -0.1
+                                }
+                            },
+                            borderRadius: 5
                         }
+                    },
+                    credits: {
+                        enabled: false
                     }
                 };
 
+
                 // Renderizar el gráfico en el contenedor con el ID 'grafico'
                 Highcharts.chart('grafico', options);
-                //Mete el autocompetar ala busqueda
-                // Función para inicializar el autocompletar
-                function autocomplete(inp, arr) {
-                    var currentFocus;
-
-                    inp.addEventListener("input", function (e) {
-                        var a, b, i, val = this.value;
-                        closeAllLists();
-                        if (!val) { return false; }
-                        currentFocus = -1;
-
-                        a = document.getElementById("autocomplete-list");
-                        a.innerHTML = "";
-
-                        for (i = 0; i < arr.length; i++) {
-                            if (arr[i].substr(0, val.length).toUpperCase() === val.toUpperCase()) {
-                                b = document.createElement("DIV");
-                                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                                b.innerHTML += arr[i].substr(val.length);
-                                b.addEventListener("click", function (e) {
-                                    inp.value = this.innerText;
-                                    closeAllLists();
-                                    buscarGeneral(); // Llama a tu función de búsqueda aquí
-                                });
-                                a.appendChild(b);
-                            }
-                        }
-                    });
-
-                    function closeAllLists(elmnt) {
-                        var x = document.getElementById("autocomplete-list");
-                        if (elmnt != x && elmnt != inp) {
-                            x.innerHTML = "";
-                        }
-                    }
-
-                    document.addEventListener("click", function (e) {
-                        closeAllLists(e.target);
-                    });
-                }
                 // Usamos un objeto Set para filtrar los duplicados, ya que un Set solo permite valores únicos
                 var uniqueTerms = [...new Set(availableTerms)];
 
                 // Inicializa el autocompletar
-                autocomplete(document.getElementById("busquedaGeneralInput"), availableTerms);
+                autocomplete(document.getElementById("busquedaGeneralInput"), uniqueTerms);
             },
             error: function (error) {
                 // Maneja el error si ocurre.
@@ -819,11 +848,11 @@ function CargaElectricidad() {
 }
 
 
-CargaElectricidad();
-
-
-
 //Funcionalidades de Búsqueda y Menú*@
+
+
+
+CargaElectricidad();
 
 
 
@@ -874,10 +903,7 @@ function autocomplete(inp, arr) {
     });
 }
 
-// Inicializa el autocompletar al cargar la página
-setTimeout(function () {
-    autocomplete(document.getElementById("busquedaGeneralInput"), availableTerms);
-}, 500);
+
 
 //Links activos*@
 function activarElemento(elementoID) {
@@ -941,7 +967,119 @@ vientoConfig.forEach(function (cfg) {
 
 var control = L.control.layers(rasterBaseLayers, null, { collapsed: false, position: 'topright' }).addTo(mapas[0]);
 
+
+
 // --- Funciones para cargar y limpiar marcadores ---
+// --- Validación segura para carga de KML ---
+function validarNombreKML(input) {
+    // No permitir vacíos, espacios solo, ni caracteres peligrosos
+    var value = input.value.trim();
+    // Expresión regular: solo letras, números, guiones, guion bajo, punto y espacios
+    var regex = /^[\w\d\-_. ]+$/;
+    if (!value) {
+        input.setCustomValidity('El nombre no puede estar vacío.');
+        return false;
+    }
+    if (!regex.test(value)) {
+        input.setCustomValidity('Nombre inválido: solo letras, números, guiones, guion bajo, punto y espacios.');
+        return false;
+    }
+    // Validación básica para evitar inyección de dependencias (no <, >, ;, |, &, etc)
+    if (/[<>;|&$]/.test(value)) {
+        input.setCustomValidity('Nombre inválido: no se permiten caracteres especiales.');
+        return false;
+    }
+    input.setCustomValidity('');
+    return true;
+}
+
+// Si tienes un input para el nombre del KML, agrega el listener:
+setTimeout(function () {
+    var kmlInput = document.getElementById('kmlFileNameInput');
+    if (kmlInput) {
+        kmlInput.addEventListener('input', function () {
+            validarNombreKML(this);
+        });
+        kmlInput.addEventListener('blur', function () {
+            validarNombreKML(this);
+        });
+    }
+}, 1000);
+
+
+// --- Links de descarga de capas ---
+// Coloca los links directamente en el div desde el JS al cargar la página
+function ponerLinksDescargaDirectos() {
+    var contenedor = document.getElementById('descarga-capas');
+    if (!contenedor) return;
+    contenedor.innerHTML = `
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>🌞 Potencial Fotovoltaico</span>
+                <a href="https://cdn.sassoapps.com/Geovisualizador/rasters/potencialfotovoltaico_4326_0.png" download target="_blank" class="btn btn-sm btn-outline-primary">Descargar</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>☀️ Radiación Horizontal</span>
+                <a href="https://cdn.sassoapps.com/Geovisualizador/rasters/radiacionhorizontal_4326_0.png" download target="_blank" class="btn btn-sm btn-outline-primary">Descargar</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>💨 Velocidad de Viento 10m</span>
+                <a href="https://cdn.sassoapps.com/Geovisualizador/rasters/Velocidaddevientoa10mdealtura_4.png" download target="_blank" class="btn btn-sm btn-outline-primary">Descargar</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>💨 Velocidad de Viento 50m</span>
+                <a href="https://cdn.sassoapps.com/Geovisualizador/rasters/Velocidaddevientoa50mdealtura_3.png" download target="_blank" class="btn btn-sm btn-outline-primary">Descargar</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>💨 Velocidad de Viento 100m</span>
+                <a href="https://cdn.sassoapps.com/Geovisualizador/rasters/Velocidaddevientoa100mdealtura_2.png" download target="_blank" class="btn btn-sm btn-outline-primary">Descargar</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>💨 Velocidad de Viento 150m</span>
+                <a href="https://cdn.sassoapps.com/Geovisualizador/rasters/Velocidaddevientoa150mdealtura_1.png" download target="_blank" class="btn btn-sm btn-outline-primary">Descargar</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>💨 Velocidad de Viento 200m</span>
+                <a href="https://cdn.sassoapps.com/Geovisualizador/rasters/Velocidaddevientoa200mdealtura_0.png" download target="_blank" class="btn btn-sm btn-outline-primary">Descargar</a>
+            </li>
+        </ul>
+    `;
+}
+
+// Al cargar la página, asegurar capa por defecto y links reales
+document.addEventListener('DOMContentLoaded', function () {
+    // Mostrar panel de descarga de capas si está oculto
+    var descargaPanel = document.getElementById('descarga-capas');
+    if (descargaPanel) {
+        descargaPanel.style.display = '';
+    }
+    // Coloca los links de descarga directamente
+    ponerLinksDescargaDirectos();
+    // Forzar que solo el raster de Potencial Fotovoltaico esté activo al cargar la página
+    // Elimina todos los overlays raster (imageOverlay) antes de agregar el de fotovoltaico
+    mapas[0].eachLayer(function (layer) {
+        if (layer instanceof L.ImageOverlay) {
+            mapas[0].removeLayer(layer);
+        }
+    });
+    if (rasterBaseLayers["🌞 Potencial Fotovoltaico"]) {
+        rasterBaseLayers["🌞 Potencial Fotovoltaico"].addTo(mapas[0]);
+        rasterActivo = rasterBaseLayers["🌞 Potencial Fotovoltaico"];
+    }
+    // Mostrar leyenda de Potencial Fotovoltaico
+    hideAllColorRamps();
+    var defaultRamp = document.getElementById('simbol-fotovoltaico');
+    if (defaultRamp) {
+        defaultRamp.style.display = '';
+    }
+    setTimeout(agregarBotonCentrarMapa, 200);
+    // Cargar marcadores fotovoltaico solo si no se ha llamado ya
+    if (typeof cargarMarcadoresFotovoltaico === 'function') {
+        cargarMarcadoresFotovoltaico();
+    }
+});
+
+
 function limpiarMarcadores() {
     mapas[0].eachLayer(function (layer) {
         if (layer instanceof L.Marker || layer instanceof L.MarkerClusterGroup || layer instanceof L.Circle) {
@@ -951,6 +1089,8 @@ function limpiarMarcadores() {
 }
 
 function cargarMarcadoresFotovoltaico() {
+    // Limpiar todos los marcadores y clusters antes de cargar los nuevos
+    limpiarMarcadores();
     // Limpiar input del buscador
     var input = document.getElementById("busquedaGeneralInput");
     if (input) input.value = "";
@@ -965,6 +1105,8 @@ function cargarMarcadoresFotovoltaico() {
 }
 
 function cargarMarcadoresViento() {
+    // Limpiar todos los marcadores y clusters antes de cargar los nuevos
+    limpiarMarcadores();
     // Limpiar input del buscador
     var input = document.getElementById("busquedaGeneralInput");
     if (input) input.value = "";
@@ -1016,10 +1158,12 @@ function cargarMarcadoresViento() {
             type: 'GET',
             contentType: 'application/json',
             success: function (response) {
+                console.log("Response for Viento:", response); // Log the raw response
                 // Solo Eólica
                 datosExpendios = response.filter(function (coordenada) {
                     return coordenada.clasificacion === "Eólica";
                 });
+                console.log("Filtered datosExpendios for Viento:", datosExpendios); // Log the filtered data
                 // Limpiar availableTerms y solo agregar los de viento
                 availableTerms = [];
                 estadosLayer.eachLayer(function (layer) {
@@ -1063,37 +1207,37 @@ function cargarMarcadoresViento() {
                     }
                     contenido += "<ul>";
                     if (camposVisiblesGlobal.includes("EfId")) {
-                        contenido += "<li><strong>Clave y Entidad Federativa:</strong> " + handleNull(coordenada.efId) + "</li>";
+                        contenido += "<li><strong>Entidad Federativa:</strong> " + handleNull(coordenada.efId) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("NumeroPermiso")) {
-                        contenido += "<li><strong>NumeroPermiso:</strong> " + handleNull(coordenada.numeroPermiso) + "</li>";
+                        contenido += "<li><strong>Número de Permiso:</strong> " + handleNull(coordenada.numeroPermiso) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("MpoId")) {
-                        contenido += "<li><strong>Clave y Municipio:</strong> " + handleNull(coordenada.mpoId) + "</li>";
+                        contenido += "<li><strong>Municipio:</strong> " + handleNull(coordenada.mpoId) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("NumeroDeExpediente")) {
-                        contenido += "<li><strong>Numero de Expediente:</strong> " + handleNull(coordenada.numeroDeExpediente) + "</li>";
+                        contenido += "<li><strong>Número de Expediente:</strong> " + handleNull(coordenada.numeroDeExpediente) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("RazonSocial")) {
-                        contenido += "<li><strong>RazonSocial:</strong> " + handleNull(coordenada.razonSocial) + "</li>";
+                        contenido += "<li><strong>Razón Social:</strong> " + handleNull(coordenada.razonSocial) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("FechaOtorgamiento")) {
                         contenido += "<li><strong>Fecha de Otorgamiento:</strong> " + handleNull(coordenada.fechaOtorgamiento) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("LatitudGeo")) {
-                        contenido += "<li><strong>LatitudGeo:</strong> " + handleNull(coordenada.latitudGeo) + "</li>";
+                        contenido += "<li><strong>Latitud:</strong> " + handleNull(coordenada.latitudGeo) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("LongitudGeo")) {
-                        contenido += "<li><strong>LongitudGeo:</strong> " + handleNull(coordenada.longitudGeo) + "</li>";
+                        contenido += "<li><strong>Longitud:</strong> " + handleNull(coordenada.longitudGeo) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("Dirección")) {
                         contenido += "<li><strong>Dirección:</strong> " + handleNull(coordenada.direccion) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("Estatus")) {
-                        contenido += "<li><strong>Estatus:</strong> " + handleNull(coordenada.estatus) + "</li>";
+                        contenido += "<li><strong>Estatus del Permiso:</strong> " + handleNull(coordenada.estatus) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("RFC")) {
-                        contenido += "<li><strong>Rfc:</strong> " + handleNull(coordenada.rfc) + "</li>";
+                        contenido += "<li><strong>RFC:</strong> " + handleNull(coordenada.rfc) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("FechaRecepcion")) {
                         contenido += "<li><strong>Fecha de Recepción:</strong> " + handleNull(coordenada.fechaRecepcion) + "</li>";
@@ -1108,16 +1252,16 @@ function cargarMarcadoresViento() {
                         contenido += "<li><strong>Inicio de Vigencia:</strong> " + handleNull(coordenada.inicioVigencia) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("InicioOperaciones")) {
-                        contenido += "<li><strong>Inicio  de Operaciones:</strong> " + handleNull(coordenada.inicioOperaciones) + "</li>";
+                        contenido += "<li><strong>Inicio de Operaciones:</strong> " + handleNull(coordenada.inicioOperaciones) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("CapacidadAutorizadaMW")) {
-                        contenido += "<li><strong>Capacidad Autorizada  en MW:</strong> " + handleNull(coordenada.capacidadAutorizadaMW) + "</li>";
+                        contenido += "<li><strong>Capacidad Autorizada (MW):</strong> " + handleNull(coordenada.capacidadAutorizadaMW) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("Generación_estimada_anual")) {
                         contenido += "<li><strong>Generación Estimada Anual:</strong> " + handleNull(coordenada.generacion_estimada_anual) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("Inversion_estimada_mdls")) {
-                        contenido += "<li><strong>Inversión Estimada en mdls:</strong> " + handleNull(coordenada.inversion_estimada_mdls) + "</li>";
+                        contenido += "<li><strong>Inversión Estimada (mdls):</strong> " + handleNull(coordenada.inversion_estimada_mdls) + "</li>";
                     }
                     if (camposVisiblesGlobal.includes("Energetico_primario")) {
                         contenido += "<li><strong>Energético Primario:</strong> " + handleNull(coordenada.energetico_primario) + "</li>";
@@ -1167,6 +1311,135 @@ function cargarMarcadoresViento() {
                 mapas[0].addLayer(markers);
                 // --- FIN AGREGAR MARCADORES DE VIENTO ---
 
+                //******Tarjetas Totales******///
+                // Contar el número total de elementos en el array 'datosExpendios'
+                var totalElementos = datosExpendios.length;
+                // Formatear el número con separadores de miles
+                var totalFormateado = totalElementos.toLocaleString();
+
+                console.log("Total de permisos (Eólica) formateado:", totalFormateado);
+
+                // Actualizar la tarjeta de permisos
+                const tarjetaTitulo = document.getElementById('titulo-permiso');
+                const tarjetaTotal = document.getElementById('total-permisos');
+                const tarjetaIcono = document.getElementById('icono-permiso');
+
+                if (tarjetaTitulo) tarjetaTitulo.textContent = 'Eólica';
+                if (tarjetaIcono) tarjetaIcono.src = 'https://cdn.sassoapps.com/img_snier/vistas/eolica.png'; // Asegúrate que el ícono exista
+                if (tarjetaTotal) tarjetaTotal.textContent = "Proyectos Autorizados: " + totalFormateado;
+                //******Fin Tarjetas Totales******///
+
+                // --- INICIO GRÁFICO VIENTO ---
+                var counts = {};
+                datosExpendios.forEach(function (coordenada) {
+                    if (!counts[coordenada.efId]) {
+                        counts[coordenada.efId] = 0;
+                    }
+                    counts[coordenada.efId]++;
+                });
+
+                var categories = [];
+                var dataPermisos = [];
+                for (var entidad in counts) {
+                    categories.push(entidad);
+                    dataPermisos.push(counts[entidad]);
+                }
+
+                var options = {
+                    chart: {
+                        type: 'column',
+                        backgroundColor: 'transparent',
+                        style: {
+                            fontFamily: 'inherit'
+                        },
+                        borderRadius: 10
+                    },
+                    title: {
+                        text: 'Total de Proyectos Autorizados por Entidad Federativa',
+                        style: {
+                            color: '#333',
+                            fontSize: '18px',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    subtitle: {
+                        text: 'Fuente: Eólica',
+                        style: {
+                            color: '#666'
+                        }
+                    },
+                    xAxis: {
+                        categories: categories,
+                        labels: {
+                            style: {
+                                color: '#666'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Número de Proyectos',
+                            style: {
+                                color: '#666'
+                            }
+                        },
+                        gridLineColor: '#e6e6e6'
+                    },
+                    series: [{
+                        name: 'Proyectos Autorizados',
+                        data: dataPermisos,
+                        color: {
+                            linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+                            stops: [
+                                [0, '#2af598'],
+                                [1, '#009efd']
+                            ]
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            rotation: 0,
+                            color: '#333',
+                            align: 'center',
+                            format: '{point.y:,.0f}',
+                            y: -15,
+                            style: {
+                                fontSize: '11px',
+                                fontWeight: 'bold'
+                            },
+                            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                            padding: 3,
+                            borderRadius: 3
+                        }
+                    }],
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        style: {
+                            color: '#f0f0f0'
+                        },
+                        headerFormat: '<span style="font-size: 12px">{point.key}</span><br/>',
+                        pointFormat: '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y:,.0f}</b>'
+                    },
+                    plotOptions: {
+                        series: {
+                            animation: {
+                                duration: 1000
+                            },
+                            states: {
+                                hover: {
+                                    brightness: -0.1
+                                }
+                            },
+                            borderRadius: 5
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    }
+                };
+                Highcharts.chart('grafico', options);
+                // --- FIN GRÁFICO VIENTO ---
+
+
                 setTimeout(function () {
                     autocomplete(document.getElementById("busquedaGeneralInput"), availableTerms);
                 }, 500);
@@ -1208,9 +1481,26 @@ setTimeout(function () {
     }
 }, 500);
 
+function hideAllColorRamps() {
+    var rampIds = ['simbol-fotovoltaico', 'simbol-radiacion', 'simbol-viento'];
+    rampIds.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) {
+            el.style.display = 'none';
+        }
+    });
+}
+
 // Cargar capa y marcadores por defecto
 rasterActivo.addTo(mapas[0]);
 cargarMarcadoresFotovoltaico();
+
+// Ocultar todas las rampas al inicio y luego mostrar la por defecto
+hideAllColorRamps();
+var defaultRamp = document.getElementById('simbol-fotovoltaico');
+if (defaultRamp) {
+    defaultRamp.style.display = '';
+}
 
 // --- Evento para cambio de capa raster ---
 mapas[0].on('baselayerchange', function (e) {
@@ -1230,9 +1520,9 @@ mapas[0].on('baselayerchange', function (e) {
 
     // Oculta todas las leyendas y rampas (solo si existen)
     var tablas = [
-        'simbol-fotovoltaico', 'rampa-fotovoltaico',
-        'simbol-radiacion', 'rampa-radiacion',
-        'simbol-viento', 'rampa-viento'
+        'simbol-fotovoltaico',
+        'simbol-radiacion',
+        'simbol-viento'
     ];
     tablas.forEach(function (id) {
         var el = document.getElementById(id);
@@ -1242,19 +1532,13 @@ mapas[0].on('baselayerchange', function (e) {
     // Determina qué leyenda/rampa mostrar (solo si existen)
     if (e.name === '🌞 Potencial Fotovoltaico') {
         var t = document.getElementById('simbol-fotovoltaico');
-        var r = document.getElementById('rampa-fotovoltaico');
         if (t) t.style.display = '';
-        if (r) r.style.display = '';
     } else if (e.name === '☀️ Radiación Horizontal') {
         var t = document.getElementById('simbol-radiacion');
-        var r = document.getElementById('rampa-radiacion');
         if (t) t.style.display = '';
-        if (r) r.style.display = '';
     } else if (e.name && e.name.startsWith('💨 Viento')) {
         var t = document.getElementById('simbol-viento');
-        var r = document.getElementById('rampa-viento');
         if (t) t.style.display = '';
-        if (r) r.style.display = '';
     }
 
     // Limpiar input del buscador y términos
