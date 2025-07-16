@@ -35,6 +35,11 @@ namespace NSIE.Controllers
             return View();
         }
 
+        public IActionResult AZEL_Publico()
+        {
+            return View();
+        }
+
 
 
 

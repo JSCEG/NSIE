@@ -35,7 +35,7 @@
 <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
     aria-label="breadcrumb" style="padding-left:15px">
     <ol class="breadcrumb lp-5">
-        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home" )">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
         @* <li class="breadcrumb-item"><a href="@Url.Action("Hidrocarburos", "Home" )">Sector Petróleo y Gas</a></li>*@
         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
     </ol>
@@ -69,32 +69,35 @@
 
             <div id="main-container">
 
-            <div class="row g-4 mb-4">
-                <div class="col">
-                    <div class="app-card app-card-chart h-100 shadow-sm">
+                <div class="row g-4 mb-4">
+                    <div class="col">
+                        <div class="app-card app-card-chart h-100 shadow-sm">
 
-                        <div class="search-container p-3" id="search-container">
-                            <label class="form-label">Buscar en el Mapa:</label>
-                            <input type="text" id="busquedaGeneralInput" class="form-control"
-                                placeholder="Número de Permiso, Entidad Federativa o Municipio">
-                            <div id="autocomplete-list" class="autocomplete-items"></div>
-                            <!-- El resto de tu código -->
+                            <div class="search-container p-3" id="search-container">
+                                <label class="form-label">Buscar en el Mapa:</label>
+                                <input type="text" id="busquedaGeneralInput" class="form-control"
+                                    placeholder="Número de Permiso, Entidad Federativa o Municipio">
+                                <div id="autocomplete-list" class="autocomplete-items"></div>
+                                <!-- El resto de tu código -->
 
-                            <button class="btn btn-cre-rojo-home" onclick="buscarGeneral()"
-                                style="width:10% !important"><i class="bi bi-search"></i></button>
-                        </div>
+                                <button class="btn btn-cre-rojo-home" onclick="buscarGeneral()"
+                                    style="width:10% !important"><i class="bi bi-search"></i></button>
+                            </div>
 
-                        @*Menu de Botones*@
-                        <div class="container-fluid">
-                        </div>
-                        <div class="app-card-body p-4">
-                            <div class="chart-container">
-                                <div id="" class="app-card-body p-4 d-flex align-items-center">
-                                    <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
-                                    <div id="alert-message" class="alert alert-info ms-3" role="alert" style="margin-left: 15px; padding: 10px; background-color: #FCFEE7; border-left: 6px solid #DEF321; color: #818F31;">
-                                        Para el caso del mercado de electricidad, las ubicaciones corresponden a la dirección proporcionada en la documentación del permiso otorgado que puede corresponder a la ubicación física de central eléctrica que representa.
+                            @*Menu de Botones*@
+                            <div class="container-fluid">
+                            </div>
+                            <div class="app-card-body p-4">
+                                <div class="chart-container">
+                                    <div id="" class="app-card-body p-4 d-flex align-items-center">
+                                        <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
+                                        <div id="alert-message" class="alert alert-info ms-3" role="alert"
+                                            style="margin-left: 15px; padding: 10px; background-color: #FCFEE7; border-left: 6px solid #DEF321; color: #818F31;">
+                                            Para el caso del mercado de electricidad, las ubicaciones corresponden a la
+                                            dirección proporcionada en la documentación del permiso otorgado que puede
+                                            corresponder a la ubicación física de central eléctrica que representa.
+                                        </div>
                                     </div>
-                                </div>
                                     <div id="map" class="p-3 bg"></div>
                                     <div class="leyenda pt-3">
                                         <p>Mayor Concentración</p>
@@ -102,17 +105,60 @@
                                         <p>Menor Concentración</p>
                                         <p> Ductos</p>
                                     </div>
+                                    <!-- Simbología de tablas: ejemplo, puedes reemplazar por tus tablas reales -->
+                                    <div class="simbol-leyendas pt-2">
+                                        <table class="table table-bordered mb-2"
+                                            style="width:auto; display:inline-block; margin-right:20px;">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">Simbología 1</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="background:#ff0000;width:30px;"></td>
+                                                    <td>Alto</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="background:#ffff00;width:30px;"></td>
+                                                    <td>Medio</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="background:#00ff00;width:30px;"></td>
+                                                    <td>Bajo</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="table table-bordered mb-2"
+                                            style="width:auto; display:inline-block; margin-right:20px;">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">Simbología 2</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="background:#0000ff;width:30px;"></td>
+                                                    <td>Tipo A</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="background:#00ffff;width:30px;"></td>
+                                                    <td>Tipo B</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     <br />
                                     <div class="" id="grafico"></div>
                                     @* <div class="" id="grafico2"></div> *@
                                     <br />
-                                @* </div> *@
+                                    @* </div> *@
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
             </div>
         </div>
     </section>
@@ -125,7 +171,8 @@
         #fullscreen-elements {
             display: flex;
             flex-direction: column;
-            height: auto; /* Valor inicial para cuando no esté en pantalla completa */
+            height: auto;
+            /* Valor inicial para cuando no esté en pantalla completa */
         }
 
         #fullscreen-last-update,

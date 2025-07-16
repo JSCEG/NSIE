@@ -32,6 +32,10 @@ namespace NSIE.Controllers
         {
             return View();
         }
+        public IActionResult SankeyPublico()
+        {
+            return View();
+        }
 
         public async Task<IActionResult> Sankey()
         {
