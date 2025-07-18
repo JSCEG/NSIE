@@ -111,7 +111,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
 </section> *@
 
 <!-- MODULOS DESTACADOS - MEJORADO -->
-<section id="modulos" class="py-5 bg-light" aria-labelledby="modulosHeading">
+@* <section id="modulos" class="py-5 bg-light" aria-labelledby="modulosHeading">
     <div class="container">
         <h2 id="modulosHeading" class="fw-bold text-center mb-5" data-aos="fade-up">Contenido del SNIEr</h2>
         <div class="row g-4 justify-content-center">
@@ -159,7 +159,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
             </div>
         </div>
     </div>
-</section>
+</section> *@
 
 
 <!-- GRÁFICO DE INDICADORES - VERSIÓN MEJORADA -->
@@ -467,16 +467,16 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
             try {
                 const info = typeof infoJson === 'string' ? JSON.parse(infoJson) : infoJson;
                 const html = `
-                                                <div class="text-start">
-                                                    ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
-                                                    ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
-                                                    ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
-                                                    ${info.roles?.length ? `
-                                                        <ul>
-                                                            ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
-                                                        </ul>` : ''}
-                                                    ${info.order ? `<p><i class='fas fa-sort-amount-up'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
-                                                </div>`;
+                                                    <div class="text-start">
+                                                        ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
+                                                        ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
+                                                        ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
+                                                        ${info.roles?.length ? `
+                                                            <ul>
+                                                                ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
+                                                            </ul>` : ''}
+                                                        ${info.order ? `<p><i class='fas fa-sort-amount-up'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
+                                                    </div>`;
 
                 Swal.fire({
                     title: info.title || 'Ayuda del módulo',
