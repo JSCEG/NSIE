@@ -19,15 +19,42 @@ namespace NSIE.Controllers
     public class AtlasController : Controller
     {
         private readonly IRepositorioAtlas repositorioAtlas;
+        private readonly IHttpClientFactory _httpClientFactory;
 
 
-        public AtlasController(IRepositorioAtlas repositorioAtlas)
+        public AtlasController(IRepositorioAtlas repositorioAtlas, IHttpClientFactory httpClientFactory)
         {
 
             this.repositorioAtlas = repositorioAtlas;
+            _httpClientFactory = httpClientFactory;
         }
 
+        [HttpGet]
+        [Route("Atlas/ProxyImagen")]
+        public async Task<IActionResult> ProxyImagen([FromQuery] string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return BadRequest("Se requiere una URL");
 
+            try
+            {
+                var client = _httpClientFactory.CreateClient();
+                var response = await client.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                    return StatusCode((int)response.StatusCode, "No se pudo obtener la imagen");
+
+                var contentType = response.Content.Headers.ContentType?.ToString() ?? "image/png";
+                var content = await response.Content.ReadAsByteArrayAsync();
+
+                Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                return File(content, contentType);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener la imagen: {ex.Message}");
+            }
+        }
 
 
         public IActionResult AZEL()
@@ -40,8 +67,7 @@ namespace NSIE.Controllers
             return View();
         }
 
-
-
+        
 
     }
 }
