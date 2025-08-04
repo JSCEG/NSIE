@@ -1161,7 +1161,7 @@ vientoConfig.forEach(function (cfg) {
     ]);
 
     // Sobrescribimos o creamos la capa en rasterBaseLayers
-    rasterBaseLayers["💨 Velocidad de Viento " + cfg.altura + "m"] = grupoConVector;
+    rasterBaseLayers["💨 Viento " + cfg.altura + "m"] = grupoConVector;
 });
 
 
@@ -3237,160 +3237,163 @@ var overlaysTree = [
         });
         lay.addTo(mapas[0]);
 
-// function pop_Cuencas_Disponibilidad_2023_0(feature, layer) {
-//     var popupContent = '<table>\
-//             <tr>\
-//                 <th scope="row">Clave de la cuenca: </th>\
-//                 <td>' + (feature.properties['clvcuenca'] !== null ? autolinker.link(String(feature.properties['clvcuenca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-//             </tr>\
-//             <tr>\
-//                 <th scope="row">Cuenca: </th>\
-//                 <td>' + (feature.properties['cuenca'] !== null ? autolinker.link(String(feature.properties['cuenca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-//             </tr>\
-//             <tr>\
-//                 <th scope="row">Disponibilidad: </th>\
-//                 <td>' + (feature.properties['d'] !== null ? autolinker.link(String(feature.properties['d']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-//             </tr>\
-//         </table>';
-//     var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-//     layer.on('popupopen', function(e) {
-//         addClassToPopupIfMedia(content, e.popup);
-//     });
-//     layer.bindPopup(content, { maxHeight: 400 });
-// }
+function pop_Cuencas_Disponibilidad_2023_0(feature, layer) {
+    var popupContent = '<table>\
+            <tr>\
+                <th scope="row">Clave de la cuenca: </th>\
+                <td>' + (feature.properties['clvcuenca'] !== null ? autolinker.link(String(feature.properties['clvcuenca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+            </tr>\
+            <tr>\
+                <th scope="row">Cuenca: </th>\
+                <td>' + (feature.properties['cuenca'] !== null ? autolinker.link(String(feature.properties['cuenca']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+            </tr>\
+            <tr>\
+                <th scope="row">Disponibilidad: </th>\
+                <td>' + (feature.properties['d'] !== null ? autolinker.link(String(feature.properties['d']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+            </tr>\
+        </table>';
+    var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+    layer.on('popupopen', function(e) {
+        addClassToPopupIfMedia(content, e.popup);
+    });
+    layer.bindPopup(content, { maxHeight: 400 });
+}
 
-// function style_Cuencas_Disponibilidad_2023_0_0(feature) {
-//     if (feature.properties['d'] >= -1635.387000 && feature.properties['d'] <= -100.000000 ) {
-//         return {
-//         pane: 'pane_Cuencas_Disponibilidad_2023_0',
-//         opacity: 1,
-//         color: 'rgba(35,35,35,0.0)',
-//         dashArray: '',
-//         lineCap: 'butt',
-//         lineJoin: 'miter',
-//         weight: 1.0, 
-//         fill: true,
-//         fillOpacity: 1,
-//         fillColor: 'rgba(127,26,28,1.0)',
-//         interactive: true,
-//     }
-//     }
-//     if (feature.properties['d'] >= -100.000000 && feature.properties['d'] <= -10.000000 ) {
-//         return {
-//         pane: 'pane_Cuencas_Disponibilidad_2023_0',
-//         opacity: 1,
-//         color: 'rgba(35,35,35,0.0)',
-//         dashArray: '',
-//         lineCap: 'butt',
-//         lineJoin: 'miter',
-//         weight: 1.0, 
-//         fill: true,
-//         fillOpacity: 1,
-//         fillColor: 'rgba(227,26,28,1.0)',
-//         interactive: true,
-//     }
-//     }
-//     if (feature.properties['d'] >= -10.000000 && feature.properties['d'] <= -1.000000 ) {
-//         return {
-//         pane: 'pane_Cuencas_Disponibilidad_2023_0',
-//         opacity: 1,
-//         color: 'rgba(35,35,35,0.0)',
-//         dashArray: '',
-//         lineCap: 'butt',
-//         lineJoin: 'miter',
-//         weight: 1.0, 
-//         fill: true,
-//         fillOpacity: 1,
-//         fillColor: 'rgba(255,154,0,1.0)',
-//         interactive: true,
-//     }
-//     }
-//     if (feature.properties['d'] >= -1.000000 && feature.properties['d'] <= 1.000000 ) {
-//         return {
-//         pane: 'pane_Cuencas_Disponibilidad_2023_0',
-//         opacity: 1,
-//         color: 'rgba(35,35,35,0.0)',
-//         dashArray: '',
-//         lineCap: 'butt',
-//         lineJoin: 'miter',
-//         weight: 1.0, 
-//         fill: true,
-//         fillOpacity: 1,
-//         fillColor: 'rgba(247,222,109,1.0)',
-//         interactive: true,
-//     }
-//     }
-//     if (feature.properties['d'] >= 1.000000 && feature.properties['d'] <= 10.000000 ) {
-//         return {
-//         pane: 'pane_Cuencas_Disponibilidad_2023_0',
-//         opacity: 1,
-//         color: 'rgba(35,35,35,0.0)',
-//         dashArray: '',
-//         lineCap: 'butt',
-//         lineJoin: 'miter',
-//         weight: 1.0, 
-//         fill: true,
-//         fillOpacity: 1,
-//         fillColor: 'rgba(166,206,227,1.0)',
-//         interactive: true,
-//     }
-//     }
-//     if (feature.properties['d'] >= 10.000000 && feature.properties['d'] <= 100.000000 ) {
-//         return {
-//         pane: 'pane_Cuencas_Disponibilidad_2023_0',
-//         opacity: 1,
-//         color: 'rgba(35,35,35,0.0)',
-//         dashArray: '',
-//         lineCap: 'butt',
-//         lineJoin: 'miter',
-//         weight: 1.0, 
-//         fill: true,
-//         fillOpacity: 1,
-//         fillColor: 'rgba(64,133,180,1.0)',
-//         interactive: true,
-//     }
-//     }
-//     if (feature.properties['d'] >= 100.000000 && feature.properties['d'] <= 12199.913000 ) {
-//         return {
-//         pane: 'pane_Cuencas_Disponibilidad_2023_0',
-//         opacity: 1,
-//         color: 'rgba(35,35,35,0.0)',
-//         dashArray: '',
-//         lineCap: 'butt',
-//         lineJoin: 'miter',
-//         weight: 1.0, 
-//         fill: true,
-//         fillOpacity: 1,
-//         fillColor: 'rgba(13,74,115,1.0)',
-//         interactive: true,
-//     }
-//     }
-// }
-// mapas[0].createPane('pane_Cuencas_Disponibilidad_2023_0');
-// mapas[0].getPane('pane_Cuencas_Disponibilidad_2023_0').style.zIndex = 400;
-// mapas[0].getPane('pane_Cuencas_Disponibilidad_2023_0').style['mix-blend-mode'] = 'normal';
-// var layer_Cuencas_Disponibilidad_2023_0 = new L.geoJson(json_Cuencas_Disponibilidad_2023_0, {
-//     attribution: '',
-//     interactive: true,
-//     dataVar: 'json_Cuencas_Disponibilidad_2023_0',
-//     layerName: 'layer_Cuencas_Disponibilidad_2023_0',
-//     pane: 'pane_Cuencas_Disponibilidad_2023_0',
-//     onEachFeature: pop_Cuencas_Disponibilidad_2023_0,
-//     style: style_Cuencas_Disponibilidad_2023_0_0,
-// });
-// rasterBaseLayers["💧 Disponibilidad Hídrica"] = geotermicaGroup;
-// var overlaysTree = [
-//     {label: 'Cuencas_Disponibilidad_2023<br /><table><tr><td style="text-align: center;"><img src="legend/Cuencas_Disponibilidad_2023_0_Déficitmásde100hm³año0.png" /></td><td>Déficit (más de -100hm³/año)</td></tr><tr><td style="text-align: center;"><img src="legend/Cuencas_Disponibilidad_2023_0_Déficitentre10y100hm³año1.png" /></td><td>Déficit (entre -10 y -100hm³/año)</td></tr><tr><td style="text-align: center;"><img src="legend/Cuencas_Disponibilidad_2023_0_Déficitentre1y10hm³año2.png" /></td><td>Déficit (entre -1 y -10 hm³/año)</td></tr><tr><td style="text-align: center;"><img src="legend/Cuencas_Disponibilidad_2023_0_Neutro1y1hm³año3.png" /></td><td>Neutro (-1 y 1 hm³/año)</td></tr><tr><td style="text-align: center;"><img src="legend/Cuencas_Disponibilidad_2023_0_Disponibilidadentre1y10hm³año4.png" /></td><td>Disponibilidad (entre 1 y 10 hm³/año)</td></tr><tr><td style="text-align: center;"><img src="legend/Cuencas_Disponibilidad_2023_0_Disponibilidadentre10y100hm³año5.png" /></td><td>Disponibilidad (entre 10 y 100hm³/año)</td></tr><tr><td style="text-align: center;"><img src="legend/Cuencas_Disponibilidad_2023_0_Disponibilidadmásde100hm³año6.png" /></td><td>Disponibilidad (más de 100hm³/año)</td></tr></table>', layer: layer_Cuencas_Disponibilidad_2023_0},]
-// var layDC = L.control.layers.tree(null, overlaysTree,{
-//     //namedToggle: true,
-//     //selectorBack: false,
-//     //closedSymbol: '&#8862; &#x1f5c0;',
-//     //openedSymbol: '&#8863; &#x1f5c1;',
-//     //collapseAll: 'Collapse all',
-//     //expandAll: 'Expand all',
-//     collapsed: true,
-// });
-// layDC.addTo(mapas[0]);
+function style_Cuencas_Disponibilidad_2023_0_0(feature) {
+    if (feature.properties['d'] >= -1635.387000 && feature.properties['d'] <= -100.000000 ) {
+        return {
+        pane: 'pane_Cuencas_Disponibilidad_2023_0',
+        opacity: 1,
+        color: 'rgba(35,35,35,0.0)',
+        dashArray: '',
+        lineCap: 'butt',
+        lineJoin: 'miter',
+        weight: 1.0, 
+        fill: true,
+        fillOpacity: 1,
+        fillColor: 'rgba(127,26,28,1.0)',
+        interactive: true,
+    }
+    }
+    if (feature.properties['d'] >= -100.000000 && feature.properties['d'] <= -10.000000 ) {
+        return {
+        pane: 'pane_Cuencas_Disponibilidad_2023_0',
+        opacity: 1,
+        color: 'rgba(35,35,35,0.0)',
+        dashArray: '',
+        lineCap: 'butt',
+        lineJoin: 'miter',
+        weight: 1.0, 
+        fill: true,
+        fillOpacity: 1,
+        fillColor: 'rgba(227,26,28,1.0)',
+        interactive: true,
+    }
+    }
+    if (feature.properties['d'] >= -10.000000 && feature.properties['d'] <= -1.000000 ) {
+        return {
+        pane: 'pane_Cuencas_Disponibilidad_2023_0',
+        opacity: 1,
+        color: 'rgba(35,35,35,0.0)',
+        dashArray: '',
+        lineCap: 'butt',
+        lineJoin: 'miter',
+        weight: 1.0, 
+        fill: true,
+        fillOpacity: 1,
+        fillColor: 'rgba(255,154,0,1.0)',
+        interactive: true,
+    }
+    }
+    if (feature.properties['d'] >= -1.000000 && feature.properties['d'] <= 1.000000 ) {
+        return {
+        pane: 'pane_Cuencas_Disponibilidad_2023_0',
+        opacity: 1,
+        color: 'rgba(35,35,35,0.0)',
+        dashArray: '',
+        lineCap: 'butt',
+        lineJoin: 'miter',
+        weight: 1.0, 
+        fill: true,
+        fillOpacity: 1,
+        fillColor: 'rgba(247,222,109,1.0)',
+        interactive: true,
+    }
+    }
+    if (feature.properties['d'] >= 1.000000 && feature.properties['d'] <= 10.000000 ) {
+        return {
+        pane: 'pane_Cuencas_Disponibilidad_2023_0',
+        opacity: 1,
+        color: 'rgba(35,35,35,0.0)',
+        dashArray: '',
+        lineCap: 'butt',
+        lineJoin: 'miter',
+        weight: 1.0, 
+        fill: true,
+        fillOpacity: 1,
+        fillColor: 'rgba(166,206,227,1.0)',
+        interactive: true,
+    }
+    }
+    if (feature.properties['d'] >= 10.000000 && feature.properties['d'] <= 100.000000 ) {
+        return {
+        pane: 'pane_Cuencas_Disponibilidad_2023_0',
+        opacity: 1,
+        color: 'rgba(35,35,35,0.0)',
+        dashArray: '',
+        lineCap: 'butt',
+        lineJoin: 'miter',
+        weight: 1.0, 
+        fill: true,
+        fillOpacity: 1,
+        fillColor: 'rgba(64,133,180,1.0)',
+        interactive: true,
+    }
+    }
+    if (feature.properties['d'] >= 100.000000 && feature.properties['d'] <= 12199.913000 ) {
+        return {
+        pane: 'pane_Cuencas_Disponibilidad_2023_0',
+        opacity: 1,
+        color: 'rgba(35,35,35,0.0)',
+        dashArray: '',
+        lineCap: 'butt',
+        lineJoin: 'miter',
+        weight: 1.0, 
+        fill: true,
+        fillOpacity: 1,
+        fillColor: 'rgba(13,74,115,1.0)',
+        interactive: true,
+    }
+    }
+}
+mapas[0].createPane('pane_Cuencas_Disponibilidad_2023_0');
+mapas[0].getPane('pane_Cuencas_Disponibilidad_2023_0').style.zIndex = 400;
+mapas[0].getPane('pane_Cuencas_Disponibilidad_2023_0').style['mix-blend-mode'] = 'normal';
+var layer_Cuencas_Disponibilidad_2023_0 = new L.geoJson(json_Cuencas_Disponibilidad_2023_0, {
+    attribution: '',
+    interactive: true,
+    dataVar: 'json_Cuencas_Disponibilidad_2023_0',
+    layerName: 'layer_Cuencas_Disponibilidad_2023_0',
+    pane: 'pane_Cuencas_Disponibilidad_2023_0',
+    onEachFeature: pop_Cuencas_Disponibilidad_2023_0,
+    style: style_Cuencas_Disponibilidad_2023_0_0,
+});
+rasterBaseLayers["💧 Disponibilidad Hídrica"] = layer_Cuencas_Disponibilidad_2023_0;
+var overlaysTreeDC = [
+    {label: 'Cuencas_Disponibilidad_2023<br /><table><tr><td style="text-align: center;"><img src="https://cdn.sassoapps.com/Geovisualizador/legend/Cuencas_Disponibilidad_2023_0_Déficitmásde100hm³año0.png" /></td><td>Déficit (más de -100hm³/año)</td></tr><tr><td style="text-align: center;"><img src="https://cdn.sassoapps.com/Geovisualizador/legend/Cuencas_Disponibilidad_2023_0_Déficitentre10y100hm³año1.png" /></td><td>Déficit (entre -10 y -100hm³/año)</td></tr><tr><td style="text-align: center;"><img src="https://cdn.sassoapps.com/Geovisualizador/legend/Cuencas_Disponibilidad_2023_0_Déficitentre1y10hm³año2.png" /></td><td>Déficit (entre -1 y -10 hm³/año)</td></tr><tr><td style="text-align: center;"><img src="https://cdn.sassoapps.com/Geovisualizador/legend/Cuencas_Disponibilidad_2023_0_Neutro1y1hm³año3.png" /></td><td>Neutro (-1 y 1 hm³/año)</td></tr><tr><td style="text-align: center;"><img src="https://cdn.sassoapps.com/Geovisualizador/legend/Cuencas_Disponibilidad_2023_0_Disponibilidadentre1y10hm³año4.png" /></td><td>Disponibilidad (entre 1 y 10 hm³/año)</td></tr><tr><td style="text-align: center;"><img src="https://cdn.sassoapps.com/Geovisualizador/legend/Cuencas_Disponibilidad_2023_0_Disponibilidadentre10y100hm³año5.png" /></td><td>Disponibilidad (entre 10 y 100hm³/año)</td></tr><tr><td style="text-align: center;"><img src="https://cdn.sassoapps.com/Geovisualizador/legend/Cuencas_Disponibilidad_2023_0_Disponibilidadmásde100hm³año6.png" /></td><td>Disponibilidad (más de 100hm³/año)</td></tr></table>', layer: layer_Cuencas_Disponibilidad_2023_0},]
+
+        aplicarProxyCDNEnLabels(overlaysTreeDC);
+
+    var layDC = L.control.layers.tree(null, overlaysTreeDC,{
+    //namedToggle: true,
+    //selectorBack: false,
+    //closedSymbol: '&#8862; &#x1f5c0;',
+    //openedSymbol: '&#8863; &#x1f5c1;',
+    //collapseAll: 'Collapse all',
+    //expandAll: 'Expand all',
+    collapsed: true,
+});
+layDC.addTo(mapas[0]);
 
 // --- Control de capas ---
 
@@ -3994,59 +3997,58 @@ mapas[0].on('baselayerchange', function (e) {
         var t = document.getElementById('simbol-fotovoltaico');
         if (t) t.style.display = '';
         mapas[0].removeControl(lay);
-        //mapas[0].removeControl(layDC);
+        mapas[0].removeControl(layDC);
         actualizarPlaceholderBusqueda('PERMISO');
     } else if (e.name === '☀️ Radiación Horizontal') {
         var t = document.getElementById('simbol-radiacion');
         if (t) t.style.display = '';
         mapas[0].removeControl(lay);
-        //mapas[0].removeControl(layDC);
+        mapas[0].removeControl(layDC);
         actualizarPlaceholderBusqueda('PERMISO');
     } else if (e.name && e.name.startsWith('💨 Viento')) {
         var t = document.getElementById('simbol-viento');
         if (t) t.style.display = '';
         mapas[0].removeControl(lay);
-        //mapas[0].removeControl(layDC);
+        mapas[0].removeControl(layDC);
         actualizarPlaceholderBusqueda('PERMISO');
     } else if (e.name === '🛢️ Residuos Industriales') {
         var t = document.getElementById('simbol-biomasa');
         if (t) t.style.display = '';
-        //mapas[0].removeControl(lay);
-        //mapas[0].removeControl(layDC);
+        mapas[0].removeControl(layDC);
         lay.addTo(mapas[0]);
         actualizarPlaceholderBusqueda('SINPERMISO');
     } else if (e.name === '🐄 Residuos Pecuarios') {
         var t = document.getElementById('simbol-biomasa');
         if (t) t.style.display = '';
-        //mapas[0].removeControl(layDC);
+        mapas[0].removeControl(layDC);
         lay.addTo(mapas[0]);
         actualizarPlaceholderBusqueda('SINPERMISO');
     } else if (e.name === '🗑️ Residuos Urbanos') {
         var t = document.getElementById('simbol-biomasa');
         if (t) t.style.display = '';
-        //mapas[0].removeControl(layDC);
+        mapas[0].removeControl(layDC);
         lay.addTo(mapas[0]);
         actualizarPlaceholderBusqueda('SINPERMISO');
     } else if (e.name === '🌲 Residuos Forestales') {
         var t = document.getElementById('simbol-biomasa');
         if (t) t.style.display = '';
-        //mapas[0].removeControl(layDC);
+        mapas[0].removeControl(layDC);
         lay.addTo(mapas[0]);
         actualizarPlaceholderBusqueda('SINPERMISO');
     } else if (e.name === '🌋 Geotérmica') {
         var t = document.getElementById('simbol-geotermica');
         if (t) t.style.display = '';
-        //mapas[0].removeControl(layDC);
+        mapas[0].removeControl(layDC);
         lay.addTo(mapas[0]);
         actualizarPlaceholderBusqueda('SINPERMISO');
     } 
-    // else if (e.name === '💧 Disponibilidad Hídrica'){
-    //     var t = document.getElementById('simbol-hidrica');
-    //     if (t) t.style.display = '';
-    //     mapas[0].removeControl(lay);
-    //     layDC.addTo(mapas[0]);
-    //     actualizarPlaceholderBusqueda('SINPERMISO');
-    // }
+    else if (e.name === '💧 Disponibilidad Hídrica'){
+        var t = document.getElementById('simbol-hidrica');
+        if (t) t.style.display = '';
+        mapas[0].removeControl(lay);
+        layDC.addTo(mapas[0]);
+        actualizarPlaceholderBusqueda('SINPERMISO');
+    }
 
     // Limpiar input del buscador y términos
     var input = document.getElementById("busquedaGeneralInput");
