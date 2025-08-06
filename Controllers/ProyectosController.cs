@@ -39,6 +39,107 @@ namespace NSIE.Controllers
 
         public IActionResult FondoPetroleo()
         {
+            // Checamos si el archivo ya fue subido
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "necesidades", "Listado_Necesidades.pdf");
+            bool listadoPublicado = System.IO.File.Exists(ruta);
+
+            //Secretario administartivo
+            string rutaBase = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario");
+
+            var propuestas = new List<dynamic>();
+
+            var propuestasEvaluacion = new List<dynamic>();
+
+            if (Directory.Exists(rutaBase))
+            {
+                var carpetas = Directory.GetDirectories(rutaBase);
+
+                foreach (var carpeta in carpetas)
+                {
+                    var nombreCarpeta = Path.GetFileName(carpeta);
+                    var nombreProyecto = nombreCarpeta.Split("_")[0]; // Puedes ajustar esto según convención
+
+                    var tieneDemanda = System.IO.File.Exists(Path.Combine(carpeta, "Demanda_Especifica.pdf"));
+                    var tieneCuestionario = System.IO.File.Exists(Path.Combine(carpeta, "Cuestionario.pdf"));
+                    var tienePropuesta = System.IO.File.Exists(Path.Combine(carpeta, "Propuesta_Tecnica.pdf"));
+                    var tieneEvaluacion = System.IO.File.Exists(Path.Combine(carpeta, "Cuestionario_Evaluado.pdf"));
+                    var tieneFormatoEvaluacion = System.IO.File.Exists(Path.Combine(carpeta, "Formato_Evaluacion.pdf"));
+                    var rutaEvaluacion = Path.Combine(carpeta, "Evaluacion.txt");
+                    bool esViable = false;
+                    if (System.IO.File.Exists(rutaEvaluacion))
+                    {
+                        var contenido = System.IO.File.ReadAllText(rutaEvaluacion);
+                        esViable = contenido.Contains("VIABLE");
+                    }
+                    bool fueEnviado = System.IO.File.Exists(Path.Combine(carpeta, "EnviadoAFinanciamiento.txt"));
+                    var aprobado = System.IO.File.Exists(Path.Combine(carpeta, "Oficio_Aprobacion.pdf"));
+                    var observaciones = Path.Combine(carpeta, "Observaciones.txt");
+                    var observacionesArchivo = Path.Combine(carpeta, "Observaciones_Adjunto.pdf");
+                    var notificadoSujeto = Path.Combine(carpeta, "NotificadoASujeto.txt");
+                    var tieneCorreccion = Path.Combine(carpeta, "Correccion_Propuesta.pdf");
+                    var rutaCorreccionEnviada = Path.Combine(carpeta, "Correccion_Enviada.txt");
+
+                    var correccionEnviada = System.IO.File.Exists(rutaCorreccionEnviada);
+
+
+                    if (tieneDemanda && tieneCuestionario)
+                    {
+                        propuestas.Add(new
+                        {
+                            Nombre = nombreProyecto,
+                            Carpeta = nombreCarpeta,
+                            Tipo = tienePropuesta ? "integrada" : "abierta",
+                            Evaluado = tieneEvaluacion,
+                            FormatoListo = tieneFormatoEvaluacion,
+                            EsViable = esViable,
+                            FueEnviado = fueEnviado,
+                            Aprobado = aprobado,
+                            Observaciones = System.IO.File.Exists(observaciones) ? System.IO.File.ReadAllText(observaciones) : null,
+                            ObservacionesArchivo = System.IO.File.Exists(observacionesArchivo),
+                            FueNotificadoSujeto = System.IO.File.Exists(notificadoSujeto),
+                            TieneCorreccion = System.IO.File.Exists(tieneCorreccion),
+                            CorreccionEnviada = correccionEnviada
+                        });
+                    }
+                }
+
+                foreach (var carpeta in carpetas)
+                {
+                    var nombreCarpeta = Path.GetFileName(carpeta);
+                    var nombreProyecto = nombreCarpeta.Split("_")[0];
+
+                    var demanda = System.IO.File.Exists(Path.Combine(carpeta, "Demanda_Especifica.pdf"));
+                    var propuesta = System.IO.File.Exists(Path.Combine(carpeta, "Propuesta_Tecnica.pdf"));
+                    var formato = System.IO.File.Exists(Path.Combine(carpeta, "Formato_Evaluacion.pdf"));
+                    var rutaEvaluacion = Path.Combine(carpeta, "Evaluacion.txt");
+                    string estadoEvaluacion = null;
+                    bool esViable = false;
+
+                    if (System.IO.File.Exists(rutaEvaluacion))
+                    {
+                        estadoEvaluacion = System.IO.File.ReadAllText(rutaEvaluacion);
+                    }
+
+                    if (formato && demanda) // mínimo requerido
+                    {
+                        propuestasEvaluacion.Add(new
+                        {
+                            Nombre = nombreProyecto,
+                            Carpeta = nombreCarpeta,
+                            TienePropuesta = propuesta,
+                            EstadoEvaluacion = estadoEvaluacion
+                        });
+                    }
+                }
+            }
+
+            ViewData["PropuestasComite"] = propuestas;
+            ViewData["PropuestasEvaluacion"] = propuestasEvaluacion;
+
+            // Pasamos datos a la vista (ViewData o ViewBag)
+            ViewData["ListadoPublicado"] = listadoPublicado;
+            ViewData["UrlListado"] = "/documentos/necesidades/Listado_Necesidades.pdf";
+
             return View();
         }
 
@@ -350,6 +451,407 @@ namespace NSIE.Controllers
             };
 
             return View(model);
+        }
+
+
+        // IMP
+
+        [HttpPost]
+        public IActionResult SubirListado(IFormFile ArchivoListado)
+        {
+            if (ArchivoListado != null && ArchivoListado.Length > 0)
+            {
+                var destino = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "necesidades");
+                if (!Directory.Exists(destino))
+                    Directory.CreateDirectory(destino);
+
+                var rutaCompleta = Path.Combine(destino, "Listado_Necesidades.pdf");
+
+                using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+                {
+                    ArchivoListado.CopyTo(stream);
+                }
+            }
+
+            return RedirectToAction("FondoPetroleo"); // O la vista que corresponda
+        }
+
+        [HttpPost]
+        public IActionResult EliminarListado()
+        {
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "necesidades", "Listado_Necesidades.pdf");
+
+            if (System.IO.File.Exists(ruta))
+            {
+                System.IO.File.Delete(ruta);
+            }
+
+            return RedirectToAction("FondoPetroleo"); // Reemplaza con tu vista real
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EnviarPropuesta(
+            IFormFile anexo1_pdf,
+            IFormFile anexo1_editable,
+            IFormFile anexo2_pdf,
+            IFormFile anexo2_editable,
+            string nombreProyecto,
+            string nombreSolicitante,
+            string institucion,
+            string responsable,
+            string correo,
+            string tipoDemanda,
+            string descripcion
+        )
+        {
+            // Creamos carpeta base para propuestas
+            var baseRuta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "propuestas");
+
+            // Puedes usar timestamp o nombre del proyecto para subcarpeta
+            var nombreCarpeta = $"{nombreProyecto}_{DateTime.Now:yyyyMMddHHmmss}";
+            var rutaDestino = Path.Combine(baseRuta, nombreCarpeta);
+
+            if (!Directory.Exists(rutaDestino))
+                Directory.CreateDirectory(rutaDestino);
+
+            // Guardamos los archivos
+            async Task GuardarArchivo(IFormFile archivo, string nombre)
+            {
+                if (archivo != null && archivo.Length > 0)
+                {
+                    var path = Path.Combine(rutaDestino, nombre);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await archivo.CopyToAsync(stream);
+                    }
+                }
+            }
+
+            await GuardarArchivo(anexo1_pdf, "Anexo1_PDF.pdf");
+            await GuardarArchivo(anexo1_editable, "Anexo1_Editable.docx");
+            await GuardarArchivo(anexo2_pdf, "Anexo2_PDF.pdf");
+            await GuardarArchivo(anexo2_editable, "Anexo2_Editable.docx");
+
+            // Aquí puedes guardar los metadatos en DB o log si lo deseas
+            HttpContext.Session.SetString("PropuestaEnviada", "true");
+            TempData["MensajeExito"] = "✅ Propuesta enviada correctamente.";
+            return RedirectToAction("FondoPetroleo"); // O redirige a donde muestres feedback
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EnviarSecretario(
+            IFormFile archivoDemanda,
+            IFormFile archivoCuestionario,
+            IFormFile archivoPropuesta,
+            string nombreProyecto,
+            string tipoDemanda
+        )
+        {
+            var baseRuta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario");
+            var nombreCarpeta = $"{nombreProyecto}_{DateTime.Now:yyyyMMddHHmmss}";
+            var rutaDestino = Path.Combine(baseRuta, nombreCarpeta);
+
+            if (!Directory.Exists(rutaDestino))
+                Directory.CreateDirectory(rutaDestino);
+
+            async Task GuardarArchivo(IFormFile archivo, string nombre)
+            {
+                if (archivo != null && archivo.Length > 0)
+                {
+                    var path = Path.Combine(rutaDestino, nombre);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await archivo.CopyToAsync(stream);
+                    }
+                }
+            }
+
+            await GuardarArchivo(archivoDemanda, "Demanda_Especifica.pdf");
+            await GuardarArchivo(archivoCuestionario, "Cuestionario.pdf");
+
+            if (tipoDemanda == "integrada")
+                await GuardarArchivo(archivoPropuesta, "Propuesta_Tecnica.pdf");
+
+            TempData["MensajeExito"] = $"✅ Propuesta ({tipoDemanda}) enviada al comité correctamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EnviarEvaluacion(IFormFile cuestionarioEvaluado, string carpetaProyecto)
+        {
+            if (string.IsNullOrEmpty(carpetaProyecto))
+            {
+                TempData["MensajeError"] = "Error: No se especificó la carpeta del proyecto.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var rutaDestino = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpetaProyecto);
+
+            if (!Directory.Exists(rutaDestino))
+            {
+                TempData["MensajeError"] = "Error: No se encontró el proyecto especificado.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            if (cuestionarioEvaluado != null && cuestionarioEvaluado.Length > 0)
+            {
+                var rutaArchivo = Path.Combine(rutaDestino, "Cuestionario_Evaluado.pdf");
+                using (var stream = new FileStream(rutaArchivo, FileMode.Create))
+                {
+                    await cuestionarioEvaluado.CopyToAsync(stream);
+                }
+
+                TempData["MensajeExito"] = "✅ Cuestionario evaluado enviado correctamente.";
+            }
+            else
+            {
+                TempData["MensajeError"] = "⚠️ Debes seleccionar un archivo PDF válido.";
+            }
+
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubirFormatoEvaluacion(IFormFile formatoEvaluacion, string carpetaProyecto)
+        {
+            if (string.IsNullOrEmpty(carpetaProyecto))
+            {
+                TempData["MensajeError"] = "Error: Proyecto no especificado.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpetaProyecto);
+
+            if (!Directory.Exists(ruta))
+            {
+                TempData["MensajeError"] = "Error: Carpeta del proyecto no encontrada.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            if (formatoEvaluacion != null && formatoEvaluacion.Length > 0)
+            {
+                var destino = Path.Combine(ruta, "Formato_Evaluacion.pdf");
+                using (var stream = new FileStream(destino, FileMode.Create))
+                {
+                    await formatoEvaluacion.CopyToAsync(stream);
+                }
+
+                TempData["MensajeExito"] = "✅ Formato de evaluación enviado correctamente.";
+            }
+            else
+            {
+                TempData["MensajeError"] = "⚠️ Selecciona un archivo válido.";
+            }
+
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public IActionResult EvaluarViabilidad(string carpeta, string decision)
+        {
+            if (string.IsNullOrWhiteSpace(carpeta) || string.IsNullOrWhiteSpace(decision))
+            {
+                TempData["MensajeError"] = "⚠️ Parámetros inválidos.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+
+            if (!Directory.Exists(ruta))
+            {
+                TempData["MensajeError"] = "⚠️ Carpeta del proyecto no encontrada.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var archivo = Path.Combine(ruta, "Evaluacion.txt");
+            System.IO.File.WriteAllText(archivo, $"Evaluado: {decision.ToUpper()} - {DateTime.Now}");
+
+            TempData["MensajeExito"] = decision == "viable"
+                ? "✅ Proyecto marcado como viable."
+                : "❌ Proyecto marcado como NO viable.";
+
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public IActionResult EnviarAFinanciamiento(string carpeta)
+        {
+            if (string.IsNullOrWhiteSpace(carpeta))
+            {
+                TempData["MensajeError"] = "Proyecto no válido.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var rutaProyecto = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+            if (!Directory.Exists(rutaProyecto))
+            {
+                TempData["MensajeError"] = "No se encontró el proyecto especificado.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            // Marcamos que ya fue enviado (creamos un archivo marcador)
+            var marcador = Path.Combine(rutaProyecto, "EnviadoAFinanciamiento.txt");
+            System.IO.File.WriteAllText(marcador, $"Enviado al comité - {DateTime.Now}");
+
+            TempData["MensajeExito"] = "✅ Proyecto enviado correctamente al Comité de Decisión para aprobación presupuestal.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AprobarProyecto(string carpeta, IFormFile oficio)
+        {
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+            var pathOficio = Path.Combine(ruta, "Oficio_Aprobacion.pdf");
+
+            if (!Directory.Exists(ruta)) Directory.CreateDirectory(ruta);
+
+            using (var stream = new FileStream(pathOficio, FileMode.Create))
+            {
+                await oficio.CopyToAsync(stream);
+            }
+
+            System.IO.File.WriteAllText(Path.Combine(ruta, "Aprobado.txt"), DateTime.Now.ToString());
+
+            TempData["MensajeExito"] = "✅ Propuesta aprobada correctamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EnviarObservacion(string carpeta, string observaciones, IFormFile oficio)
+        {
+            var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+
+            if (!Directory.Exists(rutaCarpeta))
+                return NotFound("Carpeta no encontrada");
+
+            string Archivo(string nombre) => Path.Combine(rutaCarpeta, nombre);
+
+            // Eliminar archivos antiguos
+            foreach (var archivo in new[] {
+                Archivo("Observaciones.txt"),
+                Archivo("Oficio_Observacion.pdf"),
+                Archivo("Correccion_Propuesta.pdf"),
+                Archivo("CorreccionEnviada.txt")
+            })
+            {
+                if (System.IO.File.Exists(archivo))
+                    System.IO.File.Delete(archivo);
+            }
+
+            if (string.IsNullOrWhiteSpace(observaciones) && (oficio == null || oficio.Length == 0))
+            {
+                TempData["MensajeError"] = "Debes escribir observaciones o adjuntar un oficio.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            if (!string.IsNullOrWhiteSpace(observaciones))
+                await System.IO.File.WriteAllTextAsync(Archivo("Observaciones.txt"), observaciones);
+
+            if (oficio != null && oficio.Length > 0)
+            {
+                var rutaArchivo = Archivo("Observaciones_Adjunto.pdf");
+                using var stream = new FileStream(rutaArchivo, FileMode.Create);
+                await oficio.CopyToAsync(stream);
+            }
+
+            TempData["MensajeExito"] = "🔴 Observación enviada correctamente al Secretario.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public IActionResult NotificarSujetoObservaciones(string carpeta)
+        {
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+
+            if (!Directory.Exists(ruta))
+            {
+                TempData["MensajeError"] = "❌ Carpeta no encontrada.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            // Crear archivo para marcar que fue notificado
+            var rutaNotificado = Path.Combine(ruta, "NotificadoASujeto.txt");
+            System.IO.File.WriteAllText(rutaNotificado, $"Notificado el {DateTime.Now:dd/MM/yyyy HH:mm}");
+
+            TempData["MensajeExito"] = "✅ Observaciones notificadas al Sujeto de Apoyo.";
+            return RedirectToAction("FondoPetroleo");
+        }
+        [HttpPost]
+        public async Task<IActionResult> SubirCorreccion(string carpeta, IFormFile archivoCorreccion)
+        {
+            if (string.IsNullOrEmpty(carpeta) || archivoCorreccion == null || archivoCorreccion.Length == 0)
+            {
+                TempData["MensajeError"] = "❌ Debes seleccionar un archivo válido.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var rutaDestino = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+            if (!Directory.Exists(rutaDestino))
+            {
+                TempData["MensajeError"] = "❌ No se encontró la propuesta especificada.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var rutaArchivo = Path.Combine(rutaDestino, "Correccion_Propuesta.pdf");
+
+            using (var stream = new FileStream(rutaArchivo, FileMode.Create))
+            {
+                await archivoCorreccion.CopyToAsync(stream);
+            }
+
+            TempData["MensajeExito"] = "✅ Corrección enviada correctamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public IActionResult ReenviarCorreccionComite(string carpeta)
+        {
+            if (string.IsNullOrEmpty(carpeta))
+            {
+                TempData["MensajeError"] = "❌ Carpeta no válida.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var rutaProyecto = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+            var rutaArchivo = Path.Combine(rutaProyecto, "Correccion_Propuesta.pdf");
+
+            if (!System.IO.File.Exists(rutaArchivo))
+            {
+                TempData["MensajeError"] = "❌ No se encontró la corrección a reenviar.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            // Marcamos como enviada
+            var rutaMarca = Path.Combine(rutaProyecto, "Correccion_Enviada.txt");
+            System.IO.File.WriteAllText(rutaMarca, "Reenviado al Comité: " + DateTime.Now.ToString("g"));
+
+            TempData["MensajeExito"] = "✅ Corrección enviada al Comité exitosamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public IActionResult AutorizarConvocatoria(string carpeta)
+        {
+            if (string.IsNullOrWhiteSpace(carpeta))
+            {
+                TempData["MensajeError"] = "⚠️ Proyecto no especificado.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var rutaProyecto = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+
+            if (!Directory.Exists(rutaProyecto))
+            {
+                TempData["MensajeError"] = "⚠️ No se encontró la carpeta del proyecto.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var pathArchivo = Path.Combine(rutaProyecto, "Convocatoria_Autorizada.txt");
+
+            System.IO.File.WriteAllText(pathArchivo, $"Autorizado el {DateTime.Now:dd/MM/yyyy HH:mm}");
+
+            TempData["MensajeExito"] = "✅ Convocatoria autorizada correctamente.";
+            return RedirectToAction("FondoPetroleo");
         }
 
     }

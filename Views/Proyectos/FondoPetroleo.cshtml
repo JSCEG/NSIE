@@ -3,6 +3,9 @@
 @using Microsoft.AspNetCore.Http
 @using Newtonsoft.Json
 @using NSIE.Models
+@using System.IO
+@using Microsoft.AspNetCore.Hosting
+
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
@@ -16,22 +19,10 @@
 }
 
 <style>
-    #previewContent {
-        overflow-x: auto;
-    }
-
-    #previewContent canvas {
-        max-width: 100% !important;
-        height: auto !important;
-        display: block;
-        margin: auto;
-    }
-
-    .modal-body {
-        overflow-x: auto;
-    }
-
-    /* Elegant Card Styles */
+    #previewContent { overflow-x: auto; }
+    #previewContent canvas { max-width: 100% !important; height: auto !important; display: block; margin: auto; }
+    .modal-body { overflow-x: auto; }
+       /* Elegant Card Styles */
     .stat-card {
         transition: all 0.3s ease;
         border-radius: 12px;
@@ -95,13 +86,12 @@
 
 <div class="text-center">
     <h3 class="cp-section cp-grouping-section">
-        <img src="@Cdn.Url/img_snier/vistas/mexicoi.png" alt="Icono personalizado" class="iconomenu">@ViewData["Title"]
+        <img src="~/img/mexicoi.png" alt="Icono personalizado" class="iconomenu">@ViewData["Title"]
     </h3>
 </div>
 
 <!-- Miga de Pan -->
-<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
-    aria-label="breadcrumb" style="padding-left:15px">
+<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb" style="padding-left:15px">
     <ol class="breadcrumb lp-5">
         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
         <li class="breadcrumb-item">Proyectos Estratégicos</li>
@@ -111,95 +101,678 @@
 <br />
 
 <div class="container">
+
+    @{
+        // Cambia el rol para simular la vista deseada
+        string rolUsuario = "Comite"; // o "Sujeto"
+
+        bool listadoPublicado = ViewData["ListadoPublicado"] != null && (bool)ViewData["ListadoPublicado"];
+        string urlListadoPublicado = ViewData["UrlListado"]?.ToString() ?? "#";
+
+        var propuestaEnviada = Context.Session.GetString("PropuestaEnviada") == "true";
+        var propuestasComite = ViewData["PropuestasComite"] as IEnumerable<dynamic>;
+    }
+
+
+    <h2 class="fw-bold subtitulo">Propuestas para asignación de fondos del Instituto Mexicano del Petróleo</h2>
+    <br>
+
+    @if (rolUsuario == "Comite")
+    {
+        <div class="alert alert-primary">
+            Vista del Comité de Decisión
+        </div>
+
+        @if (!listadoPublicado && (propuestasComite == null || !propuestasComite.Any()))
+        {
+            <form method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="SubirListado">
+                <div class="mb-3">
+                    <label for="archivoListado" class="form-label">Subir Listado de Necesidades</label>
+                    <input type="file" name="ArchivoListado" id="archivoListado" class="form-control" accept=".pdf,.docx" />
+                </div>
+                <button type="submit" class="btn btn-primary">Subir</button>
+            </form>
+            <div class="alert alert-warning mt-3">
+                ⚠️ Aún no se ha publicado un listado.
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success mt-3">
+            ✅ El listado ha sido publicado. Los sujetos de apoyo ya pueden registrar propuestas. <br />
+            <a href="@urlListadoPublicado" target="_blank" class="fw-bold text-decoration-underline">Ver documento publicado</a>
+
+            <form method="post" asp-controller="Proyectos" asp-action="EliminarListado" class="d-inline ms-3">
+                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar el documento?')">
+                    <i class="bi bi-trash3"></i> Eliminar documento
+                </button>
+            </form>
+        </div>
+        }
+
+        @if (propuestasComite != null && propuestasComite.Any())
+        {
+            <hr />
+            <h5 class="mt-4">📥 Propuestas enviadas por el Secretario Administrativo</h5>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Demanda/Propuesta</th>
+                        <th>Tipo</th>
+                        <th>Documentos</th>
+                        <th>Acciones</th>
+                        <th>Decisión</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in propuestasComite)
+                    {
+                        var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                        <tr>
+                            <td>@p.Nombre</td>
+                            <td>
+                                @if (p.Tipo == "integrada")
+                                {
+                                    <span class="badge bg-success">Integrada</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info text-dark">Abierta</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="@($"{baseUrl}/Demanda_Especifica.pdf")" target="_blank">Demanda</a> |
+                                <a href="@($"{baseUrl}/Cuestionario.pdf")" target="_blank">Cuestionario</a> |
+                                @if (p.Tipo == "integrada")
+                                {
+                                   <a href="@($"{baseUrl}/Propuesta_Tecnica.pdf")" target="_blank">Propuesta Técnica</a>
+                                }
+                            </td>
+                            <td>
+                                @if (p.Tipo == "integrada")
+                                {
+                                    if (p.Evaluado)
+                                    {
+                                        <span class="badge bg-secondary">
+                                            ✅ Cuestionario registrado
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-outline-primary btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEvaluacion"
+                                                data-proyecto="@p.Nombre"
+                                                data-carpeta="@p.Carpeta">
+                                            Enviar Evaluación
+                                        </button>
+                                    }
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-success btn-sm">Autorizar Convocatoria</button>
+                                }
+                            </td>
+                            <td>
+                                @if (p.Tipo == "integrada" && p.EsViable)
+                                {
+                                    @if (p.Aprobado)
+                                    {
+                                        <span class="badge bg-success">✔️ Aprobado</span>
+                                        <a href="@($"{baseUrl}/Oficio_Aprobacion.pdf")" class="btn btn-outline-secondary btn-sm ms-2" target="_blank">
+                                            <i class="bi bi-eye"></i> Ver Oficio
+                                        </a>
+                                    }
+                                    else if (!string.IsNullOrEmpty(p.Observaciones))
+                                    {
+                                        if (!p.TieneCorreccion && !p.CorreccionEnviada && !p.Aprobado)
+                                        {
+                                            <span class="badge bg-danger">📝 Observaciones enviadas</span>
+                                            <p class="mt-1 small">@p.Observaciones</p>
+                                        }
+                                        else if (p.TieneCorreccion && p.CorreccionEnviada && !p.Aprobado)
+                                        {
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-outline-success"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalAprobar"
+                                                        data-proyecto="@p.Nombre"
+                                                        data-carpeta="@p.Carpeta">
+                                                    Aceptar y Subir Oficio
+                                                </button>
+
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalObservacion"
+                                                        data-proyecto="@p.Nombre"
+                                                        data-carpeta="@p.Carpeta">
+                                                    Enviar Nueva Observación
+                                                </button>
+                                            </div>
+                                            <div class="mt-1 small text-muted">⚠️ Se está revisando la corrección enviada.</div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-outline-success"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalAprobar"
+                                                    data-proyecto="@p.Nombre"
+                                                    data-carpeta="@p.Carpeta">
+                                                Aceptar y Subir Oficio
+                                            </button>
+
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalObservacion"
+                                                    data-proyecto="@p.Nombre"
+                                                    data-carpeta="@p.Carpeta">
+                                                Enviar Observación
+                                            </button>
+                                        </div>
+                                    }
+                                }
+                                else if(p.Tipo == "abierta" && p.EsViable)
+                                {
+                                    <span class="badge bg-danger">Se está trabajando esto</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Aún no se ha aprobado el presupuesto de la propuesta</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info mt-4">
+                No hay propuestas del Secretario Administrativo disponibles por el momento.
+            </div>
+        }
+    }
+    else if (rolUsuario == "Sujeto")
+    {
+        <div class="alert alert-secondary d-flex align-items-center" role="alert">
+            <i class="bi bi-person-fill me-2"></i>
+            Vista del Sujeto de Apoyo
+        </div>
+
+        @if (!listadoPublicado)
+        {
+            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Aún no hay un listado de necesidades prioritarias publicado. Por favor, vuelve más tarde.
+            </div>
+        }
+        else if (propuestaEnviada)
+        {
+            <div class="alert alert-success d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                Tu propuesta fue enviada correctamente. Espera validación por parte del Secretario Administrativo.
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info" role="alert">
+                <div class="d-flex">
+                    <i class="bi bi-info-circle-fill me-2 mt-1"></i>
+                    <div>
+                        <p class="mb-1">
+                            Ya se encuentra disponible el listado de necesidades prioritarias.
+                        </p>
+                        <p class="mb-1">
+                            Puedes consultarlo en la página oficial de la SENER: <br />
+                            <a href="https://www.gob.mx/sener/es/articulos/recursos-para-desarrollo-tecnologico-e-innovacion" target="_blank" class="fw-bold text-decoration-underline">
+                                www.gob.mx/sener/es/articulos/recursos-para-desarrollo-tecnologico-e-innovacion
+                            </a>
+                        </p>
+                        <p class="mb-0">
+                            O bien, puedes verlo directamente desde el sistema: <br />
+                            <a href="@urlListadoPublicado" target="_blank" class="fw-bold text-decoration-underline">
+                                Ver listado publicado
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4 d-flex gap-3">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalLlenarFormulario">
+                    <i class="bi bi-pencil-square"></i> Nueva propuesta
+                </button>
+                <p class="mb-1">
+                    *Recuerda envíar tu propuesta por correo electrónico a sustentabilidad.fmp@energia.gob.mx
+                </p>
+            </div>
+        }
+        @if (propuestasComite != null && propuestasComite.Any(p => p.FueNotificadoSujeto))
+        {
+            <hr />
+            <h5 class="mt-4">🛠 Propuestas con observaciones</h5>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Observaciones</th>
+                        <th>Adjunto (si aplica)</th>
+                        <th>Respuesta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in propuestasComite.Where(p => p.FueNotificadoSujeto))
+                    {
+                        var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                        <tr>
+                            <td>@p.Nombre</td>
+                            <td class="text-wrap" style="max-width: 400px;">
+                                @p.Observaciones
+                            </td>
+                            <td>
+                                @if (p.ObservacionesArchivo)
+                                {
+                                    <a href="@($"{baseUrl}/Observaciones_Adjunto.pdf")" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-file-earmark-pdf"></i> Ver adjunto
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Sin archivo</span>
+                                }
+                            </td>
+                            <td>
+                                @if (p.TieneCorreccion)
+                                {
+                                    <span class="badge bg-success">✅ Corregido</span>
+                                    <a href="@($"{baseUrl}/Correccion_Propuesta.pdf")" target="_blank" class="btn btn-sm btn-outline-info ms-2">
+                                        <i class="bi bi-eye"></i> Ver envío
+                                    </a>
+                                }
+                                else
+                                {
+                                    <form method="post" asp-controller="Proyectos" asp-action="SubirCorreccion" enctype="multipart/form-data" class="d-flex gap-2">
+                                        <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                        <input type="file" name="archivoCorreccion" accept=".pdf,.docx" class="form-control form-control-sm" required />
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-upload"></i> Enviar
+                                        </button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+    else if (rolUsuario == "Secretario")
+    {
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <i class="bi bi-person-badge-fill me-2"></i>
+            Vista del Secretario Administrativo
+        </div>
+
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success d-flex align-items-center mt-3">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                @TempData["MensajeExito"]
+            </div>
+        }
+
+        <form method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="EnviarSecretario">
+            <div class="mb-3">
+                <label class="form-label">Nombre del Demanda/Propuesta:</label>
+                <input type="text" name="nombreProyecto" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Demandas Específicas (PDF):</label>
+                <input type="file" name="archivoDemanda" class="form-control" accept=".pdf" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Cuestionario (PDF):</label>
+                <input type="file" name="archivoCuestionario" class="form-control" accept=".pdf" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Tipo de Demanda:</label>
+                <select class="form-select" name="tipoDemanda" id="tipoDemanda" required onchange="mostrarPropuesta(this.value)">
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="integrada">Específica Integrada</option>
+                    <option value="abierta">Específica Abierta</option>
+                </select>
+            </div>
+
+            <div id="bloquePropuesta" style="display: none;">
+                <div class="mb-3">
+                    <label class="form-label">Propuesta Técnica (PDF):</label>
+                    <input type="file" name="archivoPropuesta" class="form-control" accept=".pdf" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3">
+                <i class="bi bi-send-check"></i> Enviar al Comité
+            </button>
+        </form>
+
+        @if (propuestasComite != null && propuestasComite.Any(p => p.Evaluado))
+        {
+            <hr />
+            <h5 class="mt-4">📤 Cuestionarios Evaluados disponibles</h5>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Descargar Evaluación</th>
+                        <th>Subir Formato de Evaluación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in propuestasComite.Where(p => p.Evaluado))
+                    {
+                        var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                        <tr>
+                            <td>@p.Nombre</td>
+                            <td>
+                                <a href="@($"{baseUrl}/Cuestionario_Evaluado.pdf")" target="_blank" class="btn btn-outline-info btn-sm">
+                                    <i class="bi bi-download"></i> Descargar
+                                </a>
+                            </td>
+                            <td>
+                                @if (p.FormatoListo)
+                                {
+                                    <span class="badge bg-success">
+                                        ✅ Formato enviado
+                                    </span>
+                                    <a href="@($"{baseUrl}/Formato_Evaluacion.pdf")" target="_blank" class="btn btn-outline-secondary btn-sm ms-2">
+                                        <i class="bi bi-eye"></i> Ver
+                                    </a>
+                                }
+                                else
+                                {
+                                    <form method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="SubirFormatoEvaluacion" class="d-flex gap-2">
+                                        <input type="hidden" name="carpetaProyecto" value="@p.Carpeta" />
+                                        <input type="file" name="formatoEvaluacion" accept=".pdf" class="form-control form-control-sm" required />
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="bi bi-upload"></i> Subir
+                                        </button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (propuestasComite != null && propuestasComite.Any(p => p.EsViable))
+            {
+                <hr />
+                <h5 class="mt-4">📨 Propuestas aprobadas para presupuesto para el envío al Comité de Decisión</h5>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Documentos</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in propuestasComite.Where(p => p.EsViable))
+                        {
+                            var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                            <tr>
+                                <td>@p.Nombre</td>
+                                <td>
+                                    <a href="@($"{baseUrl}/Demanda_Especifica.pdf")" target="_blank" class="btn btn-sm btn-outline-primary me-1">Demanda</a>
+                                    @if (p.Tipo == "integrada")
+                                    {
+                                        <a href="@($"{baseUrl}/Propuesta_Tecnica.pdf")" target="_blank" class="btn btn-sm btn-outline-secondary me-1">Propuesta</a>
+                                    }
+                                    <a href="@($"{baseUrl}/Formato_Evaluacion.pdf")" target="_blank" class="btn btn-sm btn-outline-success">Formato Evaluación</a>
+                                </td>
+                                <td>
+                                    @if (p.FueEnviado)
+                                    {
+                                        <span class="badge bg-info">📤 Enviado</span>
+                                    }
+                                    else
+                                    {
+                                        <form method="post" asp-controller="Proyectos" asp-action="EnviarAFinanciamiento" class="d-inline">
+                                            <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="bi bi-send"></i> Enviar a Comité
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            @if (propuestasComite != null && propuestasComite.Any(p => !string.IsNullOrEmpty(p.Observaciones)))
+            {
+                <hr />
+                <h5 class="mt-4">📝 Propuestas con observaciones del Comité</h5>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Observaciones</th>
+                            <th>Documentos</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in propuestasComite.Where(p => !string.IsNullOrEmpty(p.Observaciones)))
+                        {
+                            var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                            <tr>
+                                <td>@p.Nombre</td>
+                                <td class="text-wrap" style="max-width: 400px;">
+                                    @p.Observaciones
+                                </td>
+                                <td>
+                                    <a href="@($"{baseUrl}/Demanda_Especifica.pdf")" target="_blank" class="btn btn-sm btn-outline-primary me-1">Demanda</a>
+                                    @if (p.Tipo == "integrada")
+                                    {
+                                        <a href="@($"{baseUrl}/Propuesta_Tecnica.pdf")" target="_blank" class="btn btn-sm btn-outline-secondary me-1">Propuesta</a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (p.FueNotificadoSujeto)
+                                    {
+                                        <span class="badge bg-info">📤 Notificado</span>
+                                        @if (p.ObservacionesArchivo)
+                                        {
+                                            <div class="mt-2">
+                                                <a href="~/documentos/revision_secretario/@p.Carpeta/Observaciones_Adjunto.pdf"
+                                                target="_blank"
+                                                class="btn btn-sm btn-outline-secondary">
+                                                    <i class="bi bi-file-earmark-pdf"></i> Ver archivo adjunto
+                                                </a>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <form method="post" asp-controller="Proyectos" asp-action="NotificarSujetoObservaciones">
+                                            <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                            <button type="submit" class="btn btn-warning btn-sm">
+                                                <i class="bi bi-envelope-exclamation"></i> Notificar Sujeto
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            @if (propuestasComite != null && propuestasComite.Any(p => p.TieneCorreccion && !p.CorreccionEnviada))
+            {
+                <hr />
+                <h5 class="mt-4">♻️ Correcciones de propuestas por reenviar al Comité</h5>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Corrección enviada por el Sujeto</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in propuestasComite.Where(p => p.TieneCorreccion && !p.CorreccionEnviada))
+                        {
+                            var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                            <tr>
+                                <td>@p.Nombre</td>
+                                <td>
+                                    <a href="@($"{baseUrl}/Correccion_Propuesta.pdf")" target="_blank" class="btn btn-outline-info btn-sm">
+                                        <i class="bi bi-download"></i> Ver corrección
+                                    </a>
+                                </td>
+                                <td>
+                                    <form method="post" asp-controller="Proyectos" asp-action="ReenviarCorreccionComite">
+                                        <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="bi bi-send-check"></i> Enviar al Comité
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+
+        <script>
+            function mostrarPropuesta(tipo) {
+                const bloque = document.getElementById('bloquePropuesta');
+                bloque.style.display = tipo === "integrada" ? "block" : "none";
+            }
+        </script>
+    }
+    else if (rolUsuario == "Evaluacion")
+    {
+        <div class="alert alert-info d-flex align-items-center">
+            <i class="bi bi-people-fill me-2"></i>
+            Vista del Comité de Evaluación
+        </div>
+
+        var propuestasEval = ViewData["PropuestasEvaluacion"] as List<dynamic>;
+
+        @if (propuestasEval != null && propuestasEval.Any())
+        {
+            <h5 class="mt-4">📋 Proyectos para evaluación de presupuesto</h5>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Documentos</th>
+                        <th>Evaluación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in propuestasEval)
+                    {
+                        var urlBase = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                        <tr>
+                            <td>@p.Nombre</td>
+                            <td>
+                                <a href="@($"{urlBase}/Demanda_Especifica.pdf")" target="_blank" class="btn btn-outline-primary btn-sm">
+                                    Demanda
+                                </a>
+                                @if (p.TienePropuesta)
+                                {
+                                    <a href="@($"{urlBase}/Propuesta_Tecnica.pdf")" target="_blank" class="btn btn-outline-secondary btn-sm ms-1">
+                                        Propuesta
+                                    </a>
+                                }
+                                <a href="@($"{urlBase}/Formato_Evaluacion.pdf")" target="_blank" class="btn btn-outline-success btn-sm ms-1">
+                                    Formato Evaluación
+                                </a>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(p.EstadoEvaluacion))
+                                {
+                                    <div class="alert alert-@(p.EstadoEvaluacion.Contains("VIABLE") ? "success" : "danger") p-2 mb-2">
+                                        <i class="bi bi-check2-circle me-1"></i> @p.EstadoEvaluacion
+                                    </div>
+                                }
+                                else
+                                {
+                                    <form method="post" asp-controller="Proyectos" asp-action="EvaluarViabilidad" class="d-flex gap-2">
+                                        <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                        <button name="decision" value="viable" class="btn btn-success btn-sm">
+                                            ✅ Viable
+                                        </button>
+                                        <button name="decision" value="no_viable" class="btn btn-danger btn-sm">
+                                            ❌ No viable
+                                        </button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-warning mt-4">
+                No hay proyectos listos para evaluación de presupuesto.
+            </div>
+        }
+    }
+    <br>
+    <h2 class="fw-bold subtitulo">Proyectos aprobados para asignación de fondos del Instituto Mexicano del Petróleo</h2>
+    <div class="table-responsive mt-4">
+        <table id="tablaProyectos" class="table table-striped table-hover" style="width:100%">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre del Proyecto</th>
+                    <th>Inicio</th>
+                    <th>Fin</th>
+                    <th>Progreso</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTablaProyectos">
+                <!-- Se llenará dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <br><br>
     <h2 class="fw-bold   subtitulo ">Infraestructura del Fondo Mexicano del Petróleo</h2>
 
     @* SECCIÓN DE MAPA *@
 
-    <section id="despliega_mapa" class="pb-5">
-
-        <br />
-
-        <div class="app-card-header p-3 border-0">
-
-            @*Menu*@
-            <div class="navbarmapag">
-
-
-                <a id="electricidad" class="icono-texto">
-                    <img src="@Cdn.Url/img_snier/vistas/inspeccion.png" alt="Icono personalizado" class="iconomenu" />
-                    <span>Recursos FMP</span>
-
-                    <div id="total_petroliferos"></div>
-                </a>
-
-
-            </div>
-
-
-
-            <!-- Nuevo Div para Conteo de Tipos de Permisos -->
-            <div id="conteo_tipos_permisos" class="conteo-permisos">
-                <!-- Aquí se mostrarán los conteos de tipos de permisos -->
-            </div>
-
-            <br>
-
-            <div id="main-container">
-
-                <div class="row g-4 mb-4">
-                    <div class="col">
-                        <div class="app-card app-card-chart h-100 shadow-sm">
-
-                            <div class="search-container p-3" id="search-container">
-                                <label class="form-label">Buscar en el Mapa:</label>
-                                <input type="text" id="busquedaGeneralInput" class="form-control"
-                                    placeholder="Número de Permiso, Entidad Federativa o Municipio">
-                                <div id="autocomplete-list" class="autocomplete-items"></div>
-                                <!-- El resto de tu código -->
-
-                                <button class="btn btn-cre-rojo-home" onclick="buscarGeneral()"
-                                    style="width:10% !important"><i class="bi bi-search"></i></button>
-                            </div>
-
-                            @*Menu de Botones*@
-                            <div class="container-fluid">
-                            </div>
-                            <div class="app-card-body p-4">
-                                <div class="chart-container">
-                                    <div id="" class="app-card-body p-4">
-                                        <button id="fullscreen-btn" class="btn btn-primary">Pantalla Completa</button>
-                                        <div id="map" class="p-3 bg"></div>
-                                        <div class="leyenda pt-3">
-                                            <p>Mayor Concentración</p>
-                                            <p>Concentración Promedio</p>
-                                            <p>Menor Concentración</p>
-                                            <p> Ductos</p>
-                                        </div>
-                                        <br />
-                                        <div class="" id="grafico"></div>
-                                        @* <div class="" id="grafico2"></div> *@
-
-                                        @* Precios de Gasolina  *@
-                                        @if (Convert.ToInt32(ViewData["RolUsuario"]) == 1)
-                                        {
-                                            <div id="graficoPrecios" style="width: 100%; height: 400px; margin-top: 20px;">
-                                            </div>
-                                        }
-
-
-                                        <br />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+    <section class="py-5 bg-white">
+        <div class="container" data-aos="fade-up">
+            <h2 class="fw-bold text-center mb-4">Trazabilidad Geoespacial</h2>
+            <div id="map" class="rounded shadow-sm" style="height: 500px;"></div>
         </div>
     </section>
 
     <h2 class="fw-bold   subtitulo ">Cronograma de Recursos del Fondo Mexicano del Petróleo</h2>
+    <br>
 
     @* SECCIÓN DE SEMAFORO Y GANTT *@
     <section id="semaforo_proyectos" class="container mb-4">
@@ -207,45 +780,45 @@
             <!-- Semáforo -->
             <div class="col-md-3 d-flex flex-column justify-content-between" style="min-height: 100%;">
                 <!-- Tarjeta 1 -->
-                <!-- Prototipo con datos simulados -->
-                <div class="card stat-card bg-gradient-success border-0 mb-1">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge rounded-pill bg-white bg-opacity-25">60%</span>
-                            <div class="card-icon bg-white bg-opacity-25">
-                                <i class="bi bi-check-circle-fill fs-4 text-white"></i>
+                    <!-- Prototipo con datos simulados -->
+                    <div class="card stat-card bg-gradient-success border-0 mb-1">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge rounded-pill bg-white bg-opacity-25" id="porcentaje-terminados">0%</span>
+                                <div class="card-icon bg-white bg-opacity-25">
+                                    <i class="bi bi-check-circle-fill fs-4 text-white"></i>
+                                </div>
                             </div>
+                            <h2 class="mb-0 text-white" id="proyectos-terminados">0</h2>
+                            <p class="card-title h6 text-white-50">Proyectos Terminados</p>
                         </div>
-                        <h2 class="mb-0 text-white">180</h2>
-                        <p class="card-title h6 text-white-50">Proyectos Terminados</p>
                     </div>
-                </div>
 
-                <div class="card stat-card bg-gradient-warning border-0 mb-1">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge rounded-pill bg-white bg-opacity-25">30%</span>
-                            <div class="card-icon bg-white bg-opacity-25">
-                                <i class="bi bi-clock-fill fs-4 text-dark"></i>
+                    <div class="card stat-card bg-gradient-warning border-0 mb-1">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge rounded-pill bg-white bg-opacity-25" id="porcentaje-en-curso">0%</span>
+                                <div class="card-icon bg-white bg-opacity-25">
+                                    <i class="bi bi-clock-fill fs-4 text-dark"></i>
+                                </div>
                             </div>
+                            <h2 class="mb-0 text-dark" id="proyectos-en-curso">0</h2>
+                            <p class="card-title h6 text-dark">Proyectos en Curso</p>
                         </div>
-                        <h2 class="mb-0 text-dark">90</h2>
-                        <p class="card-title h6 text-dark">Proyectos en Curso</p>
                     </div>
-                </div>
 
-                <div class="card stat-card bg-danger border-0">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge rounded-pill bg-white bg-opacity-25">10%</span>
-                            <div class="card-icon bg-white bg-opacity-25">
-                                <i class="bi bi-x-circle-fill fs-4 text-white"></i>
+                    <div class="card stat-card bg-danger border-0">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge rounded-pill bg-white bg-opacity-25" id="porcentaje-cancelados">0%</span>
+                                <div class="card-icon bg-white bg-opacity-25">
+                                    <i class="bi bi-x-circle-fill fs-4 text-white"></i>
+                                </div>
                             </div>
+                            <h2 class="mb-0 text-white" id="proyectos-cancelados">0</h2>
+                            <p class="card-title h6 text-white-50">Proyectos Cancelados</p>
                         </div>
-                        <h2 class="mb-0 text-white">30</h2>
-                        <p class="card-title h6 text-white-50">Proyectos Cancelados</p>
                     </div>
-                </div>
             </div>
 
             <!-- Gráfica Gantt con Highcharts -->
@@ -272,8 +845,13 @@
                 </div>
                 <div class="modal-body">
                     <p><strong>Nombre:</strong> <span id="modalNombre"></span></p>
-                    <p><strong>Inicio:</strong> <span id="modalInicio"></span></p>
-                    <p><strong>Fin:</strong> <span id="modalFin"></span></p>
+                    <p><strong>Solicitante:</strong> <span id="modalSolicitante"></span></p>
+                    <p><strong>Institución:</strong> <span id="modalInstitucion"></span></p>
+                    <p><strong>Responsable:</strong> <span id="modalResponsable"></span></p>
+                    <p><strong>Tipo de Demanda:</strong> <span id="modalTipoDemanda"></span></p>
+                    <p><strong>Descripción:</strong> <span id="modalDescripcion"></span></p>
+                    <p><strong>Fecha de Inicio:</strong> <span id="modalInicio"></span></p>
+                    <p><strong>Fecha Final:</strong> <span id="modalFin"></span></p>
                     <p><strong>Progreso:</strong> <span id="modalProgreso"></span>%</p>
 
                     <hr>
@@ -291,15 +869,182 @@
         .modal-xl-custom {
             max-width: 95%;
         }
-
         .modal-body {
             max-height: 200vh;
             overflow-y: auto;
         }
     </style>
 
+    <!-- Modal para enviar evaluación -->
+    <div class="modal fade" id="modalEvaluacion" tabindex="-1" aria-labelledby="modalEvaluacionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="EnviarEvaluacion">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEvaluacionLabel">Enviar Cuestionario Evaluado</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="carpetaProyecto" id="carpetaProyecto" />
+                        <div class="mb-3">
+                            <label for="cuestionarioEvaluado" class="form-label">Subir Cuestionario Evaluado (PDF):</label>
+                            <input type="file" class="form-control" name="cuestionarioEvaluado" accept=".pdf" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Enviar al Comité</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
+    <!-- Modal: Llenar Formulario -->
+    <div class="modal fade" id="modalLlenarFormulario" tabindex="-1" aria-labelledby="modalLlenarFormularioLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registro de Demanda Específica</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNuevoProyecto" method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="EnviarPropuesta">
+                        <!-- 🧑 Datos del Solicitante -->
+                        <h5 class="mt-3">Datos del Solicitante</h5>
 
+                        <div class="mb-3">
+                            <label for="nombreSolicitante" class="form-label">Nombre del Solicitante:</label>
+                            <input type="text" class="form-control" id="nombreSolicitante" name="nombreSolicitante" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="institucion" class="form-label">Institución:</label>
+                            <input type="text" class="form-control" id="institucion" name="institucion" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="responsable" class="form-label">Responsable Técnico del Proyecto:</label>
+                            <input type="text" class="form-control" id="responsable" name="responsable" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo de contacto:</label>
+                            <input type="email" class="form-control" id="correo" name="correo" required>
+                        </div>
+
+                        <!-- 📄 Datos del Proyecto -->
+                        <h5 class="mt-4">Datos del Proyecto</h5>
+
+                        <div class="mb-3">
+                            <label for="nombreProyecto" class="form-label">Nombre del Proyecto:</label>
+                            <input type="text" class="form-control" id="nombreProyecto" name="nombreProyecto" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tipoDemanda" class="form-label">Tipo de Demanda:</label>
+                            <select class="form-select" id="tipoDemanda" name="tipoDemanda" required>
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                <option value="integrada">Integrada</option>
+                                <option value="abierta">Abierta</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción general del Proyecto:</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                        </div>
+
+                        <!-- 📎 Archivos Requeridos -->
+                        <h5 class="mt-4">Carga de Anexos Obligatorios</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Anexo 1 - Demanda Específica (PDF firmado)</label>
+                                <input type="file" class="form-control" name="anexo1_pdf" accept=".pdf" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Anexo 1 - Demanda Específica (Editable .doc/.docx)</label>
+                                <input type="file" class="form-control" name="anexo1_editable" accept=".doc,.docx" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Anexo 2 - Propuesta Técnica (PDF firmado)</label>
+                                <input type="file" class="form-control" name="anexo2_pdf" accept=".pdf" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Anexo 2 - Propuesta Técnica (Editable .doc/.docx)</label>
+                                <input type="file" class="form-control" name="anexo2_editable" accept=".doc,.docx" required>
+                            </div>
+                        </div>
+
+                        <!-- ✅ Botón Final -->
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-send"></i> Enviar Propuesta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Aprobar una propuesta -->
+    <div class="modal fade" id="modalAprobar" tabindex="-1" aria-labelledby="modalAprobarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <form method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="AprobarProyecto">
+                <div class="modal-header">
+                <h5 class="modal-title">Subir Oficio de Aprobación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                <input type="hidden" name="carpeta" id="aprobacionCarpeta" />
+                <div class="mb-3">
+                    <label class="form-label">Selecciona el oficio en PDF:</label>
+                    <input type="file" name="oficio" class="form-control" accept=".pdf" required />
+                </div>
+                </div>
+                <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Subir Oficio</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Rechazar propuesta (con observaciones) -->
+    <div class="modal fade" id="modalObservacion" tabindex="-1" aria-labelledby="modalObservacionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="EnviarObservacion">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Enviar Observaciones</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="carpeta" id="obsCarpeta" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Observaciones escritas:</label>
+                            <textarea name="observaciones" class="form-control" rows="4" placeholder="Escribe aquí las observaciones si lo deseas..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Adjuntar documento (opcional):</label>
+                            <input type="file" name="oficio" class="form-control" accept=".pdf" />
+                        </div>
+
+                        <div class="alert alert-secondary small">
+                            Puedes llenar solo el campo de observaciones o solo adjuntar el documento, o ambos. Al menos uno es requerido.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Enviar Observación</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <style>
         #fullscreen-search-container {
@@ -309,8 +1054,7 @@
         #fullscreen-elements {
             display: flex;
             flex-direction: column;
-            height: auto;
-            /* Valor inicial para cuando no esté en pantalla completa */
+            height: auto; /* Valor inicial para cuando no esté en pantalla completa */
         }
 
         #fullscreen-last-update,
@@ -339,6 +1083,362 @@
 </div>
 
 @section Scripts {
+
+    <!-- Bootstrap JS + Popper.js desde CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    @* BOTONES FORMULARIO *@
+    <!-- MODAL -->
+    <script>
+        var modalEvaluacion = document.getElementById('modalEvaluacion');
+        modalEvaluacion.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var carpeta = button.getAttribute('data-carpeta');
+            document.getElementById('carpetaProyecto').value = carpeta;
+        });
+    </script>
+
+    <script>
+        var modalAprobar = document.getElementById('modalAprobar');
+        modalAprobar.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var carpeta = button.getAttribute('data-carpeta');
+            document.getElementById('aprobacionCarpeta').value = carpeta;
+        });
+
+        var modalObs = document.getElementById('modalObservacion');
+        modalObs.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var carpeta = button.getAttribute('data-carpeta');
+            document.getElementById('obsCarpeta').value = carpeta;
+        });
+    </script>
+
+    <!-- PROYECTOS -->
+    <script>
+        const proyectos = []; 
+        
+        function agregarProyecto() {
+            const nombre = document.getElementById("nombreProyecto").value;
+            const inicio = document.getElementById("fechaInicio").value;
+            const fin = document.getElementById("fechaFinal").value;
+            const progreso = 0;
+            const dependencias = document.getElementById("responsable").value || null;
+
+            const nuevoProyecto = {
+                id: (proyectos.length + 1).toString(), // Generar ID única básica
+                name: nombre,
+                inicio: inicio,
+                fin: fin,
+                progreso: progreso,
+                dependencias: dependencias
+            };
+
+            proyectos.push(nuevoProyecto);
+            console.log("Proyecto actualizado: ", proyectos);
+            actualizarGantt(); // Llama a la función para refrescar el gráfico
+            actualizarSemaforo(proyectos);
+            renderizarTablaProyectos(proyectos);
+        }
+
+        function actualizarGantt() {
+            Highcharts.ganttChart('gantt-chart', {
+                title: { text: '' },
+                tooltip: {
+                    pointFormat: '<b>{point.name}</b><br>Inicio: {point.start:%e de %B}<br>Fin: {point.end:%e de %B}'
+                },
+                xAxis: {
+                    currentDateIndicator: true,
+                    min: Date.UTC(2025, 4, 1),
+                    max: Date.UTC(2025, 5, 30),
+                    tickInterval: 7 * 24 * 3600 * 1000,
+                    labels: {
+                        formatter: function () {
+                            const weekNumber = Highcharts.dateFormat('%W', this.value);
+                            return 'Semana ' + weekNumber;
+                        }
+                    }
+                },
+                plotOptions: {
+                    series: {
+                        point: {
+                            events: {
+                                click: function () {
+                                    console.log("Detalle en click: ", this);
+                                    document.getElementById("modalNombre").textContent = this.name;
+                                    document.getElementById("modalInicio").textContent = Highcharts.dateFormat('%e %B %Y', this.start);
+                                    document.getElementById("modalFin").textContent = Highcharts.dateFormat('%e %B %Y', this.end);
+                                    document.getElementById("modalProgreso").textContent = Math.round(this.completed.amount * 100);
+
+                                    // Esperamos al modal para luego inicializar la línea del tiempo
+                                    setTimeout(() => {
+                                        const container = document.getElementById('timeline');
+                                        container.innerHTML = ''; // limpiar por si ya se abrió antes
+
+                                        // Simular datos
+                                        const items = new vis.DataSet([
+                                            {
+                                                id: 1,
+                                                content: '<div style="width: 150px;">Propuestas de Necesidades<br>#1234<br><small>01/05/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/1\', \'_blank\'); return false;">Ver detalle</a></div>',
+                                                start: '2025-04-01',
+                                            },
+                                            {
+                                                id: 2,
+                                                content: '<div style="width: 150px;">Demandas Específicas<br>#5678<br><small>10/05/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/2\', \'_blank\'); return false;">Ver detalle</a></div>',
+                                                start: '2025-05-10',
+                                            },
+                                            {
+                                                id: 3,
+                                                content: '<div style="width: 150px;">Finiquito<br>#9101<br><small>20/06/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/3\', \'_blank\'); return false;">Ver detalle</a></div>',
+                                                start: '2025-06-20',
+                                            }
+                                        ]);
+
+                                        const today = new Date();
+                                        const options = {
+                                            editable: false,
+                                            height: '300px',
+                                            maxHeight: '300px',
+                                            stack: true,
+                                            margin: { item: 20 },
+                                            horizontalScroll: true,
+                                            start: '2024-01-01',
+                                            end: today,
+                                            zoomMin: 100000000,
+                                            zoomMax: 100000000000,
+                                            zoomKey: 'ctrlKey',
+                                        };
+
+                                        const timeline = new vis.Timeline(container, items, options);
+
+                                        document.getElementById('zoomIn').onclick = function () {
+                                            const range = timeline.getWindow();
+                                            const interval = range.end - range.start;
+                                            timeline.setWindow({
+                                                start: range.start.valueOf(),
+                                                end: range.start.valueOf() + interval * 0.8,
+                                            });
+                                        };
+
+                                        document.getElementById('zoomOut').onclick = function () {
+                                            const range = timeline.getWindow();
+                                            const interval = range.end - range.start;
+                                            timeline.setWindow({
+                                                start: range.start.valueOf(),
+                                                end: range.start.valueOf() + interval * 1.25,
+                                            });
+                                        };
+                                    }, 100); // Pequeña espera para asegurar que el modal está en DOM
+
+                                    // Mostrar modal
+                                    const modal = new bootstrap.Modal(document.getElementById('modalProyecto'));
+                                    modal.show();
+                                }
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Proyecto',
+                    data: proyectos.map(p => ({
+                        id: p.id,
+                        name: p.name,
+                        start: Date.UTC(
+                            new Date(p.inicio).getFullYear(),
+                            new Date(p.inicio).getMonth(),
+                            new Date(p.inicio).getDate() + 2
+                        ),
+                        end: Date.UTC(
+                            new Date(p.fin).getFullYear(),
+                            new Date(p.fin).getMonth(),
+                            new Date(p.fin).getDate() + 2
+                        ),
+                        completed: { amount: p.progreso },
+                        dependency: p.dependencias
+                    }))
+                }]
+            });
+        }
+    </script>
+
+    <script>
+        document.getElementById('formSubirFormulario').addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Archivo subido (simulado).');
+            var modal = bootstrap.Modal.getInstance(document.getElementById('modalSubirFormulario'));
+            modal.hide();
+        });
+
+        function renderizarTablaProyectos(proyectos) {
+            const cuerpo = document.getElementById('cuerpoTablaProyectos');
+            cuerpo.innerHTML = '';
+
+            proyectos.forEach(proyecto => {
+                const estado = proyecto.progreso === 1
+                    ? `<span class="badge bg-success">Terminado</span>`
+                    : `<span class="badge bg-warning text-dark">En Curso</span>`;
+
+                const progreso = `${Math.round(proyecto.progreso * 100)}%`;
+
+                const fila = `
+                    <tr>
+                        <td>${proyecto.name}</td>
+                        <td>${proyecto.inicio}</td>
+                        <td>${proyecto.fin}</td>
+                        <td>${progreso}</td>
+                        <td>${estado}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-info" onclick="verDetalle('${proyecto.id}')" title="Ver Detalle">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="cancelarProyecto('${proyecto.id}')" title="Cancelar">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                cuerpo.insertAdjacentHTML('beforeend', fila);
+            });
+        }
+
+        function verDetalle(id) {
+            const proyecto = proyectos.find(p => p.id === id);
+            if (!proyecto) return;
+
+            // Establecer datos básicos en el modal
+            document.getElementById("modalNombre").textContent = proyecto.name;
+            document.getElementById("modalInicio").textContent = Highcharts.dateFormat('%e %B %Y', parseFechaISO(proyecto.inicio));
+            document.getElementById("modalFin").textContent = Highcharts.dateFormat('%e %B %Y', parseFechaISO(proyecto.fin));
+            document.getElementById("modalProgreso").textContent = Math.round(proyecto.progreso * 100);
+
+            // Nuevos datos importantes
+            document.getElementById("modalSolicitante").textContent = proyecto.nombreSolicitante || 'N/A';
+            document.getElementById("modalInstitucion").textContent = proyecto.institucion || 'N/A';
+            document.getElementById("modalResponsable").textContent = proyecto.responsable || 'N/A';
+            document.getElementById("modalTipoDemanda").textContent = proyecto.tipoDemanda === 'especifica' ? 'Demanda Específica' : 'Demanda Abierta';
+            document.getElementById("modalDescripcion").textContent = proyecto.descripcion || 'Sin descripción';
+
+            // Timeline personalizado (puedes mantenerlo o cambiarlo si lo vinculas a las fechas reales del proyecto)
+            setTimeout(() => {
+                const container = document.getElementById('timeline');
+                container.innerHTML = '';
+
+                const items = new vis.DataSet([
+                    {
+                        id: 1,
+                        content: '<div style="width: 150px;">Propuestas de Necesidades<br>#1234<br><small>01/05/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/1\', \'_blank\'); return false;">Ver detalle</a></div>',
+                        start: '2025-04-01',
+                    },
+                    {
+                        id: 2,
+                        content: '<div style="width: 150px;">Demandas Específicas<br>#5678<br><small>10/05/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/2\', \'_blank\'); return false;">Ver detalle</a></div>',
+                        start: '2025-05-10',
+                    },
+                    {
+                        id: 3,
+                        content: '<div style="width: 150px;">Finiquito<br>#9101<br><small>20/06/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/3\', \'_blank\'); return false;">Ver detalle</a></div>',
+                        start: '2025-06-20',
+                    }
+                ]);
+
+                const timeline = new vis.Timeline(container, items, {
+                    editable: false,
+                    height: '300px',
+                    maxHeight: '300px',
+                    margin: { item: 20 },
+                    horizontalScroll: true,
+                    stack: true,
+                    zoomMin: 10000000,
+                    zoomMax: 100000000000,
+                    zoomKey: 'ctrlKey',
+                });
+
+                document.getElementById('zoomIn').onclick = () => {
+                    const range = timeline.getWindow();
+                    const interval = range.end - range.start;
+                    timeline.setWindow({
+                        start: range.start.valueOf(),
+                        end: range.start.valueOf() + interval * 0.8,
+                    });
+                };
+
+                document.getElementById('zoomOut').onclick = () => {
+                    const range = timeline.getWindow();
+                    const interval = range.end - range.start;
+                    timeline.setWindow({
+                        start: range.start.valueOf(),
+                        end: range.start.valueOf() + interval * 1.25,
+                    });
+                };
+            }, 100);
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('modalProyecto'));
+            modal.show();
+        }
+
+        function parseFechaISO(fechaStr) {
+            const [anio, mes, dia] = fechaStr.split('-');
+            return new Date(parseInt(anio), parseInt(mes) - 1, parseInt(dia));
+        }
+
+        function cancelarProyecto(id) {
+            const index = proyectos.findIndex(p => p.id === id);
+            if (index !== -1) {
+                if (confirm(`¿Estás seguro de cancelar el proyecto "${proyectos[index].name}"?`)) {
+                    proyectos.splice(index, 1);
+                    actualizarGantt();
+                    actualizarSemaforo(proyectos); // actualizamos el semáforo
+                    renderizarTablaProyectos(proyectos); // actualizamos la tabla
+                }
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("formSubirListado");
+            const bloqueSubida = document.getElementById("bloqueSubida");
+            const bloquePublicado = document.getElementById("bloquePublicado");
+
+            // Verifica en localStorage si ya se ha subido el listado
+            const listadoPublicado = localStorage.getItem("listadoPublicado") === "true";
+
+            if (listadoPublicado) {
+                bloqueSubida.style.display = "none";
+                bloquePublicado.style.display = "block";
+            } else {
+                bloqueSubida.style.display = "block";
+                bloquePublicado.style.display = "none";
+            }
+
+            // Simula carga de archivo
+            form?.addEventListener("submit", function (e) {
+                e.preventDefault();
+                const archivo = document.getElementById("archivoListado").files[0];
+
+                if (!archivo) {
+                    alert("Por favor selecciona un archivo.");
+                    return;
+                }
+
+                // Simulación de guardado y persistencia
+                localStorage.setItem("listadoPublicado", "true");
+
+                bloqueSubida.style.display = "none";
+                bloquePublicado.style.display = "block";
+
+                console.log("Archivo cargado (simulado):", archivo.name);
+
+                setTimeout(() => {
+                    location.reload(); // forzar recarga con estado actualizado
+                }, 500);
+            });
+        });
+    </script>
+
+
+    @* MAPA*@
 
     @*Script de Pantalla Completa*@
     <script>
@@ -396,165 +1496,46 @@
         });
     </script>
 
-    @*Shapes Estados*@
-    <script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/estadosminlight.js"></script>
-    <script type="text/javascript" src="@Cdn.Url/Geovisualizador/shapes/municipiosminlight.js"></script>
-
-
-
-    @*Ductos*@
-    @*Petrolíferos*@
-    <script src="@Cdn.Url/Geovisualizador/data/ductos_petroliferos_4326_0.js"></script>
-    @*Gas L.P.*@
-    <script src="@Cdn.Url/Geovisualizador/data/ductos_glp_4326_0.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        window.userRole = @ViewData["RolUsuario"]; // Define userRole globalmente
-        console.log(window.userRole);
+        document.addEventListener("DOMContentLoaded", function () {
+            var map = L.map('map').setView([23.6345, -102.5528], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
 
+            L.marker([19.4326, -99.1332]).addTo(map).bindPopup("CDMX - Proyecto Energético").openPopup();
+        });
     </script>
 
-
-    <script type="text/javascript" src="/js/configura_mapa.js"></script>
-    <script type="text/javascript" src="/js/I_petroliferos.js"></script>
+    @* SEMÁFORO *@
     <script>
-        var userRole = @ViewData["RolUsuario"]; // Define userRole desde el servidor
+        function actualizarSemaforo(proyectos) {
+            const total = proyectos.length;
+            const terminados = proyectos.filter(p => p.progreso === 1).length;
+            const enCurso = total - terminados;
 
-        // Solo cargar el gráfico si el usuario tiene rol 1
-        if (userRole === 1) {
-            // Datos sintéticos
-            // Generar datos sintéticos
-            var preciosPorEF = [
-                { EfNombre: "CIUDAD DE MÉXICO", PrecioRegular: 19.87, PrecioPremium: 21.95, PrecioDiesel: 20.45 },
-                { EfNombre: "GUANAJUATO", PrecioRegular: 20.12, PrecioPremium: 22.34, PrecioDiesel: 19.78 },
-                { EfNombre: "VERACRUZ DE IGNACIO DE LA LLAVE", PrecioRegular: 19.92, PrecioPremium: 21.50, PrecioDiesel: 20.30 },
-                { EfNombre: "CHIAPAS", PrecioRegular: 20.40, PrecioPremium: 22.10, PrecioDiesel: 20.00 },
-                { EfNombre: "JALISCO", PrecioRegular: 20.25, PrecioPremium: 22.45, PrecioDiesel: 20.12 },
-                { EfNombre: "MÉXICO", PrecioRegular: 20.05, PrecioPremium: 22.00, PrecioDiesel: 20.25 },
-                { EfNombre: "QUINTANA ROO", PrecioRegular: 19.95, PrecioPremium: 21.75, PrecioDiesel: 20.10 },
-                { EfNombre: "TABASCO", PrecioRegular: 20.10, PrecioPremium: 22.30, PrecioDiesel: 19.85 },
-                { EfNombre: "PUEBLA", PrecioRegular: 19.89, PrecioPremium: 21.95, PrecioDiesel: 20.20 },
-                { EfNombre: "MICHOACÁN DE OCAMPO", PrecioRegular: 20.20, PrecioPremium: 22.50, PrecioDiesel: 19.95 },
-                { EfNombre: "TAMAULIPAS", PrecioRegular: 20.30, PrecioPremium: 22.40, PrecioDiesel: 20.00 },
-                { EfNombre: "NUEVO LEÓN", PrecioRegular: 20.50, PrecioPremium: 22.80, PrecioDiesel: 20.25 },
-                { EfNombre: "GUERRERO", PrecioRegular: 20.15, PrecioPremium: 22.35, PrecioDiesel: 20.10 },
-                { EfNombre: "BAJA CALIFORNIA", PrecioRegular: 20.45, PrecioPremium: 22.75, PrecioDiesel: 20.20 },
-                { EfNombre: "HIDALGO", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.15 },
-                { EfNombre: "MORELOS", PrecioRegular: 20.05, PrecioPremium: 22.00, PrecioDiesel: 19.90 },
-                { EfNombre: "COAHUILA", PrecioRegular: 20.35, PrecioPremium: 22.65, PrecioDiesel: 20.30 },
-                { EfNombre: "SONORA", PrecioRegular: 20.25, PrecioPremium: 22.50, PrecioDiesel: 20.15 },
-                { EfNombre: "YUCATÁN", PrecioRegular: 19.85, PrecioPremium: 21.75, PrecioDiesel: 20.00 },
-                { EfNombre: "DURANGO", PrecioRegular: 20.10, PrecioPremium: 22.25, PrecioDiesel: 20.05 },
-                { EfNombre: "ZACATECAS", PrecioRegular: 20.20, PrecioPremium: 22.35, PrecioDiesel: 20.10 },
-                { EfNombre: "COLIMA", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.20 },
-                { EfNombre: "CHIHUAHUA", PrecioRegular: 20.35, PrecioPremium: 22.60, PrecioDiesel: 20.10 },
-                { EfNombre: "BAJA CALIFORNIA SUR", PrecioRegular: 20.50, PrecioPremium: 22.75, PrecioDiesel: 20.30 },
-                { EfNombre: "SINALOA", PrecioRegular: 20.15, PrecioPremium: 22.40, PrecioDiesel: 20.05 },
-                { EfNombre: "NAYARIT", PrecioRegular: 20.25, PrecioPremium: 22.50, PrecioDiesel: 19.95 },
-                { EfNombre: "QUERÉTARO", PrecioRegular: 20.05, PrecioPremium: 22.20, PrecioDiesel: 20.10 },
-                { EfNombre: "OAXACA", PrecioRegular: 20.00, PrecioPremium: 22.15, PrecioDiesel: 19.85 },
-                { EfNombre: "SAN LUIS POTOSÍ", PrecioRegular: 20.30, PrecioPremium: 22.55, PrecioDiesel: 20.10 },
-                { EfNombre: "TLAXCALA", PrecioRegular: 19.95, PrecioPremium: 21.85, PrecioDiesel: 20.00 },
-                { EfNombre: "CAMPECHE", PrecioRegular: 20.20, PrecioPremium: 22.40, PrecioDiesel: 20.15 },
-                { EfNombre: "AGUASCALIENTES", PrecioRegular: 20.10, PrecioPremium: 22.30, PrecioDiesel: 20.05 },
-            ];
+            const porcentaje = (cantidad) => total === 0 ? 0 : Math.round((cantidad / total) * 100);
 
+            // Actualiza en el DOM
+            document.getElementById('proyectos-terminados').textContent = terminados;
+            document.getElementById('porcentaje-terminados').textContent = `${porcentaje(terminados)}%`;
 
-            // Procesar datos para el gráfico
-            var categories = preciosPorEF.map(item => item.EfNombre);
-            var regularData = preciosPorEF.map(item => item.PrecioRegular);
-            var premiumData = preciosPorEF.map(item => item.PrecioPremium);
-            var dieselData = preciosPorEF.map(item => item.PrecioDiesel);
+            document.getElementById('proyectos-en-curso').textContent = enCurso;
+            document.getElementById('porcentaje-en-curso').textContent = `${porcentaje(enCurso)}%`;
 
-            // Configurar y renderizar el gráfico
-            Highcharts.chart('graficoPrecios', {
-                chart: {
-                    type: 'line',
-                },
-                title: {
-                    text: 'Proyectos por Entidad Federativa'
-                },
-                xAxis: {
-                    categories: categories,
-                    title: {
-                        text: 'Entidad Federativa'
-                    }
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: 'Precio ($MXN)'
-                    }
-                },
-                tooltip: {
-                    shared: true,
-                    valueSuffix: ' MXN'
-                },
-                plotOptions: {
-                    column: {
-                        dataLabels: {
-                            enabled: true,
-                            format: '${point.y:.2f} MXN'
-                        }
-                    }
-                },
-                series: [
-                    {
-                        name: 'En curso',
-                        data: regularData,
-                        color: '#1f77b4' // Azul
-                    },
-                    {
-                        name: 'Cancelado',
-                        data: premiumData,
-                        color: '#ff7f0e' // Naranja
-                    },
-                    {
-                        name: 'Terminado',
-                        data: dieselData,
-                        color: '#2ca02c' // Verde
-                    }
-                ]
-            });
+            // Por ahora, 0 cancelados
+            document.getElementById('proyectos-cancelados').textContent = 0;
+            document.getElementById('porcentaje-cancelados').textContent = `0%`;
         }
     </script>
+    
+
+    @* GRÁFICA DE GANTT *@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <script>
-        // Simulación de datos de proyectos (datos fijos para prototipo)
-        const proyectos = [
-            {
-                id: '1',
-                name: 'Campo Jaf de almacenamiento estratégico',
-                inicio: '2025-05-06',
-                fin: '2025-05-13',
-                progreso: 0.5,
-                dependencias: null
-            },
-            {
-                id: '2',
-                name: 'Contrato de Servicios Integrales de Exploración y Extracción Lakach',
-                inicio: '2025-05-14',
-                fin: '2025-05-20',
-                progreso: 0.2,
-                dependencias: '1'
-            },
-            {
-                id: '3',
-                name: 'CFE: Gasoducto Tula – Villa de Reyes',
-                inicio: '2025-05-21',
-                fin: '2025-05-28',
-                progreso: 0.0,
-                dependencias: '2'
-            },
-            {
-                id: '4',
-                name: 'CFE: Gasoducto Tuxpan – Tula',
-                inicio: '2025-05-29',
-                fin: '2025-06-04',
-                progreso: 0.0,
-                dependencias: '3'
-            }
-        ];
 
         document.addEventListener('DOMContentLoaded', function () {
             Highcharts.setOptions({
@@ -563,11 +1544,11 @@
                 },
                 lang: {
                     week: 'Semana',
-                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                     weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-                    shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-                        'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 
+                                'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
                     downloadPNG: "Descargar PNG",
                     downloadJPEG: "Descargar JPEG",
                     downloadPDF: "Descargar PDF",
@@ -585,126 +1566,47 @@
                 dateTimeLabelFormats: {
                     week: "'Semana' W"
                 },
-            });
-            Highcharts.ganttChart('gantt-chart', {
-                title: {
-                    text: ''
+            }); 
+            
+            // Proyectos iniciales para prototipo
+            proyectos.push(
+                {
+                    id: '1',
+                    name: 'Campo Jaf de almacenamiento estratégico',
+                    inicio: '2025-05-06',
+                    fin: '2025-05-13',
+                    progreso: 1,
+                    dependencias: null
                 },
-                tooltip: {
-                    pointFormat: '<b>{point.name}</b><br>Inicio: {point.start:%e de %B}<br>Fin: {point.end:%e de %B}'
+                {
+                    id: '2',
+                    name: 'Contrato de Servicios Integrales de Exploración y Extracción Lakach',
+                    inicio: '2025-05-14',
+                    fin: '2025-05-20',
+                    progreso: 0.5,
+                    dependencias: '1'
                 },
-                chart: {
-                    marginBottom: 80, // Ajusta según lo necesites (por ejemplo, 80px)
-                    spacingBottom: 20 // espacio extra entre gráfica y borde
+                {
+                    id: '3',
+                    name: 'CFE: Gasoducto Tula – Villa de Reyes',
+                    inicio: '2025-05-21',
+                    fin: '2025-05-28',
+                    progreso: 0.2,
+                    dependencias: '2'
                 },
+                {
+                    id: '4',
+                    name: 'CFE: Gasoducto Tuxpan – Tula',
+                    inicio: '2025-05-29',
+                    fin: '2025-06-04',
+                    progreso: 0.0,
+                    dependencias: '3'
+                }
+            );
 
-                xAxis: {
-                    currentDateIndicator: true,
-                    min: Date.UTC(2025, 4, 1),
-                    max: Date.UTC(2025, 5, 30),
-                    tickInterval: 7 * 24 * 3600 * 1000, // Forzar ticks semanales (7 días)
-                    labels: {
-                        style: {
-                            fontSize: '11px',
-                            whiteSpace: 'nowrap'
-                        },
-                        formatter: function () {
-                            const weekNumber = Highcharts.dateFormat('%W', this.value);
-                            return 'Semana ' + weekNumber;
-                        }
-                    }
-                },
-                plotOptions: {
-                    series: {
-                        point: {
-                            events: {
-                                click: function () {
-                                    // Llena el modal con datos del proyecto
-                                    document.getElementById("modalNombre").textContent = this.name;
-                                    document.getElementById("modalInicio").textContent = Highcharts.dateFormat('%e %B %Y', this.start);
-                                    document.getElementById("modalFin").textContent = Highcharts.dateFormat('%e %B %Y', this.end);
-                                    document.getElementById("modalProgreso").textContent = Math.round(this.completed.amount * 100);
-
-                                    // Esperamos al modal para luego inicializar la línea del tiempo
-                                    setTimeout(() => {
-                                        const container = document.getElementById('timeline');
-                                        container.innerHTML = ''; // limpiar por si ya se abrió antes
-
-                                        // Simular datos
-                                        const items = new vis.DataSet([
-                                            {
-                                                id: 1,
-                                                content: '<div style="width: 150px;">Propuestas de Necesidades<br>#1234<br><small>01/05/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/1\', \'_blank\'); return false;">Ver detalle</a></div>',
-                                                start: '2025-04-01',
-                                            },
-                                            {
-                                                id: 2,
-                                                content: '<div style="width: 150px;">Demandas Específicas<br>#5678<br><small>10/05/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/2\', \'_blank\'); return false;">Ver detalle</a></div>',
-                                                start: '2025-05-10',
-                                            },
-                                            {
-                                                id: 3,
-                                                content: '<div style="width: 150px;">Finiquito<br>#9101<br><small>20/06/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/3\', \'_blank\'); return false;">Ver detalle</a></div>',
-                                                start: '2025-06-20',
-                                            },
-                                        ]);
-
-                                        const today = new Date();
-                                        const options = {
-                                            editable: false,
-                                            height: '300px',
-                                            maxHeight: '300px',
-                                            stack: true,
-                                            margin: { item: 20 },
-                                            horizontalScroll: true,
-                                            start: '2024-01-01',
-                                            end: today,
-                                            zoomMin: 100000000,
-                                            zoomMax: 100000000000,
-                                            zoomKey: 'ctrlKey',
-                                        };
-
-                                        const timeline = new vis.Timeline(container, items, options);
-
-                                        document.getElementById('zoomIn').onclick = function () {
-                                            const range = timeline.getWindow();
-                                            const interval = range.end - range.start;
-                                            timeline.setWindow({
-                                                start: range.start.valueOf(),
-                                                end: range.start.valueOf() + interval * 0.8,
-                                            });
-                                        };
-
-                                        document.getElementById('zoomOut').onclick = function () {
-                                            const range = timeline.getWindow();
-                                            const interval = range.end - range.start;
-                                            timeline.setWindow({
-                                                start: range.start.valueOf(),
-                                                end: range.start.valueOf() + interval * 1.25,
-                                            });
-                                        };
-                                    }, 100); // Pequeña espera para asegurar que el modal está en DOM
-
-                                    // Muestra el modal (Bootstrap 5)
-                                    const modal = new bootstrap.Modal(document.getElementById('modalProyecto'));
-                                    modal.show();
-                                }
-                            }
-                        }
-                    }
-                },
-                series: [{
-                    name: 'Proyecto',
-                    data: proyectos.map(p => ({
-                        id: p.id,
-                        name: p.name,
-                        start: Date.UTC(new Date(p.inicio).getFullYear(), new Date(p.inicio).getMonth(), new Date(p.inicio).getDate()),
-                        end: Date.UTC(new Date(p.fin).getFullYear(), new Date(p.fin).getMonth(), new Date(p.fin).getDate()),
-                        completed: { amount: p.progreso },
-                        dependency: p.dependencias
-                    }))
-                }]
-            });
+            actualizarGantt(); // Muestra el gráfico con datos iniciales
+            actualizarSemaforo(proyectos);
+            renderizarTablaProyectos(proyectos);
         });
     </script>
 }

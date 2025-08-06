@@ -1,22 +1,22 @@
 // --- Botón personalizado para centrar el mapa (Home) ---
-function agregarBotonCentrarMapa() {
-    if (!window.L || !mapas || !mapas[0]) return;
-    var homeControl = L.Control.extend({
-        options: { position: 'topleft' },
-        onAdd: function (map) {
-            var container = L.DomUtil.create('div', 'leaflet-control leaflet-bar leaflet-control-custom');
-            container.title = 'Centrar mapa';
-            container.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="12" x2="16" y2="12"/></svg>';
-            container.style.cursor = 'pointer';
-            container.onclick = function () {
-                // Ajusta los valores a la vista inicial de tu mapa
-                map.setView([23.6345, -102.5528], 5); // México
-            };
-            return container;
-        }
-    });
-    mapas[0].addControl(new homeControl());
-}
+// function agregarBotonCentrarMapa() {
+//     if (!window.L || !mapas || !mapas[0]) return;
+//     var homeControl = L.Control.extend({
+//         options: { position: 'topleft' },
+//         onAdd: function (map) {
+//             var container = L.DomUtil.create('div', 'leaflet-control leaflet-bar leaflet-control-custom');
+//             container.title = 'Centrar mapa';
+//             container.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="12" x2="16" y2="12"/></svg>';
+//             container.style.cursor = 'pointer';
+//             container.onclick = function () {
+//                 // Ajusta los valores a la vista inicial de tu mapa
+//                 map.setView([23.6345, -102.5528], 5); // México
+//             };
+//             return container;
+//         }
+//     });
+//     mapas[0].addControl(new homeControl());
+// }
 //Campos Visbles de los popup*@
 
 //
@@ -4064,10 +4064,71 @@ mapas[0].on('baselayerchange', function (e) {
 });
 
 // --- Inicialización del plugin de impresión ---
-var printer = L.easyPrint({
+// Crear preloader
+const preloader = document.createElement('div');
+preloader.id = 'preloader';
+preloader.innerHTML = '<div class="spinner"></div>';
+preloader.style.cssText = `
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(255,255,255,0.7);
+    display: none;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+`;
+document.body.appendChild(preloader);
+
+// Estilos del spinner
+const style = document.createElement('style');
+style.innerHTML = `
+  .spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #333;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+document.head.appendChild(style);
+
+// Inicializar el printer
+const printer = L.easyPrint({
     tileLayer: null,
     sizeModes: ['Current', 'A4Portrait', 'A4Landscape'],
     filename: 'captura_mapa',
     exportOnly: true,
     hideControlContainer: true
 }).addTo(mapas[0]);
+
+const esperarOpcionesImpresion = setInterval(() => {
+    const currentSizeBtn = document.querySelector('.CurrentSize');
+    const a4PortraitBtn = document.querySelector('.A4Portrait');
+    const a4LandscapeBtn = document.querySelector('.A4Landscape');
+
+    if (currentSizeBtn && a4PortraitBtn && a4LandscapeBtn) {
+        console.log('🎯 Botones de opciones de impresión detectados.');
+
+        const mostrarPreloader = () => {
+            console.log('⏳ Mostrando preloader...');
+            document.getElementById('ajax-preloader').style.display = 'flex';
+
+            // Esperamos unos segundos para ocultarlo (ej. 3 segundos)
+            setTimeout(() => {
+                document.getElementById('ajax-preloader').style.display = 'none';
+            }, 3500);
+        };
+
+        currentSizeBtn.addEventListener('click', mostrarPreloader);
+        a4PortraitBtn.addEventListener('click', mostrarPreloader);
+        a4LandscapeBtn.addEventListener('click', mostrarPreloader);
+
+        clearInterval(esperarOpcionesImpresion); // Ya no es necesario seguir buscando
+    }
+}, 500);

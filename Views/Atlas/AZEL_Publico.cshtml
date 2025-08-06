@@ -678,6 +678,20 @@ new { icon = "eye", text = "Consulta Pública: Acceso abierto a usuarios" }
             [lonMin, latMin]
         ]]);
 
+        // Calcular el área del rectángulo en metros cuadrados
+        const areaEnMetros = turf.area(rectanglePolygon);
+
+        // Convertir a kilómetros cuadrados
+        const areaEnKm2 = areaEnMetros / 1_000_000;
+
+        // Límite máximo permitido (por ejemplo 500 km²)
+        const maxAreaKm2 = 2500;
+
+        if (areaEnKm2 > maxAreaKm2) {
+            alert(`El área trazada es demasiado grande (${areaEnKm2.toFixed(2)} km²). Por favor, reduce el tamaño del rectángulo.`);
+            return;
+        }
+
         // Obtener los puntos vértices del rectángulo
         const rectanglePoints = [
             turf.point([lonMin, latMin]),
