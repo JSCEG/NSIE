@@ -457,7 +457,7 @@ namespace NSIE.Controllers
         public async Task<IActionResult> ForgotPassword(string Correo)
         {
             var user = await _repositorioAcceso.GetUserByEmail(Correo);
-            var logo = "https://github.com/SalvadorRuizG/Vetmex-Pagina-Oficial/blob/main/img/LogoEnergeo.png?raw=true";
+            var logo = "https://cdn.sassoapps.com/img_snier/login/logo_snier.png";
 
             if (user == null)
             {
@@ -509,7 +509,7 @@ namespace NSIE.Controllers
                                 <tbody>
                                     <tr>
                                         <td align='center'>
-                                            <img src='{logo}' alt='Logo' width='100px' height='100px'>
+                                            <img src='{logo}' alt='Logo' width='120px' height='100px'>
                                             <h1>¡Hola, {nombre}!</h1>
                                             <p>Por favor, usa el siguiente enlace para restablecer tu contraseña. Recuerda que el enlace expirará en 30 minutos.</p>
                                             <a href='{url}' style='padding: 10px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; display: inline-block;'>Restablecer Contraseña</a>
@@ -549,7 +549,7 @@ namespace NSIE.Controllers
                                 <tbody>
                                     <tr>
                                         <td align='center'>
-                                            <img src='{logo}' alt='Logo' width='100px' height='100px'>
+                                            <img src='{logo}' alt='Logo' width='120px' height='100px'>
                                             <h1>¡Hola, {nombre}!</h1>
                                             <p>Su Token anterior ha expirado. Use el siguiente enlace para restablecer su contraseña (Recuerde que tiene 30 minutos antes de que su Token expire):</p>
                                             <a href='{url}' style='padding: 10px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; display: inline-block;'>Restablecer Contraseña</a>
@@ -589,7 +589,7 @@ namespace NSIE.Controllers
                                 <tbody>
                                     <tr>
                                         <td align='center'>
-                                            <img src='{logo}' alt='Logo' width='100px' height='100px'>
+                                            <img src='{logo}' alt='Logo' width='120px' height='100px'>
                                             <h1>¡Hola, {nombre}!</h1>
                                             <p>Le informamos que su contraseña ha sido restablecida correctamente.</p>
                                             <p>*Este correo se genera automáticamente y no requiere respuesta.</p>
@@ -628,7 +628,7 @@ namespace NSIE.Controllers
         public async Task<IActionResult> ResetPassword(string Token, string Clave, string ConfirmarClave)
         {
             var user = await _repositorioAcceso.GetUserByPasswordResetToken(Token);
-            var logo = "https://github.com/SalvadorRuizG/Vetmex-Pagina-Oficial/blob/main/img/LogoEnergeo.png?raw=true";
+            var logo = "https://cdn.sassoapps.com/img_snier/login/logo_snier.png";
 
             if (user == null)
             {
@@ -693,7 +693,7 @@ namespace NSIE.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPasswordUser(string Clave, string ConfirmarClave, int IdUsuario)
         {
-            var logo = "https://github.com/SalvadorRuizG/Vetmex-Pagina-Oficial/blob/main/img/LogoEnergeo.png?raw=true";
+            var logo = "https://cdn.sassoapps.com/img_snier/login/logo_snier.png";
 
             if (Clave != ConfirmarClave)
             {

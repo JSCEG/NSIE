@@ -1008,101 +1008,101 @@ function addClassToPopupIfMedia(content, popup) {
 var rasterBaseLayers = {};
 
 //Capas de parques fotoeolicos
-// function pop_Parque_Solar_2022_0(feature, layer) {
-//     var popupContent = '<table>\
-//             <tr>\
-//                 <th scope="row">Nombre: </th>\
-//                 <td>' + (feature.properties['Nombre'] !== null ? autolinker.link(String(feature.properties['Nombre']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-//             </tr>\
-//             <tr>\
-//                 <th scope="row">Estado: </th>\
-//                 <td>' + (feature.properties['Estado'] !== null ? autolinker.link(String(feature.properties['Estado']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-//             </tr>\
-//         </table>';
-//     var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-//     layer.on('popupopen', function(e) {
-//         addClassToPopupIfMedia(content, e.popup);
-//     });
-//     layer.bindPopup(content, { maxHeight: 400 });
-// }
+function pop_Parque_Solar_2022_0(feature, layer) {
+    var popupContent = '<table>\
+            <tr>\
+                <th scope="row">Nombre: </th>\
+                <td>' + (feature.properties['Nombre'] !== null ? autolinker.link(String(feature.properties['Nombre']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+            </tr>\
+            <tr>\
+                <th scope="row">Estado: </th>\
+                <td>' + (feature.properties['Estado'] !== null ? autolinker.link(String(feature.properties['Estado']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+            </tr>\
+        </table>';
+    var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+    layer.on('popupopen', function(e) {
+        addClassToPopupIfMedia(content, e.popup);
+    });
+    layer.bindPopup(content, { maxHeight: 400 });
+}
 
-// function style_Parque_Solar_2022_0_0() {
-//     return {
-//         pane: 'pane_Parque_Solar_2022_0',
-//         opacity: 1,
-//         color: 'rgba(127,26,28,1.0)',
-//         dashArray: '',
-//         lineCap: 'butt',
-//         lineJoin: 'miter',
-//         weight: 1.0, 
-//         fill: true,
-//         fillOpacity: 1,
-//         fillColor: 'rgba(255,0,0,1.0)',
-//         interactive: true,
-//     }
-// }
-// mapas[0].createPane('pane_Parque_Solar_2022_0');
-// mapas[0].getPane('pane_Parque_Solar_2022_0').style.zIndex = 400;
-// mapas[0].getPane('pane_Parque_Solar_2022_0').style['mix-blend-mode'] = 'normal';
-// var layer_Parque_Solar_2022_0 = new L.geoJson(json_Parque_Solar_2022_0, {
-//     attribution: '',
-//     interactive: true,
-//     dataVar: 'json_Parque_Solar_2022_0',
-//     layerName: 'layer_Parque_Solar_2022_0',
-//     pane: 'pane_Parque_Solar_2022_0',
-//     onEachFeature: pop_Parque_Solar_2022_0,
-//     style: style_Parque_Solar_2022_0_0,
-// });
+function style_Parque_Solar_2022_0_0() {
+    return {
+        pane: 'pane_Parque_Solar_2022_0',
+        opacity: 1,
+        color: 'rgba(127,26,28,1.0)',
+        dashArray: '',
+        lineCap: 'butt',
+        lineJoin: 'miter',
+        weight: 1.0, 
+        fill: true,
+        fillOpacity: 1,
+        fillColor: 'rgba(255,0,0,1.0)',
+        interactive: true,
+    }
+}
+mapas[0].createPane('pane_Parque_Solar_2022_0');
+mapas[0].getPane('pane_Parque_Solar_2022_0').style.zIndex = 400;
+mapas[0].getPane('pane_Parque_Solar_2022_0').style['mix-blend-mode'] = 'normal';
+var layer_Parque_Solar_2022_0 = new L.geoJson(json_Parque_Solar_2022_0, {
+    attribution: '',
+    interactive: true,
+    dataVar: 'json_Parque_Solar_2022_0',
+    layerName: 'layer_Parque_Solar_2022_0',
+    pane: 'pane_Parque_Solar_2022_0',
+    onEachFeature: pop_Parque_Solar_2022_0,
+    style: style_Parque_Solar_2022_0_0,
+});
 
-// function pop_Parques_Eolicos_Poli_2023_1(feature, layer) {
-//     var popupContent = '<table>\
-//             <tr>\
-//                 <th scope="row">Proyecto: </th>\
-//                 <td>' + (feature.properties['Proyecto'] !== null ? autolinker.link(String(feature.properties['Proyecto']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-//             </tr>\
-//             <tr>\
-//                 <th scope="row">Municipio: </th>\
-//                 <td>' + (feature.properties['Municipio'] !== null ? autolinker.link(String(feature.properties['Municipio']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-//             </tr>\
-//             <tr>\
-//                 <th scope="row">Estado: </th>\
-//                 <td>' + (feature.properties['Estado'] !== null ? autolinker.link(String(feature.properties['Estado']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-//             </tr>\
-//         </table>';
-//     var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-//     layer.on('popupopen', function(e) {
-//         addClassToPopupIfMedia(content, e.popup);
-//     });
-//     layer.bindPopup(content, { maxHeight: 400 });
-// }
+function pop_Parques_Eolicos_Poli_2023_1(feature, layer) {
+    var popupContent = '<table>\
+            <tr>\
+                <th scope="row">Proyecto: </th>\
+                <td>' + (feature.properties['Proyecto'] !== null ? autolinker.link(String(feature.properties['Proyecto']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+            </tr>\
+            <tr>\
+                <th scope="row">Municipio: </th>\
+                <td>' + (feature.properties['Municipio'] !== null ? autolinker.link(String(feature.properties['Municipio']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+            </tr>\
+            <tr>\
+                <th scope="row">Estado: </th>\
+                <td>' + (feature.properties['Estado'] !== null ? autolinker.link(String(feature.properties['Estado']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+            </tr>\
+        </table>';
+    var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+    layer.on('popupopen', function(e) {
+        addClassToPopupIfMedia(content, e.popup);
+    });
+    layer.bindPopup(content, { maxHeight: 400 });
+}
 
-// function style_Parques_Eolicos_Poli_2023_1_0() {
-//     return {
-//         pane: 'pane_Parques_Eolicos_Poli_2023_1',
-//         opacity: 1,
-//         color: 'rgba(13,74,115,1.0)',
-//         dashArray: '',
-//         lineCap: 'butt',
-//         lineJoin: 'miter',
-//         weight: 1.0, 
-//         fill: true,
-//         fillOpacity: 1,
-//         fillColor: 'rgba(64,133,180,1.0)',
-//         interactive: true,
-//     }
-// }
-// mapas[0].createPane('pane_Parques_Eolicos_Poli_2023_1');
-// mapas[0].getPane('pane_Parques_Eolicos_Poli_2023_1').style.zIndex = 401;
-// mapas[0].getPane('pane_Parques_Eolicos_Poli_2023_1').style['mix-blend-mode'] = 'normal';
-// var layer_Parques_Eolicos_Poli_2023_1 = new L.geoJson(json_Parques_Eolicos_Poli_2023_1, {
-//     attribution: '',
-//     interactive: true,
-//     dataVar: 'json_Parques_Eolicos_Poli_2023_1',
-//     layerName: 'layer_Parques_Eolicos_Poli_2023_1',
-//     pane: 'pane_Parques_Eolicos_Poli_2023_1',
-//     onEachFeature: pop_Parques_Eolicos_Poli_2023_1,
-//     style: style_Parques_Eolicos_Poli_2023_1_0,
-// });
+function style_Parques_Eolicos_Poli_2023_1_0() {
+    return {
+        pane: 'pane_Parques_Eolicos_Poli_2023_1',
+        opacity: 1,
+        color: 'rgba(13,74,115,1.0)',
+        dashArray: '',
+        lineCap: 'butt',
+        lineJoin: 'miter',
+        weight: 1.0, 
+        fill: true,
+        fillOpacity: 1,
+        fillColor: 'rgba(64,133,180,1.0)',
+        interactive: true,
+    }
+}
+mapas[0].createPane('pane_Parques_Eolicos_Poli_2023_1');
+mapas[0].getPane('pane_Parques_Eolicos_Poli_2023_1').style.zIndex = 401;
+mapas[0].getPane('pane_Parques_Eolicos_Poli_2023_1').style['mix-blend-mode'] = 'normal';
+var layer_Parques_Eolicos_Poli_2023_1 = new L.geoJson(json_Parques_Eolicos_Poli_2023_1, {
+    attribution: '',
+    interactive: true,
+    dataVar: 'json_Parques_Eolicos_Poli_2023_1',
+    layerName: 'layer_Parques_Eolicos_Poli_2023_1',
+    pane: 'pane_Parques_Eolicos_Poli_2023_1',
+    onEachFeature: pop_Parques_Eolicos_Poli_2023_1,
+    style: style_Parques_Eolicos_Poli_2023_1_0,
+});
 
 // Potencial Fotovoltaico (por defecto)
 var capaPotencialFotovoltaico = L.imageOverlay(
@@ -1112,7 +1112,7 @@ var capaPotencialFotovoltaico = L.imageOverlay(
 
 var grupoSolar = L.layerGroup([
     capaPotencialFotovoltaico,
-    // layer_Parque_Solar_2022_0
+    layer_Parque_Solar_2022_0
 ]);
 
 rasterBaseLayers["🌞 Potencial Fotovoltaico"] = grupoSolar;
@@ -1126,7 +1126,7 @@ var capaRadiacionHorizontal = L.imageOverlay(
 
 var grupoRadiacion = L.layerGroup([
     capaRadiacionHorizontal,
-    // layer_Parque_Solar_2022_0
+    layer_Parque_Solar_2022_0
 ]);
 
 rasterBaseLayers["☀️ Radiación Horizontal"] = grupoRadiacion;
@@ -1157,7 +1157,7 @@ vientoConfig.forEach(function (cfg) {
     // Grupo que une la imagen y la capa de parques eólicos
     var grupoConVector = L.layerGroup([
         capaRaster,
-        // layer_Parques_Eolicos_Poli_2023_1
+        layer_Parques_Eolicos_Poli_2023_1
     ]);
 
     // Sobrescribimos o creamos la capa en rasterBaseLayers

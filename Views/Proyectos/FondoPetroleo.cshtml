@@ -211,7 +211,19 @@
                                 }
                                 else
                                 {
-                                    <button class="btn btn-outline-success btn-sm">Autorizar Convocatoria</button>
+                                    @if (!p.ConvocatoriaAutorizada)
+                                    {
+                                        <form method="post" asp-controller="Proyectos" asp-action="AutorizarConvocatoria" class="d-inline">
+                                            <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                            <button type="submit" class="btn btn-outline-success btn-sm">
+                                                <i class="bi bi-check2-circle"></i> Autorizar Convocatoria
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">✅ Convocatoria Autorizada</span>
+                                    }
                                 }
                             </td>
                             <td>
@@ -274,9 +286,64 @@
                                         </div>
                                     }
                                 }
-                                else if(p.Tipo == "abierta" && p.EsViable)
+                                else if(p.Tipo == "abierta" && p.EsViable && p.SusceptiblePresupuesto)
                                 {
-                                    <span class="badge bg-danger">Se está trabajando esto</span>
+                                    @if (p.Aprobado)
+                                    {
+                                        <span class="badge bg-success">✔️ Aprobado</span>
+                                        <a href="@($"{baseUrl}/Oficio_Aprobacion.pdf")" class="btn btn-outline-secondary btn-sm ms-2" target="_blank">
+                                            <i class="bi bi-eye"></i> Ver Oficio
+                                        </a>
+                                    }
+                                    else if (!string.IsNullOrEmpty(p.Observaciones))
+                                    {
+                                        if (!p.TieneCorreccion && !p.CorreccionEnviada && !p.Aprobado)
+                                        {
+                                            <span class="badge bg-danger">📝 Observaciones enviadas</span>
+                                            <p class="mt-1 small">@p.Observaciones</p>
+                                        }
+                                        else if (p.TieneCorreccion && p.CorreccionEnviada && !p.Aprobado)
+                                        {
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-outline-success"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalAprobar"
+                                                        data-proyecto="@p.Nombre"
+                                                        data-carpeta="@p.Carpeta">
+                                                    Aceptar y Subir Oficio
+                                                </button>
+
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalObservacion"
+                                                        data-proyecto="@p.Nombre"
+                                                        data-carpeta="@p.Carpeta">
+                                                    Enviar Nueva Observación
+                                                </button>
+                                            </div>
+                                            <div class="mt-1 small text-muted">⚠️ Se está revisando la corrección enviada.</div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-outline-success"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalAprobar"
+                                                    data-proyecto="@p.Nombre"
+                                                    data-carpeta="@p.Carpeta">
+                                                Aceptar y Subir Oficio
+                                            </button>
+
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalObservacion"
+                                                    data-proyecto="@p.Nombre"
+                                                    data-carpeta="@p.Carpeta">
+                                                Enviar Observación
+                                            </button>
+                                        </div>
+                                    }
                                 }
                                 else
                                 {
@@ -409,6 +476,68 @@
                 </tbody>
             </table>
         }
+        @if (propuestasComite != null && propuestasComite.Any(p => p.ConvocatoriaNotificada))
+        {
+            <hr />
+            <h5 class="mt-4">📑 Enviar propuesta y oficio</h5>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in propuestasComite.Where(p => p.ConvocatoriaNotificada))
+                    {
+                        <tr>
+                            <td>@p.Nombre</td>
+                            <td>
+                                @if (p.PropuestaOficioEnviada)
+                                {
+                                    <span class="badge bg-success">📤 Enviado</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!p.PropuestaOficioEnviada)
+                                {
+                                    <form method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="SubirPropuestaOficio" class="d-flex flex-column gap-2">
+                                        <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                        
+                                        <div>
+                                            <label class="form-label">Oficio (PDF):</label>
+                                            <input type="file" name="archivoOficio" accept=".pdf" class="form-control form-control-sm" required />
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Propuesta detallada (DOCX):</label>
+                                            <input type="file" name="archivoPropuesta" accept=".docx" class="form-control form-control-sm" required />
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm mt-2">
+                                            <i class="bi bi-upload"></i> Enviar
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <a href="~/documentos/revision_secretario/@p.Carpeta/Propuesta_Oficio.pdf" target="_blank" class="btn btn-outline-secondary btn-sm me-1">
+                                        Ver oficio
+                                    </a>
+                                    <a href="~/documentos/revision_secretario/@p.Carpeta/Propuesta_Detalles.docx" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        Ver propuesta
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     }
     else if (rolUsuario == "Secretario")
     {
@@ -512,7 +641,7 @@
                 </tbody>
             </table>
 
-            @if (propuestasComite != null && propuestasComite.Any(p => p.EsViable))
+            @if (propuestasComite != null && propuestasComite.Any(p => p.EsViable) && propuestasComite.Any(p => p.TienePropuesta))
             {
                 <hr />
                 <h5 class="mt-4">📨 Propuestas aprobadas para presupuesto para el envío al Comité de Decisión</h5>
@@ -526,7 +655,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var p in propuestasComite.Where(p => p.EsViable))
+                        @foreach (var p in propuestasComite.Where(p => p.EsViable && p.Tipo == "integrada"))
                         {
                             var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
                             <tr>
@@ -559,6 +688,165 @@
                     </tbody>
                 </table>
             }
+
+            @* Propuestas abiertas *@
+            @if (propuestasComite != null && propuestasComite.Any(p => p.ConvocatoriaAutorizada))
+            {
+                <hr />
+                <h5 class="mt-4">📢 Convocatorias autorizadas por el Comité</h5>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in propuestasComite.Where(p => p.ConvocatoriaAutorizada))
+                        {
+                            <tr>
+                                <td>@p.Nombre</td>
+                                <td>
+                                    @if (p.ConvocatoriaNotificada)
+                                    {
+                                        <span class="badge bg-success">📤 Notificado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Pendiente de notificar</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!p.ConvocatoriaNotificada)
+                                    {
+                                        <form method="post" asp-controller="Proyectos" asp-action="NotificarSujetoConvocatoria" class="d-inline">
+                                            <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                            <button type="submit" class="btn btn-warning btn-sm">
+                                                <i class="bi bi-envelope-exclamation"></i> Notificar Sujeto
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Ya notificado</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            @if (propuestasComite != null && propuestasComite.Any(p =>
+                p.ConvocatoriaNotificada &&
+                p.PropuestaOficioEnviada))
+            {
+                <hr />
+                <h5 class="mt-4">📂 Propuestas y oficios recibidos de los Sujetos</h5>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Documentos recibidos</th>
+                            <th>Formato de Evaluación</th>
+                            <th>Enviar al Comité de Decisión</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in propuestasComite.Where(p =>
+                            p.ConvocatoriaNotificada &&
+                            p.PropuestaOficioEnviada))
+                        {
+                            var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                            <tr>
+                                <td>@p.Nombre</td>
+                                <td>
+                                    <a href="@($"{baseUrl}/Propuesta_Oficio.pdf")" target="_blank" class="btn btn-outline-primary btn-sm">Oficio (PDF)</a>
+                                    <a href="@($"{baseUrl}/Propuesta_Detalles.docx")" target="_blank" class="btn btn-outline-secondary btn-sm ms-1">Propuesta (DOCX)</a>
+                                </td>
+                                <td>
+                                    @if (p.FormatoEvaluacionSubido)
+                                    {
+                                        <span class="badge bg-success">✅ Subido</span>
+                                        <a href="@($"{baseUrl}/Formato_Evaluacion.pdf")" target="_blank" class="btn btn-outline-info btn-sm ms-1">Ver</a>
+                                    }
+                                    else
+                                    {
+                                        <form method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="SubirFormatoEvaluacionSujeto" class="d-flex gap-2">
+                                            <input type="hidden" name="carpetaProyecto" value="@p.Carpeta" />
+                                            <input type="file" name="formatoEvaluacion" accept=".pdf" class="form-control form-control-sm" required />
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="bi bi-upload"></i> Subir
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                                <td>
+                                    @if (p.EnviadoComite)
+                                    {
+                                        <span class="badge bg-primary">📤 Enviado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Suba primero el formato</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            @if (propuestasComite != null && propuestasComite.Any(p => p.EsViable))
+            {
+                <hr />
+                <h5 class="mt-4">💰 Proyectos viables para marcar como susceptibles a presupuesto</h5>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in propuestasComite.Where(p => p.EsViable && p.Tipo == "abierta"))
+                        {
+                            <tr>
+                                <td>@p.Nombre</td>
+                                <td>
+                                    @if (p.SusceptiblePresupuesto)
+                                    {
+                                        <span class="badge bg-success">✅ Susceptible</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!p.SusceptiblePresupuesto)
+                                    {
+                                        <form method="post" asp-controller="Proyectos" asp-action="MarcarSusceptiblePresupuesto">
+                                            <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-cash-stack"></i> Marcar como Susceptible
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Ya marcado</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            @* Propuestas con observaciones *@
 
             @if (propuestasComite != null && propuestasComite.Any(p => !string.IsNullOrEmpty(p.Observaciones)))
             {
@@ -712,6 +1000,12 @@
                                 {
                                     <div class="alert alert-@(p.EstadoEvaluacion.Contains("VIABLE") ? "success" : "danger") p-2 mb-2">
                                         <i class="bi bi-check2-circle me-1"></i> @p.EstadoEvaluacion
+                                    </div>
+                                }
+                                else if (!string.IsNullOrEmpty(p.EstadoEvaluacionAbierta))
+                                {
+                                    <div class="alert alert-@(p.EstadoEvaluacionAbierta.Contains("VIABLE") ? "success" : "danger") p-2 mb-2">
+                                        <i class="bi bi-check2-circle me-1"></i> @p.EstadoEvaluacionAbierta
                                     </div>
                                 }
                                 else

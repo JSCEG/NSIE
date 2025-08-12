@@ -59,8 +59,16 @@ namespace NSIE.Servicios
                 string username = _configuration["EmailSettings:Username"];
                 string password = _configuration["EmailSettings:Password"];
 
+                Console.WriteLine($"Tipo de cuenta configurada: {tipoCuenta}");
+                Console.WriteLine($"Usuario de envío: {username}");
+
                 // Lista de configuraciones a probar en orden de prioridad
                 var configuracionesPrueba = new List<(string nombre, string host, int port, bool ssl)>();
+
+                if (!configuracionesPrueba.Any())
+                {
+                    Console.WriteLine("⚠️ No se encontró ninguna configuración de SMTP para el tipo de cuenta proporcionado.");
+                }
 
                 if (tipoCuenta == "Proton")
                 {
@@ -107,6 +115,7 @@ namespace NSIE.Servicios
 
                 foreach (var config in configuracionesPrueba)
                 {
+                    Console.WriteLine($"Configuración registrada: {config.nombre} - {config.host}:{config.port} SSL={config.ssl}");
                     try
                     {
                         Console.WriteLine($"Intentando envío con: {config.nombre} ({config.host}:{config.port})");
@@ -148,7 +157,7 @@ namespace NSIE.Servicios
                 }
 
                 // Si llegamos aquí, todas las configuraciones fallaron
-                throw new Exception($"No se pudo enviar el email con ninguna configuración. Último error: {ultimoError?.Message}");
+                throw new Exception($"No se pudo enviar el email con ninguna configuración. Último error: {ultimoError?.ToString() ?? "Error desconocido"}");
             }
             catch (Exception ex)
             {
@@ -156,7 +165,6 @@ namespace NSIE.Servicios
                 throw;
             }
         }
-
 
     }
 

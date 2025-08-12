@@ -1,13 +1,16 @@
 
 // Configuración General de los Mapas
 
+
+
         var mapas = [];
         var bounds_group = new L.featureGroup([]);
         var autolinker = new Autolinker({ truncate: { length: 30, location: 'smart' } });
 
 
         function iniciarMapas() {
-        
+            // Token de acceso de Mapbox
+            const yourAccessToken = 'pk.eyJ1IjoiY2VzYXJ2aGUiLCJhIjoiY21lN3R4eTF2MDhkZTJrb3Jnb3o0ZHY2ZiJ9.rnwgEH6hJCRSAHoWclXZ_A';
             ///Variable a la que le cargaremos los  mapas
 
                 //Tipos de Mapas
@@ -52,21 +55,49 @@
                     var cartoDBDarkAll = L.tileLayer('https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>'
                     });
+
+                    // Añadir la capa de Mapbox GL como fondo
+                    var Sener = L.mapboxGL({
+                        accessToken: yourAccessToken,
+                        style: 'mapbox://styles/cesarvhe/cme7qim1i002201s27lf9b62y' // URL de tu estilo
+                    });
+
+                    // Añadir la capa Light de Mapbox GL como fondo
+                    var SenerLight = L.mapboxGL({
+                        accessToken: yourAccessToken,
+                        style: 'mapbox://styles/cesarvhe/cme8rtepc004n01s290kggigc' // URL de tu estilo
+                    });
+
+                    // Añadir la capa Dark de Mapbox GL como fondo
+                    var SenerDark = L.mapboxGL({
+                        accessToken: yourAccessToken,
+                        style: 'mapbox://styles/cesarvhe/cme7qim1i002201s27lf9b62y' // URL de tu estilo
+                    });
+
+                    // Añadir la capa Monocromo de Mapbox GL como fondo
+                    var SenerMonocromo = L.mapboxGL({
+                        accessToken: yourAccessToken,
+                        style: 'mapbox://styles/cesarvhe/cme8sof98004t01s27vve5f9g' // URL de tu estilo
+                    });
                 
                     // Configura los Base Layers y expónlos globalmente
                     var baseLayers = {
-                        "Vista de Calle": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        }),
+                        "SENER": Sener,
+                        "SENER Light": SenerLight,
+                        "SENER Dark": SenerDark,
+                        "SENER Monocromo": SenerMonocromo,
+                        // "Vista de Calle": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        // }),
                         "Vista Satélite": layer_GoogleSatellite_0,
-                        "Modo Oscuro": cartoDBDarkAll
+                        // "Modo Oscuro": cartoDBDarkAll
                     };
                     // Asigna a una variable global
                     window.baseMaps = baseLayers;
                 
                     // Control de capas y vista inicial
                     L.control.layers(baseLayers).addTo(targetMap);
-                    baseLayers["Vista de Calle"].addTo(targetMap);
+                    baseLayers["SENER"].addTo(targetMap);
                 
                     // Eventos y controles
                     targetMap.on('baselayerchange', function (eventLayer) {
