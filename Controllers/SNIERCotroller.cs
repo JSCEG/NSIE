@@ -219,6 +219,22 @@ namespace NSIE.Controllers
             return View();
         }
 
+        public IActionResult MonitoreoProgramasLineasYMetas()
+        {
+            return View();
+        }
+
+        public IActionResult RepositorioNormativo()
+        {
+            return View();
+        }
+
+        public IActionResult Metodologias()
+        {
+            return View();
+        }
+
+
         // Nuevo método para obtener datos reales de demanda del MEM
         [HttpGet]
         public async Task<IActionResult> DemandaMEM(string inicio, string fin)

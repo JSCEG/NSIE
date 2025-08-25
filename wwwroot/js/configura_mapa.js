@@ -57,39 +57,70 @@
                     });
 
                     // Añadir la capa de Mapbox GL como fondo
-                    var Sener = L.mapboxGL({
-                        accessToken: yourAccessToken,
-                        style: 'mapbox://styles/cesarvhe/cme7qim1i002201s27lf9b62y' // URL de tu estilo
-                    });
+                    // var Sener = L.mapboxGL({
+                    //     accessToken: yourAccessToken,
+                    //     style: 'mapbox://styles/cesarvhe/cme7qim1i002201s27lf9b62y' // URL de tu estilo
+                    // });
 
                     // Añadir la capa Light de Mapbox GL como fondo
-                    var SenerLight = L.mapboxGL({
-                        accessToken: yourAccessToken,
-                        style: 'mapbox://styles/cesarvhe/cme8rtepc004n01s290kggigc' // URL de tu estilo
-                    });
+                    // var SenerLight = L.mapboxGL({
+                    //     accessToken: yourAccessToken,
+                    //     style: 'mapbox://styles/cesarvhe/cme8rtepc004n01s290kggigc' // URL de tu estilo
+                    // });
 
                     // Añadir la capa Dark de Mapbox GL como fondo
-                    var SenerDark = L.mapboxGL({
-                        accessToken: yourAccessToken,
-                        style: 'mapbox://styles/cesarvhe/cme7qim1i002201s27lf9b62y' // URL de tu estilo
-                    });
+                    // var SenerDark = L.mapboxGL({
+                    //     accessToken: yourAccessToken,
+                    //     style: 'mapbox://styles/cesarvhe/cme7qim1i002201s27lf9b62y' // URL de tu estilo
+                    // });
 
                     // Añadir la capa Monocromo de Mapbox GL como fondo
-                    var SenerMonocromo = L.mapboxGL({
-                        accessToken: yourAccessToken,
-                        style: 'mapbox://styles/cesarvhe/cme8sof98004t01s27vve5f9g' // URL de tu estilo
+                    // var SenerMonocromo = L.mapboxGL({
+                    //     accessToken: yourAccessToken,
+                    //     style: 'mapbox://styles/cesarvhe/cme8sof98004t01s27vve5f9g' // URL de tu estilo
+                    // });
+
+                    L.control.locate({
+                        position: "topleft",
+                        flyTo: true,
+                        showCompass: true,
+                        strings: {
+                            title: "Haz clic para encontrarte"
+                        }
+                    }).addTo(targetMap);
+
+                    const key = 'xRR3xCujdkUjxkDqlNTG';
+                    // Capa de MapTiler estilo "toner-v2"
+                    var Sener = L.maptiler.maptilerLayer({
+                        apiKey: key,
+                        style: "0198a9f0-f135-7991-aaec-bea71681556e" // aquí puedes usar el ID o estilo que quieras
                     });
-                
+
+                    const keyLight = 'xRR3xCujdkUjxkDqlNTG';
+                    // Capa de MapTiler estilo "toner-v2"
+                    var SenerLight = L.maptiler.maptilerLayer({
+                        apiKey: keyLight,
+                        style: "0198a9af-dc7c-79d3-8316-a80767ad1d0f" // aquí puedes usar el ID o estilo que quieras
+                    });
+
+                    const keyDark = 'xRR3xCujdkUjxkDqlNTG';
+                    // Capa de MapTiler estilo "toner-v2"
+                    var SenerDark = L.maptiler.maptilerLayer({
+                        apiKey: keyDark,
+                        style: "0198a9df-c3dc-73df-b1c0-55a5488e3790" // aquí puedes usar el ID o estilo que quieras
+                    });
+
                     // Configura los Base Layers y expónlos globalmente
                     var baseLayers = {
                         "SENER": Sener,
                         "SENER Light": SenerLight,
                         "SENER Dark": SenerDark,
-                        "SENER Monocromo": SenerMonocromo,
+                        // "SENER Monocromo": SenerMonocromo,
                         // "Vista de Calle": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         // }),
                         "Vista Satélite": layer_GoogleSatellite_0,
+                        // "Pruebas": Prueba
                         // "Modo Oscuro": cartoDBDarkAll
                     };
                     // Asigna a una variable global

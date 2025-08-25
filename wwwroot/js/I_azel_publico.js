@@ -3530,7 +3530,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (defaultRamp) {
         defaultRamp.style.display = '';
     }
-    setTimeout(agregarBotonCentrarMapa, 200);
+    // setTimeout(agregarBotonCentrarMapa, 200);
     // Cargar marcadores fotovoltaico solo si no se ha llamado ya
     if (typeof cargarMarcadoresFotovoltaico === 'function') {
         cargarMarcadoresFotovoltaico();
@@ -3937,8 +3937,19 @@ setTimeout(function () {
     var slider = document.getElementById('raster-opacity-slider');
     if (slider) {
         slider.addEventListener('input', function () {
-            if (rasterActivo && typeof rasterActivo.setOpacity === 'function') {
-                rasterActivo.setOpacity(parseFloat(this.value));
+            var valor = parseFloat(this.value);
+
+            if (!rasterActivo) return;
+
+            if (typeof rasterActivo.setOpacity === 'function') {
+                rasterActivo.setOpacity(valor);
+            } 
+            else if (rasterActivo.eachLayer) {
+                rasterActivo.eachLayer(function (layer) {
+                    if (typeof layer.setOpacity === 'function') {
+                        layer.setOpacity(valor);
+                    }
+                });
             }
         });
     }
@@ -3967,7 +3978,25 @@ if (defaultRamp) {
 
 // --- Evento para cambio de capa raster ---
 mapas[0].on('baselayerchange', function (e) {
+    // Si es un estilo de mapa y no un raster temático, no limpiar marcadores
+    const capasTematicas = [
+        "🌞 Potencial Fotovoltaico",
+        "☀️ Radiación Horizontal",
+        "💨 Viento", // puedes usar startsWith más abajo
+        "🛢️ Residuos Industriales",
+        "🐄 Residuos Pecuarios",
+        "🗑️ Residuos Urbanos",
+        "🌲 Residuos Forestales",
+        "🌋 Geotérmica",
+        "💧 Disponibilidad Hídrica"
+    ];
+
+    if (!capasTematicas.some(nombre => e.name.startsWith(nombre.replace(/.$/, "")))) {
+        return; // Es un cambio de estilo base → no tocar marcadores
+    }
+
     limpiarMarcadores();
+    
     // Quitar opacidad al raster anterior
     if (rasterActivo && typeof rasterActivo.setOpacity === 'function') {
         rasterActivo.setOpacity(1);

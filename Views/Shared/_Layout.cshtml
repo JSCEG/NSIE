@@ -71,6 +71,14 @@
     <!-- Mapbox GL JS CSS -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet" />
 
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v3.6.1/maptiler-sdk.umd.min.js"></script>
+    <link href="https://cdn.maptiler.com/maptiler-sdk-js/v3.6.1/maptiler-sdk.css" rel="stylesheet" />
+    <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v4.1.0/leaflet-maptilersdk.umd.min.js"></script>
+
+    <!-- Incluye CSS y JS del plugin -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+
     <!-- Geovisualizador CSS -->
     <link rel="stylesheet" href="@Cdn.Url/Geovisualizador/css/qgis2web.css">
     <link rel="stylesheet" href="@Cdn.Url/Geovisualizador/css/fontawesome-all.min.css">
@@ -528,7 +536,7 @@
                     </li>
                 }
             }
-                 @if (perfilUsuario.IdUsuario == "1")
+                @if (perfilUsuario.IdUsuario == "1" || perfilUsuario.IdUsuario == "31")
                 {
                    <div class="px-3 pb-3">
                         <small class="section-header">Sistema</small>

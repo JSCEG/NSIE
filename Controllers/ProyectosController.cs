@@ -10,6 +10,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 
 namespace NSIE.Controllers
@@ -43,7 +44,7 @@ namespace NSIE.Controllers
             var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "necesidades", "Listado_Necesidades.pdf");
             bool listadoPublicado = System.IO.File.Exists(ruta);
 
-            //Secretario administartivo
+            //Secretario administrativo
             string rutaBase = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario");
 
             var propuestas = new List<dynamic>();
@@ -94,7 +95,10 @@ namespace NSIE.Controllers
                         var contenido = System.IO.File.ReadAllText(rutaEvaluacionAbierta);
                         esViable = contenido.Contains("VIABLE");
                     }
-
+                    var documentoConvenioSubido = System.IO.File.Exists(Path.Combine(carpeta, "Documentacion_Convenio.pdf"));
+                    var oficioSolicitudCuentaSubido = System.IO.File.Exists(Path.Combine(carpeta, "Oficio_Solicitud_Cuenta.pdf"));
+                    var documentosCuentaBancariaSubidos = System.IO.File.Exists(Path.Combine(carpeta, "Documentos_CuentaBancaria.pdf"));
+                    var transferenciaConfirmada = System.IO.File.Exists(Path.Combine(carpeta, "Transferencia_Confirmada.txt"));
 
                     if (tieneDemanda && tieneCuestionario)
                     {
@@ -120,7 +124,12 @@ namespace NSIE.Controllers
                             PropuestaOficioEnviada = propuestaOficioEnviada,
                             FormatoEvaluacionSubido = formatoEvaluacionSubido,
                             EnviadoComite = enviadoComite,
-                            SusceptiblePresupuesto = susceptiblePresupuesto
+                            SusceptiblePresupuesto = susceptiblePresupuesto,
+
+                            DocumentoConvenioSubido = documentoConvenioSubido,
+                            OficioSolicitudCuentaSubido = oficioSolicitudCuentaSubido,
+                            DocumentosCuentaBancariaSubidos = documentosCuentaBancariaSubidos,
+                            TransferenciaConfirmada = transferenciaConfirmada
                         });
                     }
                 }
@@ -173,6 +182,153 @@ namespace NSIE.Controllers
             // Pasamos datos a la vista (ViewData o ViewBag)
             ViewData["ListadoPublicado"] = listadoPublicado;
             ViewData["UrlListado"] = "/documentos/necesidades/Listado_Necesidades.pdf";
+
+            //PROYECTOS
+            ViewData["ProyectosAprobados"] = propuestas
+                .Where(p => p.TransferenciaConfirmada)
+                .Select(p =>
+                {
+                    var carpetaProyecto = Path.Combine(rutaBase, p.Carpeta);
+
+                    var transferenciaPath = Path.Combine(carpetaProyecto, "Transferencia_Confirmada.txt");
+                    var inicioDate = System.IO.File.Exists(transferenciaPath)
+                        ? System.IO.File.GetCreationTime(transferenciaPath)
+                        : DateTime.Today;
+
+                    var finDate = DateTime.Today.AddMonths(2);
+
+                    // Cadenas para la vista
+                    var inicio = inicioDate.ToString("yyyy-MM-dd");
+                    var fin = finDate.ToString("yyyy-MM-dd");
+
+                    var informeOficioGuardadoPath = Path.Combine(carpetaProyecto, "Informe_Oficio_Guardado.txt");
+                    var informeOficioGuardado = System.IO.File.Exists(informeOficioGuardadoPath);
+
+                    var fechaLimitePath = Path.Combine(carpetaProyecto, "Fecha_Limite.txt");
+                    string fechaLimite = null;
+                    string fechaLimiteStr = null;
+                    if (System.IO.File.Exists(fechaLimitePath))
+                    {
+                        var contenido = System.IO.File.ReadAllText(fechaLimitePath);
+                        Console.WriteLine("Contenido crudo: [" + contenido + "]");
+                        fechaLimite = contenido.Replace("Limite el", "").Trim();
+                        Console.WriteLine("Valor final: [" + fechaLimite + "]");
+                        // Puedes parsear el contenido del archivo en vez de solo tomar la fecha de creación
+                        fechaLimite = System.IO.File.ReadAllText(fechaLimitePath)
+                            .Replace("Limite el", "", StringComparison.OrdinalIgnoreCase)
+                            .Trim();
+                        Console.WriteLine("Valor: " + fechaLimite);
+                        if (DateTime.TryParse(fechaLimite, out var fechaParsed))
+                        {
+                            // 👇 Lo convertimos a ISO 8601 para JS
+                            fechaLimiteStr = fechaParsed.ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                        Console.WriteLine("Valor Final: " + fechaLimiteStr);
+                    }
+
+                    var fechaReunionPath = Path.Combine(carpetaProyecto, "Fecha_Reunion.txt");
+                    string fechaReunion = null;
+                    string fechaReunionStr = null;
+                    string requiereDocumento = null;
+                    if (System.IO.File.Exists(fechaReunionPath))
+                    {
+                        var contenido = System.IO.File.ReadAllText(fechaReunionPath).Trim();
+                        Console.WriteLine("Contenido crudo: [" + contenido + "]");
+
+                        // Ejemplo esperado: "2025-08-18T14:30:00|SI"
+                        var partes = contenido.Split('|');
+                        if (partes.Length >= 1)
+                        {
+                            var textoFecha = partes[0].Trim();
+                            // Buscar la fecha en el texto
+                            var match = Regex.Match(textoFecha, @"\d{2}/\d{2}/\d{4}\s+\d{2}:\d{2}");
+                            if (match.Success)
+                            {
+                                fechaReunion = match.Value; // "27/08/2025 17:21"
+                                if (DateTime.TryParse(fechaReunion, out var fechaParsed))
+                                {
+                                    fechaReunionStr = fechaParsed.ToString("yyyy-MM-ddTHH:mm:ss");
+                                }
+                            }
+                        }
+
+                        if (partes.Length >= 2)
+                        {
+                            requiereDocumento = partes[1].Replace("Requiere documento:", "").Trim();
+                        }
+
+                        Console.WriteLine("Fecha reunión: " + fechaReunionStr);
+                        Console.WriteLine("¿Requiere documento?: " + requiereDocumento);
+                    }
+
+                    var informeFinalGuardadoPath = Path.Combine(carpetaProyecto, "Informe_Final_Guardado.txt");
+                    var informeFinalGuardado = System.IO.File.Exists(informeFinalGuardadoPath);
+
+                    var finalProyectoPath = Path.Combine(carpetaProyecto, "Final_Proyecto.txt");
+                    var finalProyecto = System.IO.File.Exists(finalProyectoPath);
+
+                    var finiquitoPath = Path.Combine(carpetaProyecto, "Finiquito.txt");
+                    var finiquito = System.IO.File.Exists(finiquitoPath);
+
+                    // 👇 lógica de progreso
+                    int progreso = 0;
+                    bool habilitarInformeFinal = false;
+                    if (informeOficioGuardado)
+                    {
+                        progreso = 25;
+
+                        // Solo si el fin es posterior al inicio calculamos la mitad
+                        if (finDate > inicioDate)
+                        {
+                            var fechaMitad = inicioDate.AddDays((finDate - inicioDate).TotalDays / 2.0);
+                            Console.WriteLine("Fecha mitad: " + fechaMitad);
+                            if (DateTime.Now >= fechaMitad)
+                            {
+                                progreso = 50;
+                            }
+                            var diasRestantesProyecto = (finDate - DateTime.Today).TotalDays;
+                            Console.WriteLine("Dias restantes: " + diasRestantesProyecto);
+                            if (diasRestantesProyecto <= 14 && diasRestantesProyecto >= 0)
+                            {
+                                habilitarInformeFinal = true;
+                                if (informeFinalGuardado)
+                                {
+                                    progreso = 75;
+                                    if (finiquito)
+                                    {
+                                        progreso = 100;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    return new
+                    {
+                        p.Nombre,
+                        Inicio = inicio,
+                        Fin = DateTime.Now.AddMonths(2).ToString("yyyy-MM-dd"),
+                        Progreso = progreso,
+                        Estado = progreso >= 100 ? "Concluido" : "En curso",
+                        p.Carpeta,
+                        InformeOficioGuardado = informeOficioGuardado,
+                        FechaEntregaInformes = informeOficioGuardado
+                            ? System.IO.File.GetCreationTime(informeOficioGuardadoPath).ToString("yyyy-MM-dd")
+                            : null,
+                        FechaLimite = fechaLimiteStr,
+                        FechaReunion = fechaReunionStr,
+                        RequiereDocumento = requiereDocumento,
+                        HabilitarInformeFinal = habilitarInformeFinal,
+                        InformeFinalGuardado = informeFinalGuardado,
+                        FechaEntregaFinal = informeFinalGuardado
+                            ? System.IO.File.GetCreationTime(informeOficioGuardadoPath).ToString("yyyy-MM-dd")
+                            : null,
+                        FinalProyecto = finalProyecto,
+                        Finiquito = finiquito
+                    };
+                })
+                .ToList();
 
             return View();
         }
@@ -734,19 +890,42 @@ namespace NSIE.Controllers
         [HttpPost]
         public async Task<IActionResult> AprobarProyecto(string carpeta, IFormFile oficio)
         {
-            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
-            var pathOficio = Path.Combine(ruta, "Oficio_Aprobacion.pdf");
-
-            if (!Directory.Exists(ruta)) Directory.CreateDirectory(ruta);
-
-            using (var stream = new FileStream(pathOficio, FileMode.Create))
+            if (string.IsNullOrWhiteSpace(carpeta) || oficio == null)
             {
-                await oficio.CopyToAsync(stream);
+                TempData["MensajeError"] = "❌ Datos inválidos. Selecciona un archivo y vuelve a intentarlo.";
+                return RedirectToAction("FondoPetroleo");
             }
 
-            System.IO.File.WriteAllText(Path.Combine(ruta, "Aprobado.txt"), DateTime.Now.ToString());
+            if (Path.GetExtension(oficio.FileName).ToLower() != ".pdf")
+            {
+                TempData["MensajeError"] = "❌ El archivo debe estar en formato PDF.";
+                return RedirectToAction("FondoPetroleo");
+            }
 
-            TempData["MensajeExito"] = "✅ Propuesta aprobada correctamente.";
+            try
+            {
+                var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+                if (!Directory.Exists(ruta)) Directory.CreateDirectory(ruta);
+
+                var pathOficio = Path.Combine(ruta, "Oficio_Aprobacion.pdf");
+
+                // Guardar el PDF
+                using (var stream = new FileStream(pathOficio, FileMode.Create))
+                {
+                    await oficio.CopyToAsync(stream);
+                }
+
+                // Crear o actualizar el archivo de aprobación
+                var aprobadoPath = Path.Combine(ruta, "Aprobado.txt");
+                System.IO.File.WriteAllText(aprobadoPath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+                TempData["MensajeExito"] = "✅ Propuesta aprobada correctamente y oficio guardado.";
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = $"❌ Ocurrió un error al subir el oficio: {ex.Message}";
+            }
+
             return RedirectToAction("FondoPetroleo");
         }
 
@@ -1046,7 +1225,7 @@ namespace NSIE.Controllers
 
             return RedirectToAction("FondoPetroleo");
         }
-        
+
         [HttpPost]
         public IActionResult MarcarSusceptiblePresupuesto(string carpeta)
         {
@@ -1063,6 +1242,323 @@ namespace NSIE.Controllers
             System.IO.File.WriteAllText(rutaArchivo, $"Marcado como susceptible a presupuesto el {DateTime.Now}");
 
             TempData["MensajeExito"] = "El proyecto fue marcado como susceptible a presupuesto.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubirDocumentacionConvenio(string carpeta, IFormFile archivoConvenio)
+        {
+            if (string.IsNullOrWhiteSpace(carpeta) || archivoConvenio == null)
+            {
+                TempData["MensajeError"] = "❌ Datos inválidos.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            if (Path.GetExtension(archivoConvenio.FileName).ToLower() != ".pdf")
+            {
+                TempData["MensajeError"] = "❌ El archivo debe estar en formato PDF.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            try
+            {
+                var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+                if (!Directory.Exists(ruta)) Directory.CreateDirectory(ruta);
+
+                var pathArchivo = Path.Combine(ruta, "Documentacion_Convenio.pdf");
+
+                using (var stream = new FileStream(pathArchivo, FileMode.Create))
+                {
+                    await archivoConvenio.CopyToAsync(stream);
+                }
+
+                System.IO.File.WriteAllText(Path.Combine(ruta, "DocumentoConvenioSubido.txt"), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+                TempData["MensajeExito"] = "✅ Documentación para convenio subida correctamente.";
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = $"❌ Error al subir el documento: {ex.Message}";
+            }
+
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubirOficioSolicitudCuenta(string carpeta, IFormFile archivoOficio)
+        {
+            if (archivoOficio == null || archivoOficio.Length == 0)
+            {
+                TempData["MensajeError"] = "❌ Debe seleccionar un archivo PDF.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var rutaProyecto = Path.Combine(Directory.GetCurrentDirectory(),
+                                            "wwwroot", "documentos", "revision_secretario", carpeta);
+
+            if (!Directory.Exists(rutaProyecto))
+                Directory.CreateDirectory(rutaProyecto);
+
+            var pathDestino = Path.Combine(rutaProyecto, "Oficio_Solicitud_Cuenta.pdf");
+
+            using (var stream = new FileStream(pathDestino, FileMode.Create))
+            {
+                await archivoOficio.CopyToAsync(stream);
+            }
+
+            TempData["MensajeExito"] = "✅ Oficio de solicitud de cuenta bancaria subido correctamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubirDocumentosCuentaBancaria(string carpeta, IFormFile archivoCuenta)
+        {
+            if (archivoCuenta == null || archivoCuenta.Length == 0)
+            {
+                TempData["MensajeError"] = "⚠️ Debe seleccionar un archivo PDF.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            // Ruta destino
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+            if (!Directory.Exists(ruta))
+                Directory.CreateDirectory(ruta);
+
+            var pathArchivo = Path.Combine(ruta, "Documentos_CuentaBancaria.pdf");
+
+            // Guardar archivo
+            using (var stream = new FileStream(pathArchivo, FileMode.Create))
+            {
+                await archivoCuenta.CopyToAsync(stream);
+            }
+
+            // Crear archivo indicador de que ya se subió
+            System.IO.File.WriteAllText(Path.Combine(ruta, "CuentaBancaria_Subida.txt"), DateTime.Now.ToString());
+
+            TempData["MensajeExito"] = "✅ Documentos de apertura de cuenta bancaria enviados correctamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public IActionResult ConfirmarTransferencia(string carpeta)
+        {
+            if (string.IsNullOrEmpty(carpeta))
+            {
+                TempData["MensajeError"] = "⚠️ Carpeta inválida.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+            if (!Directory.Exists(ruta))
+            {
+                TempData["MensajeError"] = "⚠️ Carpeta no encontrada.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            System.IO.File.WriteAllText(Path.Combine(ruta, "Transferencia_Confirmada.txt"), DateTime.Now.ToString());
+
+            TempData["MensajeExito"] = "✅ Transferencia confirmada correctamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public IActionResult SubirInformes(string carpeta, IFormFile informeTecnico, IFormFile informeFinanciero, IFormFile Oficio)
+        {
+            if (string.IsNullOrEmpty(carpeta))
+            {
+                TempData["MensajeError"] = "⚠️ Carpeta inválida.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+
+            if (!Directory.Exists(ruta))
+            {
+                Directory.CreateDirectory(ruta); // Crea la carpeta si no existe
+            }
+
+            // Guarda un archivo de control para indicar que ya se guardaron informes
+            var nombreArchivo = $"Informe_Oficio_Guardado.txt";
+            System.IO.File.WriteAllText(Path.Combine(ruta, nombreArchivo),
+                $"Informe guardado el {DateTime.Now}");
+
+            // 2. Guardar informe si se subió
+            if (informeTecnico != null && informeTecnico.Length > 0)
+            {
+                var informeTecnicoPath = Path.Combine(ruta, "Informe_Tecnico_Proyecto.pdf");
+                using (var stream = new FileStream(informeTecnicoPath, FileMode.Create))
+                {
+                    informeTecnico.CopyTo(stream);
+                }
+            }
+
+            if (informeFinanciero != null && informeFinanciero.Length > 0)
+            {
+                var informeFinancieroPath = Path.Combine(ruta, "Informe_Financiero_Proyecto.pdf");
+                using (var stream = new FileStream(informeFinancieroPath, FileMode.Create))
+                {
+                    informeFinanciero.CopyTo(stream);
+                }
+            }
+
+            // 3. Guardar oficio si se subió
+            if (Oficio != null && Oficio.Length > 0)
+            {
+                var oficioPath = Path.Combine(ruta, "Oficio_Proyecto.pdf");
+                using (var stream = new FileStream(oficioPath, FileMode.Create))
+                {
+                    Oficio.CopyTo(stream);
+                }
+            }
+
+            TempData["MensajeExito"] = "✅ Informes guardados correctamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public IActionResult AsignarPlazo(string carpeta, DateTime? fechaLimite)
+        {
+            if (string.IsNullOrEmpty(carpeta))
+            {
+                return BadRequest("La carpeta es obligatoria.");
+            }
+
+            // Validar fecha (que no sea pasada)
+            if (fechaLimite.HasValue && fechaLimite.Value.Date < DateTime.Today)
+            {
+                TempData["Error"] = "La fecha límite no puede ser anterior a hoy.";
+                return RedirectToAction("FondoPetroleo"); // O a la vista que uses
+            }
+
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+            // Guarda un archivo de control para indicar que ya se guardaron informes
+            var nombreArchivo = $"Fecha_Limite.txt";
+            System.IO.File.WriteAllText(Path.Combine(ruta, nombreArchivo),
+                $"Limite el {fechaLimite}");
+
+            TempData["Success"] = fechaLimite.HasValue
+                ? $"Se asignó la fecha límite {fechaLimite.Value:dd/MM/yyyy}"
+                : "Se dejó sin límite de tiempo.";
+
+            return RedirectToAction("FondoPetroleo"); // o la vista donde muestras la tabla
+        }
+
+        [HttpPost]
+        public IActionResult SubirReuniones(string carpeta, DateTime? fechaReunion, string requiereDoc)
+        {
+            if (string.IsNullOrEmpty(carpeta))
+            {
+                return BadRequest("La carpeta es obligatoria.");
+            }
+
+            // Validar fecha (que no sea pasada)
+            if (fechaReunion.HasValue && fechaReunion.Value.Date < DateTime.Today)
+            {
+                TempData["Error"] = "La fecha de la reunión no puede ser anterior a hoy.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+
+            if (!Directory.Exists(ruta))
+            {
+                Directory.CreateDirectory(ruta);
+            }
+
+            var nombreArchivo = $"Fecha_Reunion.txt";
+            var contenido = $"Reunión programada el {fechaReunion:dd/MM/yyyy HH:mm} | Requiere documento: {requiereDoc}";
+            System.IO.File.WriteAllText(Path.Combine(ruta, nombreArchivo), contenido);
+
+            TempData["Success"] = fechaReunion.HasValue
+                ? $"📅 Se asignó la reunión para el {fechaReunion.Value:dd/MM/yyyy HH:mm}. " +
+                $"Requiere documento: {(requiereDoc == "si" ? "Sí" : "No")}."
+                : "No se asignó ninguna reunión.";
+
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public IActionResult SubirInformeFinal(string carpeta, IFormFile informeFinal)
+        {
+            if (string.IsNullOrEmpty(carpeta))
+            {
+                TempData["MensajeError"] = "⚠️ Carpeta inválida.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+
+            if (!Directory.Exists(ruta))
+            {
+                Directory.CreateDirectory(ruta); // Crea la carpeta si no existe
+            }
+
+            // Guarda un archivo de control para indicar que ya se guardaron informes
+            var nombreArchivo = $"Informe_Final_Guardado.txt";
+            System.IO.File.WriteAllText(Path.Combine(ruta, nombreArchivo),
+                $"Informe guardado el {DateTime.Now}");
+
+            // 2. Guardar informe si se subió
+            if (informeFinal != null && informeFinal.Length > 0)
+            {
+                var informeFinalPath = Path.Combine(ruta, "Informe_Final_Proyecto.pdf");
+                using (var stream = new FileStream(informeFinalPath, FileMode.Create))
+                {
+                    informeFinal.CopyTo(stream);
+                }
+            }
+
+            TempData["MensajeExito"] = "✅ Informes guardados correctamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        [HttpPost]
+        public IActionResult SubirReunionFinal(string carpeta)
+        {
+            if (string.IsNullOrEmpty(carpeta))
+            {
+                TempData["MensajeError"] = "⚠️ Carpeta inválida.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+
+            if (!Directory.Exists(ruta))
+            {
+                Directory.CreateDirectory(ruta); // Crea la carpeta si no existe
+            }
+
+            // Guarda un archivo de control para indicar que ya se guardaron informes
+            var nombreArchivo = $"Final_Proyecto.txt";
+            System.IO.File.WriteAllText(Path.Combine(ruta, nombreArchivo),
+                $"Informe guardado el {DateTime.Now}");
+
+            TempData["MensajeExito"] = "✅ Informes guardados correctamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+        
+        [HttpPost]
+        public IActionResult SuscribirActaFiniquito(string carpeta)
+        {
+            if (string.IsNullOrEmpty(carpeta))
+            {
+                TempData["MensajeError"] = "⚠️ Carpeta inválida.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+
+            if (!Directory.Exists(ruta))
+            {
+                Directory.CreateDirectory(ruta); // Crea la carpeta si no existe
+            }
+
+            // Guarda un archivo de control para indicar que ya se guardaron informes
+            var nombreArchivo = $"Finiquito.txt";
+            System.IO.File.WriteAllText(Path.Combine(ruta, nombreArchivo),
+                $"Informe guardado el {DateTime.Now}");
+
+            TempData["MensajeExito"] = "✅ Informes guardados correctamente.";
             return RedirectToAction("FondoPetroleo");
         }
     }

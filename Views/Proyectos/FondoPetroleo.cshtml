@@ -104,7 +104,7 @@
 
     @{
         // Cambia el rol para simular la vista deseada
-        string rolUsuario = "Comite"; // o "Sujeto"
+        string rolUsuario = "Secretario"; // o "Sujeto"
 
         bool listadoPublicado = ViewData["ListadoPublicado"] != null && (bool)ViewData["ListadoPublicado"];
         string urlListadoPublicado = ViewData["UrlListado"]?.ToString() ?? "#";
@@ -112,7 +112,6 @@
         var propuestaEnviada = Context.Session.GetString("PropuestaEnviada") == "true";
         var propuestasComite = ViewData["PropuestasComite"] as IEnumerable<dynamic>;
     }
-
 
     <h2 class="fw-bold subtitulo">Propuestas para asignación de fondos del Instituto Mexicano del Petróleo</h2>
     <br>
@@ -538,6 +537,236 @@
                 </tbody>
             </table>
         }
+        @if (propuestasComite != null && propuestasComite.Any(p => p.Aprobado))
+        {
+            <hr />
+            <h5 class="mt-4">📜 Documentación para formalizar Convenio de Asignación de Recursos</h5>
+            <p class="small text-muted">
+                Conforme al <strong>Capítulo VII</strong> de los Lineamientos para la administración y operación de las actividades
+                de investigación científica, desarrollo tecnológico e innovación en materia de sustentabilidad, 
+                sube un solo archivo PDF con toda la información solicitada.
+            </p>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Oficio de aprobación</th>
+                        <th>Observaciones</th>
+                        <th>Documento enviado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in propuestasComite.Where(p => p.Aprobado))
+                    {
+                        var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                        <tr>
+                            <td>@p.Nombre</td>
+
+                            <!-- Oficio de aprobación -->
+                            <td>
+                                <a href="@($"{baseUrl}/Oficio_Aprobacion.pdf")" target="_blank" class="btn btn-sm btn-outline-success">
+                                    <i class="bi bi-file-earmark-pdf"></i> Ver oficio
+                                </a>
+                            </td>
+
+                            <!-- Observaciones (si las hay) -->
+                            <td>
+                                @if (p.TieneCorreccion)
+                                {
+                                    <div class="text-wrap" style="max-width: 300px;">
+                                        <strong>Observaciones:</strong> @p.Observaciones
+                                    </div>
+                                    @if (p.ObservacionesArchivo)
+                                    {
+                                        <a href="@($"{baseUrl}/Observaciones_Adjunto.pdf")" target="_blank" class="btn btn-sm btn-outline-secondary mt-1">
+                                            <i class="bi bi-file-earmark-pdf"></i> Ver adjunto
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Sin observaciones</span>
+                                }
+                            </td>
+
+                            <!-- Documento ya enviado -->
+                            <td>
+                                @if (p.DocumentoConvenioSubido)
+                                {
+                                    <span class="badge bg-success">✅ Enviado</span>
+                                    <a href="@($"{baseUrl}/Documentacion_Convenio.pdf")" target="_blank" class="btn btn-sm btn-outline-info ms-2">
+                                        <i class="bi bi-eye"></i> Ver documento
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                }
+                            </td>
+
+                            <!-- Subir documento -->
+                            <td>
+                                @if (!p.DocumentoConvenioSubido)
+                                {
+                                    <form method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="SubirDocumentacionConvenio" class="d-flex gap-2">
+                                        <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                        <input type="file" name="archivoConvenio" accept=".pdf" class="form-control form-control-sm" required />
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-upload"></i> Subir
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Ya enviado</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        @if (propuestasComite != null && propuestasComite.Any(p => p.OficioSolicitudCuentaSubido))
+        {
+            <hr />
+            <h5 class="mt-4">🏦 Documentos para apertura de cuenta bancaria</h5>
+            <p class="small text-muted">
+                Una vez recibido el oficio de solicitud de apertura de cuenta bancaria, debe subir los siguientes documentos en formato PDF:
+            </p>
+            <ul class="small text-muted">
+                <li>RFC (Constancia de Situación Fiscal actualizada).</li>
+                <li>Comprobante de Domicilio (no mayor a tres meses).</li>
+                <li>Estado de cuenta bancario (con N° CLABE interbancaria).</li>
+                <li>CURP (certificada).</li>
+                <li>Identificación oficial y designación del representante legal.</li>
+            </ul>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Oficio de Solicitud</th>
+                        <th>Documentos enviados</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in propuestasComite.Where(p => p.OficioSolicitudCuentaSubido))
+                    {
+                        var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                        <tr>
+                            <td>@p.Nombre</td>
+
+                            <!-- Oficio de solicitud -->
+                            <td>
+                                <a href="@($"{baseUrl}/Oficio_Solicitud_Cuenta.pdf")" target="_blank" class="btn btn-sm btn-outline-success">
+                                    <i class="bi bi-file-earmark-pdf"></i> Ver oficio
+                                </a>
+                            </td>
+
+                            <!-- Documentos enviados -->
+                            <td>
+                                @if (p.DocumentosCuentaBancariaSubidos)
+                                {
+                                    <span class="badge bg-success">✅ Enviados</span>
+                                    <a href="@($"{baseUrl}/Documentos_CuentaBancaria.pdf")" target="_blank" class="btn btn-sm btn-outline-info ms-2">
+                                        <i class="bi bi-eye"></i> Ver documentos
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                }
+                            </td>
+
+                            <!-- Acción -->
+                            <td>
+                                @if (!p.DocumentosCuentaBancariaSubidos)
+                                {
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalSubirCuenta"
+                                            data-proyecto="@p.Nombre" data-carpeta="@p.Carpeta">
+                                        <i class="bi bi-upload"></i> Subir Documentos
+                                    </button>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Ya enviado</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <!-- Modal para subir documentos -->
+        <div class="modal fade" id="modalSubirCuenta" tabindex="-1" aria-labelledby="modalSubirCuentaLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" enctype="multipart/form-data" asp-controller="Proyectos" asp-action="SubirDocumentosCuentaBancaria">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalSubirCuentaLabel">Subir Documentos de Apertura de Cuenta</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="carpeta" id="cuentaCarpeta" />
+                            <div class="mb-3">
+                                <label class="form-label">Seleccione el archivo PDF con todos los documentos:</label>
+                                <input type="file" name="archivoCuenta" class="form-control" accept=".pdf" required />
+                                <div class="form-text">
+                                    El archivo debe incluir RFC, comprobante de domicilio, estado de cuenta, CURP y documentos del representante legal en un solo archivo en formato .pdf.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Subir Documentos</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var modalSubirCuenta = document.getElementById('modalSubirCuenta');
+            modalSubirCuenta.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var carpeta = button.getAttribute('data-carpeta');
+                document.getElementById('cuentaCarpeta').value = carpeta;
+            });
+        </script>
+
+        @if (propuestasComite != null && propuestasComite.Any(p => p.TransferenciaConfirmada))
+        {
+            <hr />
+            <h5 class="mt-4">✅ Transferencia confirmada</h5>
+            <p class="small text-muted">
+                La transferencia de este proyecto ya se ha realizado. 
+                El proyecto ahora aparece en la sección de proyectos. 
+                Por favor, esté al pendiente para la entrega de informes técnicos y financieros.
+            </p>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Estado de transferencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in propuestasComite.Where(p => p.TransferenciaConfirmada))
+                    {
+                        <tr>
+                            <td>@p.Nombre</td>
+                            <td>
+                                <span class="badge bg-success">Transferencia realizada ✅</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     }
     else if (rolUsuario == "Secretario")
     {
@@ -945,8 +1174,178 @@
                     </tbody>
                 </table>
             }
-        }
+            @if (propuestasComite != null && propuestasComite.Any(p => p.DocumentoConvenioSubido))
+            {
+                <hr />
+                <h5 class="mt-4">🏦 Oficio para Solicitud de Apertura de Cuenta Bancaria</h5>
+                <p class="text-muted">
+                    Suba el oficio correspondiente para solicitar al sujeto de apoyo la apertura de su cuenta bancaria.
+                </p>
 
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Documento Convenio</th>
+                            <th>Estado Oficio</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in propuestasComite.Where(p => p.DocumentoConvenioSubido))
+                        {
+                            var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                            <tr>
+                                <td>@p.Nombre</td>
+                                <td>
+                                    <a href="@($"{baseUrl}/Documento_Convenio.pdf")" 
+                                    target="_blank" 
+                                    class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-file-earmark-pdf"></i> Ver convenio
+                                    </a>
+                                </td>
+                                <td>
+                                    @if (p.OficioSolicitudCuentaSubido)
+                                    {
+                                        <span class="badge bg-success">📤 Oficio Subido</span>
+                                        <a href="@($"{baseUrl}/Oficio_Solicitud_Cuenta.pdf")" 
+                                        target="_blank" 
+                                        class="btn btn-outline-secondary btn-sm ms-2">
+                                            <i class="bi bi-eye"></i> Ver Oficio
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!p.OficioSolicitudCuentaSubido)
+                                    {
+                                        <form method="post" enctype="multipart/form-data" 
+                                            asp-controller="Proyectos" 
+                                            asp-action="SubirOficioSolicitudCuenta" 
+                                            class="d-flex gap-2">
+                                            <input type="hidden" name="carpeta" value="@p.Carpeta" />
+                                            <input type="file" name="archivoOficio" accept=".pdf" 
+                                                class="form-control form-control-sm" required />
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="bi bi-upload"></i> Subir Oficio
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Ya subido</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            @if (propuestasComite != null && propuestasComite.Any(p => p.DocumentosCuentaBancariaSubidos))
+            {
+                <hr />
+                <h5 class="mt-4">💳 Confirmación de Transferencia</h5>
+                <p class="text-muted">
+                    Revise los datos bancarios enviados por el sujeto de apoyo y confirme la transferencia una vez realizada.
+                </p>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Datos Bancarios</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in propuestasComite.Where(p => p.DocumentosCuentaBancariaSubidos))
+                        {
+                            var baseUrl = Url.Content($"~/documentos/revision_secretario/{p.Carpeta}");
+                            <tr>
+                                <td>@p.Nombre</td>
+                                <td>
+                                    <a href="@($"{baseUrl}/Documentos_CuentaBancaria.pdf")" 
+                                    target="_blank" 
+                                    class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-file-earmark-pdf"></i> Ver datos bancarios
+                                    </a>
+                                </td>
+                                <td>
+                                    @if (p.TransferenciaConfirmada)
+                                    {
+                                        <span class="badge bg-success">✅ Transferencia confirmada</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!p.TransferenciaConfirmada)
+                                    {
+                                        <button class="btn btn-success btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalConfirmarTransferencia"
+                                                data-carpeta="@p.Carpeta"
+                                                data-proyecto="@p.Nombre">
+                                            <i class="bi bi-check-circle"></i> Confirmar
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Ya confirmada</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <!-- Modal Confirmar Transferencia -->
+            <div class="modal fade" id="modalConfirmarTransferencia" tabindex="-1" aria-labelledby="modalConfirmarLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" asp-controller="Proyectos" asp-action="ConfirmarTransferencia">
+                            <div class="modal-header bg-warning">
+                                <h5 class="modal-title" id="modalConfirmarLabel">⚠️ Confirmar Transferencia</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Está a punto de confirmar que ya se realizó la transferencia para el proyecto:
+                                    <strong id="proyectoNombre"></strong>.
+                                </p>
+                                <p class="text-danger fw-bold">
+                                    Esta acción no se puede deshacer. Asegúrese de haber realizado la transferencia bancaria.
+                                </p>
+                                <input type="hidden" name="carpeta" id="transferenciaCarpeta" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-success">Confirmar Transferencia</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                var modalTransferencia = document.getElementById('modalConfirmarTransferencia');
+                modalTransferencia.addEventListener('show.bs.modal', function (event) {
+                    var button = event.relatedTarget;
+                    var carpeta = button.getAttribute('data-carpeta');
+                    var nombreProyecto = button.getAttribute('data-proyecto');
+
+                    document.getElementById('transferenciaCarpeta').value = carpeta;
+                    document.getElementById('proyectoNombre').textContent = nombreProyecto;
+                });
+            </script>
+        }
         <script>
             function mostrarPropuesta(tipo) {
                 const bloque = document.getElementById('bloquePropuesta');
@@ -1048,22 +1447,42 @@
                 </tr>
             </thead>
             <tbody id="cuerpoTablaProyectos">
-                <!-- Se llenará dinámicamente -->
+                @foreach (var proyecto in (IEnumerable<dynamic>)ViewData["ProyectosAprobados"])
+                {
+                    <tr>
+                        <td>@proyecto.Nombre</td>
+                        <td>@proyecto.Inicio</td>
+                        <td>@proyecto.Fin</td>
+                        <td>@proyecto.Progreso%</td>
+                        <td>@proyecto.Estado</td>
+                        <td>
+                            <!-- Botón Editar con data-* -->
+                            <button class="btn btn-success btn-sm btn-editar"
+                                    data-nombre="@proyecto.Nombre"
+                                    data-inicio="@proyecto.Inicio"
+                                    data-fin="@proyecto.Fin"
+                                    data-progreso="@proyecto.Progreso"
+                                    data-estado="@proyecto.Estado"
+                                    data-carpeta="@proyecto.Carpeta"
+                                    data-fechaentregainformes="@proyecto.FechaEntregaInformes"
+                                    data-fechalimite="@proyecto.FechaLimite"
+                                    data-fechareunion="@proyecto.FechaReunion"
+                                    data-requieredocumento="@proyecto.RequiereDocumento"
+                                    data-habilitarinformefinal = "@proyecto.HabilitarInformeFinal"
+                                    data-informefinal = "@proyecto.InformeFinalGuardado"
+                                    data-fechafinal = "@proyecto.FechaEntregaFinal"
+                                    data-finalproyecto = "@proyecto.FinalProyecto"
+                                    data-finiquito = "@proyecto.Finiquito"
+                                    data-rol="@rolUsuario">
+                                Editar
+                            </button>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
-
     <br><br>
-    <h2 class="fw-bold   subtitulo ">Infraestructura del Fondo Mexicano del Petróleo</h2>
-
-    @* SECCIÓN DE MAPA *@
-
-    <section class="py-5 bg-white">
-        <div class="container" data-aos="fade-up">
-            <h2 class="fw-bold text-center mb-4">Trazabilidad Geoespacial</h2>
-            <div id="map" class="rounded shadow-sm" style="height: 500px;"></div>
-        </div>
-    </section>
 
     <h2 class="fw-bold   subtitulo ">Cronograma de Recursos del Fondo Mexicano del Petróleo</h2>
     <br>
@@ -1138,23 +1557,262 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>Nombre:</strong> <span id="modalNombre"></span></p>
-                    <p><strong>Solicitante:</strong> <span id="modalSolicitante"></span></p>
-                    <p><strong>Institución:</strong> <span id="modalInstitucion"></span></p>
-                    <p><strong>Responsable:</strong> <span id="modalResponsable"></span></p>
-                    <p><strong>Tipo de Demanda:</strong> <span id="modalTipoDemanda"></span></p>
-                    <p><strong>Descripción:</strong> <span id="modalDescripcion"></span></p>
-                    <p><strong>Fecha de Inicio:</strong> <span id="modalInicio"></span></p>
-                    <p><strong>Fecha Final:</strong> <span id="modalFin"></span></p>
-                    <p><strong>Progreso:</strong> <span id="modalProgreso"></span>%</p>
+                    <div class="row">
+                        <!-- Columna izquierda -->
+                        <div class="col-md-8">
+                            <p><strong>Nombre:</strong> <span id="modalNombre"></span></p>
+                            <p><strong>Estado:</strong> <span id="modalEstado"></span></p>
+                            <p><strong>Fecha de Inicio:</strong> <span id="modalInicio"></span></p>
+                            <p><strong>Fecha Final:</strong> <span id="modalFin"></span></p>
+                            <p><strong>Progreso:</strong> <span id="modalProgreso"></span>%</p>
 
-                    <hr>
-                    <h6>Línea del tiempo del proyecto</h6>
-                    <div class="pb-3">
-                        <button id="zoomIn" class="btn btn-primary btn-sm">Zoom In</button>
-                        <button id="zoomOut" class="btn btn-primary btn-sm">Zoom Out</button>
+                            <hr>
+                            <h6>Línea del tiempo del proyecto</h6>
+                            <div class="pb-3">
+                                <button id="zoomIn" class="btn btn-primary btn-sm">Zoom In</button>
+                                <button id="zoomOut" class="btn btn-primary btn-sm">Zoom Out</button>
+                            </div>
+                            <div id="timeline" style="border: 1px solid #ddd;"></div>
+                        </div>
+
+                        <input type="hidden" id="fechaLimite" name="carpeta" />
+
+                        <!-- Columna derecha: solo visible si el rol es Sujeto -->
+                        @if (rolUsuario == "Sujeto")
+                        {
+                            <div class="col-md-4 border-start">
+                                <h6>Entrega de informes</h6>
+
+                                <div id="mensajeEnviado" class="alert alert-success" style="display:none;"></div>
+
+                                <div id="contenedorForm">
+                                    <p class="small text-muted">
+                                        Adjunte los informes técnicos y financieros mediante oficio acompañado de los formatos:
+                                        <br><strong>Cronograma Técnico (Anexo 5)</strong> y 
+                                        <strong>Desglose Financiero (Anexo 6)</strong>.
+                                    </p>
+
+                                    <form id="formInformes" enctype="multipart/form-data" method="post" asp-action="SubirInformes">
+                                        <!-- Campo oculto para enviar la carpeta -->
+                                        <input type="hidden" id="carpetaInput" name="carpeta" />
+
+                                        <div class="mb-3">
+                                            <label for="informeTecnico" class="form-label">Informe Técnico (Anexo 5)</label>
+                                            <input type="file" class="form-control" id="informeTecnico" name="informeTecnico" accept=".pdf,.doc,.docx,.xlsx" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="informeFinanciero" class="form-label">Informe Financiero (Anexo 6)</label>
+                                            <input type="file" class="form-control" id="informeFinanciero" name="informeFinanciero" accept=".pdf,.doc,.docx,.xlsx" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="oficio" class="form-label">Oficio</label>
+                                            <input type="file" class="form-control" id="oficio" name="oficio" accept=".pdf,.doc,.docx" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-success w-100">Subir Informes</button>
+                                    </form>
+                                </div>
+                                <!-- NUEVO: formulario para informe técnico final -->
+                                <div id="contenedorInformeFinal" style="display:none;">
+                                    <p class="small text-muted">
+                                        📑 Puede subir aquí su <strong>Informe Técnico Final</strong> ya que el proyecto está próximo a concluir.
+                                    </p>
+                                    <form id="formInformeFinal" enctype="multipart/form-data" method="post" asp-action="SubirInformeFinal">
+                                        <input type="hidden" id="carpetaInputFinal" name="carpeta" />
+                                        <div class="mb-3">
+                                            <label for="informeFinal" class="form-label">Informe Técnico Final</label>
+                                            <input type="file" class="form-control" id="informeFinal" name="informeFinal" accept=".pdf,.doc,.docx,.xlsx" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning w-100">Subir Informe Final</button>
+                                    </form>
+                                </div>
+                                <div id="estadoReunionSuj"><!-- Aquí va el mensaje dinámico --></div>
+                            </div>
+                        }
+                        else if (rolUsuario == "Secretario")
+                        {
+                            <div class="col-md-4 border-start">
+                                <h6>Acciones del Secretario</h6>
+
+                                <!-- Caso: aún NO se entregaron informes -->
+                                <div id="contenedorPlazo" style="display:none;">
+                                    <p class="small text-muted">
+                                        El sujeto aún no ha entregado los informes.  
+                                        Puede asignar un plazo límite mediante convenio:
+                                    </p>
+
+                                    <form id="formPlazo" method="post" asp-action="AsignarPlazo"> 
+                                        <!-- Campo oculto para enviar la carpeta -->
+                                        <input type="hidden" id="carpetaInputSec" name="carpeta" />
+
+                                        <div class="mb-3">
+                                            <label for="fechaLimite" class="form-label">Fecha límite</label>
+                                            <input type="date" class="form-control" id="fechaLimite" name="fechaLimite" />
+                                            <small class="text-muted">Si no se establece fecha, se considerará "sin límite".</small>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-warning w-100">Guardar Plazo</button>
+                                    </form> 
+                                </div>
+
+                                <!-- Caso: sí se entregaron informes -->
+                                <div id="contenedorRevision" style="display:none;">
+                                    <div class="alert alert-info">
+                                        📂 Los informes y el oficio ya se encuentran disponibles para revisión.
+                                    </div>
+
+                                    <ul id="listaArchivos" class="list-group mb-3">
+                                        <!-- Se llenará dinámicamente con los archivos -->
+                                    </ul>
+
+                                    <button type="button" class="btn btn-primary w-100" id="btnSolicitarReunion">Solicitar reunión</button>
+
+                                    <div id="estadoReunion"><!-- Aquí va el mensaje dinámico --></div>
+
+                                    <!-- Formulario dinámico -->
+                                    <div id="formReunion" class="mt-3" style="display:none;">
+                                        <form id="formReuniones" enctype="multipart/form-data" method="post" asp-action="SubirReuniones">
+                                            <!-- Campo oculto para enviar la carpeta -->
+                                            <input type="hidden" id="carpetaInputSecReu" name="carpeta" />
+                                            <div class="mb-3">
+                                                <label for="fechaReunion" class="form-label">📅 Fecha de la reunión</label>
+                                                <input type="datetime-local" id="fechaReunion" name="fechaReunion" class="form-control">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="requiereDoc" class="form-label">📑 ¿Se requiere entregar documento?</label>
+                                                <select id="requiereDoc" name="requiereDoc" class="form-select">
+                                                    <option value="">Seleccione...</option>
+                                                    <option value="si">Sí, se requiere</option>
+                                                    <option value="no">No se requiere</option>
+                                                </select>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-success w-100" id="btnGuardarReunion">
+                                                Agendar reunión
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Caso: suscribir acta de finiquito -->
+                                <div id="contenedorActaFiniquito" style="display:none;">
+                                    <div class="alert alert-warning">
+                                        📝 El proyecto ya cumplió con todas sus etapas.  
+                                        El Secretario Administrativo puede suscribir el acta de finiquito.
+                                    </div>
+
+                                    <form id="formActaFiniquito" method="post" asp-action="SuscribirActaFiniquito">
+                                        <!-- Campo oculto para enviar la carpeta -->
+                                        <input type="hidden" id="carpetaInputSecFiniquito" name="carpeta" />
+
+                                        <button type="submit" class="btn btn-danger w-100">
+                                            Suscribir Acta de Finiquito
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        else if(rolUsuario == "Comite"){
+                            <div class="col-md-4 border-start">
+                                <h6>Acciones del Comité</h6>
+                                <div id="contenedorRevisionCom" style="display:none;">
+                                    <div class="alert alert-info">
+                                        📂 Los informes y el oficio ya se encuentran disponibles para revisión.
+                                    </div>
+
+                                    <ul id="listaArchivosCom" class="list-group mb-3">
+                                        <!-- Se llenará dinámicamente con los archivos -->
+                                    </ul>
+
+                                    <button type="button" class="btn btn-primary w-100" id="btnSolicitarReunionCom">Solicitar reunión</button>
+
+                                    <div id="estadoReunionCom"><!-- Aquí va el mensaje dinámico --></div>
+
+                                    <!-- Formulario dinámico -->
+                                    <div id="formReunionCom" class="mt-3" style="display:none;">
+                                        <form id="formReunionesCom" enctype="multipart/form-data" method="post" asp-action="SubirReuniones">
+                                            <!-- Campo oculto para enviar la carpeta -->
+                                            <input type="hidden" id="carpetaInputComReu" name="carpeta" />
+                                            <div class="mb-3">
+                                                <label for="fechaReunion" class="form-label">📅 Fecha de la reunión</label>
+                                                <input type="datetime-local" id="fechaReunion" name="fechaReunion" class="form-control">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="requiereDoc" class="form-label">📑 ¿Se requiere entregar documento?</label>
+                                                <select id="requiereDoc" name="requiereDoc" class="form-select">
+                                                    <option value="">Seleccione...</option>
+                                                    <option value="si">Sí, se requiere</option>
+                                                    <option value="no">No se requiere</option>
+                                                </select>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-success w-100" id="btnGuardarReunionCom">
+                                                Agendar reunión
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div id="contenedorPlazoCom">
+                                    <p class="small text-muted">
+                                        Sin acciones disponibles
+                                    </p>
+                                </div>
+                                <div id="contenedorInformeFinalCom" style="display:none;">
+                                    <div class="alert alert-warning">
+                                        📑 El Informe Técnico Final ya está disponible para revisión del Comité.
+                                    </div>
+                                    <ul id="listaArchivosFinalCom" class="list-group mb-3"></ul>
+                                    <button type="button" class="btn btn-primary w-100" id="btnSolicitarReunionFinalCom">Solicitar reunión final</button>
+
+                                    <div id="estadoReunionFinalCom"><!-- Mensaje dinámico --></div>
+
+                                    <div id="formReunionFinalCom" class="mt-3" style="display:none;">
+                                        <form id="formReunionFinalComite" enctype="multipart/form-data" method="post" asp-action="SubirReunionFinal">
+                                            <input type="hidden" id="carpetaInputComFinalReu" name="carpeta" />
+                                            <div class="mb-3">
+                                                <label for="fechaReunionFinal" class="form-label">📅 Fecha de la reunión final</label>
+                                                <input type="datetime-local" id="fechaReunionFinal" name="fechaReunion" class="form-control">
+                                            </div>
+                                            <button type="submit" class="btn btn-success w-100">
+                                                Agendar reunión final
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if(rolUsuario == "Evaluacion"){
+                            <div id="contenedorInformeFinalEv" style="display:none;">
+                                <div class="alert alert-warning">
+                                    📑 El Informe Técnico Final ya está disponible para revisión del Comité.
+                                </div>
+                                <ul id="listaArchivosFinalEv" class="list-group mb-3"></ul>
+                                <button type="button" class="btn btn-primary w-100" id="btnSolicitarReunionFinalEv">Solicitar reunión final</button>
+
+                                <div id="estadoReunionFinalEv"><!-- Mensaje dinámico --></div>
+
+                                <div id="formReunionFinalEv" class="mt-3" style="display:none;">
+                                    <form id="formReunionFinalEv" enctype="multipart/form-data" method="post" asp-action="SubirReunionFinal">
+                                        <input type="hidden" id="carpetaInputEvFinalReu" name="carpeta" />
+                                        <div class="mb-3">
+                                            <label for="fechaReunionFinal" class="form-label">📅 Fecha de la reunión final</label>
+                                            <input type="datetime-local" id="fechaReunionFinal" name="fechaReunion" class="form-control">
+                                        </div>
+                                        <button type="submit" class="btn btn-success w-100">
+                                            Agendar reunión final
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="small text-muted">
+                                Sin acciones disponibles
+                            </p>
+                        }
                     </div>
-                    <div id="timeline" style="border: 1px solid #ddd;"></div>
                 </div>
             </div>
         </div>
@@ -1410,285 +2068,383 @@
 
     <!-- PROYECTOS -->
     <script>
-        const proyectos = []; 
-        
-        function agregarProyecto() {
-            const nombre = document.getElementById("nombreProyecto").value;
-            const inicio = document.getElementById("fechaInicio").value;
-            const fin = document.getElementById("fechaFinal").value;
-            const progreso = 0;
-            const dependencias = document.getElementById("responsable").value || null;
+        document.addEventListener("DOMContentLoaded", function () {
+            // Delegación de eventos para los botones Editar
+            document.querySelectorAll(".btn-editar").forEach(btn => {
+                btn.addEventListener("click", function () {
+                    console.log("Hasta aqui llegamos"); 
+                    // Obtener datos desde atributos data-*
+                    document.getElementById("modalNombre").innerText = this.dataset.nombre;
+                    document.getElementById("modalEstado").innerText = this.dataset.estado;
+                    document.getElementById("modalInicio").innerText = this.dataset.inicio;
+                    document.getElementById("modalFin").innerText = this.dataset.fin;
+                    document.getElementById("modalProgreso").innerText = this.dataset.progreso; 
+                    document.getElementById("fechaLimite").innerText = this.dataset.fechalimite;
+                    @* document.getElementById("fechaReunion").innerText = this.dataset.fechareunion;             *@
 
-            const nuevoProyecto = {
-                id: (proyectos.length + 1).toString(), // Generar ID única básica
-                name: nombre,
-                inicio: inicio,
-                fin: fin,
-                progreso: progreso,
-                dependencias: dependencias
-            };
+                    var rolUsuario = this.dataset.rol;
+                    let fechaEntrega = this.dataset.fechaentregainformes;
+                    let fechaLimite = this.dataset.fechalimite;
+                    let fechaReunion = this.dataset.fechareunion;
+                    let requiereDocumento = this.dataset.requieredocumento;
 
-            proyectos.push(nuevoProyecto);
-            console.log("Proyecto actualizado: ", proyectos);
-            actualizarGantt(); // Llama a la función para refrescar el gráfico
-            actualizarSemaforo(proyectos);
-            renderizarTablaProyectos(proyectos);
-        }
+                    let informeFinalEntregado = this.dataset.informefinal === "true";
+                    let fechaFinal = this.dataset.fechafinal;
+                    // 🔹 Leemos el valor del atributo data-finalproyecto
+                    let finalProyecto = this.dataset.finalproyecto === "true";
+                    let finiquito = this.dataset.finiquito === "true";
 
-        function actualizarGantt() {
-            Highcharts.ganttChart('gantt-chart', {
-                title: { text: '' },
-                tooltip: {
-                    pointFormat: '<b>{point.name}</b><br>Inicio: {point.start:%e de %B}<br>Fin: {point.end:%e de %B}'
-                },
-                xAxis: {
-                    currentDateIndicator: true,
-                    min: Date.UTC(2025, 4, 1),
-                    max: Date.UTC(2025, 5, 30),
-                    tickInterval: 7 * 24 * 3600 * 1000,
-                    labels: {
-                        formatter: function () {
-                            const weekNumber = Highcharts.dateFormat('%W', this.value);
-                            return 'Semana ' + weekNumber;
+                    console.log("Rol: ", rolUsuario);
+                    console.log("Fecha Limite: ", fechaLimite);
+
+                    if (finiquito) {
+                        // Ocultamos cualquier contenedor de acciones
+                        document.querySelectorAll("#contenedorForm, #contenedorInformeFinal, #contenedorPlazo, #contenedorRevision, #contenedorActaFiniquito, #contenedorRevisionCom, #contenedorPlazoCom, #contenedorInformeFinalCom, #contenedorInformeFinalEv")
+                            .forEach(div => {
+                                if (div) div.style.display = "none";
+                            });
+
+                        // Insertamos mensaje de proyecto finalizado en la columna del rol actual
+                        let columnaAcciones = document.querySelector(".col-md-4.border-start");
+                        if (columnaAcciones) {
+                            columnaAcciones.innerHTML = `
+                                <div class="alert alert-dark text-center">
+                                    ✅ El proyecto ha concluido oficialmente. 
+                                    No hay más acciones disponibles para el rol <strong>${rolUsuario}</strong>.
+                                </div>
+                            `;
                         }
-                    }
-                },
-                plotOptions: {
-                    series: {
-                        point: {
-                            events: {
-                                click: function () {
-                                    console.log("Detalle en click: ", this);
-                                    document.getElementById("modalNombre").textContent = this.name;
-                                    document.getElementById("modalInicio").textContent = Highcharts.dateFormat('%e %B %Y', this.start);
-                                    document.getElementById("modalFin").textContent = Highcharts.dateFormat('%e %B %Y', this.end);
-                                    document.getElementById("modalProgreso").textContent = Math.round(this.completed.amount * 100);
 
-                                    // Esperamos al modal para luego inicializar la línea del tiempo
-                                    setTimeout(() => {
-                                        const container = document.getElementById('timeline');
-                                        container.innerHTML = ''; // limpiar por si ya se abrió antes
+                    } else { 
+                        // ROL DE USUARIO
+                        if (rolUsuario === "Sujeto"){ 
+                            document.getElementById('carpetaInput').value = this.dataset.carpeta;
+                            document.getElementById('carpetaInputFinal').value = this.dataset.carpeta;         
 
-                                        // Simular datos
-                                        const items = new vis.DataSet([
-                                            {
-                                                id: 1,
-                                                content: '<div style="width: 150px;">Propuestas de Necesidades<br>#1234<br><small>01/05/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/1\', \'_blank\'); return false;">Ver detalle</a></div>',
-                                                start: '2025-04-01',
-                                            },
-                                            {
-                                                id: 2,
-                                                content: '<div style="width: 150px;">Demandas Específicas<br>#5678<br><small>10/05/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/2\', \'_blank\'); return false;">Ver detalle</a></div>',
-                                                start: '2025-05-10',
-                                            },
-                                            {
-                                                id: 3,
-                                                content: '<div style="width: 150px;">Finiquito<br>#9101<br><small>20/06/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/3\', \'_blank\'); return false;">Ver detalle</a></div>',
-                                                start: '2025-06-20',
-                                            }
-                                        ]);
+                            // NUEVO: manejar la entrega de informes/oficio
+                            let mensajeEnviado = document.getElementById("mensajeEnviado");
+                            let contenedorForm = document.getElementById("contenedorForm");
 
-                                        const today = new Date();
-                                        const options = {
-                                            editable: false,
-                                            height: '300px',
-                                            maxHeight: '300px',
-                                            stack: true,
-                                            margin: { item: 20 },
-                                            horizontalScroll: true,
-                                            start: '2024-01-01',
-                                            end: today,
-                                            zoomMin: 100000000,
-                                            zoomMax: 100000000000,
-                                            zoomKey: 'ctrlKey',
-                                        };
+                            if (fechaEntrega) {
+                                // Ya entregó → mostrar mensaje
+                                mensajeEnviado.style.display = "block";
+                                mensajeEnviado.innerHTML = `✅ Los informes y el oficio se entregaron correctamente el 
+                                    <strong>${fechaEntrega}</strong>.`;
 
-                                        const timeline = new vis.Timeline(container, items, options);
+                                contenedorForm.style.display = "none";
 
-                                        document.getElementById('zoomIn').onclick = function () {
-                                            const range = timeline.getWindow();
-                                            const interval = range.end - range.start;
-                                            timeline.setWindow({
-                                                start: range.start.valueOf(),
-                                                end: range.start.valueOf() + interval * 0.8,
-                                            });
-                                        };
+                                let habilitarInformeFinal = this.dataset.habilitarinformefinal === "true";
+                                let contenedorInformeFinal = document.getElementById("contenedorInformeFinal");
 
-                                        document.getElementById('zoomOut').onclick = function () {
-                                            const range = timeline.getWindow();
-                                            const interval = range.end - range.start;
-                                            timeline.setWindow({
-                                                start: range.start.valueOf(),
-                                                end: range.start.valueOf() + interval * 1.25,
-                                            });
-                                        };
-                                    }, 100); // Pequeña espera para asegurar que el modal está en DOM
+                                if (habilitarInformeFinal) {
+                                    contenedorInformeFinal.style.display = "block";
+                                } else {
+                                    contenedorInformeFinal.style.display = "none";
+                                }
 
-                                    // Mostrar modal
-                                    const modal = new bootstrap.Modal(document.getElementById('modalProyecto'));
-                                    modal.show();
+                                if(fechaReunion){
+                                    // Mostrar detalles de reunión al Sujeto
+                                    let estadoReunion = document.getElementById("estadoReunionSuj");
+                                    estadoReunion.innerHTML = `
+                                        <div class="alert alert-success">
+                                            ✅ Reunión agendada para el <strong>${new Date(fechaReunion).toLocaleString()}</strong><br>
+                                            📑 Se requiere documento: <strong>${requiereDocumento === "si" ? "Sí" : "No"}</strong>
+                                        </div>
+                                    `;
+                                }
+                            } else {
+                                // No entregó → mostrar formulario
+                                mensajeEnviado.style.display = "none";
+                                contenedorForm.style.display = "block";
+                                if(fechaLimite){
+                                    let hoy = new Date();
+                                    let limite = new Date(fechaLimite);
+
+                                    console.log("Hoy: ", hoy);
+                                    console.log("Limite: ", limite);
+
+                                    if (hoy > limite) {
+                                        // Ya pasó el plazo
+                                        alert(`⚠️ El plazo de entrega venció el ${limite.toLocaleDateString()}. Contacte al Secretario.`);
+                                        // Opcional: deshabilitar el formulario
+                                        contenedorForm.querySelector("button[type=submit]").disabled = true;
+                                    } else {
+                                        // Todavía está dentro del plazo
+                                        let diasRestantes = Math.ceil((limite - hoy) / (1000 * 60 * 60 * 24));
+                                        alert(`📅 Tiene plazo hasta el ${limite.toLocaleDateString()} (${diasRestantes} días restantes) para entregar sus informes.`);
+                                    }
+                                }
+                                let estadoReunion = document.getElementById("estadoReunionSuj");
+                                estadoReunion.innerHTML = "";
+                            }
+
+                        } 
+                        //ROL DE SECRETARIO
+                        else if (rolUsuario === "Secretario"){
+                            document.getElementById("btnSolicitarReunion").addEventListener("click", function () {
+                                document.getElementById("formReunion").style.display = "block";
+                            });
+                            document.getElementById('carpetaInputSec').value = this.dataset.carpeta;
+                            let carpeta = this.dataset.carpeta;
+                            let contenedorPlazo = document.getElementById("contenedorPlazo");
+                            let contenedorRevision = document.getElementById("contenedorRevision");
+                            let listaArchivos = document.getElementById("listaArchivos");
+                            let contenedorFiniquito = document.getElementById("contenedorActaFiniquito");
+
+                            if (fechaEntrega) {
+                                document.getElementById('carpetaInputSecReu').value = this.dataset.carpeta;
+
+                                // Ya entregó informes → mostrar revisión
+                                contenedorPlazo.style.display = "none";
+                                contenedorRevision.style.display = "block";
+
+                                // Demo: agregar archivos ficticios
+                                listaArchivos.innerHTML = `
+                                    <li class="list-group-item">
+                                        📄 Informe Técnico (Anexo 5) 
+                                        <a href="/documentos/revision_secretario/${carpeta}/Informe_Tecnico_Proyecto.pdf" target="_blank" class="btn btn-sm btn-outline-secondary float-end">Ver</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        📄 Informe Financiero (Anexo 6)
+                                        <a href="/documentos/revision_secretario/${carpeta}/Informe_Financiero_Proyecto.pdf" target="_blank" class="btn btn-sm btn-outline-secondary float-end">Ver</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        📄 Oficio
+                                        <a href="/documentos/revision_secretario/${carpeta}/Oficio_Proyecto.pdf" target="_blank" class="btn btn-sm btn-outline-secondary float-end">Ver</a>
+                                    </li>
+                                `;
+
+                                if(fechaReunion){
+
+                                    // Solo actualizamos el div de estado
+                                    let estadoReunion = document.getElementById("estadoReunion");
+                                    estadoReunion.innerHTML = `
+                                        <div class="alert alert-success">
+                                            ✅ Reunión agendada para el <strong>${new Date(fechaReunion).toLocaleString()}</strong><br>
+                                            📑 Se requiere documento: <strong>${requiereDocumento === "si" ? "Sí" : "No"}</strong>
+                                        </div>
+                                    `;
+                                }
+
+                                if (finalProyecto) {
+                                    // Si existe → mostramos el acta finiquito
+                                    document.getElementById('carpetaInputSecFiniquito').value = carpeta;
+                                    contenedorFiniquito.style.display = "block";
+
+                                    // Ocultamos lo demás porque ya es etapa final
+                                    contenedorRevision.style.display = "none";
+                                    contenedorPlazo.style.display = "none";
+                                }
+
+                            } else {
+                                // No entregó informes → mostrar plazo
+                                contenedorRevision.style.display = "none";
+                                contenedorPlazo.style.display = "block";
+                                if (fechaLimite) {
+                                    let hoy = new Date();
+                                    let limite = new Date(fechaLimite);
+
+                                    console.log("Hoy: ", hoy);
+                                    console.log("Limite: ", limite);
+
+                                    let mensaje = (hoy > limite)
+                                        ? `⚠️ El plazo venció el ${limite.toLocaleDateString()}.`
+                                        : `📅 El plazo vence el ${limite.toLocaleDateString()}.`;
+
+                                    // Borra solo la alerta previa si existe
+                                    let alertaExistente = contenedorPlazo.querySelector(".alert-warning");
+                                    if (alertaExistente) alertaExistente.remove();
+
+                                    contenedorPlazo.insertAdjacentHTML("beforeend", `<div class="alert alert-warning mt-2">${mensaje}</div>`);
                                 }
                             }
                         }
+                        //ROL DE COMITE
+                        else if (rolUsuario === "Comite"){
+                            document.getElementById("btnSolicitarReunionCom").addEventListener("click", function () {
+                                document.getElementById("formReunionCom").style.display = "block";
+                            });
+
+                            let carpeta = this.dataset.carpeta;
+                            let contenedorRevision = document.getElementById("contenedorRevisionCom");
+                            let contenedorPlazo = document.getElementById("contenedorPlazoCom");
+                            let listaArchivos = document.getElementById("listaArchivosCom");
+
+                            if (fechaEntrega) {
+                                document.getElementById('carpetaInputComReu').value = this.dataset.carpeta;
+
+                                // Ya entregó informes → mostrar revisión
+                                contenedorRevision.style.display = "block";
+                                contenedorPlazo.style.display = "none";
+
+                                // Demo: agregar archivos ficticios
+                                listaArchivos.innerHTML = `
+                                    <li class="list-group-item">
+                                        📄 Informe Técnico (Anexo 5) 
+                                        <a href="/documentos/revision_secretario/${carpeta}/Informe_Tecnico_Proyecto.pdf" target="_blank" class="btn btn-sm btn-outline-secondary float-end">Ver</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        📄 Informe Financiero (Anexo 6)
+                                        <a href="/documentos/revision_secretario/${carpeta}/Informe_Financiero_Proyecto.pdf" target="_blank" class="btn btn-sm btn-outline-secondary float-end">Ver</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        📄 Oficio
+                                        <a href="/documentos/revision_secretario/${carpeta}/Oficio_Proyecto.pdf" target="_blank" class="btn btn-sm btn-outline-secondary float-end">Ver</a>
+                                    </li>
+                                `;
+
+                                if(fechaReunion){
+
+                                    // Solo actualizamos el div de estado
+                                    let estadoReunion = document.getElementById("estadoReunionCom");
+                                    estadoReunion.innerHTML = `
+                                        <div class="alert alert-success">
+                                            ✅ Reunión agendada para el <strong>${new Date(fechaReunion).toLocaleString()}</strong><br>
+                                            📑 Se requiere documento: <strong>${requiereDocumento === "si" ? "Sí" : "No"}</strong>
+                                        </div>
+                                    `;
+                                }
+                                let contenedorInformeFinalCom = document.getElementById("contenedorInformeFinalCom");
+                                let listaArchivosFinalCom = document.getElementById("listaArchivosFinalCom");
+                                let informeFinalEntregado = this.dataset.informefinal === "true";
+
+                                if (informeFinalEntregado) {
+                                    document.getElementById("carpetaInputComFinalReu").value = carpeta;
+                                    contenedorInformeFinalCom.style.display = "block";
+
+                                    listaArchivosFinalCom.innerHTML = `
+                                        <li class="list-group-item">
+                                            📄 Informe Técnico Final
+                                            <a href="/documentos/revision_secretario/${carpeta}/Informe_Final_Proyecto.pdf" target="_blank" class="btn btn-sm btn-outline-secondary float-end">Ver</a>
+                                        </li>
+                                    `;
+
+                                    document.getElementById("btnSolicitarReunionFinalCom").addEventListener("click", function () {
+                                        document.getElementById("formReunionFinalCom").style.display = "block";
+                                    });
+                                } else {
+                                    contenedorInformeFinalCom.style.display = "none";
+                                }
+                            } else {
+                                contenedorRevision.style.display = "none";
+                                contenedorPlazo.style.display = "block";
+                            }
+                        }
+                        //ROL DE COMITE EVALUACION
+                        else if (rolUsuario === "Evaluacion")
+                        {
+                            let contenedorInformeFinalCom = document.getElementById("contenedorInformeFinalEv");
+                            let listaArchivosFinalCom = document.getElementById("listaArchivosFinalEv");
+                            
+
+                            if (informeFinalEntregado) {
+                                document.getElementById("carpetaInputEvFinalReu").value = carpeta;
+                                contenedorInformeFinalCom.style.display = "block";
+
+                                listaArchivosFinalCom.innerHTML = `
+                                    <li class="list-group-item">
+                                        📄 Informe Técnico Final
+                                        <a href="/documentos/revision_secretario/${carpeta}/Informe_Final_Proyecto.pdf" target="_blank" class="btn btn-sm btn-outline-secondary float-end">Ver</a>
+                                    </li>
+                                `;
+
+                                document.getElementById("btnSolicitarReunionFinalEv").addEventListener("click", function () {
+                                    document.getElementById("formReunionFinalEv").style.display = "block";
+                                });
+                            } else {
+                                contenedorInformeFinalCom.style.display = "none";
+                            }
+                        }
                     }
-                },
-                series: [{
-                    name: 'Proyecto',
-                    data: proyectos.map(p => ({
-                        id: p.id,
-                        name: p.name,
-                        start: Date.UTC(
-                            new Date(p.inicio).getFullYear(),
-                            new Date(p.inicio).getMonth(),
-                            new Date(p.inicio).getDate() + 2
-                        ),
-                        end: Date.UTC(
-                            new Date(p.fin).getFullYear(),
-                            new Date(p.fin).getMonth(),
-                            new Date(p.fin).getDate() + 2
-                        ),
-                        completed: { amount: p.progreso },
-                        dependency: p.dependencias
-                    }))
-                }]
-            });
-        }
-    </script>
 
-    <script>
-        document.getElementById('formSubirFormulario').addEventListener('submit', function (e) {
-            e.preventDefault();
-            alert('Archivo subido (simulado).');
-            var modal = bootstrap.Modal.getInstance(document.getElementById('modalSubirFormulario'));
-            modal.hide();
-        });
+                    // Abrir modal con Bootstrap
+                    let modal = new bootstrap.Modal(document.getElementById("modalProyecto"));
+                    modal.show();
 
-        function renderizarTablaProyectos(proyectos) {
-            const cuerpo = document.getElementById('cuerpoTablaProyectos');
-            cuerpo.innerHTML = '';
+                    // Inicializar timeline (ejemplo con datos dummy)
+                    setTimeout(() => {
+                        const container = document.getElementById('timeline');
+                        container.innerHTML = '';
 
-            proyectos.forEach(proyecto => {
-                const estado = proyecto.progreso === 1
-                    ? `<span class="badge bg-success">Terminado</span>`
-                    : `<span class="badge bg-warning text-dark">En Curso</span>`;
+                        // Accedemos a los datos del proyecto desde data-*
+                        const inicio = this.dataset.inicio;
+                        const fin = this.dataset.fin;
 
-                const progreso = `${Math.round(proyecto.progreso * 100)}%`;
+                        const items = new vis.DataSet([
+                            {
+                                id: 1,
+                                content: '<div style="width: 150px;">Solicitud Informes<br><small>' + inicio + '</small></div>',
+                                start: inicio
+                            }
+                        ]);
 
-                const fila = `
-                    <tr>
-                        <td>${proyecto.name}</td>
-                        <td>${proyecto.inicio}</td>
-                        <td>${proyecto.fin}</td>
-                        <td>${progreso}</td>
-                        <td>${estado}</td>
-                        <td>
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-info" onclick="verDetalle('${proyecto.id}')" title="Ver Detalle">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="cancelarProyecto('${proyecto.id}')" title="Cancelar">
-                                    <i class="bi bi-x-circle"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                cuerpo.insertAdjacentHTML('beforeend', fila);
-            });
-        }
+                        // Si ya entregó informes
+                        if (fechaEntrega) {
+                            items.add({
+                                id: 2,
+                                content: '<div style="width: 150px;">Entrega de Informes<br><small>' + fechaEntrega + '</small></div>',
+                                start: fechaEntrega
+                            });
+                        }
 
-        function verDetalle(id) {
-            const proyecto = proyectos.find(p => p.id === id);
-            if (!proyecto) return;
+                        //Si hay reunión
+                        if(fechaReunion) {
+                            items.add({
+                                id: 3,
+                                content: '<div style="width: 150px;">Verificación<br><small>' + fechaReunion + '</small></div>',
+                                start: fechaReunion
+                            });
+                        }
 
-            // Establecer datos básicos en el modal
-            document.getElementById("modalNombre").textContent = proyecto.name;
-            document.getElementById("modalInicio").textContent = Highcharts.dateFormat('%e %B %Y', parseFechaISO(proyecto.inicio));
-            document.getElementById("modalFin").textContent = Highcharts.dateFormat('%e %B %Y', parseFechaISO(proyecto.fin));
-            document.getElementById("modalProgreso").textContent = Math.round(proyecto.progreso * 100);
+                        if (informeFinalEntregado){
+                            items.add({
+                                id: 4,
+                                content: '<div style="width: 150px;">Verificación<br><small>' + fechaFinal + '</small></div>',
+                                start: fechaFinal
+                            });
+                        }
 
-            // Nuevos datos importantes
-            document.getElementById("modalSolicitante").textContent = proyecto.nombreSolicitante || 'N/A';
-            document.getElementById("modalInstitucion").textContent = proyecto.institucion || 'N/A';
-            document.getElementById("modalResponsable").textContent = proyecto.responsable || 'N/A';
-            document.getElementById("modalTipoDemanda").textContent = proyecto.tipoDemanda === 'especifica' ? 'Demanda Específica' : 'Demanda Abierta';
-            document.getElementById("modalDescripcion").textContent = proyecto.descripcion || 'Sin descripción';
+                        if (finiquito){
+                            items.add({
+                                id: 5,
+                                content: '<div style="width: 150px;">Verificación<br><small>' + fin + '</small></div>',
+                                start: fin
+                            });
+                        }
 
-            // Timeline personalizado (puedes mantenerlo o cambiarlo si lo vinculas a las fechas reales del proyecto)
-            setTimeout(() => {
-                const container = document.getElementById('timeline');
-                container.innerHTML = '';
+                        const timeline = new vis.Timeline(container, items, {
+                            editable: false,
+                            height: '300px',
+                            maxHeight: '300px',
+                            margin: { item: 20 },
+                            horizontalScroll: true,
+                            stack: true,
+                            zoomMin: 10000000,
+                            zoomMax: 100000000000,
+                            zoomKey: 'ctrlKey',
+                        });
 
-                const items = new vis.DataSet([
-                    {
-                        id: 1,
-                        content: '<div style="width: 150px;">Propuestas de Necesidades<br>#1234<br><small>01/05/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/1\', \'_blank\'); return false;">Ver detalle</a></div>',
-                        start: '2025-04-01',
-                    },
-                    {
-                        id: 2,
-                        content: '<div style="width: 150px;">Demandas Específicas<br>#5678<br><small>10/05/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/2\', \'_blank\'); return false;">Ver detalle</a></div>',
-                        start: '2025-05-10',
-                    },
-                    {
-                        id: 3,
-                        content: '<div style="width: 150px;">Finiquito<br>#9101<br><small>20/06/2025</small><br><a class="btn btn-primary btn-sm" onclick="event.stopPropagation(); window.open(\'https://ejemplo.com/3\', \'_blank\'); return false;">Ver detalle</a></div>',
-                        start: '2025-06-20',
-                    }
-                ]);
+                        document.getElementById('zoomIn').onclick = () => {
+                            const range = timeline.getWindow();
+                            const interval = range.end - range.start;
+                            timeline.setWindow({
+                                start: range.start.valueOf(),
+                                end: range.start.valueOf() + interval * 0.8,
+                            });
+                        };
 
-                const timeline = new vis.Timeline(container, items, {
-                    editable: false,
-                    height: '300px',
-                    maxHeight: '300px',
-                    margin: { item: 20 },
-                    horizontalScroll: true,
-                    stack: true,
-                    zoomMin: 10000000,
-                    zoomMax: 100000000000,
-                    zoomKey: 'ctrlKey',
+                        document.getElementById('zoomOut').onclick = () => {
+                            const range = timeline.getWindow();
+                            const interval = range.end - range.start;
+                            timeline.setWindow({
+                                start: range.start.valueOf(),
+                                end: range.start.valueOf() + interval * 1.25,
+                            });
+                        };
+                    }, 200);
                 });
-
-                document.getElementById('zoomIn').onclick = () => {
-                    const range = timeline.getWindow();
-                    const interval = range.end - range.start;
-                    timeline.setWindow({
-                        start: range.start.valueOf(),
-                        end: range.start.valueOf() + interval * 0.8,
-                    });
-                };
-
-                document.getElementById('zoomOut').onclick = () => {
-                    const range = timeline.getWindow();
-                    const interval = range.end - range.start;
-                    timeline.setWindow({
-                        start: range.start.valueOf(),
-                        end: range.start.valueOf() + interval * 1.25,
-                    });
-                };
-            }, 100);
-
-            // Mostrar el modal
-            const modal = new bootstrap.Modal(document.getElementById('modalProyecto'));
-            modal.show();
-        }
-
-        function parseFechaISO(fechaStr) {
-            const [anio, mes, dia] = fechaStr.split('-');
-            return new Date(parseInt(anio), parseInt(mes) - 1, parseInt(dia));
-        }
-
-        function cancelarProyecto(id) {
-            const index = proyectos.findIndex(p => p.id === id);
-            if (index !== -1) {
-                if (confirm(`¿Estás seguro de cancelar el proyecto "${proyectos[index].name}"?`)) {
-                    proyectos.splice(index, 1);
-                    actualizarGantt();
-                    actualizarSemaforo(proyectos); // actualizamos el semáforo
-                    renderizarTablaProyectos(proyectos); // actualizamos la tabla
-                }
-            }
-        }
+            });
+        });
 
         document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("formSubirListado");
@@ -1731,107 +2487,37 @@
         });
     </script>
 
-
-    @* MAPA*@
-
-    @*Script de Pantalla Completa*@
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const mapElement = document.getElementById('map');
-            const fullscreenButton = document.getElementById('fullscreen-btn');
-            const searchContainer = document.getElementById('search-container');
-            const mainContainer = document.getElementById('main-container');
-            const fullscreenElements = document.createElement('div');
-            fullscreenElements.id = 'fullscreen-elements';
-
-            const originalMapParent = mapElement.parentNode;
-            const originalSearchParent = searchContainer.parentNode;
-            const originalMapNextSibling = mapElement.nextSibling;
-            const originalSearchNextSibling = searchContainer.nextSibling;
-
-            fullscreenButton.addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    mainContainer.appendChild(fullscreenElements); // Asegurarnos de que fullscreenElements esté en el DOM
-                    fullscreenElements.appendChild(searchContainer);
-                    fullscreenElements.appendChild(mapElement);
-                    fullscreenElements.requestFullscreen().catch(err => {
-                        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-                    });
-                } else {
-                    document.exitFullscreen();
-                }
-            });
-
-            document.addEventListener('fullscreenchange', (event) => {
-                if (document.fullscreenElement) {
-                    fullscreenButton.textContent = "Salir de Pantalla Completa";
-                    mainContainer.classList.add('fullscreen-active');
-                    mapElement.style.height = "calc(100vh - 60px)";
-                    searchContainer.style.backgroundColor = "white";
-                } else {
-                    fullscreenButton.textContent = "Pantalla Completa";
-                    if (originalSearchNextSibling) {
-                        originalSearchParent.insertBefore(searchContainer, originalSearchNextSibling);
-                    } else {
-                        originalSearchParent.appendChild(searchContainer);
-                    }
-                    if (originalMapNextSibling) {
-                        originalMapParent.insertBefore(mapElement, originalMapNextSibling);
-                    } else {
-                        originalMapParent.appendChild(mapElement);
-                    }
-                    mainContainer.classList.remove('fullscreen-active');
-                    mapElement.style.height = "500px";
-
-                    // Asegurarse de que los estilos se restablezcan
-                    fullscreenElements.style.height = 'auto'; // Restablecer altura a su valor inicial
-                }
-            });
-        });
-    </script>
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var map = L.map('map').setView([23.6345, -102.5528], 5);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
-
-            L.marker([19.4326, -99.1332]).addTo(map).bindPopup("CDMX - Proyecto Energético").openPopup();
-        });
-    </script>
-
     @* SEMÁFORO *@
-    <script>
-        function actualizarSemaforo(proyectos) {
-            const total = proyectos.length;
-            const terminados = proyectos.filter(p => p.progreso === 1).length;
-            const enCurso = total - terminados;
-
-            const porcentaje = (cantidad) => total === 0 ? 0 : Math.round((cantidad / total) * 100);
-
-            // Actualiza en el DOM
-            document.getElementById('proyectos-terminados').textContent = terminados;
-            document.getElementById('porcentaje-terminados').textContent = `${porcentaje(terminados)}%`;
-
-            document.getElementById('proyectos-en-curso').textContent = enCurso;
-            document.getElementById('porcentaje-en-curso').textContent = `${porcentaje(enCurso)}%`;
-
-            // Por ahora, 0 cancelados
-            document.getElementById('proyectos-cancelados').textContent = 0;
-            document.getElementById('porcentaje-cancelados').textContent = `0%`;
-        }
-    </script>
-    
-
     @* GRÁFICA DE GANTT *@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Obtenemos datos desde el backend
+            var proyectos = @Html.Raw(Json.Serialize(ViewData["ProyectosAprobados"]));
 
-        document.addEventListener('DOMContentLoaded', function () {
+            
+            console.log("Proyectos: ", proyectos);
+
+            // Semáforo
+            let total = proyectos.length;
+            let enCurso = proyectos.filter(p => p.estado === "En curso").length;
+            let terminados = proyectos.filter(p => p.estado === "Terminado").length;
+            let cancelados = proyectos.filter(p => p.estado === "Cancelado").length;
+
+            let porcEnCurso = total ? Math.round((enCurso / total) * 100) : 0;
+            let porcTerminados = total ? Math.round((terminados / total) * 100) : 0;
+            let porcCancelados = total ? Math.round((cancelados / total) * 100) : 0;
+
+            document.getElementById("proyectos-en-curso").innerText = enCurso;
+            document.getElementById("proyectos-terminados").innerText = terminados;
+            document.getElementById("proyectos-cancelados").innerText = cancelados;
+
+            document.getElementById("porcentaje-en-curso").innerText = porcEnCurso + "%";
+            document.getElementById("porcentaje-terminados").innerText = porcTerminados + "%";
+            document.getElementById("porcentaje-cancelados").innerText = porcCancelados + "%";
+
+            // Gantt con Highcharts
             Highcharts.setOptions({
                 time: {
                     useUTC: false // <- Mostrar todo en hora local del navegador
@@ -1860,47 +2546,22 @@
                 dateTimeLabelFormats: {
                     week: "'Semana' W"
                 },
-            }); 
-            
-            // Proyectos iniciales para prototipo
-            proyectos.push(
-                {
-                    id: '1',
-                    name: 'Campo Jaf de almacenamiento estratégico',
-                    inicio: '2025-05-06',
-                    fin: '2025-05-13',
-                    progreso: 1,
-                    dependencias: null
-                },
-                {
-                    id: '2',
-                    name: 'Contrato de Servicios Integrales de Exploración y Extracción Lakach',
-                    inicio: '2025-05-14',
-                    fin: '2025-05-20',
-                    progreso: 0.5,
-                    dependencias: '1'
-                },
-                {
-                    id: '3',
-                    name: 'CFE: Gasoducto Tula – Villa de Reyes',
-                    inicio: '2025-05-21',
-                    fin: '2025-05-28',
-                    progreso: 0.2,
-                    dependencias: '2'
-                },
-                {
-                    id: '4',
-                    name: 'CFE: Gasoducto Tuxpan – Tula',
-                    inicio: '2025-05-29',
-                    fin: '2025-06-04',
-                    progreso: 0.0,
-                    dependencias: '3'
-                }
-            );
+            });
 
-            actualizarGantt(); // Muestra el gráfico con datos iniciales
-            actualizarSemaforo(proyectos);
-            renderizarTablaProyectos(proyectos);
+            Highcharts.ganttChart('gantt-chart', {
+                title: { text: 'Cronograma de Proyectos' },
+                xAxis: { currentDateIndicator: true },
+                series: [{
+                    name: 'Proyectos',
+                    data: proyectos.map((p, i) => ({
+                        id: 'p' + i,
+                        name: p.nombre,
+                        start: new Date(p.inicio).getTime(),  // 👈 aquí ya regresa epoch
+                        end: new Date(p.fin).getTime(),
+                        completed: { amount: p.progreso / 100 }
+                    }))
+                }]
+            });
         });
     </script>
 }
