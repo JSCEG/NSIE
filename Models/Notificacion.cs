@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
+
 namespace NSIE.Models
 {
     public class Notificacion
@@ -12,6 +15,21 @@ namespace NSIE.Models
         public bool Visto { get; set; }
         public DateTime? Fecha_Visto { get; set; }
         public string Imagen { get; set; } // Nueva propiedad para imagenes
+
+        [NotMapped]
+        public IFormFile ImagenFile { get; set; } // Para recibir el archivo subido
+
+        [NotMapped]
+        public string Destino { get; set; }  // Todos / Rol / Usuarios
+
+
+        [NotMapped]
+        public string Rol { get; set; }  // Si eligió Rol
+
+
+        [NotMapped]
+        public List<int> UsuariosSeleccionados { get; set; } // Si eligió usuarios específicos
+
 
         // Propiedad calculada para el tiempo transcurrido
         public string TimeAgo

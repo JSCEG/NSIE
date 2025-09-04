@@ -80,6 +80,9 @@
                     '&fecha=' + encodeURIComponent(notification.fecha_Notificacion) +
                     '&link=' + encodeURIComponent(notification.link) +
                     '" onclick="markAsRead(' + notification.id + ', this); return false;" class="btn ' + buttonClass + '">Ver Detalles</a>' +
+
+                    // 🔹 Botón de eliminar
+                    '<button onclick="deleteNotification(' + notification.id + ', this)" class="btn btn-danger ms-2">Eliminar</button>' +
                     '</div>' +
                     '</div>' +
                     '</div>';
@@ -150,6 +153,35 @@
                 },
                 error: function (xhr, status, error) {
                     console.error("Error al marcar la notificación como leída:", error);
+                }
+            });
+        }
+
+        function deleteNotification(notificationId, buttonElement) {
+            if (!confirm("¿Seguro que deseas eliminar esta notificación?")) return;
+
+            $.ajax({
+                url: '@Url.Action("DeleteNotification", "Usuarios")',
+                type: 'POST',
+                data: { notificationId: notificationId },
+                success: function (response) {
+                    if (response.success) {
+                        // Remover la tarjeta de la notificación
+                        $(buttonElement).closest('.col-md-4').remove();
+
+                        // Ajustar el arreglo local
+                        notifications = notifications.filter(n => n.id !== notificationId);
+
+                        // Refrescar la paginación
+                        updatePaginationButtons();
+
+                        alert("✅ Notificación eliminada correctamente.");
+                    } else {
+                        alert("❌ Error al eliminar la notificación: " + (response.message || ""));
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("⚠️ Error al intentar eliminar: " + error);
                 }
             });
         }

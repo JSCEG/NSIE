@@ -55,7 +55,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />  -->
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />   *@
     <link rel="stylesheet" href="~/css/snier.css" asp-append-version="true" />
 
 
@@ -110,7 +110,7 @@
     <!-- D3.js -->
     <script src="https://d3js.org/d3.v6.min.js"></script>
 
-    <!-- Highcharts -->
+    <!-- Highcharts 12.03-->
     <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/heatmap.js"></script>
@@ -219,6 +219,8 @@
                         </button>
                     </div>
                 </form>
+
+                <button id="generate-test-notification" class="btn btn-header">Prueba Notificaciones</button>
 
                 <!-- Notificaciones -->
                 @if (perfilUsuario.Rol != "0")
@@ -728,6 +730,18 @@
             });
         });
     </script>
+
+    <style>
+        .link-mask {
+            position: absolute;
+            inset: 0; /* ocupa todo el contenedor padre */
+            z-index: 10;
+        }
+        .item {
+            position: relative; /* necesario para que el link-mask se posicione dentro */
+            cursor: pointer;
+        }
+    </style>
 
     <!-- Sección de notificaciones -->
     <script>

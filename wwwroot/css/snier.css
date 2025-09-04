@@ -1188,3 +1188,372 @@ footer .small {
     margin-bottom: 10px;
     /* Espacio entre leyendas */
 }
+
+/* ESTILOS PARA LOS ICONOS */
+
+.iconomenu {
+    margin-right: 10px;
+    /* Ajustar el margen derecho de la imagen */
+}
+
+.iconomenu {
+    width: 56px !important;
+    /* Establecer el ancho m ximo al 100% del contenedor */
+    height: auto;
+    /* Permitir que la altura se ajuste autom ticamente */
+}
+
+@media screen and (max-width: 500px) {
+    .iconomenu {
+        margin-bottom: 5px;
+        margin-right: 10px;
+        /* Ajustar el margen derecho de la imagen */
+        width: 32px !important;
+        /* Establecer el ancho m ximo al 100% del contenedor */
+        height: auto;
+        /* Permitir que la altura se ajuste autom ticamente */
+    }
+}
+
+#tarjetas-totales .iconomenu {
+    width: 40px;
+    /* Tamaño del ícono */
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.iconoflecha {
+    width: 68px !important;
+    height: auto;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.iconoflecha:hover {
+    transform: scale(1.2);
+}
+
+/* @* Iconos *@ */
+.iconotierra {
+    width: 48px !important;
+    height: auto;
+}
+
+.iconoco2e {
+    width: 48px !important;
+    height: auto;
+}
+
+.iconoflecha {
+    width: 68px !important;
+    height: auto;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.iconoflecha:hover {
+    transform: scale(1.2);
+}
+
+.iconoboton {
+    width: 24px !important;
+    height: auto;
+}
+
+.iconoboton2 {
+    width: 36px !important;
+    height: auto;
+}
+
+.iconoimg {
+    width: 90px;
+    height: auto;
+    padding-top: 16px;
+}
+
+.iconoimg3 {
+    width: 60px;
+    height: auto;
+}
+
+.iconoimg2 {
+    width: 60px;
+    height: auto;
+    padding: 3px;
+}
+
+.icono-responsivo {
+    max-width: 24px;
+    /* Establecer el ancho m ximo al 100% del contenedor */
+    height: auto;
+    /* Permitir que la altura se ajuste autom ticamente */
+}
+
+.icono-lateral {
+    max-width: 100%;
+    /* Establecer el ancho m ximo al 100% del contenedor */
+    height: auto;
+    /* Permitir que la altura se ajuste autom ticamente */
+}
+
+.iconomenu {
+    width: 56px !important;
+    /* Establecer el ancho m ximo al 100% del contenedor */
+    height: auto;
+    /* Permitir que la altura se ajuste autom ticamente */
+}
+
+.iconoboton {
+    padding-right: 5px;
+}
+
+.iconobotongie {
+    width: 60px !important;
+    height: 60px;
+    margin-top: 30px;
+}
+
+.icono-texto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 0px;
+}
+
+.usuario-activo-icono {
+    font-size: 3rem;
+    margin-right: 15px;
+    color: #17a2b8;
+    /* Color del ícono */
+}
+
+/* @* Diagrama *@ */
+.diagram {
+    display: flex;
+    justify-content: space-between;
+    margin: 0px;
+    position: relative;
+    z-index: 2;
+}
+
+.column {
+    flex: 1;
+    text-align: center;
+    padding: 5px;
+    min-width: 150px;
+    max-width: 150px;
+    border-radius: 8px;
+}
+
+.columni {
+    flex: 1;
+    text-align: center;
+    min-width: 30px;
+    max-width: 30px;
+}
+
+/*Textos del Diagrama*/
+.column h5 {
+    display: block;
+    margin: 8px 0;
+    text-decoration: none;
+    color: #6E7080;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.column h4 {
+    display: block;
+    margin: 8px 0;
+    text-decoration: none;
+    color: #6E7080;
+    font-size: 14px;
+}
+
+.column h3 {
+    display: block;
+    margin: 0px 0;
+    text-decoration: none;
+    color: #000;
+    font-size: 14px;
+    font-weight: bolder;
+    color: #6E7080;
+}
+
+.column h2 {
+    display: block;
+    margin: 0px 0;
+    text-decoration: none;
+    color: #6E7080;
+    font-size: 24px;
+}
+
+.column a {
+    display: block;
+    margin: 4px 0;
+    text-decoration: none;
+    color: #6E7080;
+    font-size: 12px;
+}
+
+.column p {
+    display: block;
+    margin: 4px 0;
+    text-decoration: none;
+    color: #6E7080;
+    font-size: 8px;
+}
+
+.column ul {
+    text-align: justify;
+    font-weight: bold;
+}
+
+.column li {
+    display: block;
+    margin: 4px 0;
+    text-decoration: none;
+    color: #6E7080;
+    font-size: 8px;
+}
+
+.group1,
+.group2,
+.group3,
+.groupgris,
+.groupnaranja,
+.groupverde,
+.groupuranio {
+    padding: 6px;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    box-shadow: 2px -1px 11px -5px rgba(0, 0, 0, 0.2) !important
+}
+
+.group2 {
+    /*background-color: #d0a1bd;*/
+    background-color: #d48b99;
+}
+
+.group3 {
+    background-color: #4E959B;
+}
+
+.group_pm {
+    background-color: #f3f3f3;
+    border-style: solid;
+    border-color: #d9d9d9;
+    border-width: 4px;
+    padding: 6px;
+    border-radius: 16px;
+    margin-bottom: 12px;
+}
+
+.groupgris {
+    background-color: #f3f3f3;
+}
+
+.groupgris2 {
+    padding: 0px;
+    background-color: #f3f3f3;
+    border-radius: 16px;
+    box-shadow: 2px -1px 11px -5px rgba(0, 0, 0, 0.34) !important
+}
+
+.groupuranio {
+    background-color: #F0DB97;
+}
+
+.groupnaranja {
+    background-color: #e2bd04;
+}
+
+.groupverde {
+    background-color: #b6dea0;
+    /* background-color: #EEEDE4;*/
+}
+
+/* @* Linea retroalimentacion *@ */
+.v-liner {
+    border-left: thick solid #526675;
+    height: 630px;
+    margin-left: 50%;
+    margin-top: 0px;
+}
+
+.v-liner2 {
+    border-left: thick solid #526675;
+    height: 333px;
+    margin-left: 49%;
+    margin-top: -25px;
+}
+
+.h-liner {
+    position: fixed;
+    /* top: 0; */
+    left: 384px;
+    right: 0;
+    border-bottom: thick solid #526675;
+    margin-top: 441px;
+    width: 1095px;
+}
+
+.arrow-image {
+    position: absolute;
+    /* Posición absoluta para las imágenes de flechas */
+}
+
+.float-text {
+    position: absolute;
+    /* Posición absoluta para los textos */
+    font-size: 12px;
+}
+
+.texto-vertical-right {
+    position: absolute;
+    /* Posición absoluta para los textos verticales */
+    font-size: 12px;
+}
+
+.btn-d-rojo {
+    background-color: #9f2241 !important;
+    color: #ffffff !important;
+    width: 100%;
+    border-radius: 8px;
+    border-bottom: 2px solid transparent;
+    transition: background-color 0.3s ease, color 0.3s ease, border-bottom 0.3s ease;
+    /* Transición suave */
+}
+
+.navbarmapag {
+    width: 100%;
+    /* background-color: #161c2c; */
+    overflow: auto;
+    display: flex;
+    justify-content: flex-start;
+    /* o 'center' si prefieres */
+    align-items: center;
+}
+
+.navbarmapag a {
+    flex: 1;
+    /* Asegura que cada enlace ocupe un espacio igual */
+    padding: 5px;
+    color: black;
+    text-decoration: none;
+    font-size: 12px;
+    text-align: center;
+    /* Centra el texto dentro de cada enlace */
+}
+
+.navbarmapag a:hover {
+    color: #fafafa;
+    cursor: pointer;
+    background-color: #595560;
+}
+
+.navbarmapag a.active {
+    background-color: #1a8092ff;
+    color: #fafafa;
+}

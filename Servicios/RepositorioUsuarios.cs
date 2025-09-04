@@ -30,6 +30,7 @@ namespace NSIE.Servicios
         Task<IEnumerable<Notificacion>> GetAllNotificationsAsync(int userId);
         Task<bool> GenerateNotificationsScriptAsync();
         Task<Notificacion> ObtenerNotificacionPorId(int id);
+        Task<bool> GuardarNotificacionScriptAsync(Notificacion model);
 
         // Créditos
         Task<IEnumerable<Credito>> ObtenerCreditos();
@@ -359,13 +360,13 @@ namespace NSIE.Servicios
             {
                 await connection.OpenAsync();
                 var script = @"DECLARE @ID_Usuario INT;
-                DECLARE @Titulo_Notificacion NVARCHAR(255) = 'Sistema de Coordenadas de Georreferenciación';
-                DECLARE @Mensaje NVARCHAR(MAX) = '¡Te invitamos a consultar el documento del Sistema de Coordenadas de Georreferenciación! Conoce más sobre el Sistema de Coordenadas Geográficas, sus generalidades, las unidades de medición y cómo verificar que las coordenadas estén en territorio nacional';
+                DECLARE @Titulo_Notificacion NVARCHAR(255) = 'Notificación de prueba';
+                DECLARE @Mensaje NVARCHAR(MAX) = 'Este es un mensaje de prueba para el funcionamiento de las notificaciones en el sistema SNIER (Se anexan documentos e imagen de ejemplo)';
                 DECLARE @Fecha_Notificacion DATETIME = GETDATE();
-                DECLARE @Link NVARCHAR(255) = '/documents/Coordenadas-de-Geo-referenciación-Póster.pdf';
+                DECLARE @Link NVARCHAR(255) = '/documentos/necesidades/Listado_Necesidades.pdf';
                 DECLARE @Visto BIT = 0;
                 DECLARE @Fecha_Visto DATETIME = NULL;
-                DECLARE @Imagen NVARCHAR(255) = '/img/mapam.png';
+                DECLARE @Imagen NVARCHAR(255) = '/img/codigo.png';
                 DECLARE UserCursor CURSOR FOR
                 SELECT TOP 500 IdUsuario FROM [dbo].[USUARIO] WHERE Vigente = 1 ORDER BY IdUsuario;
                 OPEN UserCursor;
@@ -393,6 +394,69 @@ namespace NSIE.Servicios
                     await command.ExecuteNonQueryAsync();
                 }
                 return true;
+            }
+        }
+
+        //CREACION DE NOTIFICACIONES
+        public async Task<bool> GuardarNotificacionScriptAsync(Notificacion model)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string filtro = "";
+
+                    if (model.Destino == "Rol" && !string.IsNullOrEmpty(model.Rol))
+                    {
+                        filtro = @"
+                            INNER JOIN [dbo].[Roles_Usuarios] ru ON u.IdUsuario = ru.IdUsuario
+                            INNER JOIN [dbo].[Roles] r ON ru.Rol_ID = r.Rol_ID
+                            WHERE r.Rol_ID = @Rol AND u.Vigente = 1";
+                    }
+                    else if (model.Destino == "Usuarios" && model.UsuariosSeleccionados != null && model.UsuariosSeleccionados.Any())
+                    {
+                        filtro = "WHERE u.IdUsuario IN (SELECT value FROM STRING_SPLIT(@UsuariosSeleccionados, ','))";
+                    }
+                    else
+                    {
+                        filtro = "WHERE u.Vigente = 1"; // Todos
+                    }
+
+                    var script = $@"
+                        DECLARE @Fecha_Notificacion DATETIME = GETDATE();
+                        DECLARE @Visto BIT = 0;
+                        DECLARE @Fecha_Visto DATETIME = NULL;
+
+                        INSERT INTO [dbo].[Notificaciones] 
+                            ([ID_Notificacion], [Titulo_Notificacion], [Mensaje], [Fecha_Notificacion], [Link], [ID_Usuario], [Visto], [Fecha_Visto], [Imagen])
+                        SELECT NEWID(), @Titulo, @Mensaje, @Fecha_Notificacion, @Link, u.IdUsuario, @Visto, @Fecha_Visto, @Imagen
+                        FROM [dbo].[USUARIO] u
+                        {filtro};
+                    ";
+
+                    using (var command = new SqlCommand(script, connection))
+                    {
+                        command.Parameters.AddWithValue("@Titulo", model.Titulo_Notificacion);
+                        command.Parameters.AddWithValue("@Mensaje", model.Mensaje);
+                        command.Parameters.AddWithValue("@Link", (object)model.Link ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@Imagen", (object)model.Imagen ?? "/img/notificacion.png");
+                        if (model.Destino == "Rol")
+                            command.Parameters.AddWithValue("@Rol", model.Rol);
+
+                        if (model.Destino == "Usuarios")
+                            command.Parameters.AddWithValue("@UsuariosSeleccionados", string.Join(",", model.UsuariosSeleccionados));
+
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                return true; // vuelve al listado de usuarios
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 

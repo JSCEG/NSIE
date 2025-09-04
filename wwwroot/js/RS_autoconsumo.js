@@ -738,6 +738,150 @@ function CargaPI() {
 CargaPI();
 
 
+//Carga Ductos de Petrolíferos
+function pop_ductos_petroliferos_4326_0(feature, layer) {
+    // Variables para almacenar las coordenadas de clic
+    let clickedLat, clickedLon;
+    function updatePopupContent() {
+        var popupContent = '<table>\
+                                                            <tr>\
+                                                                <th scope="row">Región: </th>\
+                                                                <td>' + (feature.properties['regin'] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
+                                                            </tr>\
+                                                            <tr>\
+                                                                <th scope="row">Ducto: </th>\
+                                                                <td>' + (feature.properties['ducto'] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
+                                                            </tr>\
+                                                            <tr>\
+                                                                <th scope="row">Servicio: </th>\
+                                                                <td>' + (feature.properties['servicio'] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
+                                                            </tr>\
+                                                            <tr>\
+                                                                <th scope="row">Longitud (km): </th>\
+                                                                <td>' + (feature.properties['longitud_'] !== null ? autolinker.link(feature.properties['longitud_'].toLocaleString()) : '') + '</td>\
+                                                            </tr>\
+                                                            <tr>\
+                                                                <th scope="row">Capacidad nominal (B): </th>\
+                                                                <td>' + (feature.properties['capa_n'] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
+                                                            </tr>\
+                                                            <tr>\
+                                                                <th scope="row">Capacidad opertiva (B): </th>\
+                                                                <td>' + (feature.properties['capa_o'] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
+                                                            </tr>\
+                                                            <tr>\
+                                                                <td><a class="street-view-link btn btn-cre-verde" href="http://maps.google.com/maps?q=&layer=c&cbll=' + clickedLat + ',' + clickedLon + '&cbp=11,0,0,0,0" target="_blank"><b> Ver vista de calle </b></a></td>\
+                                                            </tr>\
+                                                        </table>';
+        layer.bindPopup(popupContent, { maxHeight: 400 }).openPopup();
+    }
+    // Evento para capturar clics en el mapa dentro del área del feature
+    layer.on('click', function (e) {
+        clickedLat = e.latlng.lat.toPrecision(8);
+        clickedLon = e.latlng.lng.toPrecision(8);
+        updatePopupContent();
+    });
+}
+
+function style_ductos_petroliferos_4326_0_0() {
+    return {
+        pane: 'pane_ductos_petroliferos_4326_0',
+        opacity: 1,
+        color: '#a77c50',
+        dashArray: '',
+        lineCap: 'square',
+        lineJoin: 'bevel',
+        weight: 4.0,
+        fillOpacity: 0,
+        interactive: true,
+    }
+}
+mapas[0].createPane('pane_ductos_petroliferos_4326_0');
+mapas[0].getPane('pane_ductos_petroliferos_4326_0').style.zIndex = 400;
+mapas[0].getPane('pane_ductos_petroliferos_4326_0').style['mix-blend-mode'] = 'normal';
+var layer_ductos_petroliferos_4326_0 = new L.geoJson(json_ductos_petroliferos_4326_0, {
+    attribution: '',
+    interactive: true,
+    dataVar: 'json_ductos_petroliferos_4326_0',
+    layerName: 'layer_ductos_petroliferos_4326_0',
+    pane: 'pane_ductos_petroliferos_4326_0',
+    onEachFeature: pop_ductos_petroliferos_4326_0,
+    style: style_ductos_petroliferos_4326_0_0,
+});
+bounds_group.addLayer(layer_ductos_petroliferos_4326_0);
+mapas[0].addLayer(layer_ductos_petroliferos_4326_0);
+
+//Carga Ductos de GLP
+function pop_ductos_glp_4326_0(feature, layer) {
+    // Variables para almacenar las coordenadas de clic
+    let clickedLat, clickedLon;
+    function updatePopupContent() {
+        var popupContent = '<table>\
+                                                <tr>\
+                                                    <th scope="row">Región: </th>\
+                                                    <td>' + (feature.properties['Región: '] !== null ? autolinker.link(feature.properties['regin'].toLocaleString()) : '') + '</td>\
+                                                </tr>\
+                                                <tr>\
+                                                    <th scope="row">Ducto: </th>\
+                                                    <td>' + (feature.properties['Ducto: '] !== null ? autolinker.link(feature.properties['ducto'].toLocaleString()) : '') + '</td>\
+                                                </tr>\
+                                                <tr>\
+                                                    <th scope="row">Servicio: </th>\
+                                                    <td>' + (feature.properties['Servicio: '] !== null ? autolinker.link(feature.properties['servicio'].toLocaleString()) : '') + '</td>\
+                                                </tr>\
+                                                <tr>\
+                                                    <th scope="row">Longitud (km): </th>\
+                                                    <td>' + (feature.properties['Longitud (km): '] !== null ? autolinker.link(feature.properties['lon'].toLocaleString()) : '') + '</td>\
+                                                </tr>\
+                                                <tr>\
+                                                    <th scope="row">Capa nominal (B): </th>\
+                                                    <td>' + (feature.properties['Capacidad nominal (B): '] !== null ? autolinker.link(feature.properties['capa_n'].toLocaleString()) : '') + '</td>\
+                                                </tr>\
+                                                <tr>\
+                                                    <th scope="row">Capa operativa (B): </th>\
+                                                    <td>' + (feature.properties['Capacidad operativa (B): '] !== null ? autolinker.link(feature.properties['capa_o'].toLocaleString()) : '') + '</td>\
+                                                </tr>\
+                                                <tr>\
+                                                    <td><a class="street-view-link btn btn-cre-verde" href="http://maps.google.com/maps?q=&layer=c&cbll=' + clickedLat + ',' + clickedLon + '&cbp=11,0,0,0,0" target="_blank"><b> Ver vista de calle </b></a></td>\
+                                                </tr>\
+                                            </table>';
+        layer.bindPopup(popupContent, { maxHeight: 400 }).openPopup();
+    }
+    // Evento para capturar clics en el mapa dentro del área del feature
+    layer.on('click', function (e) {
+        clickedLat = e.latlng.lat.toPrecision(8);
+        clickedLon = e.latlng.lng.toPrecision(8);
+        updatePopupContent();
+    });
+}
+
+function style_ductos_glp_4326_0_0() {
+    return {
+        pane: 'pane_ductos_glp_4326_0',
+        opacity: 1,
+        color: 'rgba(128,64,0,1.0)',
+        dashArray: '',
+        lineCap: 'square',
+        lineJoin: 'bevel',
+        weight: 2.0,
+        fillOpacity: 0,
+        interactive: true,
+    }
+}
+mapas[0].createPane('pane_ductos_glp_4326_0');
+mapas[0].getPane('pane_ductos_glp_4326_0').style.zIndex = 400;
+mapas[0].getPane('pane_ductos_glp_4326_0').style['mix-blend-mode'] = 'normal';
+var layer_ductos_glp_4326_0 = new L.geoJson(json_ductos_glp_4326_0, {
+    attribution: '',
+    interactive: true,
+    dataVar: 'json_ductos_glp_4326_0',
+    layerName: 'layer_ductos_glp_4326_0',
+    pane: 'pane_ductos_glp_4326_0',
+    onEachFeature: pop_ductos_glp_4326_0,
+    style: style_ductos_glp_4326_0_0,
+});
+bounds_group.addLayer(layer_ductos_glp_4326_0);
+mapas[0].addLayer(layer_ductos_glp_4326_0);
+
 // Funcionalidades de Búsqueda y Menú*@
 
 

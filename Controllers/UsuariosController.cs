@@ -430,6 +430,67 @@ namespace NSIE.Controllers
             return View(notification);
         }
 
+        //CREAR NOTIFICACION
+        [HttpGet]
+        public async Task<IActionResult> CrearNotificacion()
+        {
+            var usuarios = await repositorioUsuarios.ObtenerListadeUsuarios();
+            var roles = await repositorioUsuarios.ObtenerTodosLosRoles();
+
+            // 🔹 Aquí filtramos solo para esta vista
+            var usuariosFiltrados = usuarios.Where(u => u.IdUsuario != 10).ToList();
+            var rolesFiltrados = roles.Where(r => r.Rol_ID != 0).ToList();
+
+            var rolesViewModel = rolesFiltrados.Select(r => new UserViewModel
+            {
+                Rol_ID = r.Rol_ID,
+                Rol_Nombre = r.Rol_Nombre
+            }).ToList();
+
+            ViewBag.Usuarios = usuariosFiltrados;
+            ViewBag.Rol = rolesViewModel;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GuardarNotificacion(Notificacion model)
+        {
+            try
+            {
+                if (model.ImagenFile != null && model.ImagenFile.Length > 0)
+                {
+                    // Carpeta de destino
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/notificaciones");
+
+                    // Crear carpeta si no existe
+                    if (!Directory.Exists(uploadsFolder))
+                        Directory.CreateDirectory(uploadsFolder);
+
+                    // Nombre único para evitar choques
+                    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImagenFile.FileName);
+
+                    // Ruta completa
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    // Guardar el archivo
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await model.ImagenFile.CopyToAsync(stream);
+                    }
+
+                    // Guardamos la ruta relativa para usarla después en la vista
+                    model.Imagen = "/img/notificaciones/" + uniqueFileName;
+                }
+                bool success = await repositorioUsuarios.GuardarNotificacionScriptAsync(model);
+                return Json(new { success, message = success ? "Notificación creada." : "No se pudo crear." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
         // ============================
         // 7. UTILIDADES Y AYUDA
         // ============================

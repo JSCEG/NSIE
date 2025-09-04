@@ -276,6 +276,22 @@ function limpiarMarcadores() {
 
 
 }
+
+// Definimos como arreglo
+let capasDuctos = [];
+
+// Función para limpiar todas las capas almacenadas
+function limpiarDuctos() {
+    if (capasDuctos.length > 0) {
+        capasDuctos.forEach(capa => {
+            map.removeLayer(capa);
+        });
+        capasDuctos = []; // opcional, para limpiar el arreglo
+    } else {
+        console.log("No se han cargado ductos");
+    }
+}
+
 function handleNull(value) {
     return value ? value : "S/D-Sin Dato";
 }
@@ -411,6 +427,7 @@ function CargaPetrolíferos() {
     });
     bounds_group.addLayer(layer_ductos_petroliferos_4326_0);
     map.addLayer(layer_ductos_petroliferos_4326_0);
+    capasDuctos.push(layer_ductos_petroliferos_4326_0);
     //setBounds();
 
     cargarCamposVisibles().then(camposVisibles => {
@@ -1046,6 +1063,7 @@ function CargaGLP() {
     });
     bounds_group.addLayer(layer_ductos_glp_4326_0);
     map.addLayer(layer_ductos_glp_4326_0);
+    capasDuctos.push(layer_ductos_glp_4326_0);
     //setBounds();
 
     cargarCamposVisiblesGLP().then(camposVisibles => {
@@ -1657,6 +1675,7 @@ function CargaGN() {
     });
     bounds_group.addLayer(layer_ductos_glp_4326_0);
     map.addLayer(layer_ductos_glp_4326_0);
+    capasDuctos.push(layer_ductos_glp_4326_0);
     //setBounds();
 
 
@@ -2170,7 +2189,8 @@ function CargaElectricidad() {
 
     cargarCamposVisibles().then(camposVisibles => {
         // Limpiar marcadores existentes
-        limpiarMarcadores()
+        limpiarMarcadores();
+        limpiarDuctos();
         // Carga los Marcadores y Ductos
 
         $.ajax({
@@ -3027,7 +3047,8 @@ function CargaElectricidadI() {
 
     cargarCamposVisibles().then(camposVisibles => {
         // Limpiar marcadores existentes
-        limpiarMarcadores()
+        limpiarMarcadores();
+        limpiarDuctos();
         // Carga los Marcadores y Ductos
 
         $.ajax({
@@ -3244,6 +3265,7 @@ function CargaPetrolíferos2() {
     });
     bounds_group.addLayer(layer_ductos_petroliferos_4326_0);
     map.addLayer(layer_ductos_petroliferos_4326_0);
+    capasDuctos.push(layer_ductos_petroliferos_4326_0);
     //setBounds();
 
     cargarCamposVisibles().then(camposVisibles => {
@@ -3711,6 +3733,7 @@ function CargaGLP2() {
     });
     bounds_group.addLayer(layer_ductos_glp_4326_0);
     map.addLayer(layer_ductos_glp_4326_0);
+    capasDuctos.push(layer_ductos_glp_4326_0);
     //setBounds();
 
     cargarCamposVisiblesGLP().then(camposVisibles => {
@@ -4187,6 +4210,7 @@ function CargaGN2() {
     });
     bounds_group.addLayer(layer_ductos_glp_4326_0);
     map.addLayer(layer_ductos_glp_4326_0);
+    capasDuctos.push(layer_ductos_glp_4326_0);
     //setBounds();
 
 
@@ -4623,7 +4647,8 @@ function CargaElectricidad2() {
 
     cargarCamposVisibles().then(camposVisibles => {
         // Limpiar marcadores existentes
-        limpiarMarcadores()
+        limpiarMarcadores();
+        limpiarDuctos();
         // Carga los Marcadores y Ductos
 
         $.ajax({
