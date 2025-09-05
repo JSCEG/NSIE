@@ -31,6 +31,7 @@ namespace NSIE.Servicios
         Task<bool> GenerateNotificationsScriptAsync();
         Task<Notificacion> ObtenerNotificacionPorId(int id);
         Task<bool> GuardarNotificacionScriptAsync(Notificacion model);
+        Task<bool> DeleteNotificationAsync(int notificationId);
 
         // Créditos
         Task<IEnumerable<Credito>> ObtenerCreditos();
@@ -455,6 +456,31 @@ namespace NSIE.Servicios
                 return true; // vuelve al listado de usuarios
             }
             catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteNotificationAsync(int notificationId)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    Console.WriteLine("Notification: " + notificationId);
+
+                    var query = "DELETE FROM [dbo].[Notificaciones] WHERE ID = @Id";
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", notificationId);
+                        var rowsAffected = await command.ExecuteNonQueryAsync();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch
             {
                 return false;
             }

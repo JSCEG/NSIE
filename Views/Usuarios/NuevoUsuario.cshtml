@@ -22,12 +22,37 @@
 
 
 
-<div class="text-center">
-    <h3 class="cp-section cp-grouping-section"> <img src="@Cdn.Url/img_snier/vistas/mexicoi.png" alt="Icono personalizado" class="iconomenu">@ViewData["Title"]</h3>
-</div>
+@{
+    var header = new HeaderViewModel
+    {
+        Title = "Alta de Nuevo Usuario",
+        IconPath = "mexicoi.png",
+        Description = "Crea perfiles, roles y accesos según normativa.",
+        Section = "Gobernanza y Seguridad",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Alta de Usuarios y Perfiles",
+            description = "Sistema de alta de usuarios y control de accesos del SNIEr.",
+            functionality = "Permite dar de alta usuarios, asignar roles y mantener la trazabilidad de accesos.",
+            stage = "Inicialización",
+            roles = new[] {
+                new { icon = "building", text = "Secretaría de Energía: Administración general" },
+                new { icon = "users-cog", text = "Unidad SNIEr: Gestión de perfiles" },
+                new { icon = "user-shield", text = "Dirección TICs: Control técnico" },
+                new { icon = "user-tie", text = "Consejo: Supervisión de accesos" }
+            },
+            order = new { step = 1, description = "Control de accesos desde el inicio (Art. 70)" }
+        }),
+        LegalDescription = "Creación de accesos y perfiles conforme a los lineamientos establecidos en el Art. 70 del Reglamento.",
+        Fundamentos = new List<FundamentoLegal> {
+            new() { Reference = "Art. 70 Reglamento", Description = "Establece los controles de acceso y gestión de usuarios" },
+            new() { Reference = "Art. 71 Reglamento", Description = "Define la administración de perfiles" },
+            new() { Reference = "Art. 76 Reglamento", Description = "Establece la trazabilidad y seguridad" }
+        }
+    };
+}
 
-<br />
-
+@await Html.PartialAsync("_ViewHeader", header)
 
 <div class="container">
     <form asp-action="NuevoUsuario" method="post">

@@ -220,7 +220,7 @@
                     </div>
                 </form>
 
-                <button id="generate-test-notification" class="btn btn-header">Prueba Notificaciones</button>
+                @* <button id="generate-test-notification" class="btn btn-header">Prueba Notificaciones</button> *@
 
                 <!-- Notificaciones -->
                 @if (perfilUsuario.Rol != "0")
@@ -234,7 +234,7 @@
                             <i class="bi bi-bell"></i>
 
                             <!-- Badge dinámico -->
-                            <span class="icon-badge hidden" id="notification-count">0</span>
+                            <span class="icon-badge" id="notification-count">0</span>
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm"

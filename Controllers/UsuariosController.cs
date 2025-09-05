@@ -390,14 +390,15 @@ namespace NSIE.Controllers
             }
         }
 
-        public IActionResult NotificationDetails(string titulo, string mensaje, DateTime fecha, string link)
+        public IActionResult NotificationDetails(string titulo, string mensaje, DateTime fecha, string link, string imagen)
         {
             var model = new NotificationDetails
             {
                 Titulo = titulo,
                 Mensaje = mensaje,
                 Fecha = fecha,
-                Link = link
+                Link = link,
+                Imagen = imagen
             };
             return View(model);
         }
@@ -484,6 +485,24 @@ namespace NSIE.Controllers
                 }
                 bool success = await repositorioUsuarios.GuardarNotificacionScriptAsync(model);
                 return Json(new { success, message = success ? "Notificación creada." : "No se pudo crear." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteNotification(int notificationId)
+        {
+            try
+            {
+                var result = await repositorioUsuarios.DeleteNotificationAsync(notificationId);
+
+                if (result)
+                    return Json(new { success = true });
+                else
+                    return Json(new { success = false, message = "No se pudo eliminar la notificación." });
             }
             catch (Exception ex)
             {
