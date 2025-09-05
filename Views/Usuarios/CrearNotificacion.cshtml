@@ -12,14 +12,37 @@
     ViewData["Title"] = "Crear Notificación";
 }
 
-<div class="text-center">
-    <h3 class="cp-section cp-grouping-section">
-        <img src="@Cdn.Url/img_snier/vistas/notificaciones.png" class="iconomenu" />
-        @ViewData["Title"]
-    </h3>
-</div>
+@{
+    var header = new HeaderViewModel
+    {
+        Title = "Creacion de notificaciones",
+        IconPath = "notificaciones.png",
+        Description = "Gestiona la creación de notificaciones para los usuarios del SNIEr.",
+        Section = "Gobernanza y Seguridad",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Creación de notificaciones",
+            description = "Gestiona la creación de notificaciones para los usuarios del SNIEr",
+            functionality = "Crea notificaciones para enviarlas a todos los usuarios, por rol o algún usuario en específico",
+            stage = "Inicialización",
+            roles = new[] {
+                new { icon = "building", text = "Secretaría de Energía: Administración general" },
+                new { icon = "users-cog", text = "Unidad SNIEr: Gestión de notificaciones" },
+                new { icon = "user-shield", text = "Dirección TICs: Control técnico" },
+                new { icon = "user-tie", text = "Consejo: Supervisión de accesos" }
+            },
+            order = new { step = 1, description = "Control de accesos desde el inicio (Art. 70)" }
+        }),
+        LegalDescription = "Gestión de notificaciones.",
+        Fundamentos = new List<FundamentoLegal> {
+            new() { Reference = "Art. 70 Reglamento", Description = "Establece los controles de acceso y gestión de usuarios" },
+            new() { Reference = "Art. 71 Reglamento", Description = "Define la administración de perfiles" },
+            new() { Reference = "Art. 76 Reglamento", Description = "Establece la trazabilidad y seguridad" }
+        }
+    };
+}
 
-<br />
+@await Html.PartialAsync("_ViewHeader", header);
 
 <div class="container">
     <form id="formNotificacion" enctype="multipart/form-data" method="post">
