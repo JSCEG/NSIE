@@ -1,0 +1,603 @@
+@inject IHttpContextAccessor HttpContextAccessor
+@using NSIE.Models
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+
+@{
+	var httpContext = HttpContextAccessor.HttpContext;
+	var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+	var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+
+	ViewData["Title"] = "Fuentes de Información";
+	ViewData["NombreUsuario"] = perfilUsuario?.Nombre;
+	ViewData["RolUsuario"] = perfilUsuario?.Rol;
+	ViewData["IDUsuario"] = perfilUsuario?.IdUsuario;
+
+	var header = new HeaderViewModel
+	{
+		Title = "Fuentes de Información",
+		IconPath = "database.png",
+		Description = "Consulta y gestiona las fuentes de información del sistema SNIEr.",
+		Section = "Tablero de Fuentes",
+		ModuleInfo = JsonConvert.SerializeObject(new
+		{
+			title = "Fuentes de Información",
+			description = "Listado y gestión de fuentes, con filtro y totales.",
+			functionality = "Consulta, edición y resumen por fuente.",
+			stage = "Disponible",
+			roles = new[] {
+new { icon = "database", text = "Consulta y gestión de fuentes" }
+},
+			order = new { step = 1, description = "Implementado en el tablero principal" },
+			manualUrl = "#"
+		})
+	};
+}
+
+@await Html.PartialAsync("_ViewHeader", header)
+
+<div class="container mb-5">
+	<div class="row">
+		<div class="col-12">
+			<div class="card mb-3">
+				<div class="card-header">
+					<h6 class="mb-0"><i class="fas fa-filter"></i> Filtros</h6>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6">
+							<label for="filtro" class="form-label">Buscar por entidad o rubro:</label>
+							<input type="text" id="filtro" class="form-control" placeholder="Escriba para buscar..." />
+						</div>
+						<div class="col-md-4">
+							<label for="filtroFuente" class="form-label">Filtrar por fuente:</label>
+							<select id="filtroFuente" class="form-control">
+								<option value="">Todas las fuentes</option>
+							</select>
+						</div>
+						<div class="col-md-2 d-flex align-items-end">
+							<button class="btn btn-primary w-100" onclick="aplicarFiltros()">
+								<i class="fas fa-search"></i> Buscar
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-header">
+							<h6 class="mb-0"><i class="fas fa-table"></i> Entidades y Fuentes de Información</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover" id="tablaFuentes">
+									<thead class="table-light">
+										<tr>
+											<th>Entidad</th>
+											<th>Rubros</th>
+											<th>Cantidad de Fuentes</th>
+											<th>Acciones</th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">
+							<h6 class="mb-0"><i class="fas fa-chart-pie"></i> Distribución por Entidad</h6>
+						</div>
+						<div class="card-body">
+							<div id="chartEntidades" style="width:100%; height:350px;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">
+							<h6 class="mb-0"><i class="fas fa-chart-donut"></i> Distribución por Tipo</h6>
+						</div>
+						<div class="card-body">
+							<div id="chartTipos" style="width:100%; height:350px;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal para Detalles/CRUD -->
+<div class="modal fade" id="modalFuente" tabindex="-1" role="dialog" aria-labelledby="modalFuenteLabel"
+	aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalFuenteLabel">Detalles de Fuente</h5>
+				<!-- Bootstrap 4 y 5 compatible -->
+				<button type="button" class="close btn-close" data-dismiss="modal" data-bs-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" id="modalBody">
+				<!-- Contenido dinámico -->
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">
+					<i class="fas fa-times"></i> Cerrar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	let datosOriginales = [];
+	let totalesOriginales = [];
+
+	function aplicarFiltros() {
+		var filtroTexto = document.getElementById('filtro').value.toLowerCase();
+		var filtroFuente = document.getElementById('filtroFuente').value;
+
+		console.log('Aplicando filtros:', { filtroTexto, filtroFuente, datosOriginales: datosOriginales.length });
+
+		// Filtrar datos de la tabla
+		var datosFiltrados = datosOriginales.filter(f => {
+			var coincideTexto = !filtroTexto ||
+				(f.entidad && f.entidad.toLowerCase().includes(filtroTexto)) ||
+				(f.rubro && f.rubro.toLowerCase().includes(filtroTexto)) ||
+				(f.etiqueta && f.etiqueta.toLowerCase().includes(filtroTexto));
+
+			var coincideFuente = !filtroFuente || (f.entidad === filtroFuente);
+
+			return coincideTexto && coincideFuente;
+		});
+
+		console.log('Datos filtrados:', datosFiltrados.length);
+
+		// Actualizar tabla
+		actualizarTabla(datosFiltrados);
+
+		// Actualizar gráfico con datos filtrados
+		actualizarGrafico(datosFiltrados);
+	}
+
+	function actualizarTabla(datos) {
+		// Destruir DataTable si existe
+		if ($.fn.DataTable.isDataTable('#tablaFuentes')) {
+			$('#tablaFuentes').DataTable().clear().destroy();
+		}
+
+		// Agrupar datos por entidad
+		var entidadesAgrupadas = {};
+		datos.forEach(f => {
+			var entidad = f.entidad || 'Sin entidad';
+			if (!entidadesAgrupadas[entidad]) {
+				entidadesAgrupadas[entidad] = {
+					entidad: entidad,
+					fuentes: [],
+					tipos: new Set(),
+					rubros: new Set()
+				};
+			}
+			entidadesAgrupadas[entidad].fuentes.push(f);
+			if (f.tipo) entidadesAgrupadas[entidad].tipos.add(f.tipo);
+			if (f.rubro) entidadesAgrupadas[entidad].rubros.add(f.rubro);
+		});
+
+		var tbody = document.querySelector('#tablaFuentes tbody');
+		tbody.innerHTML = '';
+
+		Object.values(entidadesAgrupadas).forEach(grupo => {
+			var tiposText = Array.from(grupo.tipos).slice(0, 2).join(', ');
+			if (grupo.tipos.size > 2) tiposText += '...';
+
+			var rubrosText = Array.from(grupo.rubros).slice(0, 2).join(', ');
+			if (grupo.rubros.size > 2) rubrosText += '...';
+
+			tbody.innerHTML += `<tr>
+				<td>
+					<strong>${grupo.entidad}</strong>
+					<br><small class="text-muted">Tipos: ${tiposText || 'N/A'}</small>
+				</td>
+				<td>
+					<small class="text-muted">Rubros principales:</small><br>
+					${rubrosText || 'N/A'}
+				</td>
+				<td>
+					<span class="badge badge-primary badge-pill">${grupo.fuentes.length}</span>
+					${grupo.fuentes.length === 1 ? 'fuente' : 'fuentes'}
+				</td>
+				<td>
+					<button class="btn btn-sm btn-info" onclick="verDetalleEntidad('${grupo.entidad}')" title="Ver trazabilidad de entidad">
+						<i class="fas fa-chart-line"></i> Trazabilidad
+					</button>
+				</td>
+			</tr>`;
+		});
+
+		// Reinicializar DataTables después de actualizar contenido
+		$('#tablaFuentes').DataTable({
+			paging: true,
+			searching: false,
+			ordering: true,
+			info: true,
+			pageLength: 10,
+			order: [[2, 'desc']], // Ordenar por cantidad de fuentes
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
+			}
+		});
+	}
+
+	function actualizarGrafico(datos) {
+		// Calcular totales por entidad
+		var totalesPorEntidad = {};
+		var totalesPorTipo = {};
+
+		datos.forEach(f => {
+			var entidad = f.entidad || 'Sin entidad';
+			var tipo = f.tipo || 'Sin tipo';
+
+			// Contar por entidad
+			if (totalesPorEntidad[entidad]) {
+				totalesPorEntidad[entidad]++;
+			} else {
+				totalesPorEntidad[entidad] = 1;
+			}
+
+			// Contar por tipo
+			if (totalesPorTipo[tipo]) {
+				totalesPorTipo[tipo]++;
+			} else {
+				totalesPorTipo[tipo] = 1;
+			}
+		});
+
+		// Datos para gráfico por entidades
+		var seriesDataEntidades = Object.keys(totalesPorEntidad).map(entidad => ({
+			name: entidad,
+			y: totalesPorEntidad[entidad]
+		}));
+
+		// Datos para gráfico por tipos
+		var seriesDataTipos = Object.keys(totalesPorTipo).map(tipo => ({
+			name: tipo,
+			y: totalesPorTipo[tipo]
+		}));
+
+		// Crear gráfico por entidades
+		Highcharts.chart('chartEntidades', {
+			chart: {
+				type: 'pie'
+			},
+			title: {
+				text: 'Fuentes por Entidad'
+			},
+			colors: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#17a2b8', '#fd7e14', '#e83e8c', '#6c757d', '#343a40'],
+			series: [{
+				name: 'Fuentes',
+				data: seriesDataEntidades,
+				dataLabels: {
+					enabled: true,
+					format: '{point.name}: {point.y}'
+				}
+			}],
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer',
+					dataLabels: {
+						enabled: true,
+						format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)'
+					}
+				}
+			},
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.y}</b> ({point.percentage:.1f}%)'
+			}
+		});
+
+		// Crear gráfico por tipos
+		Highcharts.chart('chartTipos', {
+			chart: {
+				type: 'pie'
+			},
+			title: {
+				text: 'Fuentes por Tipo'
+			},
+			colors: ['#17a2b8', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#007bff', '#fd7e14', '#e83e8c', '#6c757d', '#343a40'],
+			series: [{
+				name: 'Fuentes',
+				data: seriesDataTipos,
+				dataLabels: {
+					enabled: true,
+					format: '{point.name}: {point.y}'
+				}
+			}],
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer',
+					dataLabels: {
+						enabled: true,
+						format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)'
+					}
+				}
+			},
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.y}</b> ({point.percentage:.1f}%)'
+			}
+		});
+	}
+
+	function cargarFuentes() {
+		fetch('/FuentesdeInformacion/ObtenerFuentes?filtro=')
+			.then(r => r.json())
+			.then(data => {
+				console.log('Respuesta de ObtenerFuentes:', JSON.stringify(data));
+				if (data && data.error) {
+					alert('Error: ' + data.error);
+					return;
+				}
+				if (!Array.isArray(data)) {
+					alert('Error: La respuesta no es un array válido.');
+					return;
+				}
+
+				// Guardar datos originales
+				datosOriginales = data;
+
+				// Mostrar todos los datos inicialmente
+				actualizarTabla(data);
+				actualizarGrafico(data);
+			})
+			.catch(error => {
+				console.error('Error al cargar fuentes:', error);
+				alert('Error al cargar fuentes: ' + error.message);
+			});
+	}
+
+	function verDetalleEntidad(entidad) {
+		// Filtrar datos de la entidad específica
+		var fuentesEntidad = datosOriginales.filter(f => f.entidad === entidad);
+
+		if (fuentesEntidad.length === 0) {
+			alert('No se encontraron fuentes para esta entidad.');
+			return;
+		}
+
+		// Agrupar por tipo y rubro para la trazabilidad
+		var tiposPorRubro = {};
+		var resumenTipos = {};
+		var resumenRubros = {};
+
+		fuentesEntidad.forEach(f => {
+			var tipo = f.tipo || 'Sin tipo';
+			var rubro = f.rubro || 'Sin rubro';
+
+			// Agrupar tipos por rubro
+			if (!tiposPorRubro[rubro]) {
+				tiposPorRubro[rubro] = new Set();
+			}
+			tiposPorRubro[rubro].add(tipo);
+
+			// Contar tipos
+			resumenTipos[tipo] = (resumenTipos[tipo] || 0) + 1;
+
+			// Contar rubros
+			resumenRubros[rubro] = (resumenRubros[rubro] || 0) + 1;
+		});
+
+		// Crear tabla de fuentes
+		var tablaFuentes = '';
+		fuentesEntidad.forEach((f, index) => {
+			tablaFuentes += `
+				<tr>
+					<td>${index + 1}</td>
+					<td>${f.tipo || 'N/A'}</td>
+					<td>${f.rubro || 'N/A'}</td>
+					<td>${f.etiqueta || 'N/A'}</td>
+					<td>
+						<button class="btn btn-xs btn-outline-info" onclick="verDetalle(${f.id})" title="Ver detalles completos">
+							<i class="fas fa-eye"></i>
+						</button>
+					</td>
+				</tr>
+			`;
+		});
+
+		// Crear contenido del modal
+		document.getElementById('modalBody').innerHTML = `
+			<div class="row">
+				<div class="col-md-4">
+					<div class="card border-primary">
+						<div class="card-header bg-primary text-white">
+							<h6 class="mb-0"><i class="fas fa-info-circle"></i> Resumen</h6>
+						</div>
+						<div class="card-body">
+							<p><strong>Entidad:</strong> ${entidad}</p>
+							<p><strong>Total fuentes:</strong> <span class="badge badge-primary">${fuentesEntidad.length}</span></p>
+							<p><strong>Tipos únicos:</strong> <span class="badge badge-info">${Object.keys(resumenTipos).length}</span></p>
+							<p><strong>Rubros únicos:</strong> <span class="badge badge-success">${Object.keys(resumenRubros).length}</span></p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="card">
+						<div class="card-header">
+							<h6 class="mb-0"><i class="fas fa-list"></i> Distribución por Tipo</h6>
+						</div>
+						<div class="card-body">
+							${Object.entries(resumenTipos).map(([tipo, cant]) =>
+			`<span class="badge badge-outline-secondary mr-2 mb-1">${tipo}: ${cant}</span>`
+		).join('')}
+						</div>
+					</div>
+					<div class="card mt-2">
+						<div class="card-header">
+							<h6 class="mb-0"><i class="fas fa-tags"></i> Distribución por Rubro</h6>
+						</div>
+						<div class="card-body">
+							${Object.entries(resumenRubros).map(([rubro, cant]) =>
+			`<span class="badge badge-outline-primary mr-2 mb-1">${rubro}: ${cant}</span>`
+		).join('')}
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-12">
+					<h6><i class="fas fa-table"></i> Detalle de Fuentes</h6>
+					<div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+						<table class="table table-sm table-striped">
+							<thead class="thead-light">
+								<tr>
+									<th>#</th>
+									<th>Tipo</th>
+									<th>Rubro</th>
+									<th>Etiqueta</th>
+									<th>Acción</th>
+								</tr>
+							</thead>
+							<tbody>
+								${tablaFuentes}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		`;
+
+		// Cambiar título del modal
+		document.getElementById('modalFuenteLabel').innerHTML = `<i class="fas fa-chart-line"></i> Trazabilidad de Entidad - ${entidad}`;
+
+		// Mostrar modal
+		try {
+			if (typeof bootstrap !== 'undefined') {
+				var modal = new bootstrap.Modal(document.getElementById('modalFuente'));
+				modal.show();
+			} else {
+				$('#modalFuente').modal('show');
+			}
+		} catch (e) {
+			$('#modalFuente').modal('show');
+		}
+	}
+
+	function verDetalle(id) {
+		fetch('/FuentesdeInformacion/ObtenerFuentePorId?id=' + id)
+			.then(r => r.json())
+			.then(data => {
+				if (data) {
+					// Obtener fecha de modificación y usuario (si están disponibles)
+					var fechaModificacion = data.fechaModificacion ?
+						new Date(data.fechaModificacion).toLocaleString('es-ES') : 'No disponible';
+					var usuarioModificacion = data.usuarioModificacion || 'No disponible';
+
+					document.getElementById('modalBody').innerHTML = `
+						<div class="row">
+							<div class="col-md-6">
+								<h6><i class="fas fa-info-circle"></i> Información General</h6>
+								<p><strong>Entidad:</strong> ${data.entidad || 'N/A'}</p>
+								<p><strong>Tipo:</strong> ${data.tipo || 'N/A'}</p>
+								<p><strong>Rubro:</strong> ${data.rubro || 'N/A'}</p>
+								<p><strong>Etiqueta:</strong> ${data.etiqueta || 'N/A'}</p>
+								<p><strong>Dato Información:</strong> ${data.dato_Informacion || 'N/A'}</p>
+								<p><strong>Unidades:</strong> ${data.unidades || 'N/A'}</p>
+							</div>
+							<div class="col-md-6">
+								<h6><i class="fas fa-cogs"></i> Detalles Técnicos</h6>
+								<p><strong>Desagregación:</strong> ${data.desagregacion || 'N/A'}</p>
+								<p><strong>Sub desagregación:</strong> ${data.sub_desagregacion || 'N/A'}</p>
+								<p><strong>Periodicidad:</strong> ${data.periodicidad_Corte_de_Informacion || 'N/A'}</p>
+								<p><strong>Fuente Link:</strong> 
+									${data.fuente_Link && data.fuente_Link.trim() !== '' ?
+							`<a href="${data.fuente_Link}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-external-link-alt"></i> Abrir enlace</a>` :
+							'<span class="text-muted">Sin enlace disponible</span>'}
+								</p>
+								<p><strong>Comentario:</strong> ${data.comentario || 'N/A'}</p>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-12">
+								<h6><i class="fas fa-history"></i> Información de Auditoría</h6>
+								<small class="text-muted">
+									<strong>Última modificación:</strong> ${fechaModificacion}<br>
+									<strong>Modificado por:</strong> ${usuarioModificacion}
+								</small>
+							</div>
+						</div>
+					`;
+
+					// Cambiar título del modal
+					document.getElementById('modalFuenteLabel').innerHTML = '<i class="fas fa-database"></i> Detalles de Fuente - ' + (data.entidad || 'N/A');
+
+					// Mostrar modal (compatible con Bootstrap 4 y 5)
+					try {
+						// Intentar Bootstrap 5 primero
+						if (typeof bootstrap !== 'undefined') {
+							var modal = new bootstrap.Modal(document.getElementById('modalFuente'));
+							modal.show();
+						} else {
+							// Fallback a Bootstrap 4/jQuery
+							$('#modalFuente').modal('show');
+						}
+					} catch (e) {
+						// Fallback final
+						$('#modalFuente').modal('show');
+					}
+				}
+			})
+			.catch(error => {
+				console.error('Error al cargar detalle:', error);
+				alert('Error al cargar detalle: ' + error.message);
+			});
+	}
+
+	function cargarFuentesDropdown() {
+		fetch('/FuentesdeInformacion/ObtenerTotalesPorFuente')
+			.then(r => r.json())
+			.then(data => {
+				if (Array.isArray(data)) {
+					totalesOriginales = data;
+					var select = document.getElementById('filtroFuente');
+					// Limpiar opciones existentes excepto la primera
+					select.innerHTML = '<option value="">Todas las fuentes</option>';
+
+					data.forEach(t => {
+						var option = document.createElement('option');
+						option.value = t.entidad;
+						option.text = t.entidad + ' (' + t.total + ')';
+						select.appendChild(option);
+					});
+				}
+			})
+			.catch(error => {
+				console.error('Error al cargar dropdown:', error);
+			});
+	}
+
+	// Agregar evento para filtrar automáticamente al escribir
+	document.addEventListener('DOMContentLoaded', function () {
+		// Cargar datos iniciales
+		cargarFuentes();
+		cargarFuentesDropdown();
+
+		// Eventos de filtrado automático
+		document.getElementById('filtro').addEventListener('input', function () {
+			setTimeout(aplicarFiltros, 300); // Pequeño delay para evitar demasiadas llamadas
+		});
+
+		document.getElementById('filtroFuente').addEventListener('change', aplicarFiltros);
+	});
+</script>
