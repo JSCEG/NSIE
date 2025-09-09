@@ -1,0 +1,624 @@
+@inject IHttpContextAccessor HttpContextAccessor
+@using NSIE.Models
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+
+@{
+	var httpContext = HttpContextAccessor.HttpContext;
+	var perfilUsuarioJson = httpContext.Session.GetString("PerfilUsuario");
+	var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+
+	ViewData["Title"] = "Gestionar Fuentes - " + ViewBag.Entidad;
+	ViewData["NombreUsuario"] = perfilUsuario?.Nombre;
+	ViewData["RolUsuario"] = perfilUsuario?.Rol;
+	ViewData["IDUsuario"] = perfilUsuario?.IdUsuario;
+
+	var header = new HeaderViewModel
+	{
+		Title = "Gestionar Fuentes de " + ViewBag.Entidad,
+		IconPath = "database.png",
+		Description = "Gestiona las fuentes de información de la entidad " + ViewBag.Entidad,
+		Section = "CRUD de Fuentes",
+		ModuleInfo = JsonConvert.SerializeObject(new
+		{
+			title = "Gestión de Fuentes",
+			description = "CRUD completo de fuentes para la entidad seleccionada.",
+			functionality = "Crear, leer, actualizar y eliminar fuentes.",
+			stage = "Disponible",
+			roles = new[] {
+				new { icon = "edit", text = "CRUD de fuentes" },
+				new { icon = "list", text = "Listado con filtros" },
+				new { icon = "chart", text = "Análisis visual" }
+			},
+			order = new { step = 2, description = "Vista de gestión detallada" },
+			manualUrl = "#"
+		})
+	};
+}
+
+@await Html.PartialAsync("_ViewHeader", header)
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="container mb-5">
+	<div class="row">
+		<div class="col-12">
+			<!-- Breadcrumb -->
+			<nav aria-label="breadcrumb" class="mb-3">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item">
+						<a href="/FuentesdeInformacion/Fuentes">
+							<i class="fas fa-database"></i> Fuentes de Información
+						</a>
+					</li>
+					<li class="breadcrumb-item active" aria-current="page">
+						<i class="fas fa-cogs"></i> @ViewBag.Entidad
+					</li>
+				</ol>
+			</nav>
+
+			<!-- Información de la entidad -->
+			<div class="card mb-3">
+				<div class="card-header bg-primary text-white">
+					<div class="d-flex justify-content-between align-items-center">
+						<h5 class="mb-0">
+							<i class="fas fa-building"></i> Entidad: @ViewBag.Entidad
+						</h5>
+						<div>
+							<span class="badge badge-light" id="totalFuentes">0 fuentes</span>
+							<button class="btn btn-success btn-sm ml-2" onclick="agregarNuevaFuente()">
+								<i class="fas fa-plus"></i> Agregar Fuente
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6">
+							<label for="filtroTipo" class="form-label">Filtrar por tipo:</label>
+							<select id="filtroTipo" class="form-control">
+								<option value="">Todos los tipos</option>
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label for="filtroRubro" class="form-label">Filtrar por rubro:</label>
+							<select id="filtroRubro" class="form-control">
+								<option value="">Todos los rubros</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Tabla de fuentes -->
+			<div class="card">
+				<div class="card-header">
+					<h6 class="mb-0"><i class="fas fa-list"></i> Fuentes de la Entidad</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover" id="tablaFuentesDetalle">
+							<thead class="table-light">
+								<tr>
+									<th>Tipo</th>
+									<th>Rubro</th>
+									<th>Etiqueta</th>
+									<th>Unidades</th>
+									<th>Periodicidad</th>
+									<th>Enlace</th>
+									<th>Acciones</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<!-- Gráficos de análisis -->
+			<div class="row mt-4">
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">
+							<h6 class="mb-0"><i class="fas fa-chart-pie"></i> Distribución por Tipo</h6>
+						</div>
+						<div class="card-body">
+							<div id="chartTiposDetalle" style="width:100%; height:300px;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">
+							<h6 class="mb-0"><i class="fas fa-chart-donut"></i> Distribución por Rubro</h6>
+						</div>
+						<div class="card-body">
+							<div id="chartRubrosDetalle" style="width:100%; height:300px;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal para CRUD de fuentes -->
+<div class="modal fade" id="modalFuenteCRUD" tabindex="-1" role="dialog" aria-labelledby="modalFuenteCRUDLabel" aria-hidden="true">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalFuenteCRUDLabel">Agregar Nueva Fuente</h5>
+				<button type="button" class="close btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="formFuente">
+					<input type="hidden" id="fuenteId" name="id" value="0">
+					<input type="hidden" id="entidadInput" name="entidad" value="@ViewBag.Entidad">
+					
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="tipoInput">Tipo *</label>
+								<input type="text" class="form-control" id="tipoInput" name="tipo" required>
+							</div>
+							<div class="form-group">
+								<label for="rubroInput">Rubro *</label>
+								<input type="text" class="form-control" id="rubroInput" name="rubro" required>
+							</div>
+							<div class="form-group">
+								<label for="etiquetaInput">Etiqueta *</label>
+								<input type="text" class="form-control" id="etiquetaInput" name="etiqueta" required>
+							</div>
+							<div class="form-group">
+								<label for="datoInformacionInput">Dato Información</label>
+								<textarea class="form-control" id="datoInformacionInput" name="dato_Informacion" rows="3"></textarea>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="desagregacionInput">Desagregación</label>
+								<input type="text" class="form-control" id="desagregacionInput" name="desagregacion">
+							</div>
+							<div class="form-group">
+								<label for="subDesagregacionInput">Sub Desagregación</label>
+								<input type="text" class="form-control" id="subDesagregacionInput" name="sub_desagregacion">
+							</div>
+							<div class="form-group">
+								<label for="unidadesInput">Unidades</label>
+								<input type="text" class="form-control" id="unidadesInput" name="unidades">
+							</div>
+							<div class="form-group">
+								<label for="periodicidadInput">Periodicidad</label>
+								<input type="text" class="form-control" id="periodicidadInput" name="periodicidad_Corte_de_Informacion">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="fuenteLinkInput">Enlace de la Fuente</label>
+								<input type="url" class="form-control" id="fuenteLinkInput" name="fuente_Link" placeholder="https://...">
+							</div>
+							<div class="form-group">
+								<label for="comentarioInput">Comentario</label>
+								<textarea class="form-control" id="comentarioInput" name="comentario" rows="2"></textarea>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">
+					<i class="fas fa-times"></i> Cancelar
+				</button>
+				<button type="button" class="btn btn-primary" onclick="guardarFuente()">
+					<i class="fas fa-save"></i> Guardar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	let fuentesEntidad = [];
+	let entidadActual = '@ViewBag.Entidad';
+
+	// Función para mostrar notificaciones con SweetAlert2
+	function mostrarNotificacion(tipo, titulo, mensaje) {
+		const iconos = {
+			'success': 'success',
+			'error': 'error',
+			'warning': 'warning',
+			'info': 'info'
+		};
+
+		Swal.fire({
+			icon: iconos[tipo] || 'info',
+			title: titulo,
+			text: mensaje,
+			toast: true,
+			position: 'top-end',
+			showConfirmButton: false,
+			timer: 4000,
+			timerProgressBar: true,
+			didOpen: (toast) => {
+				toast.addEventListener('mouseenter', Swal.stopTimer);
+				toast.addEventListener('mouseleave', Swal.resumeTimer);
+			}
+		});
+	}
+
+	// Función para confirmaciones con SweetAlert2
+	async function confirmarAccion(titulo, mensaje, textoConfirmar = 'Sí, continuar') {
+		const result = await Swal.fire({
+			title: titulo,
+			text: mensaje,
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#d33',
+			cancelButtonColor: '#6c757d',
+			confirmButtonText: textoConfirmar,
+			cancelButtonText: 'Cancelar',
+			reverseButtons: true
+		});
+		return result.isConfirmed;
+	}
+
+	function cargarFuentesEntidad() {
+		// Mostrar loading
+		Swal.fire({
+			title: 'Cargando fuentes...',
+			allowOutsideClick: false,
+			didOpen: () => {
+				Swal.showLoading();
+			}
+		});
+
+		fetch(`/FuentesdeInformacion/ObtenerFuentes?filtro=${encodeURIComponent(entidadActual)}`)
+			.then(r => r.json())
+			.then(data => {
+				Swal.close(); // Cerrar loading
+				
+				console.log('Fuentes de la entidad:', data);
+				if (Array.isArray(data)) {
+					// Filtrar solo las fuentes de esta entidad
+					fuentesEntidad = data.filter(f => f.entidad === entidadActual);
+					actualizarTablaDetalle();
+					actualizarGraficosDetalle();
+					actualizarContadores();
+					cargarFiltros();
+					
+					mostrarNotificacion('success', 'Datos cargados', `Se cargaron ${fuentesEntidad.length} fuentes de ${entidadActual}`);
+				}
+			})
+			.catch(error => {
+				Swal.close(); // Cerrar loading
+				console.error('Error al cargar fuentes:', error);
+				mostrarNotificacion('error', 'Error de conexión', 'Error al cargar fuentes: ' + error.message);
+			});
+	}
+
+	function actualizarTablaDetalle() {
+		if ($.fn.DataTable.isDataTable('#tablaFuentesDetalle')) {
+			$('#tablaFuentesDetalle').DataTable().clear().destroy();
+		}
+
+		var tbody = document.querySelector('#tablaFuentesDetalle tbody');
+		tbody.innerHTML = '';
+
+		fuentesEntidad.forEach(f => {
+			var enlaceHtml = f.fuente_Link && f.fuente_Link.trim() ? 
+				`<a href="${f.fuente_Link}" target="_blank" class="btn btn-xs btn-outline-primary"><i class="fas fa-external-link-alt"></i></a>` :
+				'<span class="text-muted">Sin enlace</span>';
+
+			tbody.innerHTML += `<tr>
+				<td>${f.tipo || 'N/A'}</td>
+				<td>${f.rubro || 'N/A'}</td>
+				<td>${f.etiqueta || 'N/A'}</td>
+				<td>${f.unidades || 'N/A'}</td>
+				<td>${f.periodicidad_Corte_de_Informacion || 'N/A'}</td>
+				<td>${enlaceHtml}</td>
+				<td>
+					<div class="btn-group" role="group">
+						<button class="btn btn-sm btn-info" onclick="verFuenteCompleta(${f.id})" title="Ver detalles completos">
+							<i class="fas fa-eye"></i>
+						</button>
+						<button class="btn btn-sm btn-warning" onclick="editarFuente(${f.id})" title="Editar fuente">
+							<i class="fas fa-edit"></i>
+						</button>
+						<button class="btn btn-sm btn-danger" onclick="eliminarFuente(${f.id})" title="Eliminar fuente">
+							<i class="fas fa-trash"></i>
+						</button>
+					</div>
+				</td>
+			</tr>`;
+		});
+
+		$('#tablaFuentesDetalle').DataTable({
+			paging: true,
+			searching: true,
+			ordering: true,
+			info: true,
+			pageLength: 15,
+			language: {
+				url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
+			}
+		});
+	}
+
+	function actualizarGraficosDetalle() {
+		// Contar por tipo
+		var conteoTipos = {};
+		var conteoRubros = {};
+
+		fuentesEntidad.forEach(f => {
+			var tipo = f.tipo || 'Sin tipo';
+			var rubro = f.rubro || 'Sin rubro';
+			
+			conteoTipos[tipo] = (conteoTipos[tipo] || 0) + 1;
+			conteoRubros[rubro] = (conteoRubros[rubro] || 0) + 1;
+		});
+
+		// Gráfico por tipos
+		var seriesTipos = Object.keys(conteoTipos).map(tipo => ({
+			name: tipo,
+			y: conteoTipos[tipo]
+		}));
+
+		Highcharts.chart('chartTiposDetalle', {
+			chart: { type: 'pie' },
+			title: { text: 'Por Tipo' },
+			colors: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1'],
+			series: [{
+				name: 'Fuentes',
+				data: seriesTipos,
+				dataLabels: {
+					enabled: true,
+					format: '<b>{point.name}</b>: {point.y}'
+				}
+			}],
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer'
+				}
+			}
+		});
+
+		// Gráfico por rubros
+		var seriesRubros = Object.keys(conteoRubros).map(rubro => ({
+			name: rubro,
+			y: conteoRubros[rubro]
+		}));
+
+		Highcharts.chart('chartRubrosDetalle', {
+			chart: { type: 'pie' },
+			title: { text: 'Por Rubro' },
+			colors: ['#17a2b8', '#28a745', '#ffc107', '#dc3545', '#6f42c1'],
+			series: [{
+				name: 'Fuentes',
+				data: seriesRubros,
+				dataLabels: {
+					enabled: true,
+					format: '<b>{point.name}</b>: {point.y}'
+				}
+			}],
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer'
+				}
+			}
+		});
+	}
+
+	function actualizarContadores() {
+		document.getElementById('totalFuentes').textContent = 
+			fuentesEntidad.length + (fuentesEntidad.length === 1 ? ' fuente' : ' fuentes');
+	}
+
+	function cargarFiltros() {
+		// Cargar tipos únicos
+		var tipos = [...new Set(fuentesEntidad.map(f => f.tipo).filter(t => t))];
+		var selectTipo = document.getElementById('filtroTipo');
+		selectTipo.innerHTML = '<option value="">Todos los tipos</option>';
+		tipos.forEach(tipo => {
+			selectTipo.innerHTML += `<option value="${tipo}">${tipo}</option>`;
+		});
+
+		// Cargar rubros únicos
+		var rubros = [...new Set(fuentesEntidad.map(f => f.rubro).filter(r => r))];
+		var selectRubro = document.getElementById('filtroRubro');
+		selectRubro.innerHTML = '<option value="">Todos los rubros</option>';
+		rubros.forEach(rubro => {
+			selectRubro.innerHTML += `<option value="${rubro}">${rubro}</option>`;
+		});
+	}
+
+	function agregarNuevaFuente() {
+		// Limpiar formulario
+		document.getElementById('formFuente').reset();
+		document.getElementById('fuenteId').value = '0';
+		document.getElementById('entidadInput').value = entidadActual;
+		
+		// Cambiar título
+		document.getElementById('modalFuenteCRUDLabel').innerHTML = '<i class="fas fa-plus"></i> Agregar Nueva Fuente';
+		
+		// Mostrar modal
+		try {
+			if (typeof bootstrap !== 'undefined') {
+				var modal = new bootstrap.Modal(document.getElementById('modalFuenteCRUD'));
+				modal.show();
+			} else {
+				$('#modalFuenteCRUD').modal('show');
+			}
+		} catch (e) {
+			$('#modalFuenteCRUD').modal('show');
+		}
+	}
+
+	function editarFuente(id) {
+		var fuente = fuentesEntidad.find(f => f.id === id);
+		if (!fuente) {
+			alert('Fuente no encontrada');
+			return;
+		}
+
+		// Llenar formulario
+		document.getElementById('fuenteId').value = fuente.id;
+		document.getElementById('entidadInput').value = fuente.entidad;
+		document.getElementById('tipoInput').value = fuente.tipo || '';
+		document.getElementById('rubroInput').value = fuente.rubro || '';
+		document.getElementById('etiquetaInput').value = fuente.etiqueta || '';
+		document.getElementById('datoInformacionInput').value = fuente.dato_Informacion || '';
+		document.getElementById('desagregacionInput').value = fuente.desagregacion || '';
+		document.getElementById('subDesagregacionInput').value = fuente.sub_desagregacion || '';
+		document.getElementById('unidadesInput').value = fuente.unidades || '';
+		document.getElementById('periodicidadInput').value = fuente.periodicidad_Corte_de_Informacion || '';
+		document.getElementById('fuenteLinkInput').value = fuente.fuente_Link || '';
+		document.getElementById('comentarioInput').value = fuente.comentario || '';
+		
+		// Cambiar título
+		document.getElementById('modalFuenteCRUDLabel').innerHTML = '<i class="fas fa-edit"></i> Editar Fuente';
+		
+		// Mostrar modal
+		try {
+			if (typeof bootstrap !== 'undefined') {
+				var modal = new bootstrap.Modal(document.getElementById('modalFuenteCRUD'));
+				modal.show();
+			} else {
+				$('#modalFuenteCRUD').modal('show');
+			}
+		} catch (e) {
+			$('#modalFuenteCRUD').modal('show');
+		}
+	}
+
+	function guardarFuente() {
+		// Mostrar loading
+		Swal.fire({
+			title: 'Guardando fuente...',
+			allowOutsideClick: false,
+			didOpen: () => {
+				Swal.showLoading();
+			}
+		});
+
+		// Simular guardado
+		setTimeout(() => {
+			Swal.close();
+			mostrarNotificacion('success', 'Fuente guardada', 'La fuente ha sido guardada exitosamente');
+			
+			// Cerrar modal
+			$('#modalFuenteCRUD').modal('hide');
+			cargarFuentesEntidad();
+		}, 1000);
+	}
+
+	async function eliminarFuente(id) {
+		var fuente = fuentesEntidad.find(f => f.id === id);
+		if (!fuente) {
+			mostrarNotificacion('error', 'Error', 'Fuente no encontrada');
+			return;
+		}
+
+		const confirmado = await Swal.fire({
+			title: '¿Eliminar fuente?',
+			html: `
+				<p>¿Está seguro de eliminar la fuente <strong>"${fuente.etiqueta}"</strong>?</p>
+				<div class="alert alert-danger mt-3">
+					<i class="fas fa-exclamation-triangle"></i>
+					<strong>¡Atención!</strong> Esta acción NO se puede deshacer.
+				</div>
+			`,
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#dc3545',
+			cancelButtonColor: '#6c757d',
+			confirmButtonText: 'Sí, eliminar',
+			cancelButtonText: 'Cancelar',
+			reverseButtons: true
+		});
+
+		if (confirmado.isConfirmed) {
+			// Mostrar loading
+			Swal.fire({
+				title: 'Eliminando fuente...',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+
+			// Aquí implementarías la lógica para eliminar
+			setTimeout(() => {
+				Swal.close();
+				mostrarNotificacion('success', 'Fuente eliminada', 'La fuente ha sido eliminada exitosamente');
+				cargarFuentesEntidad();
+			}, 1000);
+		}
+	}
+
+	async function verFuenteCompleta(id) {
+		// Mostrar loading
+		Swal.fire({
+			title: 'Cargando detalles...',
+			allowOutsideClick: false,
+			showConfirmButton: false,
+			width: 300,
+			didOpen: () => {
+				Swal.showLoading();
+			}
+		});
+
+		try {
+			const response = await fetch(`/FuentesdeInformacion/ObtenerFuentePorId?id=${id}`);
+			const data = await response.json();
+			
+			Swal.close(); // Cerrar loading
+
+			if (data) {
+				await Swal.fire({
+					title: 'Detalles de la Fuente',
+					html: `
+						<div class="text-left">
+							<p><strong>Entidad:</strong> ${data.entidad || 'N/A'}</p>
+							<p><strong>Tipo:</strong> ${data.tipo || 'N/A'}</p>
+							<p><strong>Rubro:</strong> ${data.rubro || 'N/A'}</p>
+							<p><strong>Etiqueta:</strong> ${data.etiqueta || 'N/A'}</p>
+							<p><strong>Dato:</strong> ${data.dato_Informacion || 'N/A'}</p>
+							<p><strong>Unidades:</strong> ${data.unidades || 'N/A'}</p>
+							<p><strong>Periodicidad:</strong> ${data.periodicidad_Corte_de_Informacion || 'N/A'}</p>
+							${data.fuente_Link ? `<p><strong>Enlace:</strong> <a href="${data.fuente_Link}" target="_blank">Ver enlace</a></p>` : ''}
+						</div>
+					`,
+					width: 600,
+					confirmButtonText: 'Cerrar'
+				});
+			} else {
+				mostrarNotificacion('error', 'Error', 'No se pudieron cargar los detalles');
+			}
+		} catch (error) {
+			Swal.close(); // Cerrar loading
+			console.error('Error:', error);
+			mostrarNotificacion('error', 'Error de conexión', 'Error al obtener detalles de la fuente');
+		}
+	}
+
+	// Inicializar cuando se carga la página
+	document.addEventListener('DOMContentLoaded', function() {
+		cargarFuentesEntidad();
+
+		// Eventos de filtrado
+		document.getElementById('filtroTipo').addEventListener('change', function() {
+			// Implementar filtrado por tipo
+		});
+
+		document.getElementById('filtroRubro').addEventListener('change', function() {
+			// Implementar filtrado por rubro
+		});
+	});
+</script>

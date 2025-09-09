@@ -36,6 +36,9 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 
 @await Html.PartialAsync("_ViewHeader", header)
 
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="container mb-5">
 	<div class="row">
 		<div class="col-12">
@@ -66,8 +69,12 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 			<div class="row">
 				<div class="col-md-12">
 					<div class="card">
-						<div class="card-header">
+						<div class="card-header d-flex justify-content-between align-items-center">
 							<h6 class="mb-0"><i class="fas fa-table"></i> Entidades y Fuentes de Información</h6>
+							<button class="btn btn-sm btn-success" onclick="agregarNuevaFuente()"
+								title="Agregar nueva fuente de información">
+								<i class="fas fa-plus"></i> Nueva Fuente
+							</button>
 						</div>
 						<div class="card-body">
 							<div class="table-responsive">
@@ -138,6 +145,127 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 	</div>
 </div>
 
+<!-- Modal para Nueva Fuente -->
+<div class="modal fade" id="modalNuevaFuente" tabindex="-1" role="dialog" aria-labelledby="modalNuevaFuenteLabel"
+	aria-hidden="true">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header bg-success text-white">
+				<h5 class="modal-title" id="modalNuevaFuenteLabel">
+					<i class="fas fa-plus"></i> Agregar Nueva Fuente de Información
+				</h5>
+				<button type="button" class="close btn-close text-white" data-dismiss="modal" data-bs-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="formNuevaFuente">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="nuevaEntidad">Entidad *</label>
+								<input type="text" class="form-control" id="nuevaEntidad" name="entidad" required
+									placeholder="Nombre de la entidad..." list="entidadesExistentes">
+								<datalist id="entidadesExistentes">
+									<!-- Se llena dinámicamente -->
+								</datalist>
+								<small class="form-text text-muted">Si ya existe, se agregará a la entidad
+									existente</small>
+							</div>
+							<div class="form-group">
+								<label for="nuevoTipo">Tipo *</label>
+								<input type="text" class="form-control" id="nuevoTipo" name="tipo" required
+									placeholder="Ej: Estadística, Reporte, Base de datos..." list="tiposExistentes">
+								<datalist id="tiposExistentes">
+									<!-- Se llena dinámicamente -->
+								</datalist>
+							</div>
+							<div class="form-group">
+								<label for="nuevoRubro">Rubro *</label>
+								<input type="text" class="form-control" id="nuevoRubro" name="rubro" required
+									placeholder="Ej: Energía, Hidrocarburos, Electricidad..." list="rubrosExistentes">
+								<datalist id="rubrosExistentes">
+									<!-- Se llena dinámicamente -->
+								</datalist>
+							</div>
+							<div class="form-group">
+								<label for="nuevaEtiqueta">Etiqueta *</label>
+								<input type="text" class="form-control" id="nuevaEtiqueta" name="etiqueta" required
+									placeholder="Nombre descriptivo de la fuente...">
+							</div>
+							<div class="form-group">
+								<label for="nuevaUnidades">Unidades</label>
+								<input type="text" class="form-control" id="nuevaUnidades" name="unidades"
+									placeholder="Ej: MW, Barriles, Pesos, Porcentaje..." list="unidadesExistentes">
+								<datalist id="unidadesExistentes">
+									<!-- Se llena dinámicamente -->
+								</datalist>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="nuevaDesagregacion">Desagregación</label>
+								<input type="text" class="form-control" id="nuevaDesagregacion" name="desagregacion"
+									placeholder="Nivel de detalle de los datos...">
+							</div>
+							<div class="form-group">
+								<label for="nuevaSubDesagregacion">Sub Desagregación</label>
+								<input type="text" class="form-control" id="nuevaSubDesagregacion"
+									name="sub_desagregacion" placeholder="Nivel adicional de detalle...">
+							</div>
+							<div class="form-group">
+								<label for="nuevaPeriodicidad">Periodicidad</label>
+								<select class="form-control" id="nuevaPeriodicidad"
+									name="periodicidad_Corte_de_Informacion">
+									<option value="">Seleccionar periodicidad...</option>
+									<option value="Anual">Anual</option>
+									<option value="Semestral">Semestral</option>
+									<option value="Trimestral">Trimestral</option>
+									<option value="Mensual">Mensual</option>
+									<option value="Semanal">Semanal</option>
+									<option value="Diaria">Diaria</option>
+									<option value="Tiempo Real">Tiempo Real</option>
+									<option value="Ocasional">Ocasional</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="nuevaFuenteLink">Enlace de la Fuente</label>
+								<input type="url" class="form-control" id="nuevaFuenteLink" name="fuente_Link"
+									placeholder="https://...">
+								<small class="form-text text-muted">URL donde se puede acceder a la fuente</small>
+							</div>
+							<div class="form-group">
+								<label for="nuevaComentario">Comentario</label>
+								<textarea class="form-control" id="nuevaComentario" name="comentario" rows="2"
+									placeholder="Observaciones adicionales..."></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="nuevoDatoInformacion">Descripción de la Información</label>
+								<textarea class="form-control" id="nuevoDatoInformacion" name="dato_Informacion"
+									rows="3"
+									placeholder="Describe qué tipo de información contiene esta fuente..."></textarea>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">
+					<i class="fas fa-times"></i> Cancelar
+				</button>
+				<button type="button" class="btn btn-success" onclick="guardarNuevaFuente()">
+					<i class="fas fa-save"></i> Guardar Fuente
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 	let datosOriginales = [];
 	let totalesOriginales = [];
@@ -167,6 +295,47 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 
 		// Actualizar gráfico con datos filtrados
 		actualizarGrafico(datosFiltrados);
+	}
+
+	// Función para mostrar notificaciones con SweetAlert2
+	function mostrarNotificacion(tipo, titulo, mensaje) {
+		const iconos = {
+			'success': 'success',
+			'error': 'error',
+			'warning': 'warning',
+			'info': 'info'
+		};
+
+		Swal.fire({
+			icon: iconos[tipo] || 'info',
+			title: titulo,
+			text: mensaje,
+			toast: true,
+			position: 'top-end',
+			showConfirmButton: false,
+			timer: 4000,
+			timerProgressBar: true,
+			didOpen: (toast) => {
+				toast.addEventListener('mouseenter', Swal.stopTimer);
+				toast.addEventListener('mouseleave', Swal.resumeTimer);
+			}
+		});
+	}
+
+	// Función para confirmaciones con SweetAlert2
+	async function confirmarAccion(titulo, mensaje, textoConfirmar = 'Sí, continuar') {
+		const result = await Swal.fire({
+			title: titulo,
+			text: mensaje,
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#d33',
+			cancelButtonColor: '#6c757d',
+			confirmButtonText: textoConfirmar,
+			cancelButtonText: 'Cancelar',
+			reverseButtons: true
+		});
+		return result.isConfirmed;
 	}
 
 	function actualizarTabla(datos) {
@@ -204,7 +373,8 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 
 			tbody.innerHTML += `<tr>
 				<td>
-					<strong>${grupo.entidad}</strong>
+					<span id="entidad-${grupo.entidad.replace(/\s+/g, '-')}" class="entidad-nombre">${grupo.entidad}</span>
+					<input type="text" id="input-${grupo.entidad.replace(/\s+/g, '-')}" class="form-control entidad-input d-none" value="${grupo.entidad}">
 					<br><small class="text-muted">Tipos: ${tiposText || 'N/A'}</small>
 				</td>
 				<td>
@@ -216,9 +386,25 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 					${grupo.fuentes.length === 1 ? 'fuente' : 'fuentes'}
 				</td>
 				<td>
-					<button class="btn btn-sm btn-info" onclick="verDetalleEntidad('${grupo.entidad}')" title="Ver trazabilidad de entidad">
-						<i class="fas fa-chart-line"></i> Trazabilidad
-					</button>
+					<div class="btn-group" role="group">
+						<button class="btn btn-sm btn-info" onclick="gestionarFuentesEntidad('${grupo.entidad}')" title="Gestionar fuentes de esta entidad">
+							<i class="fas fa-cogs"></i> Gestionar
+						</button>
+						<button class="btn btn-sm btn-warning" onclick="editarEntidad('${grupo.entidad}')" title="Editar nombre de entidad">
+							<i class="fas fa-edit"></i> Editar
+						</button>
+						<button class="btn btn-sm btn-danger" onclick="eliminarEntidad('${grupo.entidad}')" title="Eliminar entidad y todas sus fuentes">
+							<i class="fas fa-trash"></i> Eliminar
+						</button>
+					</div>
+					<div class="btn-group d-none entidad-edit-actions" id="actions-${grupo.entidad.replace(/\s+/g, '-')}" role="group">
+						<button class="btn btn-sm btn-success" onclick="guardarEntidad('${grupo.entidad}')" title="Guardar cambios">
+							<i class="fas fa-save"></i> Guardar
+						</button>
+						<button class="btn btn-sm btn-secondary" onclick="cancelarEdicionEntidad('${grupo.entidad}')" title="Cancelar">
+							<i class="fas fa-times"></i> Cancelar
+						</button>
+					</div>
 				</td>
 			</tr>`;
 		});
@@ -338,17 +524,431 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 		});
 	}
 
+	// === FUNCIONES CRUD DE ENTIDADES ===
+
+	function agregarNuevaFuente() {
+		// Limpiar formulario
+		document.getElementById('formNuevaFuente').reset();
+
+		// Cargar opciones de autocompletado
+		cargarOpcionesAutocompletado();
+
+		// Cerrar cualquier modal abierto primero
+		$('#modalFuente').modal('hide');
+
+		// Mostrar modal con un pequeño delay
+		setTimeout(() => {
+			try {
+				if (typeof bootstrap !== 'undefined') {
+					var modal = new bootstrap.Modal(document.getElementById('modalNuevaFuente'));
+					modal.show();
+				} else {
+					$('#modalNuevaFuente').modal('show');
+				}
+			} catch (e) {
+				$('#modalNuevaFuente').modal('show');
+			}
+		}, 100);
+	}
+
+	function cargarOpcionesAutocompletado() {
+		if (datosOriginales.length === 0) return;
+
+		// Obtener valores únicos
+		var entidades = [...new Set(datosOriginales.map(f => f.entidad).filter(e => e))];
+		var tipos = [...new Set(datosOriginales.map(f => f.tipo).filter(t => t))];
+		var rubros = [...new Set(datosOriginales.map(f => f.rubro).filter(r => r))];
+		var unidades = [...new Set(datosOriginales.map(f => f.unidades).filter(u => u))];
+
+		// Llenar datalists
+		document.getElementById('entidadesExistentes').innerHTML =
+			entidades.map(e => `<option value="${e}">`).join('');
+
+		document.getElementById('tiposExistentes').innerHTML =
+			tipos.map(t => `<option value="${t}">`).join('');
+
+		document.getElementById('rubrosExistentes').innerHTML =
+			rubros.map(r => `<option value="${r}">`).join('');
+
+		document.getElementById('unidadesExistentes').innerHTML =
+			unidades.map(u => `<option value="${u}">`).join('');
+	}
+
+	async function guardarNuevaFuente() {
+		// Obtener datos del formulario
+		var formData = new FormData(document.getElementById('formNuevaFuente'));
+		var nuevaFuente = {};
+
+		// Convertir FormData a objeto
+		for (let [key, value] of formData.entries()) {
+			nuevaFuente[key] = value.trim();
+		}
+
+		// Validaciones
+		if (!nuevaFuente.entidad || nuevaFuente.entidad.length < 2) {
+			mostrarNotificacion('warning', 'Validación', 'La entidad es requerida y debe tener al menos 2 caracteres');
+			return;
+		}
+
+		if (!nuevaFuente.tipo || nuevaFuente.tipo.length < 2) {
+			mostrarNotificacion('warning', 'Validación', 'El tipo es requerido y debe tener al menos 2 caracteres');
+			return;
+		}
+
+		if (!nuevaFuente.rubro || nuevaFuente.rubro.length < 2) {
+			mostrarNotificacion('warning', 'Validación', 'El rubro es requerido y debe tener al menos 2 caracteres');
+			return;
+		}
+
+		if (!nuevaFuente.etiqueta || nuevaFuente.etiqueta.length < 3) {
+			mostrarNotificacion('warning', 'Validación', 'La etiqueta es requerida y debe tener al menos 3 caracteres');
+			return;
+		}
+
+		// Validar URL si se proporciona
+		if (nuevaFuente.fuente_Link && nuevaFuente.fuente_Link.length > 0) {
+			try {
+				new URL(nuevaFuente.fuente_Link);
+			} catch (e) {
+				mostrarNotificacion('warning', 'Validación', 'El enlace proporcionado no es una URL válida');
+				return;
+			}
+		}
+
+		// Mostrar confirmación
+		const confirmado = await Swal.fire({
+			title: 'Confirmar nueva fuente',
+			html: `
+				<div class="text-left">
+					<p><strong>Entidad:</strong> ${nuevaFuente.entidad}</p>
+					<p><strong>Tipo:</strong> ${nuevaFuente.tipo}</p>
+					<p><strong>Rubro:</strong> ${nuevaFuente.rubro}</p>
+					<p><strong>Etiqueta:</strong> ${nuevaFuente.etiqueta}</p>
+					${nuevaFuente.fuente_Link ? `<p><strong>Enlace:</strong> <a href="${nuevaFuente.fuente_Link}" target="_blank">Ver enlace</a></p>` : ''}
+				</div>
+				<p class="mt-3">¿Está seguro de agregar esta fuente de información?</p>
+			`,
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#28a745',
+			cancelButtonColor: '#6c757d',
+			confirmButtonText: 'Sí, agregar',
+			cancelButtonText: 'Cancelar',
+			reverseButtons: true
+		});
+
+		if (confirmado.isConfirmed) {
+			try {
+				const response = await fetch('/FuentesdeInformacion/CrearFuente', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(nuevaFuente)
+				});
+
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+
+				const result = await response.json();
+
+				if (result.success) {
+					// Cerrar modal inmediatamente
+					$('#modalNuevaFuente').modal('hide');
+
+					// Mostrar notificación de éxito
+					mostrarNotificacion('success', 'Éxito', result.message);
+
+					// Recargar datos después de cerrar el modal
+					setTimeout(() => {
+						cargarFuentesSinLoading();
+					}, 300);
+				} else {
+					// También cerrar el modal si el servidor indica un error
+					$('#modalNuevaFuente').modal('hide');
+					mostrarNotificacion('error', 'Error', result.error || 'Error al crear fuente');
+				}
+			} catch (error) {
+				console.error('Error completo:', error);
+				// Cerrar modal incluso si hay error para no dejarlo colgado
+				$('#modalNuevaFuente').modal('hide');
+
+				// Si es un error de red o parsing, es posible que la fuente se haya creado
+				mostrarNotificacion('warning', 'Atención',
+					'Hubo un problema con la respuesta del servidor. Por favor, recarga la página para verificar si la fuente se creó correctamente.');
+
+				// Recargar datos por si acaso se creó
+				setTimeout(() => {
+					cargarFuentesSinLoading();
+				}, 1000);
+			}
+		}
+	}
+
+	async function agregarNuevaEntidad() {
+		const { value: nombreEntidad } = await Swal.fire({
+			title: 'Nueva Entidad',
+			text: 'Ingrese el nombre de la nueva entidad:',
+			input: 'text',
+			inputPlaceholder: 'Nombre de la entidad...',
+			showCancelButton: true,
+			confirmButtonText: 'Crear',
+			cancelButtonText: 'Cancelar',
+			confirmButtonColor: '#28a745',
+			inputValidator: (value) => {
+				if (!value || !value.trim()) {
+					return 'El nombre de la entidad es requerido'
+				}
+				if (value.trim().length < 3) {
+					return 'El nombre debe tener al menos 3 caracteres'
+				}
+			}
+		});
+
+		if (nombreEntidad) {
+			// Mostrar loading
+			Swal.fire({
+				title: 'Creando entidad...',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+
+			try {
+				const response = await fetch('/FuentesdeInformacion/CrearEntidad', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ Nombre: nombreEntidad.trim() })
+				});
+
+				const result = await response.json();
+
+				if (result.success) {
+					mostrarNotificacion('success', 'Éxito', result.message);
+					cargarFuentes();
+				} else {
+					mostrarNotificacion('error', 'Error', result.error || 'Error al crear entidad');
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				mostrarNotificacion('error', 'Error', 'Error de conexión: ' + error.message);
+			}
+
+			Swal.close();
+		}
+	}
+
+	function editarEntidad(entidadOriginal) {
+		var safeId = entidadOriginal.replace(/\s+/g, '-');
+
+		// Ocultar texto y mostrar input
+		document.getElementById(`entidad-${safeId}`).classList.add('d-none');
+		document.getElementById(`input-${safeId}`).classList.remove('d-none');
+
+		// Cambiar botones
+		document.querySelector(`[onclick="editarEntidad('${entidadOriginal}')"]`).closest('.btn-group').classList.add('d-none');
+		document.getElementById(`actions-${safeId}`).classList.remove('d-none');
+
+		// Focus en el input
+		document.getElementById(`input-${safeId}`).focus();
+		document.getElementById(`input-${safeId}`).select();
+	}
+
+	function cancelarEdicionEntidad(entidadOriginal) {
+		var safeId = entidadOriginal.replace(/\s+/g, '-');
+
+		// Restaurar valor original
+		document.getElementById(`input-${safeId}`).value = entidadOriginal;
+
+		// Mostrar texto y ocultar input
+		document.getElementById(`entidad-${safeId}`).classList.remove('d-none');
+		document.getElementById(`input-${safeId}`).classList.add('d-none');
+
+		// Restaurar botones
+		document.querySelector(`[onclick="editarEntidad('${entidadOriginal}')"]`).closest('.btn-group').classList.remove('d-none');
+		document.getElementById(`actions-${safeId}`).classList.add('d-none');
+	}
+
+	async function guardarEntidad(entidadOriginal) {
+		var safeId = entidadOriginal.replace(/\s+/g, '-');
+		var nuevoNombre = document.getElementById(`input-${safeId}`).value.trim();
+
+		if (!nuevoNombre) {
+			mostrarNotificacion('warning', 'Atención', 'El nombre de la entidad no puede estar vacío');
+			return;
+		}
+
+		if (nuevoNombre === entidadOriginal) {
+			cancelarEdicionEntidad(entidadOriginal);
+			return;
+		}
+
+		// Validar que no exista otra entidad con el mismo nombre
+		var entidadExistente = datosOriginales.find(f => f.entidad && f.entidad.toLowerCase() === nuevoNombre.toLowerCase() && f.entidad !== entidadOriginal);
+		if (entidadExistente) {
+			mostrarNotificacion('warning', 'Atención', 'Ya existe una entidad con ese nombre');
+			return;
+		}
+
+		const confirmado = await confirmarAccion(
+			'Confirmar cambio de nombre',
+			`¿Está seguro de cambiar "${entidadOriginal}" por "${nuevoNombre}"?\n\nEsto afectará a TODAS las fuentes de esta entidad.`,
+			'Sí, actualizar'
+		);
+
+		if (confirmado) {
+			// Mostrar loading
+			Swal.fire({
+				title: 'Actualizando entidad...',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+
+			try {
+				const response = await fetch('/FuentesdeInformacion/ActualizarEntidad', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						EntidadOriginal: entidadOriginal,
+						EntidadNueva: nuevoNombre
+					})
+				});
+
+				const result = await response.json();
+
+				if (result.success) {
+					mostrarNotificacion('success', 'Éxito', result.message);
+					// Actualizar datos locales inmediatamente
+					datosOriginales.forEach(f => {
+						if (f.entidad === entidadOriginal) {
+							f.entidad = nuevoNombre;
+						}
+					});
+					// Recargar vista sin loading
+					actualizarTabla(datosOriginales);
+					actualizarGrafico(datosOriginales);
+					cargarFuentesDropdown();
+				} else {
+					mostrarNotificacion('error', 'Error', result.error || 'Error al actualizar entidad');
+					cancelarEdicionEntidad(entidadOriginal);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				mostrarNotificacion('error', 'Error', 'Error de conexión: ' + error.message);
+				cancelarEdicionEntidad(entidadOriginal);
+			}
+
+			Swal.close();
+		}
+	}
+
+	async function eliminarEntidad(entidad) {
+		var fuentesEntidad = datosOriginales.filter(f => f.entidad === entidad);
+		var cantidadFuentes = fuentesEntidad.length;
+
+		const confirmado = await Swal.fire({
+			title: '¿Eliminar entidad?',
+			html: `
+				<p>¿Está seguro de eliminar la entidad <strong>"${entidad}"</strong>?</p>
+				<p>Esto eliminará <strong>${cantidadFuentes} fuente(s)</strong> asociada(s).</p>
+				<div class="alert alert-danger mt-3">
+					<i class="fas fa-exclamation-triangle"></i>
+					<strong>¡Atención!</strong> Esta acción NO se puede deshacer.
+				</div>
+			`,
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#dc3545',
+			cancelButtonColor: '#6c757d',
+			confirmButtonText: 'Sí, eliminar',
+			cancelButtonText: 'Cancelar',
+			reverseButtons: true
+		});
+
+		if (confirmado.isConfirmed) {
+			// Mostrar loading
+			Swal.fire({
+				title: 'Eliminando entidad...',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+
+			try {
+				const response = await fetch('/FuentesdeInformacion/EliminarEntidad', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ Entidad: entidad })
+				});
+
+				const result = await response.json();
+
+				if (result.success) {
+					mostrarNotificacion('success', 'Éxito', result.message);
+					// Recargar datos sin loading para respuesta más rápida
+					cargarFuentesSinLoading();
+				} else {
+					mostrarNotificacion('error', 'Error', result.error || 'Error al eliminar entidad');
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				mostrarNotificacion('error', 'Error', 'Error de conexión: ' + error.message);
+			}
+
+			Swal.close();
+		}
+	}
+
+	function gestionarFuentesEntidad(entidad) {
+		// Redirigir a nueva vista para gestionar fuentes de la entidad
+		var url = `/FuentesdeInformacion/GestionarFuentes?entidad=${encodeURIComponent(entidad)}`;
+		window.location.href = url;
+	}
+
 	function cargarFuentes() {
+		// Mostrar loading
+		Swal.fire({
+			title: 'Cargando fuentes...',
+			allowOutsideClick: false,
+			didOpen: () => {
+				Swal.showLoading();
+			}
+		});
+
+		cargarFuentesInterno(true);
+	}
+
+	function cargarFuentesSinLoading() {
+		cargarFuentesInterno(false);
+	}
+
+	function cargarFuentesInterno(mostrarLoading) {
 		fetch('/FuentesdeInformacion/ObtenerFuentes?filtro=')
 			.then(r => r.json())
 			.then(data => {
 				console.log('Respuesta de ObtenerFuentes:', JSON.stringify(data));
+
+				if (mostrarLoading) {
+					Swal.close(); // Cerrar loading solo si se estaba mostrando
+				}
+
 				if (data && data.error) {
-					alert('Error: ' + data.error);
+					mostrarNotificacion('error', 'Error', data.error);
 					return;
 				}
 				if (!Array.isArray(data)) {
-					alert('Error: La respuesta no es un array válido.');
+					mostrarNotificacion('error', 'Error', 'La respuesta no es un array válido.');
 					return;
 				}
 
@@ -358,10 +958,20 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 				// Mostrar todos los datos inicialmente
 				actualizarTabla(data);
 				actualizarGrafico(data);
+
+				if (mostrarLoading) {
+					mostrarNotificacion('success', 'Datos cargados', `Se cargaron ${data.length} fuentes correctamente`);
+				}
+
+				// Actualizar dropdown de filtros
+				cargarFuentesDropdown();
 			})
 			.catch(error => {
+				if (mostrarLoading) {
+					Swal.close(); // Cerrar loading en caso de error
+				}
 				console.error('Error al cargar fuentes:', error);
-				alert('Error al cargar fuentes: ' + error.message);
+				mostrarNotificacion('error', 'Error de conexión', 'Error al cargar fuentes: ' + error.message);
 			});
 	}
 
@@ -370,7 +980,7 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 		var fuentesEntidad = datosOriginales.filter(f => f.entidad === entidad);
 
 		if (fuentesEntidad.length === 0) {
-			alert('No se encontraron fuentes para esta entidad.');
+			mostrarNotificacion('info', 'Sin datos', 'No se encontraron fuentes para esta entidad.');
 			return;
 		}
 
@@ -494,9 +1104,22 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 	}
 
 	function verDetalle(id) {
+		// Mostrar loading en modal más pequeño
+		Swal.fire({
+			title: 'Cargando detalles...',
+			allowOutsideClick: false,
+			showConfirmButton: false,
+			width: 300,
+			didOpen: () => {
+				Swal.showLoading();
+			}
+		});
+
 		fetch('/FuentesdeInformacion/ObtenerFuentePorId?id=' + id)
 			.then(r => r.json())
 			.then(data => {
+				Swal.close(); // Cerrar loading
+
 				if (data) {
 					// Obtener fecha de modificación y usuario (si están disponibles)
 					var fechaModificacion = data.fechaModificacion ?
@@ -556,11 +1179,14 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 						// Fallback final
 						$('#modalFuente').modal('show');
 					}
+				} else {
+					mostrarNotificacion('error', 'Error', 'No se pudieron cargar los detalles de la fuente');
 				}
 			})
 			.catch(error => {
+				Swal.close(); // Cerrar loading en caso de error
 				console.error('Error al cargar detalle:', error);
-				alert('Error al cargar detalle: ' + error.message);
+				mostrarNotificacion('error', 'Error de conexión', 'Error al cargar detalle: ' + error.message);
 			});
 	}
 
@@ -584,6 +1210,7 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 			})
 			.catch(error => {
 				console.error('Error al cargar dropdown:', error);
+				mostrarNotificacion('warning', 'Advertencia', 'No se pudieron cargar las opciones del filtro');
 			});
 	}
 
@@ -599,5 +1226,67 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 		});
 
 		document.getElementById('filtroFuente').addEventListener('change', aplicarFiltros);
+
+		// Manejo correcto de modales para Bootstrap 4 y 5
+		$('#modalNuevaFuente').on('hidden.bs.modal', function () {
+			// Limpiar formulario cuando se cierre el modal
+			document.getElementById('formNuevaFuente').reset();
+		});
+
+		// Event listener para cerrar modal con ESC
+		document.addEventListener('keydown', function (e) {
+			if (e.key === 'Escape') {
+				// Cerrar modal de nueva fuente si está abierto
+				if ($('#modalNuevaFuente').hasClass('show') || $('#modalNuevaFuente').is(':visible')) {
+					$('#modalNuevaFuente').modal('hide');
+				}
+				// Cerrar modal de detalles si está abierto
+				if ($('#modalFuente').hasClass('show') || $('#modalFuente').is(':visible')) {
+					$('#modalFuente').modal('hide');
+				}
+			}
+		});
+
+		// Agregar evento para guardar con Enter en campos de edición
+		document.addEventListener('keydown', function (e) {
+			if (e.key === 'Enter') {
+				var activeElement = document.activeElement;
+				if (activeElement && activeElement.classList.contains('entidad-input')) {
+					// Encontrar la entidad original basada en el ID del input
+					var inputId = activeElement.id;
+					var match = inputId.match(/input-(.+)/);
+					if (match) {
+						var safeId = match[1];
+						var entidadOriginal = safeId.replace(/-/g, ' '); // Revertir el reemplazo de espacios
+
+						// Buscar en los datos originales para obtener el nombre exacto
+						var fuenteConEntidad = datosOriginales.find(f =>
+							f.entidad && f.entidad.replace(/\s+/g, '-') === safeId
+						);
+
+						if (fuenteConEntidad) {
+							guardarEntidad(fuenteConEntidad.entidad);
+						}
+					}
+				}
+			} else if (e.key === 'Escape') {
+				var activeElement = document.activeElement;
+				if (activeElement && activeElement.classList.contains('entidad-input')) {
+					// Cancelar edición con Escape
+					var inputId = activeElement.id;
+					var match = inputId.match(/input-(.+)/);
+					if (match) {
+						var safeId = match[1];
+						var fuenteConEntidad = datosOriginales.find(f =>
+							f.entidad && f.entidad.replace(/\s+/g, '-') === safeId
+						);
+
+						if (fuenteConEntidad) {
+							cancelarEdicionEntidad(fuenteConEntidad.entidad);
+						}
+					}
+				}
+			}
+		});
 	});
 </script>

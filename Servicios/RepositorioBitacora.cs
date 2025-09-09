@@ -49,6 +49,9 @@ namespace NSIE.Servicios
 
         // Obtener las ultimas acciones del usuario
         Task<IEnumerable<UltimaAccionDto>> ObtenerUltimasAccionesAsync(int usuarioId, int top = 5);
+
+        // Obtener historial de acciones por página y elemento
+        Task<IEnumerable<UserActivityModel>> ObtenerHistorialPorElementoAsync(string pageName, string idElemento = null, int? userId = null);
     }
 
 
@@ -72,7 +75,6 @@ namespace NSIE.Servicios
             return await conn.QueryAsync<UltimaAccionDto>(sql,
                         new { IdUsuario = usuarioId, Top = top });
         }
-
 
         public async Task RegistrarActividadAsync(string userId, string userName, string actionName, string controllerName, string pageName, string tipo, string elemento, string idElemento, string valor, string additionalData = null)
         {
@@ -117,6 +119,50 @@ namespace NSIE.Servicios
                 throw;
             }
         }
+
+        // Obtener historial de acciones filtrado por página y elemento
+        public async Task<IEnumerable<UserActivityModel>> ObtenerHistorialPorElementoAsync(string pageName, string idElemento = null, int? userId = null)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    var query = @"SELECT [Id], [UserId], [UserName], [ActionName], [ControllerName], [PageName], 
+                                         [Tipo], [Elemento], [IdElemento], [Valor], [Timestamp], [AdditionalData]
+                                  FROM [dbo].[UserActivityLog]
+                                  WHERE [PageName] = @PageName";
+
+                    var parameters = new Dictionary<string, object>
+                    {
+                        { "@PageName", pageName }
+                    };
+
+                    if (!string.IsNullOrEmpty(idElemento))
+                    {
+                        query += " AND [IdElemento] = @IdElemento";
+                        parameters.Add("@IdElemento", idElemento);
+                    }
+
+                    if (userId.HasValue)
+                    {
+                        query += " AND [UserId] = @UserId";
+                        parameters.Add("@UserId", userId.Value.ToString());
+                    }
+
+                    query += " ORDER BY [Timestamp] DESC";
+
+                    var historial = await connection.QueryAsync<UserActivityModel>(query, parameters);
+                    return historial;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener historial por elemento: {ex.Message}");
+                throw;
+            }
+        }
+
+
 
 
         public async Task<IEnumerable<UserActivityModel>> ObtenerUsuariosActivosAsync(DateTime timeThreshold)
@@ -168,6 +214,7 @@ namespace NSIE.Servicios
         {
             // Implementa aquí la lógica para generar y enviar el reporte
             // Esto podría incluir la creación de un archivo PDF o Excel, y enviarlo por correo electrónico
+            await Task.CompletedTask;
         }
 
         public async Task<List<Usuario>> ObtenerUsuariosAsync()
