@@ -240,6 +240,15 @@ namespace NSIE.Controllers
                 var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
                 // --- FIN: Validar sesión de usuario ---
 
+                // Validación de seguridad contra inyección de código
+                var validacionSeguridad = ValidarSeguridadContenido(nuevaFuente);
+                if (!validacionSeguridad.EsValido)
+                {
+                    _logger.LogWarning("Intento de inyección de código detectado por usuario {Usuario}: {Mensaje}", 
+                        perfilUsuario.Nombre, validacionSeguridad.Mensaje);
+                    return Json(new { success = false, error = $"Contenido no permitido detectado: {validacionSeguridad.Mensaje}" });
+                }
+
                 // Validaciones básicas
                 if (string.IsNullOrWhiteSpace(nuevaFuente.Entidad))
                 {
@@ -322,6 +331,15 @@ namespace NSIE.Controllers
                 }
                 var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
                 // --- FIN: Validar sesión de usuario ---
+
+                // Validación de seguridad contra inyección de código
+                var validacionSeguridad = ValidarSeguridadContenido(fuenteActualizada);
+                if (!validacionSeguridad.EsValido)
+                {
+                    _logger.LogWarning("Intento de inyección de código detectado en actualización por usuario {Usuario}: {Mensaje}", 
+                        perfilUsuario.Nombre, validacionSeguridad.Mensaje);
+                    return Json(new { success = false, error = $"Contenido no permitido detectado: {validacionSeguridad.Mensaje}" });
+                }
 
                 // Obtener la fuente original para auditoría
                 var fuenteOriginal = await repositorioFuentesdeInformacion.ObtenerFuentePorIdAsync(fuenteActualizada.ID);
@@ -470,6 +488,88 @@ namespace NSIE.Controllers
                 return Json(new { success = false, error = "Error interno del servidor al obtener historial." });
             }
         }
+
+        // Método privado para validar seguridad del contenido
+        private ValidacionSeguridadResult ValidarSeguridadContenido(FuenteInformacionModel fuente)
+        {
+            var camposAValidar = new Dictionary<string, string>
+            {
+                { "Entidad", fuente.Entidad },
+                { "Tipo", fuente.Tipo },
+                { "Rubro", fuente.Rubro },
+                { "Etiqueta", fuente.Etiqueta },
+                { "Dato_Informacion", fuente.Dato_Informacion },
+                { "Desagregacion", fuente.Desagregacion },
+                { "Sub_desagregacion", fuente.Sub_desagregacion },
+                { "Unidades", fuente.Unidades },
+                { "Periodicidad_Corte_de_Informacion", fuente.Periodicidad_Corte_de_Informacion },
+                { "Fuente_Link", fuente.Fuente_Link },
+                { "Comentario", fuente.Comentario }
+            };
+
+            // Patrones peligrosos
+            var patronesPeligrosos = new[]
+            {
+                @"<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>",
+                @"<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>",
+                @"<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>",
+                @"<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>",
+                @"<link\b[^>]*>",
+                @"<meta\b[^>]*>",
+                @"javascript:",
+                @"vbscript:",
+                @"onload\s*=",
+                @"onclick\s*=",
+                @"onerror\s*=",
+                @"onmouseover\s*=",
+                @"onfocus\s*=",
+                @"onblur\s*=",
+                @"onchange\s*=",
+                @"onsubmit\s*=",
+                @"<\s*\/?\s*(script|iframe|object|embed|form|input|select|textarea|button|link|meta|style|base|applet|body|html|head|title)\b[^>]*>",
+                @"expression\s*\(",
+                @"url\s*\(\s*javascript:",
+                @"data\s*:\s*text\/html",
+                @"eval\s*\(",
+                @"setTimeout\s*\(",
+                @"setInterval\s*\(",
+                @"Function\s*\(",
+                @"alert\s*\(",
+                @"confirm\s*\(",
+                @"prompt\s*\("
+            };
+
+            foreach (var campo in camposAValidar)
+            {
+                if (string.IsNullOrEmpty(campo.Value)) continue;
+
+                foreach (var patron in patronesPeligrosos)
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(campo.Value, patron, 
+                        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                    {
+                        return new ValidacionSeguridadResult
+                        {
+                            EsValido = false,
+                            Mensaje = $"Contenido peligroso detectado en el campo '{campo.Key}'"
+                        };
+                    }
+                }
+
+                // Verificar caracteres sospechosos
+                if (campo.Value.Contains('<') && campo.Value.Contains('>') && 
+                    !System.Text.RegularExpressions.Regex.IsMatch(campo.Value, @"^https?:\/\/[^\s<>""']+$"))
+                {
+                    return new ValidacionSeguridadResult
+                    {
+                        EsValido = false,
+                        Mensaje = $"Caracteres HTML sospechosos detectados en el campo '{campo.Key}'"
+                    };
+                }
+            }
+
+            return new ValidacionSeguridadResult { EsValido = true, Mensaje = "" };
+        }
     }
 
     // DTOs para las requests
@@ -492,5 +592,12 @@ namespace NSIE.Controllers
     public class EliminarFuenteRequest
     {
         public int Id { get; set; }
+    }
+
+    // Clase para resultado de validación de seguridad
+    public class ValidacionSeguridadResult
+    {
+        public bool EsValido { get; set; }
+        public string Mensaje { get; set; }
     }
 }

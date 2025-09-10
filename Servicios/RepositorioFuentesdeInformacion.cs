@@ -216,7 +216,7 @@ namespace NSIE.Servicios
 
                 // Crear una fuente placeholder para la entidad
                 var query = @"INSERT INTO dbo.FuentesdeInformacion 
-                            (Entidad, Tipo, Rubro, Etiqueta, Dato_Información)
+                            (Entidad, Tipo, Rubro, Etiqueta, Dato_Informacion)
                           VALUES 
                             (@Entidad, 'Placeholder', 'General', 'Entidad creada', 'Entidad creada automáticamente')";
 
@@ -241,9 +241,9 @@ namespace NSIE.Servicios
 
                 var query = @"UPDATE dbo.FuentesdeInformacion 
                             SET Entidad = @Entidad, Tipo = @Tipo, Rubro = @Rubro, Etiqueta = @Etiqueta,
-                                Dato_Información = @Dato_Informacion, Desagregación = @Desagregacion,
-                                Sub_desagregación = @Sub_desagregacion, Unidades = @Unidades,
-                                Periodicidad_Corte_de_Información = @Periodicidad_Corte_de_Informacion,
+                                Dato_Informacion = @Dato_Informacion, Desagregacion = @Desagregacion,
+                                Sub_desagregacion = @Sub_desagregacion, Unidades = @Unidades,
+                                Periodicidad_Corte_de_Informacion = @Periodicidad_Corte_de_Informacion,
                                 Fuente_Link = @Fuente_Link, Comentario = @Comentario
                             WHERE ID = @Id";
 

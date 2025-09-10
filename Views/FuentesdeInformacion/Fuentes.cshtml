@@ -38,24 +38,96 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 
 <!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- SheetJS para exportar a Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <div class="container mb-5">
 	<div class="row">
 		<div class="col-12">
+			<!-- Estadísticas rápidas -->
+			<div class="row mb-3">
+				<div class="col-md-3">
+					<div class="card bg-primary text-white">
+						<div class="card-body">
+							<div class="d-flex justify-content-between">
+								<div>
+									<h4 class="mb-0" id="totalFuentesStats">0</h4>
+									<small>Total Fuentes</small>
+								</div>
+								<div class="align-self-center">
+									<i class="fas fa-database fa-2x"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="card bg-success text-white">
+						<div class="card-body">
+							<div class="d-flex justify-content-between">
+								<div>
+									<h4 class="mb-0" id="totalEntidadesStats">0</h4>
+									<small>Entidades</small>
+								</div>
+								<div class="align-self-center">
+									<i class="fas fa-building fa-2x"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="card bg-info text-white">
+						<div class="card-body">
+							<div class="d-flex justify-content-between">
+								<div>
+									<h4 class="mb-0" id="totalTiposStats">0</h4>
+									<small>Tipos</small>
+								</div>
+								<div class="align-self-center">
+									<i class="fas fa-tags fa-2x"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="card bg-warning text-white">
+						<div class="card-body">
+							<div class="d-flex justify-content-between">
+								<div>
+									<h4 class="mb-0" id="totalRubrosStats">0</h4>
+									<small>Rubros</small>
+								</div>
+								<div class="align-self-center">
+									<i class="fas fa-list fa-2x"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div class="card mb-3">
 				<div class="card-header">
-					<h6 class="mb-0"><i class="fas fa-filter"></i> Filtros</h6>
+					<h6 class="mb-0"><i class="fas fa-filter"></i> Filtros Avanzados</h6>
 				</div>
 				<div class="card-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-4">
 							<label for="filtro" class="form-label">Buscar por entidad o rubro:</label>
 							<input type="text" id="filtro" class="form-control" placeholder="Escriba para buscar..." />
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<label for="filtroFuente" class="form-label">Filtrar por fuente:</label>
 							<select id="filtroFuente" class="form-control">
 								<option value="">Todas las fuentes</option>
+							</select>
+						</div>
+						<div class="col-md-3">
+							<label for="filtroTipo" class="form-label">Filtrar por tipo:</label>
+							<select id="filtroTipo" class="form-control">
+								<option value="">Todos los tipos</option>
 							</select>
 						</div>
 						<div class="col-md-2 d-flex align-items-end">
@@ -71,10 +143,20 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 					<div class="card">
 						<div class="card-header d-flex justify-content-between align-items-center">
 							<h6 class="mb-0"><i class="fas fa-table"></i> Entidades y Fuentes de Información</h6>
-							<button class="btn btn-sm btn-success" onclick="agregarNuevaFuente()"
-								title="Agregar nueva fuente de información">
-								<i class="fas fa-plus"></i> Nueva Fuente
-							</button>
+							<div class="btn-group" role="group">
+								<button class="btn btn-sm btn-success" onclick="agregarNuevaFuente()"
+									title="Agregar nueva fuente de información">
+									<i class="fas fa-plus"></i> Nueva Fuente
+								</button>
+								<button class="btn btn-sm btn-info" onclick="exportarAExcel()"
+									title="Exportar datos a Excel">
+									<i class="fas fa-file-excel"></i> Exportar
+								</button>
+								<button class="btn btn-sm btn-secondary" onclick="verHistorialCompleto()"
+									title="Ver historial completo del sistema">
+									<i class="fas fa-history"></i> Historial Global
+								</button>
+							</div>
 						</div>
 						<div class="card-body">
 							<div class="table-responsive">
@@ -294,11 +376,172 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 	let datosOriginales = [];
 	let totalesOriginales = [];
 
+	// Función de validación de seguridad contra inyección de código
+	function validarSeguridadInput(valor, nombreCampo) {
+		if (!valor) return { esValido: true, mensaje: '' };
+
+		// Patrones peligrosos que debemos detectar
+		const patronesPeligrosos = [
+			/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+			/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi,
+			/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi,
+			/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi,
+			/<link\b[^>]*>/gi,
+			/<meta\b[^>]*>/gi,
+			/javascript:/gi,
+			/vbscript:/gi,
+			/onload\s*=/gi,
+			/onclick\s*=/gi,
+			/onerror\s*=/gi,
+			/onmouseover\s*=/gi,
+			/onfocus\s*=/gi,
+			/onblur\s*=/gi,
+			/onchange\s*=/gi,
+			/onsubmit\s*=/gi,
+			/<\s*\/?\s*(script|iframe|object|embed|form|input|select|textarea|button|link|meta|style|base|applet|body|html|head|title)\b[^>]*>/gi,
+			/expression\s*\(/gi,
+			/url\s*\(\s*javascript:/gi,
+			/data\s*:\s*text\/html/gi,
+			/eval\s*\(/gi,
+			/setTimeout\s*\(/gi,
+			/setInterval\s*\(/gi,
+			/Function\s*\(/gi,
+			/alert\s*\(/gi,
+			/confirm\s*\(/gi,
+			/prompt\s*\(/gi,
+			/document\./gi,
+			/window\./gi,
+			/location\./gi
+		];
+
+		// Verificar cada patrón
+		for (let patron of patronesPeligrosos) {
+			if (patron.test(valor)) {
+				return {
+					esValido: false,
+					mensaje: `El campo "${nombreCampo}" contiene código potencialmente peligroso.`
+				};
+			}
+		}
+
+		// Verificar caracteres sospechosos en secuencia
+		if (valor.includes('<') && valor.includes('>')) {
+			if (!valor.match(/^https?:\/\/[^\s<>"']+$/)) {
+				return {
+					esValido: false,
+					mensaje: `El campo "${nombreCampo}" contiene caracteres HTML sospechosos.`
+				};
+			}
+		}
+
+		return { esValido: true, mensaje: '' };
+	}
+
+	// Función para exportar datos a Excel
+	function exportarAExcel() {
+		if (datosOriginales.length === 0) {
+			mostrarNotificacion('warning', 'Sin datos', 'No hay datos para exportar');
+			return;
+		}
+
+		// Preparar datos para exportación
+		var datosExport = datosOriginales.map(f => ({
+			'Entidad': f.entidad || '',
+			'Tipo': f.tipo || '',
+			'Rubro': f.rubro || '',
+			'Etiqueta': f.etiqueta || '',
+			'Descripción': f.dato_Informacion || '',
+			'Desagregación': f.desagregacion || '',
+			'Sub Desagregación': f.sub_desagregacion || '',
+			'Unidades': f.unidades || '',
+			'Periodicidad': f.periodicidad_Corte_de_Informacion || '',
+			'Enlace': f.fuente_Link || '',
+			'Comentario': f.comentario || ''
+		}));
+
+		// Crear libro de Excel
+		var ws = XLSX.utils.json_to_sheet(datosExport);
+		var wb = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, "Fuentes de Información");
+
+		// Descargar archivo
+		var fecha = new Date().toISOString().split('T')[0];
+		XLSX.writeFile(wb, `Fuentes_de_Informacion_${fecha}.xlsx`);
+
+		mostrarNotificacion('success', 'Exportación exitosa', `Se exportaron ${datosExport.length} registros a Excel`);
+	}
+
+	// Función para ver historial completo del sistema
+	function verHistorialCompleto() {
+		// Mostrar loading
+		Swal.fire({
+			title: 'Cargando historial completo...',
+			allowOutsideClick: false,
+			showConfirmButton: false,
+			didOpen: () => {
+				Swal.showLoading();
+			}
+		});
+
+		fetch('/FuentesdeInformacion/ObtenerHistorialFuente?id=0')
+			.then(r => r.json())
+			.then(data => {
+				Swal.close();
+
+				if (data.success && data.data && data.data.length > 0) {
+					mostrarHistorialEnModal(data.data, `Historial Completo del Sistema`,
+						`Mostrando ${data.data.length} registro(s) de actividad del sistema completo`);
+				} else {
+					mostrarSinHistorial(`No hay historial disponible en el sistema.`);
+				}
+			})
+			.catch(error => {
+				Swal.close();
+				console.error('Error al cargar historial completo:', error);
+				mostrarNotificacion('error', 'Error de conexión', 'Error al cargar historial: ' + error.message);
+			});
+	}
+
+	// Función para actualizar estadísticas
+	function actualizarEstadisticas(datos) {
+		// Total de fuentes
+		document.getElementById('totalFuentesStats').textContent = datos.length;
+
+		// Entidades únicas
+		var entidadesUnicas = [...new Set(datos.map(f => f.entidad).filter(e => e))];
+		document.getElementById('totalEntidadesStats').textContent = entidadesUnicas.length;
+
+		// Tipos únicos
+		var tiposUnicos = [...new Set(datos.map(f => f.tipo).filter(t => t))];
+		document.getElementById('totalTiposStats').textContent = tiposUnicos.length;
+
+		// Rubros únicos
+		var rubrosUnicos = [...new Set(datos.map(f => f.rubro).filter(r => r))];
+		document.getElementById('totalRubrosStats').textContent = rubrosUnicos.length;
+	}
+
+	// Función para cargar filtro de tipos
+	function cargarFiltroTipos() {
+		if (datosOriginales.length === 0) return;
+
+		var tipos = [...new Set(datosOriginales.map(f => f.tipo).filter(t => t))];
+		var select = document.getElementById('filtroTipo');
+		select.innerHTML = '<option value="">Todos los tipos</option>';
+
+		tipos.forEach(tipo => {
+			var option = document.createElement('option');
+			option.value = tipo;
+			option.text = tipo;
+			select.appendChild(option);
+		});
+	}
+
 	function aplicarFiltros() {
 		var filtroTexto = document.getElementById('filtro').value.toLowerCase().trim();
 		var filtroFuente = document.getElementById('filtroFuente').value;
+		var filtroTipo = document.getElementById('filtroTipo').value;
 
-		console.log('Aplicando filtros:', { filtroTexto, filtroFuente, datosOriginales: datosOriginales.length });
+		console.log('Aplicando filtros:', { filtroTexto, filtroFuente, filtroTipo, datosOriginales: datosOriginales.length });
 
 		// Filtrar datos de la tabla
 		var datosFiltrados = datosOriginales.filter(f => {
@@ -309,8 +552,9 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 				(f.tipo && f.tipo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(filtroTexto.normalize('NFD').replace(/[\u0300-\u036f]/g, '')));
 
 			var coincideFuente = !filtroFuente || (f.entidad === filtroFuente);
+			var coincideTipo = !filtroTipo || (f.tipo === filtroTipo);
 
-			return coincideTexto && coincideFuente;
+			return coincideTexto && coincideFuente && coincideTipo;
 		});
 
 		console.log('Datos filtrados:', datosFiltrados.length);
@@ -320,6 +564,9 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 
 		// Actualizar gráfico con datos filtrados
 		actualizarGrafico(datosFiltrados);
+
+		// Actualizar estadísticas con datos filtrados
+		actualizarEstadisticas(datosFiltrados);
 	}
 
 	// Función para mostrar notificaciones con SweetAlert2
@@ -613,7 +860,41 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 			nuevaFuente[key] = value.trim();
 		}
 
-		// Validaciones
+		// Validación de seguridad para todos los campos
+		var mensajesError = [];
+		for (let [key, value] of Object.entries(nuevaFuente)) {
+			if (value) {
+				const validacion = validarSeguridadInput(value, key);
+				if (!validacion.esValido) {
+					mensajesError.push(validacion.mensaje);
+				}
+			}
+		}
+
+		// Si hay errores de seguridad, mostrar alerta y detener
+		if (mensajesError.length > 0) {
+			await Swal.fire({
+				icon: 'error',
+				title: '⚠️ Contenido Peligroso Detectado',
+				html: `
+					<div class="text-left">
+						<p><strong>Se ha detectado contenido potencialmente peligroso:</strong></p>
+						<ul>
+							${mensajesError.map(msg => `<li>${msg}</li>`).join('')}
+						</ul>
+						<div class="alert alert-warning mt-3">
+							<i class="fas fa-shield-alt"></i>
+							<strong>Por su seguridad:</strong> No se permite código HTML, JavaScript u otros scripts.
+						</div>
+					</div>
+				`,
+				confirmButtonText: 'Entendido',
+				confirmButtonColor: '#dc3545'
+			});
+			return;
+		}
+
+		// Validaciones básicas
 		if (!nuevaFuente.entidad || nuevaFuente.entidad.length < 2) {
 			mostrarNotificacion('warning', 'Validación', 'La entidad es requerida y debe tener al menos 2 caracteres');
 			return;
@@ -997,6 +1278,7 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 				// Mostrar todos los datos inicialmente
 				actualizarTabla(data);
 				actualizarGrafico(data);
+				actualizarEstadisticas(data);
 
 				if (mostrarLoading) {
 					mostrarNotificacion('success', 'Datos cargados', `Se cargaron ${data.length} fuentes correctamente`);
@@ -1004,6 +1286,7 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 
 				// Actualizar dropdown de filtros
 				cargarFuentesDropdown();
+				cargarFiltroTipos();
 			})
 			.catch(error => {
 				if (mostrarLoading) {
@@ -1456,6 +1739,7 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 		});
 
 		document.getElementById('filtroFuente').addEventListener('change', aplicarFiltros);
+		document.getElementById('filtroTipo').addEventListener('change', aplicarFiltros);
 
 		// Manejo correcto de modales para Bootstrap 4 y 5
 		$('#modalNuevaFuente').on('hidden.bs.modal', function () {
