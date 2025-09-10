@@ -2403,3 +2403,298 @@ a:hover {
 .text-white-50 {
     color: rgba(255, 255, 255, 0.75) !important;
 }
+/* 
+==========================================================================
+   ESTILOS PARA FORMULARIO UNIFICADO DE ACCESO
+   ========================================================================== */
+
+/* Selector de tipo de acceso */
+.login-form-group select.form-select {
+    background-color: var(--color-glass-bg);
+    border: 2px solid var(--color-borde-claro);
+    border-radius: var(--radio-borde);
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--texto-principal);
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    appearance: none;
+}
+
+.login-form-group select.form-select:focus {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.1);
+    outline: none;
+}
+
+.login-form-group select.form-select option {
+    padding: 10px;
+    background-color: white;
+    color: var(--texto-principal);
+}
+
+/* Animaciones para mostrar/ocultar campos */
+#camposRegistrado,
+#infoPublica {
+    transition: all 0.4s ease-in-out;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+#camposRegistrado[style*="block"],
+#infoPublica[style*="block"] {
+    opacity: 1;
+    transform: translateY(0);
+    animation: slideInDown 0.4s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para información de consulta pública */
+.login-alert.login-alert-info {
+    background: linear-gradient(135deg, rgba(139, 195, 74, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%);
+    border: 2px solid rgba(139, 195, 74, 0.3);
+    border-radius: var(--radio-borde);
+    padding: 20px;
+    margin: 15px 0;
+    color: var(--texto-principal);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-alert.login-alert-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--color-primario);
+}
+
+.login-alert.login-alert-info i {
+    color: var(--color-primario);
+    font-size: 1.2em;
+}
+
+/* Botón de acceso mejorado */
+#btnAcceso {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radio-borde);
+    padding: 14px 24px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: white;
+    text-transform: none;
+    letter-spacing: 0.5px;
+}
+
+#btnAcceso:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-button);
+    background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-acento) 100%);
+}
+
+#btnAcceso:disabled {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+#btnAcceso::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+#btnAcceso:not(:disabled):hover::before {
+    left: 100%;
+}
+
+/* Indicadores de estado del botón */
+#btnAcceso .bi-hourglass-split {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Enlaces adicionales mejorados */
+#enlacesAdicionales {
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+#enlacesAdicionales[style*="block"] {
+    opacity: 1;
+    transform: translateY(0);
+    animation: slideInUp 0.4s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#enlacesAdicionales a {
+    color: var(--color-primario);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+#enlacesAdicionales a:hover {
+    color: var(--color-acento);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+#enlacesAdicionales a i {
+    transition: transform 0.3s ease;
+}
+
+#enlacesAdicionales a:hover i {
+    transform: scale(1.1);
+}
+
+/* Mejoras para campos de entrada */
+.login-form-group .input-group {
+    position: relative;
+}
+
+.login-form-group .input-group .form-control {
+    transition: all 0.3s ease;
+    border-right: none;
+}
+
+.login-form-group .input-group .form-control:focus {
+    border-color: var(--color-primario);
+    box-shadow: none;
+}
+
+.login-form-group .input-group .input-group-text {
+    background-color: var(--color-glass-bg);
+    border-color: var(--color-borde-claro);
+    color: var(--color-primario);
+    transition: all 0.3s ease;
+}
+
+.login-form-group .input-group:focus-within .input-group-text {
+    border-color: var(--color-primario);
+    background-color: rgba(139, 195, 74, 0.1);
+}
+
+/* Etiquetas mejoradas */
+.login-form-group label {
+    font-weight: 600;
+    color: var(--texto-principal);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.login-form-group label i {
+    color: var(--color-primario);
+    margin-right: 8px;
+}
+
+/* Responsive para dispositivos móviles */
+@media (max-width: 768px) {
+    .login-form-group select.form-select,
+    .login-form-group .input-group .form-control {
+        font-size: 16px; /* Evita zoom en iOS */
+    }
+    
+    #btnAcceso {
+        padding: 16px 24px;
+        font-size: 1.1rem;
+    }
+    
+    .login-alert.login-alert-info {
+        padding: 16px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Estados de validación */
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.form-control.is-valid,
+.form-select.is-valid {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.1);
+}
+
+/* Mejoras de accesibilidad */
+.login-form-group select.form-select:focus,
+.login-form-group .form-control:focus {
+    outline: 2px solid var(--color-primario);
+    outline-offset: 2px;
+}
+
+/* Indicador de carga personalizado */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.loading-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(139, 195, 74, 0.3);
+    border-top: 4px solid var(--color-primario);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}

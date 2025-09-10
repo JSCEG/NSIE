@@ -823,81 +823,83 @@
                         <div class="text-center mb-4">
                             <img src="@cdn/img_snier/login/logo_snier.png" class="img-fluid mb-3"
                                 style="max-width: 120px;" alt="SNIER Logo">
-                            <h4 class="fw-bold text-primary">Iniciar sesión</h4>
-                            <p class="text-muted">Accede con tu cuenta o entra en modo consulta pública</p>
+                            <h4 class="fw-bold text-primary">Accede al SNIER</h4>
+                            <p class="text-muted">Selecciona tu tipo de acceso al sistema</p>
                         </div>
 
-                        <ul class="nav nav-pills nav-fill login-tabs mb-3" id="loginTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link @(ViewData["Mensaje"] == null ? "active" : "")"
-                                    id="consulta-tab" data-bs-toggle="pill" data-bs-target="#consultaPublica"
-                                    type="button" role="tab">Consulta Pública</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link @(ViewData["Mensaje"] != null ? "active" : "")" id="acceso-tab"
-                                    data-bs-toggle="pill" data-bs-target="#accesoSENER" type="button"
-                                    role="tab">Acceso</button>
-                            </li>
-                        </ul>
+                        <form id="loginForm" action="@Url.Action("Login", "Acceso")" method="post" class="mt-4">
+                            <div class="login-form-group">
+                                <label for="tipoAcceso" class="form-label">
+                                    <i class="bi bi-person-badge me-2"></i>Selecciona tu tipo de acceso:
+                                </label>
+                                <select class="form-select" id="tipoAcceso" name="tipoAcceso" required onchange="handleAccessTypeChange()">
+                                    <option value="">-- Selecciona un tipo de acceso --</option>
+                                    <option value="publico">Consulta Pública (Sin registro)</option>
+                                    <option value="registrado">Usuario Registrado</option>
+                                </select>
+                            </div>
 
-                        <div class="tab-content" id="loginTabContent">
-                            <div class="tab-pane fade @(ViewData["Mensaje"] == null ? "show active" : "")"
-                                id="consultaPublica" role="tabpanel">
-                                <div class="login-alert login-alert-info text-center">
-                                    <strong>Consulta pública</strong><br />
-                                    Haz clic en el botón para ingresar sin cuenta.
+                            <!-- Campos para usuario registrado (ocultos inicialmente) -->
+                            <div id="camposRegistrado" style="display: none;">
+                                <div class="login-form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                        <input type="text" class="form-control" id="Correo" name="Correo"
+                                            placeholder="Correo electrónico o RFC" />
+                                    </div>
                                 </div>
-                                <a class="login-btn-primary w-100" href="@Url.Action("AccesoComoInvitado", "Acceso")">
-                                    Entrar como Invitado
-                                </a>
+
+                                <div class="login-form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                        <input type="password" class="form-control" id="claveInput" name="Clave"
+                                            placeholder="Contraseña" />
+                                        <span class="input-group-text" onclick="togglePassword()"
+                                            style="cursor: pointer;">
+                                            <i class="bi bi-eye-fill" id="iconoClave"></i>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="tab-pane fade @(ViewData["Mensaje"] != null ? "show active" : "")"
-                                id="accesoSENER" role="tabpanel">
-                                <form action="@Url.Action("Login", "Acceso")" method="post" class="mt-4">
-                                    <div class="login-form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                            <input type="text" class="form-control" id="Correo" name="Correo"
-                                                placeholder="Correo o RFC" required />
-                                        </div>
-                                    </div>
-
-                                    <div class="login-form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                                            <input type="password" class="form-control" id="claveInput" name="Clave"
-                                                placeholder="Contraseña" required />
-                                            <span class="input-group-text" onclick="togglePassword()"
-                                                style="cursor: pointer;">
-                                                <i class="bi bi-eye-fill" id="iconoClave"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    @if (ViewData["Mensaje"] != null)
-                                    {
-                                        <div class="login-alert login-alert-danger text-center">
-                                            <i class="bi bi-exclamation-circle me-2"></i>@ViewData["Mensaje"]
-                                        </div>
-                                    }
-
-                                    <div class="d-grid mb-3">
-                                        <button type="submit" class="login-btn-primary">Iniciar Sesión</button>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <small>
-                                            <a href="@Url.Action("ForgotPassword", "Acceso")" class="me-2">¿Olvidaste tu
-                                                contraseña?</a>
-                                            <span class="text-muted">|</span>
-                                            <a href="@Url.Action("Registro", "Acceso")" class="ms-2">¿No tienes cuenta?
-                                                Regístrate</a>
-                                        </small>
-                                    </div>
-                                </form>
+                            <!-- Información para consulta pública (oculta inicialmente) -->
+                            <div id="infoPublica" style="display: none;">
+                                <div class="login-alert login-alert-info text-center">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>Acceso Público</strong><br />
+                                    Podrás consultar información general sin necesidad de registro.
+                                    <br><small class="text-muted mt-2 d-block">
+                                        Algunas funciones avanzadas requieren registro de usuario.
+                                    </small>
+                                </div>
                             </div>
-                        </div>
+
+                            @if (ViewData["Mensaje"] != null)
+                            {
+                                <div class="login-alert login-alert-danger text-center">
+                                    <i class="bi bi-exclamation-circle me-2"></i>@ViewData["Mensaje"]
+                                </div>
+                            }
+
+                            <div class="d-grid mb-3">
+                                <button type="submit" id="btnAcceso" class="login-btn-primary" disabled>
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                                    <span id="textoBoton">Selecciona tipo de acceso</span>
+                                </button>
+                            </div>
+
+                            <div class="text-center" id="enlacesAdicionales" style="display: none;">
+                                <small>
+                                    <a href="@Url.Action("ForgotPassword", "Acceso")" class="me-2">
+                                        <i class="bi bi-key me-1"></i>¿Olvidaste tu contraseña?
+                                    </a>
+                                    <span class="text-muted">|</span>
+                                    <a href="@Url.Action("Registro", "Acceso")" class="ms-2">
+                                        <i class="bi bi-person-plus me-1"></i>¿No tienes cuenta? Regístrate
+                                    </a>
+                                </small>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -1216,6 +1218,14 @@
         });
     </script>
     <script src="~/js/validacion-formulario.js"></script>
+    <script src="~/js/seguridad.js"></script>
+    <script>
+        // Configurar URLs para el script de login unificado
+        window.urlAccesoInvitado = '@Url.Action("AccesoComoInvitado", "Acceso")';
+        window.urlLogin = '@Url.Action("Login", "Acceso")';
+        window.tieneErrores = @(ViewData["Mensaje"] != null ? "true" : "false");
+    </script>
+    <script src="~/js/login-unificado.js"></script>
 
     <script src="https://cdn.botpress.cloud/webchat/v3.0/inject.js" defer></script>
     <script src="https://files.bpcontent.cloud/2025/07/03/06/20250703065244-GFQSQ0GG.js" defer></script>

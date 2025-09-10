@@ -16,7 +16,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Manejador del evento submit del formulario
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Previene el envío automático del formulario
+        const tipoAcceso = document.getElementById('tipoAcceso')?.value;
+
+        // Si es consulta pública, no se necesita validación de campos.
+        // Se permite que el formulario se envíe a la URL ya establecida por login-unificado.js.
+        if (tipoAcceso === 'publico') {
+            // El script login-unificado.js se encarga de mostrar el estado de carga.
+            return;
+        }
+
+        event.preventDefault(); // Previene el envío para usuarios registrados hasta validar.
         clearErrors(); // Limpia mensajes de error previos
 
         // === VALIDACIÓN DE SEGURIDAD ===
