@@ -49,6 +49,28 @@ namespace NSIE.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> ObtenerFuentesPorEntidad(string entidad)
+        {
+            try
+            {
+                // Decodificar las entidades HTML que pueden venir desde JavaScript
+                var entidadDecodificada = System.Net.WebUtility.HtmlDecode(entidad);
+                _logger.LogInformation("Entidad original: {EntidadOriginal}", entidad);
+                _logger.LogInformation("Entidad decodificada: {EntidadDecodificada}", entidadDecodificada);
+
+                var datos = await repositorioFuentesdeInformacion.ObtenerFuentesPorEntidadAsync(entidadDecodificada);
+                _logger.LogInformation("Fuentes encontradas para '{Entidad}': {Count}", entidadDecodificada, datos.Count);
+
+                return Json(datos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener fuentes por entidad: {Entidad}", entidad);
+                return Json(new { error = "Error interno del servidor al obtener fuentes." });
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ObtenerTotalesPorFuente()
         {
             try
@@ -282,15 +304,163 @@ namespace NSIE.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ActualizarFuente([FromBody] FuenteInformacionModel fuenteActualizada)
+        {
+            try
+            {
+                if (fuenteActualizada == null)
+                {
+                    return Json(new { success = false, error = "Los datos de la fuente son requeridos." });
+                }
+
+                // --- INICIO: Validar sesión de usuario ---
+                var perfilUsuarioJson = HttpContext.Session.GetString("PerfilUsuario");
+                if (string.IsNullOrEmpty(perfilUsuarioJson))
+                {
+                    return Json(new { success = false, error = "Sesión de usuario no encontrada. Por favor, inicie sesión de nuevo." });
+                }
+                var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+                // --- FIN: Validar sesión de usuario ---
+
+                // Obtener la fuente original para auditoría
+                var fuenteOriginal = await repositorioFuentesdeInformacion.ObtenerFuentePorIdAsync(fuenteActualizada.ID);
+                if (fuenteOriginal == null)
+                {
+                    return Json(new { success = false, error = "Fuente no encontrada." });
+                }
+
+                var resultado = await repositorioFuentesdeInformacion.ActualizarFuenteAsync(fuenteActualizada);
+
+                if (resultado)
+                {
+                    // Registrar en auditoría
+                    await repositorioBitacora.RegistrarActividadAsync(
+                        userId: perfilUsuario.IdUsuario.ToString(),
+                        userName: perfilUsuario.Nombre,
+                        actionName: "Actualizar",
+                        controllerName: "FuentesdeInformacion",
+                        pageName: "Fuentes de Información",
+                        tipo: "Entidad",
+                        elemento: "Fuente",
+                        idElemento: fuenteActualizada.ID.ToString(),
+                        valor: fuenteActualizada.Etiqueta,
+                        additionalData: JsonConvert.SerializeObject(new
+                        {
+                            Entidad = fuenteActualizada.Entidad,
+                            Tipo = fuenteActualizada.Tipo,
+                            Rubro = fuenteActualizada.Rubro,
+                            ValorAnterior = fuenteOriginal.Etiqueta
+                        })
+                    );
+
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Fuente '{fuenteActualizada.Etiqueta}' actualizada exitosamente"
+                    });
+                }
+                else
+                {
+                    return Json(new { success = false, error = "No se pudo actualizar la fuente." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar fuente ID: {Id}", fuenteActualizada?.ID ?? 0);
+                return Json(new { success = false, error = "Error interno del servidor al actualizar fuente." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarFuente([FromBody] EliminarFuenteRequest request)
+        {
+            try
+            {
+                if (request?.Id <= 0)
+                {
+                    return Json(new { success = false, error = "ID de fuente inválido." });
+                }
+
+                // --- INICIO: Validar sesión de usuario ---
+                var perfilUsuarioJson = HttpContext.Session.GetString("PerfilUsuario");
+                if (string.IsNullOrEmpty(perfilUsuarioJson))
+                {
+                    return Json(new { success = false, error = "Sesión de usuario no encontrada. Por favor, inicie sesión de nuevo." });
+                }
+                var perfilUsuario = JsonConvert.DeserializeObject<PerfilUsuario>(perfilUsuarioJson);
+                // --- FIN: Validar sesión de usuario ---
+
+                // Obtener la fuente antes de eliminarla para auditoría
+                var fuente = await repositorioFuentesdeInformacion.ObtenerFuentePorIdAsync(request.Id);
+                if (fuente == null)
+                {
+                    return Json(new { success = false, error = "Fuente no encontrada." });
+                }
+
+                var resultado = await repositorioFuentesdeInformacion.EliminarFuenteAsync(request.Id);
+
+                if (resultado)
+                {
+                    // Registrar en auditoría
+                    await repositorioBitacora.RegistrarActividadAsync(
+                        userId: perfilUsuario.IdUsuario.ToString(),
+                        userName: perfilUsuario.Nombre,
+                        actionName: "Eliminar",
+                        controllerName: "FuentesdeInformacion",
+                        pageName: "Fuentes de Información",
+                        tipo: "Entidad",
+                        elemento: "Fuente",
+                        idElemento: request.Id.ToString(),
+                        valor: fuente.Etiqueta,
+                        additionalData: JsonConvert.SerializeObject(new
+                        {
+                            Entidad = fuente.Entidad,
+                            Tipo = fuente.Tipo,
+                            Rubro = fuente.Rubro
+                        })
+                    );
+
+                    return Json(new
+                    {
+                        success = true,
+                        message = $"Fuente '{fuente.Etiqueta}' eliminada exitosamente"
+                    });
+                }
+                else
+                {
+                    return Json(new { success = false, error = "No se pudo eliminar la fuente." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar fuente ID: {Id}", request?.Id ?? 0);
+                return Json(new { success = false, error = "Error interno del servidor al eliminar fuente." });
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> ObtenerHistorialFuente(int id)
         {
             try
             {
-                var historial = await repositorioBitacora.ObtenerHistorialPorElementoAsync(
-                    pageName: "Fuentes de Información",
-                    idElemento: id.ToString()
-                );
+                IEnumerable<UserActivityModel> historial;
+
+                if (id == 0)
+                {
+                    // Si id es 0, obtener todo el historial de la página
+                    historial = await repositorioBitacora.ObtenerHistorialPorElementoAsync(
+                        pageName: "Fuentes de Información"
+                    );
+                }
+                else
+                {
+                    // Si id es específico, obtener historial de esa fuente
+                    historial = await repositorioBitacora.ObtenerHistorialPorElementoAsync(
+                        pageName: "Fuentes de Información",
+                        idElemento: id.ToString()
+                    );
+                }
 
                 return Json(new { success = true, data = historial });
             }
@@ -317,5 +487,10 @@ namespace NSIE.Controllers
     public class CrearEntidadRequest
     {
         public string Nombre { get; set; }
+    }
+
+    public class EliminarFuenteRequest
+    {
+        public int Id { get; set; }
     }
 }

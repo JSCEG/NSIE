@@ -10,6 +10,7 @@ namespace NSIE.Servicios
     public interface IRepositorioFuentesdeInformacion
     {
         Task<List<FuenteInformacionModel>> ObtenerFuentesAsync(string filtro = null);
+        Task<List<FuenteInformacionModel>> ObtenerFuentesPorEntidadAsync(string entidad);
         Task<List<FuenteTotalModel>> ObtenerTotalesPorFuenteAsync();
         Task<FuenteInformacionModel> ObtenerFuentePorIdAsync(int id);
         Task<int> CrearFuenteAsync(FuenteInformacionModel fuente);
@@ -53,6 +54,31 @@ namespace NSIE.Servicios
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error en ObtenerFuentesAsync: {Message}", ex.Message);
+                throw;
+            }
+        }
+
+        // Método específico para obtener fuentes por entidad exacta
+        public async Task<List<FuenteInformacionModel>> ObtenerFuentesPorEntidadAsync(string entidad)
+        {
+            try
+            {
+                using var connection = new SqlConnection(connectionString);
+                await connection.OpenAsync();
+                _logger.LogInformation("Conexión abierta para ObtenerFuentesPorEntidadAsync con entidad: {Entidad}", entidad);
+
+                var query = @"SELECT ID, Entidad, Tipo, Rubro, Etiqueta, Dato_Informacion,
+                            Desagregacion, Sub_desagregacion, Unidades,
+                            Periodicidad_Corte_de_Informacion, Fuente_Link, Comentario
+                      FROM dbo.FuentesdeInformacion
+                      WHERE Entidad = @Entidad";
+                var resultado = await connection.QueryAsync<FuenteInformacionModel>(query, new { Entidad = entidad });
+                _logger.LogInformation("Consulta ejecutada para entidad exacta. Registros obtenidos: {Count}", resultado.Count());
+                return resultado.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en ObtenerFuentesPorEntidadAsync: {Message}", ex.Message);
                 throw;
             }
         }

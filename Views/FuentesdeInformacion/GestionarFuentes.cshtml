@@ -26,10 +26,10 @@
 			functionality = "Crear, leer, actualizar y eliminar fuentes.",
 			stage = "Disponible",
 			roles = new[] {
-				new { icon = "edit", text = "CRUD de fuentes" },
-				new { icon = "list", text = "Listado con filtros" },
-				new { icon = "chart", text = "Análisis visual" }
-			},
+new { icon = "edit", text = "CRUD de fuentes" },
+new { icon = "list", text = "Listado con filtros" },
+new { icon = "chart", text = "Análisis visual" }
+},
 			order = new { step = 2, description = "Vista de gestión detallada" },
 			manualUrl = "#"
 		})
@@ -144,12 +144,14 @@
 </div>
 
 <!-- Modal para CRUD de fuentes -->
-<div class="modal fade" id="modalFuenteCRUD" tabindex="-1" role="dialog" aria-labelledby="modalFuenteCRUDLabel" aria-hidden="true">
+<div class="modal fade" id="modalFuenteCRUD" tabindex="-1" role="dialog" aria-labelledby="modalFuenteCRUDLabel"
+	aria-hidden="true">
 	<div class="modal-dialog modal-xl" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="modalFuenteCRUDLabel">Agregar Nueva Fuente</h5>
-				<button type="button" class="close btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+				<button type="button" class="close btn-close" data-dismiss="modal" data-bs-dismiss="modal"
+					aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -157,7 +159,7 @@
 				<form id="formFuente">
 					<input type="hidden" id="fuenteId" name="id" value="0">
 					<input type="hidden" id="entidadInput" name="entidad" value="@ViewBag.Entidad">
-					
+
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
@@ -174,7 +176,8 @@
 							</div>
 							<div class="form-group">
 								<label for="datoInformacionInput">Dato Información</label>
-								<textarea class="form-control" id="datoInformacionInput" name="dato_Informacion" rows="3"></textarea>
+								<textarea class="form-control" id="datoInformacionInput" name="dato_Informacion"
+									rows="3"></textarea>
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -184,7 +187,8 @@
 							</div>
 							<div class="form-group">
 								<label for="subDesagregacionInput">Sub Desagregación</label>
-								<input type="text" class="form-control" id="subDesagregacionInput" name="sub_desagregacion">
+								<input type="text" class="form-control" id="subDesagregacionInput"
+									name="sub_desagregacion">
 							</div>
 							<div class="form-group">
 								<label for="unidadesInput">Unidades</label>
@@ -192,7 +196,8 @@
 							</div>
 							<div class="form-group">
 								<label for="periodicidadInput">Periodicidad</label>
-								<input type="text" class="form-control" id="periodicidadInput" name="periodicidad_Corte_de_Informacion">
+								<input type="text" class="form-control" id="periodicidadInput"
+									name="periodicidad_Corte_de_Informacion">
 							</div>
 						</div>
 					</div>
@@ -200,11 +205,13 @@
 						<div class="col-md-12">
 							<div class="form-group">
 								<label for="fuenteLinkInput">Enlace de la Fuente</label>
-								<input type="url" class="form-control" id="fuenteLinkInput" name="fuente_Link" placeholder="https://...">
+								<input type="url" class="form-control" id="fuenteLinkInput" name="fuente_Link"
+									placeholder="https://...">
 							</div>
 							<div class="form-group">
 								<label for="comentarioInput">Comentario</label>
-								<textarea class="form-control" id="comentarioInput" name="comentario" rows="2"></textarea>
+								<textarea class="form-control" id="comentarioInput" name="comentario"
+									rows="2"></textarea>
 							</div>
 						</div>
 					</div>
@@ -277,21 +284,32 @@
 			}
 		});
 
-		fetch(`/FuentesdeInformacion/ObtenerFuentes?filtro=${encodeURIComponent(entidadActual)}`)
-			.then(r => r.json())
+		// Usar parámetro específico para obtener fuentes por entidad
+		var url = `/FuentesdeInformacion/ObtenerFuentesPorEntidad?entidad=${encodeURIComponent(entidadActual)}`;
+		
+		fetch(url)
+			.then(r => {
+				if (!r.ok) {
+					throw new Error(`HTTP error! status: ${r.status}`);
+				}
+				return r.json();
+			})
 			.then(data => {
 				Swal.close(); // Cerrar loading
-				
+
 				console.log('Fuentes de la entidad:', data);
 				if (Array.isArray(data)) {
-					// Filtrar solo las fuentes de esta entidad
-					fuentesEntidad = data.filter(f => f.entidad === entidadActual);
+					fuentesEntidad = data;
 					actualizarTablaDetalle();
 					actualizarGraficosDetalle();
 					actualizarContadores();
 					cargarFiltros();
-					
+
 					mostrarNotificacion('success', 'Datos cargados', `Se cargaron ${fuentesEntidad.length} fuentes de ${entidadActual}`);
+				} else if (data && data.error) {
+					mostrarNotificacion('error', 'Error', data.error);
+				} else {
+					mostrarNotificacion('warning', 'Sin datos', 'No se encontraron fuentes para esta entidad');
 				}
 			})
 			.catch(error => {
@@ -310,7 +328,7 @@
 		tbody.innerHTML = '';
 
 		fuentesEntidad.forEach(f => {
-			var enlaceHtml = f.fuente_Link && f.fuente_Link.trim() ? 
+			var enlaceHtml = f.fuente_Link && f.fuente_Link.trim() ?
 				`<a href="${f.fuente_Link}" target="_blank" class="btn btn-xs btn-outline-primary"><i class="fas fa-external-link-alt"></i></a>` :
 				'<span class="text-muted">Sin enlace</span>';
 
@@ -357,7 +375,7 @@
 		fuentesEntidad.forEach(f => {
 			var tipo = f.tipo || 'Sin tipo';
 			var rubro = f.rubro || 'Sin rubro';
-			
+
 			conteoTipos[tipo] = (conteoTipos[tipo] || 0) + 1;
 			conteoRubros[rubro] = (conteoRubros[rubro] || 0) + 1;
 		});
@@ -416,7 +434,7 @@
 	}
 
 	function actualizarContadores() {
-		document.getElementById('totalFuentes').textContent = 
+		document.getElementById('totalFuentes').textContent =
 			fuentesEntidad.length + (fuentesEntidad.length === 1 ? ' fuente' : ' fuentes');
 	}
 
@@ -443,10 +461,10 @@
 		document.getElementById('formFuente').reset();
 		document.getElementById('fuenteId').value = '0';
 		document.getElementById('entidadInput').value = entidadActual;
-		
+
 		// Cambiar título
 		document.getElementById('modalFuenteCRUDLabel').innerHTML = '<i class="fas fa-plus"></i> Agregar Nueva Fuente';
-		
+
 		// Mostrar modal
 		try {
 			if (typeof bootstrap !== 'undefined') {
@@ -480,10 +498,10 @@
 		document.getElementById('periodicidadInput').value = fuente.periodicidad_Corte_de_Informacion || '';
 		document.getElementById('fuenteLinkInput').value = fuente.fuente_Link || '';
 		document.getElementById('comentarioInput').value = fuente.comentario || '';
-		
+
 		// Cambiar título
 		document.getElementById('modalFuenteCRUDLabel').innerHTML = '<i class="fas fa-edit"></i> Editar Fuente';
-		
+
 		// Mostrar modal
 		try {
 			if (typeof bootstrap !== 'undefined') {
@@ -511,7 +529,7 @@
 		setTimeout(() => {
 			Swal.close();
 			mostrarNotificacion('success', 'Fuente guardada', 'La fuente ha sido guardada exitosamente');
-			
+
 			// Cerrar modal
 			$('#modalFuenteCRUD').modal('hide');
 			cargarFuentesEntidad();
@@ -577,7 +595,7 @@
 		try {
 			const response = await fetch(`/FuentesdeInformacion/ObtenerFuentePorId?id=${id}`);
 			const data = await response.json();
-			
+
 			Swal.close(); // Cerrar loading
 
 			if (data) {
@@ -609,15 +627,15 @@
 	}
 
 	// Inicializar cuando se carga la página
-	document.addEventListener('DOMContentLoaded', function() {
+	document.addEventListener('DOMContentLoaded', function () {
 		cargarFuentesEntidad();
 
 		// Eventos de filtrado
-		document.getElementById('filtroTipo').addEventListener('change', function() {
+		document.getElementById('filtroTipo').addEventListener('change', function () {
 			// Implementar filtrado por tipo
 		});
 
-		document.getElementById('filtroRubro').addEventListener('change', function() {
+		document.getElementById('filtroRubro').addEventListener('change', function () {
 			// Implementar filtrado por rubro
 		});
 	});

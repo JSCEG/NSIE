@@ -145,7 +145,31 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 	</div>
 </div>
 
-<!-- Modal para Nueva Fuente -->
+<!-- Modal para Historial Completo -->
+<div class="modal fade" id="modalHistorial" tabindex="-1" role="dialog" aria-labelledby="modalHistorialLabel"
+	aria-hidden="true">
+	<div class="modal-dialog modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header bg-info text-white">
+				<h5 class="modal-title" id="modalHistorialLabel">
+					<i class="fas fa-history"></i> Historial Completo de Cambios
+				</h5>
+				<button type="button" class="close btn-close text-white" data-dismiss="modal" data-bs-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" id="modalHistorialBody">
+				<!-- Contenido dinámico del historial -->
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">
+					<i class="fas fa-times"></i> Cerrar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="modal fade" id="modalNuevaFuente" tabindex="-1" role="dialog" aria-labelledby="modalNuevaFuenteLabel"
 	aria-hidden="true">
 	<div class="modal-dialog modal-xl" role="document">
@@ -271,7 +295,7 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 	let totalesOriginales = [];
 
 	function aplicarFiltros() {
-		var filtroTexto = document.getElementById('filtro').value.toLowerCase();
+		var filtroTexto = document.getElementById('filtro').value.toLowerCase().trim();
 		var filtroFuente = document.getElementById('filtroFuente').value;
 
 		console.log('Aplicando filtros:', { filtroTexto, filtroFuente, datosOriginales: datosOriginales.length });
@@ -279,9 +303,10 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 		// Filtrar datos de la tabla
 		var datosFiltrados = datosOriginales.filter(f => {
 			var coincideTexto = !filtroTexto ||
-				(f.entidad && f.entidad.toLowerCase().includes(filtroTexto)) ||
-				(f.rubro && f.rubro.toLowerCase().includes(filtroTexto)) ||
-				(f.etiqueta && f.etiqueta.toLowerCase().includes(filtroTexto));
+				(f.entidad && f.entidad.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(filtroTexto.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))) ||
+				(f.rubro && f.rubro.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(filtroTexto.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))) ||
+				(f.etiqueta && f.etiqueta.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(filtroTexto.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))) ||
+				(f.tipo && f.tipo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(filtroTexto.normalize('NFD').replace(/[\u0300-\u036f]/g, '')));
 
 			var coincideFuente = !filtroFuente || (f.entidad === filtroFuente);
 
@@ -371,10 +396,11 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 			var rubrosText = Array.from(grupo.rubros).slice(0, 2).join(', ');
 			if (grupo.rubros.size > 2) rubrosText += '...';
 
+			var safeId = grupo.entidad.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-');
 			tbody.innerHTML += `<tr>
 				<td>
-					<span id="entidad-${grupo.entidad.replace(/\s+/g, '-')}" class="entidad-nombre">${grupo.entidad}</span>
-					<input type="text" id="input-${grupo.entidad.replace(/\s+/g, '-')}" class="form-control entidad-input d-none" value="${grupo.entidad}">
+					<span id="entidad-${safeId}" class="entidad-nombre">${grupo.entidad}</span>
+					<input type="text" id="input-${safeId}" class="form-control entidad-input d-none" value="${grupo.entidad}">
 					<br><small class="text-muted">Tipos: ${tiposText || 'N/A'}</small>
 				</td>
 				<td>
@@ -390,6 +416,9 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 						<button class="btn btn-sm btn-info" onclick="gestionarFuentesEntidad('${grupo.entidad}')" title="Gestionar fuentes de esta entidad">
 							<i class="fas fa-cogs"></i> Gestionar
 						</button>
+						<button class="btn btn-sm btn-secondary" onclick="verHistorialEntidad('${grupo.entidad}')" title="Ver historial de actividades de esta entidad">
+							<i class="fas fa-history"></i> Historial
+						</button>
 						<button class="btn btn-sm btn-warning" onclick="editarEntidad('${grupo.entidad}')" title="Editar nombre de entidad">
 							<i class="fas fa-edit"></i> Editar
 						</button>
@@ -397,7 +426,7 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 							<i class="fas fa-trash"></i> Eliminar
 						</button>
 					</div>
-					<div class="btn-group d-none entidad-edit-actions" id="actions-${grupo.entidad.replace(/\s+/g, '-')}" role="group">
+					<div class="btn-group d-none entidad-edit-actions" id="actions-${safeId}" role="group">
 						<button class="btn btn-sm btn-success" onclick="guardarEntidad('${grupo.entidad}')" title="Guardar cambios">
 							<i class="fas fa-save"></i> Guardar
 						</button>
@@ -743,14 +772,14 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 	}
 
 	function editarEntidad(entidadOriginal) {
-		var safeId = entidadOriginal.replace(/\s+/g, '-');
+		var safeId = entidadOriginal.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-');
 
 		// Ocultar texto y mostrar input
 		document.getElementById(`entidad-${safeId}`).classList.add('d-none');
 		document.getElementById(`input-${safeId}`).classList.remove('d-none');
 
 		// Cambiar botones
-		document.querySelector(`[onclick="editarEntidad('${entidadOriginal}')"]`).closest('.btn-group').classList.add('d-none');
+		document.querySelector(`[onclick="editarEntidad('${entidadOriginal.replace(/'/g, "\\'")}')"]`).closest('.btn-group').classList.add('d-none');
 		document.getElementById(`actions-${safeId}`).classList.remove('d-none');
 
 		// Focus en el input
@@ -759,7 +788,7 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 	}
 
 	function cancelarEdicionEntidad(entidadOriginal) {
-		var safeId = entidadOriginal.replace(/\s+/g, '-');
+		var safeId = entidadOriginal.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-');
 
 		// Restaurar valor original
 		document.getElementById(`input-${safeId}`).value = entidadOriginal;
@@ -769,12 +798,12 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 		document.getElementById(`input-${safeId}`).classList.add('d-none');
 
 		// Restaurar botones
-		document.querySelector(`[onclick="editarEntidad('${entidadOriginal}')"]`).closest('.btn-group').classList.remove('d-none');
+		document.querySelector(`[onclick="editarEntidad('${entidadOriginal.replace(/'/g, "\\'")}')"]`).closest('.btn-group').classList.remove('d-none');
 		document.getElementById(`actions-${safeId}`).classList.add('d-none');
 	}
 
 	async function guardarEntidad(entidadOriginal) {
-		var safeId = entidadOriginal.replace(/\s+/g, '-');
+		var safeId = entidadOriginal.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-');
 		var nuevoNombre = document.getElementById(`input-${safeId}`).value.trim();
 
 		if (!nuevoNombre) {
@@ -911,21 +940,20 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 	}
 
 	function gestionarFuentesEntidad(entidad) {
-		// Redirigir a nueva vista para gestionar fuentes de la entidad
-		var url = `/FuentesdeInformacion/GestionarFuentes?entidad=${encodeURIComponent(entidad)}`;
-		window.location.href = url;
+		// Buscar el ID de la primera fuente de esta entidad para obtener el entidadId
+		var fuenteEntidad = datosOriginales.find(f => f.entidad === entidad);
+		if (fuenteEntidad && fuenteEntidad.entidadId) {
+			// Usar ID si está disponible
+			var url = `/FuentesdeInformacion/GestionarFuentes?entidadId=${fuenteEntidad.entidadId}`;
+			window.location.href = url;
+		} else {
+			// Fallback: usar nombre codificado correctamente para caracteres especiales
+			var url = `/FuentesdeInformacion/GestionarFuentes?entidad=${encodeURIComponent(entidad)}`;
+			window.location.href = url;
+		}
 	}
 
 	function cargarFuentes() {
-		// Mostrar loading
-		Swal.fire({
-			title: 'Cargando fuentes...',
-			allowOutsideClick: false,
-			didOpen: () => {
-				Swal.showLoading();
-			}
-		});
-
 		cargarFuentesInterno(true);
 	}
 
@@ -934,6 +962,17 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 	}
 
 	function cargarFuentesInterno(mostrarLoading) {
+		if (mostrarLoading) {
+			// Mostrar loading solo cuando se solicite
+			Swal.fire({
+				title: 'Cargando fuentes...',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+		}
+
 		fetch('/FuentesdeInformacion/ObtenerFuentes?filtro=')
 			.then(r => r.json())
 			.then(data => {
@@ -1116,7 +1155,12 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 		});
 
 		fetch('/FuentesdeInformacion/ObtenerFuentePorId?id=' + id)
-			.then(r => r.json())
+			.then(r => {
+				if (!r.ok) {
+					throw new Error(`HTTP error! status: ${r.status}`);
+				}
+				return r.json();
+			})
 			.then(data => {
 				Swal.close(); // Cerrar loading
 
@@ -1153,11 +1197,16 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 						<hr>
 						<div class="row">
 							<div class="col-12">
-								<h6><i class="fas fa-history"></i> Información de Auditoría</h6>
-								<small class="text-muted">
-									<strong>Última modificación:</strong> ${fechaModificacion}<br>
-									<strong>Modificado por:</strong> ${usuarioModificacion}
-								</small>
+								<h6><i class="fas fa-history"></i> Historial de Cambios</h6>
+								<div class="d-flex justify-content-between align-items-center mb-2">
+									<small class="text-muted">Registro completo de todas las modificaciones realizadas a esta fuente</small>
+									<button class="btn btn-sm btn-outline-info" onclick="verHistorialCompleto(${id})">
+										<i class="fas fa-clock"></i> Ver Historial Completo
+									</button>
+								</div>
+								<div id="historialResumen-${id}" class="mt-2">
+									<!-- Aquí se cargará el resumen del historial -->
+								</div>
 							</div>
 						</div>
 					`;
@@ -1179,6 +1228,9 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 						// Fallback final
 						$('#modalFuente').modal('show');
 					}
+
+					// Cargar resumen del historial
+					cargarResumenHistorial(id);
 				} else {
 					mostrarNotificacion('error', 'Error', 'No se pudieron cargar los detalles de la fuente');
 				}
@@ -1187,6 +1239,184 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 				Swal.close(); // Cerrar loading en caso de error
 				console.error('Error al cargar detalle:', error);
 				mostrarNotificacion('error', 'Error de conexión', 'Error al cargar detalle: ' + error.message);
+			});
+	}
+
+	function verHistorialCompleto(id) {
+		// Mostrar loading
+		Swal.fire({
+			title: 'Cargando historial...',
+			allowOutsideClick: false,
+			showConfirmButton: false,
+			didOpen: () => {
+				Swal.showLoading();
+			}
+		});
+
+		fetch('/FuentesdeInformacion/ObtenerHistorialFuente?id=' + id)
+			.then(r => r.json())
+			.then(data => {
+				Swal.close();
+
+				if (data.success && data.data && data.data.length > 0) {
+					// Crear tabla de historial
+					var tablaHistorial = '';
+					data.data.forEach((item, index) => {
+						var fecha = new Date(item.timestamp).toLocaleString('es-ES');
+						var usuario = item.userName || item.userId || 'Sistema';
+						var accion = item.actionName || 'Acción';
+						var elemento = item.elemento || 'N/A';
+						var valor = item.valor || 'N/A';
+						var adicional = '';
+
+						// Intentar parsear datos adicionales si existen
+						if (item.additionalData) {
+							try {
+								var datosAdicionales = JSON.parse(item.additionalData);
+								if (datosAdicionales.Entidad) {
+									adicional = `Entidad: ${datosAdicionales.Entidad}, Tipo: ${datosAdicionales.Tipo || 'N/A'}, Rubro: ${datosAdicionales.Rubro || 'N/A'}`;
+								}
+							} catch (e) {
+								adicional = item.additionalData;
+							}
+						}
+
+						tablaHistorial += `
+							<tr>
+								<td>${index + 1}</td>
+								<td>${fecha}</td>
+								<td>${usuario}</td>
+								<td><span class="badge badge-${getBadgeColor(accion)}">${accion}</span></td>
+								<td>${elemento}</td>
+								<td>${valor}</td>
+								<td><small class="text-muted">${adicional}</small></td>
+							</tr>
+						`;
+					});
+
+					// Crear contenido del modal de historial
+					document.getElementById('modalHistorialBody').innerHTML = `
+						<div class="row">
+							<div class="col-12">
+								<div class="alert alert-info">
+									<i class="fas fa-info-circle"></i> 
+									<strong>Historial Completo de la Fuente</strong><br>
+									Mostrando ${data.data.length} registro(s) de actividad para esta fuente.
+								</div>
+								
+								<div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+									<table class="table table-sm table-striped">
+										<thead class="thead-dark">
+											<tr>
+												<th>#</th>
+												<th><i class="fas fa-calendar"></i> Fecha/Hora</th>
+												<th><i class="fas fa-user"></i> Usuario</th>
+												<th><i class="fas fa-cogs"></i> Acción</th>
+												<th><i class="fas fa-tag"></i> Elemento</th>
+												<th><i class="fas fa-edit"></i> Valor</th>
+												<th><i class="fas fa-info"></i> Detalles</th>
+											</tr>
+										</thead>
+										<tbody>
+											${tablaHistorial}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					`;
+
+					// Cambiar título del modal
+					document.getElementById('modalHistorialLabel').innerHTML = '<i class="fas fa-history"></i> Historial Completo de Cambios';
+
+				} else {
+					console.log('ℹ️ Sin datos de historial para mostrar en modal');
+					document.getElementById('modalHistorialBody').innerHTML = `
+						<div class="alert alert-info">
+							<i class="fas fa-info-circle"></i>
+							<strong>Sin historial de auditoría disponible</strong><br>
+							Esta fuente fue creada antes de implementar el sistema de auditoría centralizada.
+							<br><br>
+							<strong>¿Qué significa esto?</strong>
+							<ul class="mb-0 mt-2">
+								<li>Las fuentes creadas después del ${new Date().toLocaleDateString('es-ES')} tendrán historial completo</li>
+								<li>Todas las acciones futuras en esta fuente se registrarán automáticamente</li>
+								<li>El sistema de auditoría ya está funcionando para nuevas operaciones</li>
+							</ul>
+						</div>
+					`;
+					document.getElementById('modalHistorialLabel').innerHTML = '<i class="fas fa-history"></i> Historial de Cambios - Sin registros previos';
+				}
+
+				// Mostrar modal de historial
+				try {
+					if (typeof bootstrap !== 'undefined') {
+						var modal = new bootstrap.Modal(document.getElementById('modalHistorial'));
+						modal.show();
+					} else {
+						$('#modalHistorial').modal('show');
+					}
+				} catch (e) {
+					$('#modalHistorial').modal('show');
+				}
+			})
+			.catch(error => {
+				Swal.close();
+				console.error('Error al cargar historial:', error);
+				mostrarNotificacion('error', 'Error de conexión', 'Error al cargar historial: ' + error.message);
+			});
+	}
+
+	function getBadgeColor(accion) {
+		switch (accion.toLowerCase()) {
+			case 'crear':
+			case 'create':
+				return 'success';
+			case 'editar':
+			case 'edit':
+			case 'actualizar':
+			case 'update':
+				return 'primary';
+			case 'eliminar':
+			case 'delete':
+				return 'danger';
+			default:
+				return 'secondary';
+		}
+	}
+
+	function cargarResumenHistorial(id) {
+		console.log('🔍 Cargando historial para ID:', id);
+		fetch('/FuentesdeInformacion/ObtenerHistorialFuente?id=' + id)
+			.then(r => r.json())
+			.then(data => {
+				console.log('📊 Respuesta del historial para ID', id, ':', data);
+				if (data.success && data.data && data.data.length > 0) {
+					var ultimoCambio = data.data[0]; // El más reciente (ordenado DESC)
+					var fecha = new Date(ultimoCambio.timestamp).toLocaleString('es-ES');
+					var usuario = ultimoCambio.userName || ultimoCambio.userId || 'Sistema';
+					var totalCambios = data.data.length;
+
+					document.getElementById('historialResumen-' + id).innerHTML = `
+						<div class="border rounded p-2 bg-light">
+							<small>
+								<strong>Último cambio:</strong> ${fecha} por ${usuario}<br>
+								<strong>Total de cambios:</strong> ${totalCambios} registro(s)
+							</small>
+						</div>
+					`;
+				} else {
+					console.log('ℹ️ Sin historial disponible para ID:', id);
+					document.getElementById('historialResumen-' + id).innerHTML = `
+						<small class="text-muted">Sin historial disponible - Esta fuente fue creada antes de implementar el sistema de auditoría</small>
+					`;
+				}
+			})
+			.catch(error => {
+				console.error('❌ Error al cargar resumen historial:', error);
+				document.getElementById('historialResumen-' + id).innerHTML = `
+					<small class="text-danger">Error al cargar historial</small>
+				`;
 			});
 	}
 
@@ -1261,7 +1491,7 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 
 						// Buscar en los datos originales para obtener el nombre exacto
 						var fuenteConEntidad = datosOriginales.find(f =>
-							f.entidad && f.entidad.replace(/\s+/g, '-') === safeId
+							f.entidad && f.entidad.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-') === safeId
 						);
 
 						if (fuenteConEntidad) {
@@ -1278,7 +1508,7 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 					if (match) {
 						var safeId = match[1];
 						var fuenteConEntidad = datosOriginales.find(f =>
-							f.entidad && f.entidad.replace(/\s+/g, '-') === safeId
+							f.entidad && f.entidad.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-') === safeId
 						);
 
 						if (fuenteConEntidad) {
@@ -1289,4 +1519,193 @@ new { icon = "database", text = "Consulta y gestión de fuentes" }
 			}
 		});
 	});
+
+	// === FUNCIONES GLOBALES DE HISTORIAL ===
+	// Función para ver historial de una entidad específica
+	function verHistorialEntidad(entidad) {
+		console.log('🔍 Cargando historial para entidad:', entidad);
+
+		// Mostrar loading
+		Swal.fire({
+			title: 'Cargando historial de la entidad...',
+			allowOutsideClick: false,
+			showConfirmButton: false,
+			didOpen: () => {
+				Swal.showLoading();
+			}
+		});
+
+		// Obtener todas las fuentes de esta entidad para filtrar por sus IDs
+		var fuentesEntidad = datosOriginales.filter(f => f.entidad === entidad);
+		var idsElementos = fuentesEntidad.map(f => f.id.toString());
+
+		// Hacer una consulta general por página (Fuentes de Información) y filtrar por usuario si es necesario
+		fetch('/FuentesdeInformacion/ObtenerHistorialFuente?id=0') // ID 0 para obtener todo el historial de la página
+			.then(r => r.json())
+			.then(data => {
+				Swal.close();
+
+				console.log('📊 Respuesta del historial de entidad:', data);
+
+				if (data.success && data.data && data.data.length > 0) {
+					// Filtrar registros relacionados con esta entidad
+					var historialEntidad = data.data.filter(item => {
+						// Filtrar por ID de elemento (fuentes específicas de esta entidad)
+						if (idsElementos.includes(item.idElemento)) {
+							return true;
+						}
+
+						// También filtrar por datos adicionales que contengan la entidad
+						if (item.additionalData) {
+							try {
+								var datosAdicionales = JSON.parse(item.additionalData);
+								if (datosAdicionales.Entidad === entidad) {
+									return true;
+								}
+							} catch (e) {
+								// Si no se puede parsear, buscar la entidad en el texto
+								if (item.additionalData.includes(entidad)) {
+									return true;
+								}
+							}
+						}
+
+						// Filtrar por valor que contenga la entidad
+						if (item.valor && item.valor.includes(entidad)) {
+							return true;
+						}
+
+						return false;
+					});
+
+					if (historialEntidad.length > 0) {
+						mostrarHistorialEnModal(historialEntidad, `Historial de Actividades - ${entidad}`,
+							`Mostrando ${historialEntidad.length} registro(s) de actividad para la entidad "${entidad}"`);
+					} else {
+						mostrarSinHistorial(`No se encontraron actividades registradas para la entidad "${entidad}".`);
+					}
+				} else {
+					mostrarSinHistorial(`No hay historial disponible para la entidad "${entidad}".`);
+				}
+			})
+			.catch(error => {
+				Swal.close();
+				console.error('❌ Error al cargar historial de entidad:', error);
+				mostrarNotificacion('error', 'Error de conexión', 'Error al cargar historial: ' + error.message);
+			});
+	}
+
+	// Función auxiliar para mostrar historial en modal
+	function mostrarHistorialEnModal(historialData, titulo, descripcion) {
+		var tablaHistorial = '';
+		historialData.forEach((item, index) => {
+			var fecha = new Date(item.timestamp).toLocaleString('es-ES');
+			var usuario = item.userName || item.userId || 'Sistema';
+			var accion = item.actionName || 'Acción';
+			var elemento = item.elemento || 'N/A';
+			var valor = item.valor || 'N/A';
+			var adicional = '';
+
+			// Intentar parsear datos adicionales si existen
+			if (item.additionalData) {
+				try {
+					var datosAdicionales = JSON.parse(item.additionalData);
+					if (datosAdicionales.Entidad) {
+						adicional = `Entidad: ${datosAdicionales.Entidad}, Tipo: ${datosAdicionales.Tipo || 'N/A'}, Rubro: ${datosAdicionales.Rubro || 'N/A'}`;
+					}
+				} catch (e) {
+					adicional = item.additionalData;
+				}
+			}
+
+			tablaHistorial += `
+				<tr>
+					<td>${index + 1}</td>
+					<td>${fecha}</td>
+					<td>${usuario}</td>
+					<td><span class="badge badge-${getBadgeColor(accion)}">${accion}</span></td>
+					<td>${elemento}</td>
+					<td>${valor}</td>
+					<td><small class="text-muted">${adicional}</small></td>
+				</tr>
+			`;
+		});
+
+		// Crear contenido del modal de historial
+		document.getElementById('modalHistorialBody').innerHTML = `
+			<div class="row">
+				<div class="col-12">
+					<div class="alert alert-info">
+						<i class="fas fa-info-circle"></i> 
+						<strong>${titulo}</strong><br>
+						${descripcion}
+					</div>
+					
+					<div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+						<table class="table table-sm table-striped">
+							<thead class="thead-dark">
+								<tr>
+									<th>#</th>
+									<th><i class="fas fa-calendar"></i> Fecha/Hora</th>
+									<th><i class="fas fa-user"></i> Usuario</th>
+									<th><i class="fas fa-cogs"></i> Acción</th>
+									<th><i class="fas fa-tag"></i> Elemento</th>
+									<th><i class="fas fa-edit"></i> Valor</th>
+									<th><i class="fas fa-info"></i> Detalles</th>
+								</tr>
+							</thead>
+							<tbody>
+								${tablaHistorial}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		`;
+
+		document.getElementById('modalHistorialLabel').innerHTML = `<i class="fas fa-history"></i> ${titulo}`;
+
+		// Mostrar modal de historial
+		try {
+			if (typeof bootstrap !== 'undefined') {
+				var modal = new bootstrap.Modal(document.getElementById('modalHistorial'));
+				modal.show();
+			} else {
+				$('#modalHistorial').modal('show');
+			}
+		} catch (e) {
+			$('#modalHistorial').modal('show');
+		}
+	}
+
+	// Función auxiliar para mostrar mensaje cuando no hay historial
+	function mostrarSinHistorial(mensaje) {
+		document.getElementById('modalHistorialBody').innerHTML = `
+			<div class="alert alert-info">
+				<i class="fas fa-info-circle"></i>
+				<strong>Sin historial de auditoría disponible</strong><br>
+				${mensaje}
+				<br><br>
+				<strong>¿Qué significa esto?</strong>
+				<ul class="mb-0 mt-2">
+					<li>Las fuentes creadas después del ${new Date().toLocaleDateString('es-ES')} tendrán historial completo</li>
+					<li>Todas las acciones futuras se registrarán automáticamente</li>
+					<li>El sistema de auditoría ya está funcionando para nuevas operaciones</li>
+				</ul>
+			</div>
+		`;
+		document.getElementById('modalHistorialLabel').innerHTML = '<i class="fas fa-history"></i> Historial de Cambios - Sin registros previos';
+
+		// Mostrar modal
+		try {
+			if (typeof bootstrap !== 'undefined') {
+				var modal = new bootstrap.Modal(document.getElementById('modalHistorial'));
+				modal.show();
+			} else {
+				$('#modalHistorial').modal('show');
+			}
+		} catch (e) {
+			$('#modalHistorial').modal('show');
+		}
+	}
 </script>
