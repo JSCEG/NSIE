@@ -346,5 +346,12 @@ namespace NSIE.Controllers
             }
         }
 
+        //NUEVO SANKEY
+        public async Task<IActionResult> BalanceNacionalEnergia()
+        {
+            return View();
+        }
+
+
     }
 }
