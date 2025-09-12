@@ -35,10 +35,16 @@
         /* Tamaño */
         height: calc(100vh - var(--header-height));
         width: var(--sidebar-width);
+        max-width: var(--sidebar-width);
+        min-width: var(--sidebar-width);
+
+        /* Overflow control */
+        overflow-x: hidden;
+        overflow-y: auto;
 
         /* Animación */
         transform: translateX(0);
-        transition: transform var(--transition-smooth);
+        transition: transform var(--transition-smooth), width var(--transition-smooth);
     }
 
     /* -----------------------------------------
@@ -57,7 +63,19 @@
         text-decoration: none;
         transition: all var(--transition-fast);
         position: relative;
-        white-space: nowrap;
+        white-space: normal;
+        /* Permitir ajuste de texto */
+        word-wrap: break-word;
+        /* Romper palabras largas */
+        width: calc(100% - var(--spacing-sm) * 2);
+        max-width: calc(100% - var(--spacing-sm) * 2);
+        box-sizing: border-box;
+        overflow: visible;
+        /* Permitir que el contenido crezca */
+        height: auto;
+        /* Permitir que la altura se ajuste */
+        line-height: 1.4;
+        /* Mejorar espaciado para multilínea */
     }
 
     /* --- Iconos --- */
@@ -134,7 +152,7 @@
         background-color: rgba(0, 0, 0, 0.02);
         /* Fondo sutil */
         padding: var(--spacing-sm) 0;
-        margin: 0 var(--spacing-sm) var(--spacing-xs) calc(var(--spacing-lg) + 2px));
+        margin: 0 var(--spacing-sm) var(--spacing-xs) calc(var(--spacing-lg) + 2px);
         border-radius: var(--radius-md);
         border-left: 2px solid var(--color-primario-100);
     }
@@ -165,6 +183,13 @@
    [4] MODO COLAPSADO (MINI-SIDEBAR) Y TOOLTIPS
    ----------------------------------------- */
 
+    /* Modo colapsado - ajustar ancho del sidebar */
+    body.sidebar-collapsed #sidebarDesktop {
+        width: var(--sidebar-collapsed-width);
+        min-width: var(--sidebar-collapsed-width);
+        max-width: var(--sidebar-collapsed-width);
+    }
+
     /* Ocultar texto y flechas en modo colapsado */
     body.sidebar-collapsed #sidebarDesktop .nav-link-text,
     body.sidebar-collapsed #sidebarDesktop .submenu-arrow {
@@ -178,8 +203,15 @@
     body.sidebar-collapsed #sidebarDesktop .nav-link,
     body.sidebar-collapsed #sidebarDesktop .submenu-toggle {
         justify-content: center;
-        padding-left: 0;
-        padding-right: 0;
+        padding: var(--spacing-md) var(--spacing-xs);
+        margin: var(--spacing-xs);
+        width: calc(var(--sidebar-collapsed-width) - var(--spacing-xs) * 2);
+        max-width: calc(var(--sidebar-collapsed-width) - var(--spacing-xs) * 2);
+    }
+
+    /* Ocultar submenús en modo colapsado */
+    body.sidebar-collapsed #sidebarDesktop .submenu {
+        display: none !important;
     }
 
     /* Tooltip */
@@ -257,3 +289,140 @@
         background-color: var(--color-secundario);
     }
 }
+
+/* --- Contenido de sidebar-fix.css fusionado --- */
+
+/* Asegurar que el contenedor principal no tenga scroll horizontal */
+html,
+body {
+    overflow-x: hidden !important;
+    max-width: 100vw;
+}
+
+/* Contenedor principal del layout */
+.container-fluid {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Sidebar desktop - correcciones específicas */
+@media (min-width: 992px) {
+    #sidebarDesktop {
+        /* Dimensiones fijas para evitar problemas */
+        width: 260px !important;
+        max-width: 260px !important;
+        min-width: 260px !important;
+
+        /* Posicionamiento preciso */
+        position: fixed !important;
+        top: 65px !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        height: calc(100vh - 65px) !important;
+
+        /* Control de overflow */
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        /* Z-index para estar por encima */
+        z-index: 1040 !important;
+
+        /* Transiciones suaves */
+        transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    }
+
+    /* Contenido principal - ajustes para sidebar */
+    .main-content {
+        margin-left: 260px !important;
+        width: calc(100vw - 260px) !important;
+        max-width: calc(100vw - 260px) !important;
+        min-height: calc(100vh - 65px);
+        overflow-x: hidden;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Texto de los enlaces */
+    #sidebarDesktop .nav-link-text {
+        flex: 1;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+
+    /* Submenús */
+    #sidebarDesktop .submenu-link {
+        white-space: normal;
+        word-wrap: break-word;
+        height: auto;
+        line-height: 1.4;
+    }
+
+    /* Estado colapsado */
+    body.sidebar-collapsed #sidebarDesktop {
+        width: 60px !important;
+        max-width: 60px !important;
+        min-width: 60px !important;
+    }
+
+    body.sidebar-collapsed .main-content {
+        margin-left: 60px !important;
+        width: calc(100vw - 60px) !important;
+        max-width: calc(100vw - 60px) !important;
+    }
+}
+
+/* --- FIX: Asegurar fondo completo del sidebar --- */
+#sidebarDesktop {
+    background: var(--color-superficie) !important;
+    /* Asegurar que el fondo cubra toda el área */
+    background-clip: padding-box;
+}
+
+/* --- FIX: Fondo sólido completo para headers sticky --- */
+/* #sidebarDesktop .has-submenu>.submenu-toggle {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    /* Fondo sólido completo en lugar de translúcido */
+background-color: var(--color-superficie) !important;
+/* Sombra para separar visualmente */
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+border-bottom: 1px solid var(--color-borde);
+/* Asegurar que cubra todo el ancho */
+width: 100%;
+margin-left: 0;
+margin-right: 0;
+padding-left: var(--spacing-lg);
+padding-right: var(--spacing-lg);
+}
+
+#sidebarDesktop .has-submenu>.submenu-toggle.active-section {
+    background-color: var(--color-fondo-oscuro) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid var(--color-primario);
+}
+
+/* --- FIX: Eliminar comportamiento sticky de los headers de grupo --- */
+/*
+#sidebarDesktop .has-submenu>.submenu-toggle {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--color-superficie) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--color-borde);
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+}
+
+#sidebarDesktop .has-submenu>.submenu-toggle.active-section {
+    background-color: var(--color-fondo-oscuro) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid var(--color-primario);
+}
+*/

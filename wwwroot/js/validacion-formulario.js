@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Expresiones regulares para validaciones
     // Detecta patrones maliciosos de SQL Injection y XSS
-    const securityRegex = /(--|;|'|"|\b(OR|AND)\b\s*\d+|=\s*\d+|UNION\s+SELECT|DROP\s+TABLE|INSERT\s+INTO|DELETE\s+FROM|UPDATE\s+\w+|<.*?>|1\s*=\s*1|script\s*:|javascript\s*:)/i;
+    const securityRegex = /(--|;|'|"|\b(OR|AND)\b\s*\d+|=\s*\d+|UNION\s+SELECT|DROP\s+TABLE|INSERT\s+INTO|DELETE\s+FROM|UPDATE\s+\w+|<script|1\s*=\s*1|script\s*:|javascript\s*:)/i;
     // Valida formato de RFC (personas morales y físicas)
     const rfcPattern = /^([A-ZÑ&]{3,4})(\d{6})([A-Z0-9]{3})$/;
     // Valida formato básico de email

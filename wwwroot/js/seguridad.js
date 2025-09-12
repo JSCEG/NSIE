@@ -131,19 +131,14 @@
             const modal = document.createElement('div');
             modal.id = 'securityWarningModal';
             modal.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                           background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
-                           align-items: center; justify-content: center;">
-                    <div style="background: white; padding: 20px; border-radius: 8px; 
-                               max-width: 400px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-                        <div style="color: #dc3545; font-size: 48px; margin-bottom: 15px;">
+                <div class="security-modal-overlay">
+                    <div class="security-modal-content">
+                        <div class="security-modal-icon">
                             <i class="bi bi-shield-exclamation"></i>
                         </div>
-                        <h4 style="color: #dc3545; margin-bottom: 15px;">Advertencia de Seguridad</h4>
-                        <p id="securityMessage" style="margin-bottom: 20px; color: #333;"></p>
-                        <button onclick="closeSecurityWarning()" 
-                               style="background: #007bff; color: white; border: none; 
-                                      padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+                        <h4 class="security-modal-title">Advertencia de Seguridad</h4>
+                        <p id="securityMessage" class="security-modal-message"></p>
+                        <button onclick="closeSecurityWarning()" class="btn btn-primary">
                             Entendido
                         </button>
                     </div>
