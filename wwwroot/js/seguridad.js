@@ -1,232 +1,111 @@
 // ===== SISTEMA DE SEGURIDAD SNIER =====
-// Protección contra inspección de código y herramientas de desarrollo
+// Protección básica para aplicaciones web corporativas
 
-(function() {
+(function () {
     'use strict';
-    
-    // Variables de control
-    let devToolsOpen = false;
-    let checkStatus;
-    let warningCount = 0;
-    const MAX_WARNINGS = 3;
-    
-    // Deshabilitar clic derecho
-    document.addEventListener('contextmenu', function (e) {
-        e.preventDefault();
-        showSecurityWarning('Clic derecho deshabilitado por seguridad');
-        return false;
-    });
 
-    // Detectar apertura de herramientas de desarrollo por cambio de tamaño
-    window.addEventListener('resize', function () {
-        clearTimeout(checkStatus);
-        checkStatus = setTimeout(function () {
-            const heightDiff = window.outerHeight - window.innerHeight;
-            const widthDiff = window.outerWidth - window.innerWidth;
-            
-            if (heightDiff > 100 || widthDiff > 100) {
-                handleDevToolsDetection();
-            }
-        }, 500);
-    });
-
-    // Detectar herramientas de desarrollo por timing (solo en producción)
-    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        setInterval(function() {
-            const start = performance.now();
-            debugger;
-            const end = performance.now();
-            
-            if (end - start > 100) {
-                handleDevToolsDetection();
-            }
-        }, 2000); // Intervalo más largo para mejor rendimiento
-    }
-
-    // Deshabilitar combinaciones de teclas peligrosas
-    document.addEventListener('keydown', function (e) {
-        // F12 - Herramientas de desarrollo
-        if (e.keyCode === 123) {
-            e.preventDefault();
-            showSecurityWarning('Tecla F12 deshabilitada');
-            return false;
-        }
-        
-        // Ctrl+Shift+I - Inspeccionar elemento
-        if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-            e.preventDefault();
-            showSecurityWarning('Inspeccionar elemento deshabilitado');
-            return false;
-        }
-        
-        // Ctrl+U - Ver código fuente
-        if (e.ctrlKey && e.keyCode === 85) {
-            e.preventDefault();
-            showSecurityWarning('Ver código fuente deshabilitado');
-            return false;
-        }
-        
-        // Ctrl+Shift+C - Selector de elementos
-        if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
-            e.preventDefault();
-            showSecurityWarning('Selector de elementos deshabilitado');
-            return false;
-        }
-        
-        // Ctrl+Shift+J - Consola
-        if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-            e.preventDefault();
-            showSecurityWarning('Consola deshabilitada');
-            return false;
-        }
-        
-        // Ctrl+A - Seleccionar todo (en campos sensibles)
-        if (e.ctrlKey && e.keyCode === 65 && isPasswordField(e.target)) {
-            e.preventDefault();
-            return false;
-        }
-        
-        // Ctrl+C - Copiar (en campos de contraseña)
-        if (e.ctrlKey && e.keyCode === 67 && isPasswordField(e.target)) {
-            e.preventDefault();
-            showSecurityWarning('Copiar contraseña no permitido');
-            return false;
-        }
-    });
-
-    // Detectar si es un campo de contraseña
-    function isPasswordField(element) {
-        return element && (element.type === 'password' || element.id === 'password' || element.name === 'Clave');
-    }
-
-    // Manejar detección de herramientas de desarrollo
-    function handleDevToolsDetection() {
-        // Solo aplicar en producción
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            console.warn('Herramientas de desarrollo detectadas - Modo desarrollo');
-            return;
-        }
-        
-        if (!devToolsOpen) {
-            devToolsOpen = true;
-            warningCount++;
-            
-            if (warningCount >= MAX_WARNINGS) {
-                // Redirigir a página de seguridad después de múltiples intentos
-                window.location.href = '/Acceso/ActividadSospechosa';
-            } else {
-                showSecurityWarning(`Herramientas de desarrollo detectadas. Advertencia ${warningCount}/${MAX_WARNINGS}`);
-                // Recargar página como medida de seguridad (solo en producción)
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
-            }
-        }
-    }
-
-    // Mostrar advertencia de seguridad
-    function showSecurityWarning(message) {
-        // Crear modal de advertencia si no existe
-        if (!document.getElementById('securityWarningModal')) {
-            const modal = document.createElement('div');
-            modal.id = 'securityWarningModal';
-            modal.innerHTML = `
-                <div class="security-modal-overlay">
-                    <div class="security-modal-content">
-                        <div class="security-modal-icon">
-                            <i class="bi bi-shield-exclamation"></i>
-                        </div>
-                        <h4 class="security-modal-title">Advertencia de Seguridad</h4>
-                        <p id="securityMessage" class="security-modal-message"></p>
-                        <button onclick="closeSecurityWarning()" class="btn btn-primary">
-                            Entendido
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-        
-        document.getElementById('securityMessage').textContent = message;
-        document.getElementById('securityWarningModal').style.display = 'flex';
-    }
-
-    // Cerrar advertencia de seguridad
-    window.closeSecurityWarning = function() {
-        const modal = document.getElementById('securityWarningModal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
+    // Variables de configuración
+    const config = {
+        isProduction: window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1',
+        maxWarnings: 3,
+        warningCount: 0
     };
 
-    // Protección contra manipulación del DOM
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.type === 'childList') {
-                // Detectar scripts inyectados
-                mutation.addedNodes.forEach(function(node) {
-                    if (node.tagName === 'SCRIPT' && node.src && !node.src.includes('cdn.') && !node.src.includes('localhost') && !node.src.includes('bpcontent.cloud') && !node.src.includes('unpkg.com')) {
-                        node.remove();
-                        showSecurityWarning('Script malicioso detectado y removido');
-                    }
-                });
+    // Función para mostrar notificaciones de seguridad
+    function showNotification(message) {
+        // Crear notificación simple sin modal complejo
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed; top: 20px; right: 20px; 
+            background: #f44336; color: white; padding: 15px;
+            border-radius: 5px; z-index: 1000; font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        `;
+        notification.textContent = message;
+
+        document.body.appendChild(notification);
+
+        // Auto-remover después de 3 segundos
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
             }
-        });
+        }, 3000);
+    }
+
+    // Protección básica de teclado
+    document.addEventListener('keydown', function (e) {
+        // Solo en producción
+        if (!config.isProduction) return;
+
+        const blocked = [
+            e.keyCode === 123, // F12
+            e.ctrlKey && e.shiftKey && e.keyCode === 73, // Ctrl+Shift+I
+            e.ctrlKey && e.keyCode === 85, // Ctrl+U
+            e.ctrlKey && e.shiftKey && e.keyCode === 67, // Ctrl+Shift+C
+            e.ctrlKey && e.shiftKey && e.keyCode === 74  // Ctrl+Shift+J
+        ];
+
+        if (blocked.some(condition => condition)) {
+            e.preventDefault();
+            showNotification('Función deshabilitada por seguridad');
+            return false;
+        }
     });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
+    // Protección básica contra clic derecho
+    document.addEventListener('contextmenu', function (e) {
+        if (config.isProduction) {
+            e.preventDefault();
+            showNotification('Menú contextual deshabilitado');
+            return false;
+        }
     });
 
-    // Protección contra console.log y debugging
-    /* if (typeof console !== 'undefined') {
-        console.log = function() {};
-        console.warn = function() {};
-        console.error = function() {};
-        console.info = function() {};
-        console.debug = function() {};
-        console.trace = function() {};
-    } */
-
-    // Detectar si la página está siendo ejecutada en un iframe (clickjacking)
+    // Protección contra iframe (clickjacking)
     if (window.top !== window.self) {
         window.top.location = window.self.location;
     }
 
-    // Limpiar datos sensibles al salir de la página
-    window.addEventListener('beforeunload', function() {
-        // Limpiar campos de contraseña
-        const passwordFields = document.querySelectorAll('input[type="password"]');
-        passwordFields.forEach(field => field.value = '');
-        
-        // Limpiar localStorage y sessionStorage si contienen datos sensibles
+    // Limpiar campos sensibles al salir
+    window.addEventListener('beforeunload', function () {
         try {
-            localStorage.removeItem('tempLoginData');
-            sessionStorage.removeItem('tempLoginData');
-        } catch(e) {
-            // Ignorar errores de storage
+            const passwordFields = document.querySelectorAll('input[type="password"]');
+            passwordFields.forEach(field => field.value = '');
+        } catch (e) {
+            // Ignorar errores silenciosamente
         }
     });
 
-    // Protección adicional: detectar herramientas de desarrollo por console
-    let devtools = {
-        open: false,
-        orientation: null
-    };
-    
-    setInterval(function() {
-        if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-            if (!devtools.open) {
-                devtools.open = true;
-                handleDevToolsDetection();
-            }
-        } else {
-            devtools.open = false;
-        }
-    }, 500);
+    // Detección simple de herramientas de desarrollo
+    if (config.isProduction) {
+        let devtoolsDetected = false;
 
-    console.log('%cALTO!', 'color: red; font-size: 50px; font-weight: bold;');
-    console.log('%cEsta es una función del navegador destinada a desarrolladores. Si alguien te dijo que copies y pegues algo aquí para habilitar una función o "hackear" la cuenta de alguien, es una estafa y le dará acceso a tu cuenta.', 'color: red; font-size: 16px;');
+        setInterval(function () {
+            const heightDiff = window.outerHeight - window.innerHeight;
+            const widthDiff = window.outerWidth - window.innerWidth;
+
+            if ((heightDiff > 150 || widthDiff > 150) && !devtoolsDetected) {
+                devtoolsDetected = true;
+                config.warningCount++;
+
+                showNotification('Herramientas de desarrollo detectadas');
+
+                if (config.warningCount >= config.maxWarnings) {
+                    window.location.href = '/';
+                }
+
+                // Reset después de 30 segundos
+                setTimeout(() => {
+                    devtoolsDetected = false;
+                }, 30000);
+            }
+        }, 2000);
+    }
+
+    // Mensaje informativo en consola
+    if (config.isProduction) {
+        console.log('Sistema SNIER - Acceso restringido a herramientas de desarrollo');
+    }
 
 })();

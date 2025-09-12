@@ -26,9 +26,9 @@
             functionality = "Consulta módulos, indicadores, reportes, trazabilidad y estados del sistema.",
             stage = "Operación",
             roles = new[] {
-                new { icon = "globe", text = "Usuarios Públicos: Consulta general de datos" },
-                new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integración de información" }
-            },
+new { icon = "globe", text = "Usuarios Públicos: Consulta general de datos" },
+new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integración de información" }
+},
             order = new { step = 0, description = "Punto de acceso inicial al ecosistema energético" },
             manualUrl = "/Documentos/ManualSNIEr.pdf"
         })
@@ -74,7 +74,8 @@
     }
 
     .dashboard-card.full-width {
-        grid-column: 1 / -1; /* Ocupa todo el ancho del grid */
+        grid-column: 1 / -1;
+        /* Ocupa todo el ancho del grid */
     }
 
     .dashboard-card .card-header {
@@ -108,7 +109,7 @@
     .dashboard-card .card-body {
         flex-grow: 1;
     }
-    
+
     /* Estilos para la tarjeta de Módulos */
     .module-list a {
         display: flex;
@@ -140,19 +141,23 @@
         grid-template-columns: 1fr 1fr;
         gap: 1.5rem;
     }
+
     .kpi-item {
         text-align: center;
     }
+
     .kpi-label {
         font-size: 0.9rem;
         color: var(--texto-secundario);
         margin-bottom: 0.5rem;
     }
+
     .kpi-value {
         font-size: 2rem;
         font-weight: 700;
         color: var(--color-primario);
     }
+
     .kpi-unit {
         font-size: 1rem;
         color: var(--texto-secundario);
@@ -167,11 +172,13 @@
 
     /* Hero Section Compacta */
     #hero-home {
-        padding: 2.5rem 0; /* Altura reducida */
+        padding: 2.5rem 0;
+        /* Altura reducida */
         position: relative;
         overflow: hidden;
         background: var(--color-fondo-oscuro);
     }
+
     #particles-js-home {
         position: absolute;
         top: 0;
@@ -180,6 +187,7 @@
         height: 100%;
         z-index: 0;
     }
+
     #hero-home .container {
         position: relative;
         z-index: 1;
@@ -193,10 +201,18 @@
         <div class="row justify-content-center">
             <div class="col-lg-8" data-aos="zoom-in">
                 <h1 class="display-5 fw-bold mb-3 text-white">
-                    @if (esConsultaPublica) { <text>Bienvenido a la Consulta Pública</text> }
-                    else { <text>Bienvenido, @nombreUsuario</text> }
+                    @if (esConsultaPublica)
+                    {
+                        <text>Bienvenido a la Consulta Pública</text>
+                    }
+                    else
+                    {
+
+                        <text>Bienvenido, @nombreUsuario</text>
+                    }
                 </h1>
-                <p class="lead mb-4 text-white-50">El SNIEr es la fuente oficial de información del sector energético en México.</p>
+                <p class="lead mb-4 text-white-50">El SNIEr es la fuente oficial de información del sector energético en
+                    México.</p>
             </div>
         </div>
     </div>
@@ -298,10 +314,12 @@
                 <div class="card-body">
                     <p class="text-muted mb-4">Consulta nuestras guías o contáctanos para obtener asistencia.</p>
                     <div class="d-flex flex-column gap-2">
-                         <a href="https://cdn.sassoapps.com/Manuales/Manual_Usuario_SNIEr.pdf" class="btn btn-primary" target="_blank">
+                        <a href="https://cdn.sassoapps.com/Manuales/Manual_Usuario_SNIEr.pdf" class="btn btn-primary"
+                            target="_blank">
                             <i class="bi bi-file-earmark-pdf me-2"></i>Descargar Manual
                         </a>
-                        <button class="btn btn-outline-secondary" onclick="mostrarAyudaModulo(@Html.Raw(header.ModuleInfo))">
+                        <button class="btn btn-outline-secondary"
+                            onclick="mostrarAyudaModulo(@Html.Raw(header.ModuleInfo))">
                             <i class="bi bi-info-circle me-2"></i>Información del Módulo
                         </button>
                     </div>
@@ -312,7 +330,9 @@
     </div>
 </div>
 
-
+<center style="background-color: #efefee!important;">
+    <partial name="_DiagramaSEM_N" />
+</center>
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
@@ -353,16 +373,16 @@
             try {
                 const info = typeof infoJson === 'string' ? JSON.parse(infoJson) : infoJson;
                 const html = `
-                    <div class="text-start">
-                        ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
-                        ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
-                        ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
-                        ${info.roles?.length ? `
-                            <ul>
-                                ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
-                            </ul>` : ''}
-                        ${info.order ? `<p><i class='fas fa-sort-amount-up'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
-                    </div>`;
+                        <div class="text-start">
+                            ${info.description ? `<p><strong>${info.description}</strong></p>` : ''}
+                            ${info.functionality ? `<p><i class='fas fa-cogs me-2'></i> ${info.functionality}</p>` : ''}
+                            ${info.stage ? `<p><i class='fas fa-layer-group me-2'></i> Etapa: ${info.stage}</p>` : ''}
+                            ${info.roles?.length ? `
+                                <ul>
+                                    ${info.roles.map(r => `<li><i class="fas fa-${r.icon} me-2 text-primary"></i> ${r.text}</li>`).join('')}
+                                </ul>` : ''}
+                            ${info.order ? `<p><i class='fas fa-sort-amount-up'></i> Paso ${info.order.step}: ${info.order.description}</p>` : ''}
+                        </div>`;
 
                 Swal.fire({
                     title: info.title || 'Ayuda del módulo',
@@ -381,7 +401,7 @@
             const $seccion = $('#continuar');
             const $contenedor = $('#tarjetas-acciones');
             const $loader = $('<div id="loader-continua" class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
-            
+
             $contenedor.html($loader);
 
             $.ajax({
@@ -395,24 +415,24 @@
                     }
                     const filaId = 'fila-acciones';
                     const filaHtml = `
-                        <div class="position-relative netflix-carousel">
-                            <button class="nf-nav-btn nf-prev" type="button" aria-label="Anterior" data-target="#${filaId}">❮</button>
-                            <button class="nf-nav-btn nf-next" type="button" aria-label="Siguiente" data-target="#${filaId}">❯</button>
-                            <div id="${filaId}" class="netflix-card-container" role="list" aria-label="Continuar viendo">
-                            ${acciones.map(a => {
-                                const img = `@Cdn.Url/img_snier/vistas/${(a.pagina || 'default').toLowerCase().replace(/\s+/g, '_')}.png`;
-                                return `
-                                    <article class="netflix-card" role="listitem" tabindex="0" onclick="irA(this)" data-controller="${a.controller}" data-action="${a.action}">
-                                        <div class="card-img"><img src="${img}" alt="${a.pagina || 'Vista'}" loading="lazy" onerror="this.src='@Cdn.Url/img_snier/vistas/default.png'"></div>
-                                        <div class="card-overlay">
-                                            <h6 title="${a.pagina || ''}">${a.pagina || ''}</h6>
-                                            <p class="text-muted small">${a.fecha || ''}</p>
-                                            <button class="btn btn-primary btn-sm" type="button">Reanudar</button>
-                                        </div>
-                                    </article>`;
-                            }).join('')}
-                            </div>
-                        </div>`;
+                            <div class="position-relative netflix-carousel">
+                                <button class="nf-nav-btn nf-prev" type="button" aria-label="Anterior" data-target="#${filaId}">❮</button>
+                                <button class="nf-nav-btn nf-next" type="button" aria-label="Siguiente" data-target="#${filaId}">❯</button>
+                                <div id="${filaId}" class="netflix-card-container" role="list" aria-label="Continuar viendo">
+                                ${acciones.map(a => {
+                        const img = `@Cdn.Url/img_snier/vistas/${(a.pagina || 'default').toLowerCase().replace(/\s+/g, '_')}.png`;
+                        return `
+                                        <article class="netflix-card" role="listitem" tabindex="0" onclick="irA(this)" data-controller="${a.controller}" data-action="${a.action}">
+                                            <div class="card-img"><img src="${img}" alt="${a.pagina || 'Vista'}" loading="lazy" onerror="this.src='@Cdn.Url/img_snier/vistas/default.png'"></div>
+                                            <div class="card-overlay">
+                                                <h6 title="${a.pagina || ''}">${a.pagina || ''}</h6>
+                                                <p class="text-muted small">${a.fecha || ''}</p>
+                                                <button class="btn btn-primary btn-sm" type="button">Reanudar</button>
+                                            </div>
+                                        </article>`;
+                    }).join('')}
+                                </div>
+                            </div>`;
                     $contenedor.html(filaHtml);
 
                     // Lógica de navegación del carrusel (sin cambios)
