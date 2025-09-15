@@ -655,9 +655,7 @@ namespace NSIE.Controllers
                                             <img src='{logo}' alt='Logo' width='120px' height='100px'>
                                             <h1>¡Hola, {nombre}!</h1>
                                             <p>Por favor, usa el siguiente enlace para restablecer tu contraseña. Recuerda que el enlace expirará en 30 minutos.</p>
-                                            <a href='{url}' style='padding: 10px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; display: inline-block;'>Restablecer Contraseña</a>
-                                            <p>Tu Token de Seguridad es:<strong> {token}</strong></p>
-                                            <p>Deberás usarlo para recuperar tu contraseña.</p>
+                                            <a href='{url}' style='padding: 10px; background-color: #8BC34A; color: white; text-decoration: none; border-radius: 5px; display: inline-block;'>Restablecer Contraseña</a>
                                             <p>*Este correo se genera automáticamente y no requiere respuesta.</p>
                                             <p>Sin otro particular, reciba un cordial saludo.</p>
                                         </td>
@@ -695,7 +693,7 @@ namespace NSIE.Controllers
                                             <img src='{logo}' alt='Logo' width='120px' height='100px'>
                                             <h1>¡Hola, {nombre}!</h1>
                                             <p>Su Token anterior ha expirado. Use el siguiente enlace para restablecer su contraseña (Recuerde que tiene 30 minutos antes de que su Token expire):</p>
-                                            <a href='{url}' style='padding: 10px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; display: inline-block;'>Restablecer Contraseña</a>
+                                            <a href='{url}' style='padding: 10px; background-color: #8BC34A; color: white; text-decoration: none; border-radius: 5px; display: inline-block;'>Restablecer Contraseña</a>
                                             <p>Tu Token de Seguridad es:<strong> {token}</strong></p>
                                             <p>Deberás usarlo para recuperar tu contraseña.</p>
                                             <p>*Este correo se genera automáticamente y no requiere respuesta.</p>
@@ -762,8 +760,10 @@ namespace NSIE.Controllers
             await _repositorioAcceso.SavePasswordResetToken(userId, token, DateTime.Now);
         }
 
-        public IActionResult ResetPassword()
+        public IActionResult ResetPassword(string token)
         {
+            ViewData["Token"] = token;
+            Console.WriteLine("Token: " + token);
             return View();
         }
 
