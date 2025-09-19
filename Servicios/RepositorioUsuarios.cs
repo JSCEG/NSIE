@@ -16,6 +16,7 @@ namespace NSIE.Servicios
         Task<bool> ActualizarUsuario(UserViewModel usuario);
         Task<int> RegistraUsuario(UserViewModel nuevoUsuario);
         Task<bool> EliminarUsuario(int id);
+        Task<UserViewModel> BuscarPorCorreo(string email);
 
         // Roles y Mercados
         Task<IEnumerable<Rol>> ObtenerTodosLosRoles();
@@ -579,6 +580,15 @@ namespace NSIE.Servicios
             return await connection.QuerySingleOrDefaultAsync<UsuarioApp>(
                 "SELECT * FROM UsuariosPrueba Where EmailNormalizado=@emailNormalizado",
                 new { emailNomarlizado }
+            );
+        }
+
+        public async Task<UserViewModel> BuscarPorCorreo(string email)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QuerySingleOrDefaultAsync<UserViewModel>(
+                "SELECT * FROM USUARIO Where Correo=@email",
+                new { email }
             );
         }
     }

@@ -27,6 +27,7 @@ function handleAccessTypeChange() {
     const enlacesAdicionales = document.getElementById('enlacesAdicionales');
     const correoInput = document.getElementById('Correo');
     const claveInput = document.getElementById('claveInput');
+    const botonSocial = document.getElementById('botonSocial');
 
     // Limpiar campos
     if (correoInput) correoInput.value = '';
@@ -39,6 +40,7 @@ function handleAccessTypeChange() {
         enlacesAdicionales.style.display = 'none';
         btnAcceso.disabled = false;
         textoBoton.innerHTML = '<i class="bi bi-globe me-2"></i>Acceder como Consulta Pública';
+        botonSocial.style.display = 'block';
         
         // Cambiar la acción del formulario para acceso público
         document.getElementById('loginForm').action = window.urlAccesoInvitado;
@@ -54,6 +56,7 @@ function handleAccessTypeChange() {
         enlacesAdicionales.style.display = 'block';
         btnAcceso.disabled = false;
         textoBoton.innerHTML = '<i class="bi bi-person-check me-2"></i>Iniciar Sesión';
+        botonSocial.style.display = 'block';
         
         // Restaurar la acción del formulario para login normal
         document.getElementById('loginForm').action = window.urlLogin;
@@ -74,6 +77,7 @@ function handleAccessTypeChange() {
         enlacesAdicionales.style.display = 'none';
         btnAcceso.disabled = true;
         textoBoton.textContent = 'Selecciona tipo de acceso';
+        botonSocial.style.display = 'none';
     }
 }
 

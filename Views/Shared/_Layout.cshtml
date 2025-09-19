@@ -415,7 +415,7 @@
                     </li>
                 }
             }
-                    @if (perfilUsuario.IdUsuario == "1")
+                @if (perfilUsuario.IdUsuario == "1" || perfilUsuario.IdUsuario == "31")
                 {
                 <hr class="my-3 mx-3 border-secondary" />
                     <div class="px-3 pb-2">
@@ -1106,10 +1106,10 @@
     </script>
     <script src="~/js/validacion-formulario.js"></script>
     <!-- JavaScript -->
-    @* @if (perfilUsuario.IdUsuario != "1")
+    @if (perfilUsuario.IdUsuario != "1" || perfilUsuario.IdUsuario != "31")
     {
         <script src="~/js/seguridad.js"></script>
-    } *@
+    } 
     <style>
         /* Esto bloqueará la selección de texto en todo el documento HTML */
         body {

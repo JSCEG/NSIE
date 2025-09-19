@@ -10,6 +10,10 @@ using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;    // opcional, facilita tipos como GoogleDefaults
+using Microsoft.AspNetCore.Authentication.Facebook;  // opcional
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -157,7 +161,27 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedUICultures = supportedCultures;
 });
 
-
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Acceso/Login";
+        options.LogoutPath = "/Acceso/Logout";
+    })
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        options.Scope.Add("profile");
+        options.Scope.Add("email");
+    })
+    .AddFacebook(options =>
+    {
+        options.AppId = builder.Configuration["Authentication:Facebook:AppId"];
+        options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+        options.Scope.Add("email");
+        options.Fields.Add("email");
+        options.Fields.Add("name");
+    });
 
 var app = builder.Build();
 

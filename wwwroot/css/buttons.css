@@ -147,6 +147,7 @@
 .btn-outline-success,
 .btn-outline-danger,
 .btn-outline-warning,
+.btn-outline-facebook,
 .btn-outline-info {
     position: relative;
     /* Necesario para el efecto de fondo */
@@ -161,6 +162,7 @@
 .btn-outline-success::before,
 .btn-outline-danger::before,
 .btn-outline-warning::before,
+.btn-outline-facebook::before,
 .btn-outline-info::before {
     content: '';
     position: absolute;
@@ -182,6 +184,7 @@
 .btn-outline-success:hover::before,
 .btn-outline-danger:hover::before,
 .btn-outline-warning:hover::before,
+.btn-outline-facebook:hover::before,
 .btn-outline-info:hover::before {
     transform: scaleX(1);
     /* Se expande al 100% en hover */

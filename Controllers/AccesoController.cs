@@ -8,6 +8,9 @@ using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 using Dapper;
 using System.Data;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace NSIE.Controllers
 {
@@ -17,11 +20,13 @@ namespace NSIE.Controllers
         private readonly IServicioEmailSMTP _servicioEmailSMTP;
         //private readonly IServicioEmail _servicioEmail;
         private readonly IRepositorioAcceso _repositorioAcceso;
+        private readonly IRepositorioUsuarios _repositorioUsuarios;
         private readonly string _connectionString;
         private readonly ILogger<AccesoController> _logger;
-        public AccesoController(IRepositorioAcceso repositorioAcceso, IConfiguration configuration, IServicioEmailSMTP servicioEmailSMTP, ILogger<AccesoController> logger)
+        public AccesoController(IRepositorioAcceso repositorioAcceso, IRepositorioUsuarios repositorioUsuarios, IConfiguration configuration, IServicioEmailSMTP servicioEmailSMTP, ILogger<AccesoController> logger)
         {
             _repositorioAcceso = repositorioAcceso;
+            _repositorioUsuarios = repositorioUsuarios;
             _connectionString = configuration.GetConnectionString("DefaultConnection");
             //_servicioEmail = servicioEmail;
             _servicioEmailSMTP = servicioEmailSMTP;
@@ -69,6 +74,186 @@ namespace NSIE.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult LoginGoogle(string returnUrl = "/")
+        {
+            var redirectUrl = Url.Action("GoogleResponse", "Acceso", new { ReturnUrl = returnUrl });
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+            return Challenge(properties, "Google");
+        }
+
+        [HttpPost]
+        public IActionResult LoginFacebook(string returnUrl = "/")
+        {
+            var redirectUrl = Url.Action("FacebookResponse", "Acceso", new { ReturnUrl = returnUrl });
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+            return Challenge(properties, "Facebook");
+        }
+
+        public async Task<IActionResult> GoogleResponse(string returnUrl = "/")
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (!result.Succeeded) return RedirectToAction("Login");
+
+            var claims = result.Principal.Identities.First().Claims;
+            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            // Registrar o recuperar usuario
+            var existingUser = await _repositorioUsuarios.BuscarPorCorreo(email);
+            int userId;
+
+            if (existingUser == null)
+            {
+                var nuevoUsuario = new UserViewModel
+                {
+                    Correo = email,
+                    Nombre = name ?? "Usuario invitado",
+                    Clave = ConvertirSha256("OAuthSocial"),
+                    Vigente = true,
+                    Unidad_de_Adscripcion = "Publico",
+                    Cargo = "Visita",
+                    SesionActiva = true,
+                    UltimaActualizacion = DateTime.Now,
+                    RFC = null,
+                    ClaveEmpleado = null,
+                    HoraInicioSesion = DateTime.Now
+                };
+
+                userId = await _repositorioUsuarios.RegistraUsuario(nuevoUsuario);
+
+                if (userId > 0)
+                {
+                    var rolUsuario = new RolesUsuarioViewModel
+                    {
+                        IdUsuario = userId,
+                        Rol_ID = 0,
+                        Mercado_ID = 0,
+                        RolUsuario_Vigente = 1,
+                        RolUsuario_QuienRegistro = 1,
+                        RolUsuario_FechaMod = DateTime.Now,
+                        RolUsuario_Comentarios = "Registro automático por Google"
+                    };
+
+                    await _repositorioUsuarios.RegistraRolUsuario(rolUsuario);
+                }
+            }
+            else
+            {
+                userId = existingUser.IdUsuario;
+            }
+
+            // 👉 Armas un Usuario para mandarlo al Login como invitado social
+            var usuarioSocial = new Usuario
+            {
+                IdUsuario = userId,
+                Correo = email,
+                Clave = "OAuthSocial" // esta clave coincide con lo guardado en DB (encriptado en ProcesarLoginInvitado)
+            };
+
+            return Login(usuarioSocial, "social", true);
+
+        }
+
+        public async Task<IActionResult> FacebookResponse(string returnUrl = "/")
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (!result.Succeeded) return RedirectToAction("Login");
+
+            var claims = result.Principal.Identities.First().Claims;
+            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            // Registrar o recuperar usuario
+            var existingUser = await _repositorioUsuarios.BuscarPorCorreo(email);
+            int userId;
+
+            if (existingUser == null)
+            {
+                var nuevoUsuario = new UserViewModel
+                {
+                    Correo = email ?? $"fbuser_{Guid.NewGuid()}@facebook.com", // fallback si no hay email
+                    Nombre = name ?? "Usuario de Facebook",
+                    Clave = ConvertirSha256("OAuthSocial"),
+                    Vigente = true,
+                    Unidad_de_Adscripcion = "Publico",
+                    Cargo = "Visita",
+                    SesionActiva = true,
+                    UltimaActualizacion = DateTime.Now,
+                    RFC = null,
+                    ClaveEmpleado = null,
+                    HoraInicioSesion = DateTime.Now
+                };
+
+                userId = await _repositorioUsuarios.RegistraUsuario(nuevoUsuario);
+
+                if (userId > 0)
+                {
+                    var rolUsuario = new RolesUsuarioViewModel
+                    {
+                        IdUsuario = userId,
+                        Rol_ID = 0,
+                        Mercado_ID = 0,
+                        RolUsuario_Vigente = 1,
+                        RolUsuario_QuienRegistro = 1,
+                        RolUsuario_FechaMod = DateTime.Now,
+                        RolUsuario_Comentarios = "Registro automático por Facebook"
+                    };
+
+                    await _repositorioUsuarios.RegistraRolUsuario(rolUsuario);
+                }
+            }
+            else
+            {
+                userId = existingUser.IdUsuario;
+            }
+
+            // 👉 Armas un Usuario para mandarlo al Login como invitado social
+            var usuarioSocial = new Usuario
+            {
+                IdUsuario = userId,
+                Correo = email,
+                Clave = "OAuthSocial" // esta clave coincide con lo guardado en DB (encriptado en ProcesarLoginInvitado)
+            };
+
+            return Login(usuarioSocial, "social", true);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
+        }
+
+        public async Task IniciarSesionInterna(int userId, string correo, string nombre, string rol = "Usuario")
+        {
+            // Definir los claims principales
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()), // ID de usuario
+                new Claim(ClaimTypes.Name, nombre ?? "Usuario"),         // Nombre visible
+                new Claim(ClaimTypes.Email, correo),                     // Correo
+                new Claim(ClaimTypes.Role, rol)                          // Rol en el sistema
+            };
+
+            // Crear identidad con esquema de cookies
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // Opcional: definir propiedades de autenticación
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,                 // Que la cookie sea persistente
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(2) // Expira en 2 horas
+            };
+
+            // Firmar al usuario
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties
+            );
+        }
+
         #region Acceso a consulta Pública
         public IActionResult AccesoComoInvitado()
         {
@@ -84,6 +269,8 @@ namespace NSIE.Controllers
         private IActionResult ProcesarLoginInvitado(Usuario oUsuario)
         {
             oUsuario.Clave = ConvertirSha256(oUsuario.Clave);
+
+            Console.WriteLine("Clave: " + oUsuario.Clave);
 
             using (SqlConnection cn = new SqlConnection(_connectionString))
             {
@@ -219,6 +406,16 @@ namespace NSIE.Controllers
                 
                 // Procesar login como invitado (sin recursión)
                 return ProcesarLoginInvitado(usuarioInvitado);
+            }
+
+            if (tipoAcceso == "social")
+            {
+                
+                // Registrar acceso
+                RegistrarAcceso(oUsuario.Correo, "Acceso como Consulta Pública");
+                
+                // Procesar login como invitado (sin recursión)
+                return ProcesarLoginInvitado(oUsuario);
             }
 
             // Validar que se proporcionen credenciales para usuario registrado
