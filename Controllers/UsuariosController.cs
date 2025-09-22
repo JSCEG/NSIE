@@ -167,39 +167,43 @@ namespace NSIE.Controllers
 
         // Procesa la edición de usuario
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
             if (!ModelState.IsValid)
-                return View(model);
-
-            var user = new UserViewModel
             {
-                IdUsuario = model.IdUsuario,
-                Nombre = model.Nombre,
-                RFC = model.RFC,
-                Correo = model.Correo,
-                Cargo = model.Cargo,
-                Unidad_de_Adscripcion = model.Unidad_de_Adscripcion,
-                ClaveEmpleado = model.ClaveEmpleado,
-                SesionActiva = model.SesionActiva,
-                Vigente = model.Vigente,
-            };
+                //return View(model);
 
-            var rolUsuario = new RolesUsuarioViewModel
-            {
-                IdUsuario = model.IdUsuario,
-                Rol_ID = model.Rol_ID,
-                Mercado_ID = model.Mercado_ID,
-                RolUsuario_Comentarios = model.RolUsuario_Comentarios
-            };
 
-            var userUpdateSuccess = await repositorioUsuarios.ActualizarUsuario(user);
-            var rolUsuarioUpdateSuccess = await repositorioUsuarios.ActualizarRolUsuario(rolUsuario);
+                var user = new UserViewModel
+                {
+                    IdUsuario = model.IdUsuario,
+                    Nombre = model.Nombre,
+                    RFC = model.RFC,
+                    Correo = model.Correo,
+                    Cargo = model.Cargo,
+                    Unidad_de_Adscripcion = model.Unidad_de_Adscripcion,
+                    ClaveEmpleado = model.ClaveEmpleado,
+                    SesionActiva = model.SesionActiva,
+                    Vigente = model.Vigente,
+                };
 
-            if (userUpdateSuccess && rolUsuarioUpdateSuccess)
-                return RedirectToAction("AdministrarUsuarios");
+                var rolUsuario = new RolesUsuarioViewModel
+                {
+                    IdUsuario = model.IdUsuario,
+                    Rol_ID = model.Rol_ID,
+                    Mercado_ID = model.Mercado_ID,
+                    RolUsuario_Comentarios = model.RolUsuario_Comentarios
+                };
 
+                var userUpdateSuccess = await repositorioUsuarios.ActualizarUsuario(user);
+                var rolUsuarioUpdateSuccess = await repositorioUsuarios.ActualizarRolUsuario(rolUsuario);
+
+                if (userUpdateSuccess && rolUsuarioUpdateSuccess)
+                {
+                    return RedirectToAction("AdministrarUsuarios");
+                }
+            }
             ModelState.AddModelError(string.Empty, "Hubo un error al actualizar la información del usuario.");
             return View(model);
         }

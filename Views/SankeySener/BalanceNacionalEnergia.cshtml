@@ -1726,6 +1726,20 @@
     </div>
 </div>
 
+<style>
+    #color-legend-container .btn-sankey,
+    #color-legend-container select,
+    #color-legend-container input {
+        font-size: 0.75rem;   /* Texto más pequeño */
+        padding: 0.25rem 0.5rem; /* Compacta alto y ancho */
+    }
+
+    #color-legend-container svg {
+        width: 10px;
+        height: 10px; /* Íconos más chicos */
+    }
+</style>
+
 <!-- Panel lateral de Filtros (reutiliza la leyenda de categorías) -->
 <div id="filters-panel" class="filters-panel" aria-hidden="true">
     <div class="filters-panel-header">
@@ -2905,6 +2919,31 @@
                 behavior: 'smooth',
                 block: 'start'
             });
+
+            // --- Eventos para mantener el nodo pineado ---
+            sankeyChart.off('globalout');
+            sankeyChart.on('globalout', function () {
+                if (pinnedNodeName && !reapplyLock) {
+                    setTimeout(() => {
+                        pinNodeByName(pinnedNodeName);
+                    }, 10);
+                }
+            });
+
+            sankeyChart.off('downplay');
+            sankeyChart.on('downplay', function () {
+                if (pinnedNodeName && !reapplyLock) {
+                    // Reaplicar pin inmediatamente
+                    pinNodeByName(pinnedNodeName);
+                }
+            });
+
+            sankeyChart.off('mouseover');
+            sankeyChart.on('mouseover', function (params) {
+                if (pinnedNodeName && !reapplyLock) {
+                    pinNodeByName(pinnedNodeName);
+                }
+            });
         }
 
         // Y en un click fuera o en un botón "resetear":
@@ -3091,8 +3130,8 @@
                     const grupoColumn = document.createElement('div');
                     grupoColumn.style.cssText = `
                         flex: 1;
-                        min-width: 200px;
-                        max-width: 250px;
+                        min-width: 150px;
+                        max-width: 200px;
                         display: flex;
                         flex-direction: column;
                     `;
@@ -3142,8 +3181,8 @@
 
                         legendItem.innerHTML = `
                             <div style="
-                                width: 14px;
-                                height: 14px;
+                                width: 12px;
+                                height: 12px;
                                 background-color: ${color};
                                 border-radius: 3px;
                                 border: 1px solid rgba(0, 0, 0, 0.2);
@@ -3152,13 +3191,13 @@
                             <span style="
                                 font-size: 0.75rem;
                                 color: #374151;
-                                font-weight: 500;
+                                font-weight: 200;
                                 line-height: 1.2;
                             ">${truncateText(getDisplayName(energetico), 25)}</span>
                             <div class="legend-actions">
-                                <i class="fas fa-info-circle legend-info-btn" data-energetico="${energetico}" title="Ver información del energético"></i>
-                                <i class="fas fa-chart-area legend-main-export-btn" data-energetico="${energetico}" data-order="${order}" title="Descargar Sankey principal filtrado"></i>
-                                <i class="fas fa-download legend-export-btn" data-energetico="${energetico}" data-order="${order}" title="Exportar Sub-Sankey detallado"></i>
+                                <i class="fas fa-info-circle fa-sm legend-info-btn" data-energetico="${energetico}" title="Ver información del energético"></i>
+                                <i class="fas fa-chart-area fa-sm legend-main-export-btn" data-energetico="${energetico}" data-order="${order}" title="Descargar Sankey principal filtrado"></i>
+                                <i class="fas fa-download fa-sm legend-export-btn" data-energetico="${energetico}" data-order="${order}" title="Exportar Sub-Sankey detallado"></i>
                             </div>
                         `;
 
@@ -3196,7 +3235,7 @@
                                 // Mostrar indicador de carga
                                 const originalIcon = e.target.className;
                                 e.target.className = 'fas fa-spinner fa-spin legend-main-export-btn';
-                                e.target.style.color = 'var(--color-verde-bandera)';
+                                e.target.style.color = '#006847';
 
                                 searchInput.value = energetico;
                                 handleSearch();
@@ -3275,13 +3314,13 @@
                 background: rgba(106, 28, 50, 0.05);
                 border-radius: 6px;
                 font-size: 0.8rem;
-                color: var(--color-gris-oscuro);
+                color: #374151;
                 text-align: center;
             `;
             iconExplanation.innerHTML = `
                 <strong>Acciones disponibles:</strong> 
-                <i class="fas fa-info-circle" style="color: var(--color-azul-enlaces); margin: 0 3px;"></i> Ver información | 
-                <i class="fas fa-chart-area" style="color: var(--color-verde-bandera); margin: 0 3px;"></i> Descargar Sankey filtrado | 
+                <i class="fas fa-info-circle" style="color: #3b82f6; margin: 0 3px;"></i> Ver información | 
+                <i class="fas fa-chart-area" style="color: #006847; margin: 0 3px;"></i> Descargar Sankey filtrado | 
                 <i class="fas fa-download" style="color: #6a1c32; margin: 0 3px;"></i> Exportar Sub-Sankey
             `;
             legendContainer.appendChild(iconExplanation);
