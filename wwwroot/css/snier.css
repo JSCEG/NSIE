@@ -1546,6 +1546,16 @@ footer .small {
     /* Transición suave */
 }
 
+.btn-d-azul {
+    background-color: #05556b !important;
+    color: #ffffff !important;
+    width: 100%;
+    border-radius: 8px;
+    border-bottom: 2px solid transparent;
+    transition: background-color 0.3s ease, color 0.3s ease, border-bottom 0.3s ease;
+    /* Transición suave */
+}
+
 .navbarmapag {
     width: 100%;
     /* background-color: #161c2c; */

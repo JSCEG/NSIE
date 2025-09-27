@@ -1778,6 +1778,53 @@
     </div>
 </div>
 
+<style>
+    /* contenedor principal: centrar su contenido */
+    #chart-container {
+    display: flex;
+    justify-content: center; /* centra horizontalmente */
+    align-items: stretch;     /* estira verticalmente */
+    height: 90vh;
+    padding: 0.5rem;
+    margin: 0;
+    z-index: 1;
+    }
+
+    /* wrapper que contiene el canvas (bordes, scroll) */
+    #chart-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center; /* centra el canvas dentro del wrapper */
+    align-items: center;
+    position: relative;
+    border-radius: 12px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #6b7280;
+    box-sizing: border-box;
+    overflow: auto;
+    }
+
+    /* asegurarnos de que el canvas del chart se adapte y tenga un max-width */
+    #sankey, #sub-sankey-chart {
+    width: 100%;
+    height: 100%;
+    max-width: 2200px; /* ajustar a lo que necesites */
+    box-sizing: border-box;
+    /* importante: no anclar a la esquina */
+    transform-origin: center center !important;
+    }
+
+    /* overlay de etiquetas: no toca layout */
+    #sankey-label-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    }
+</style>
+
 <!-- Sub-Sankey inmediatamente después del Sankey principal -->
 <div id="sub-sankey-container" class="card-inset" style="display: none; margin-top: 1rem;">
     <div id="sub-sankey-title" style="text-align: center; margin-bottom: 1rem;">
@@ -1803,8 +1850,8 @@
 </br>
 <div id="node-details-container" class="container" style="display: none;">
     <h2>Detalles del Energético: <span id="node-details-name"></span></h2>
-    <p><strong style="color: var(--primary-color);">Tipo:</strong> <span id="node-details-type"></span></p>
-    <p><strong style="color: var(--primary-color);">Descripción:</strong> <span
+    <p><strong style="color: #6a1c32;">Tipo:</strong> <span id="node-details-type"></span></p>
+    <p><strong style="color: #6a1c32;">Descripción:</strong> <span
             id="node-details-description"></span></p>
     <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
         <p><strong>Entrada Total:</strong> <span id="node-details-inflow"></span></p>
@@ -5026,7 +5073,7 @@
             const chartContainer = document.getElementById('chart-container');
             if (focusMode) {
                 chartContainer.style.border = '2px solid #6a1c32';
-                chartContainer.style.borderRadius = 'var(--border-radius)';
+                chartContainer.style.borderRadius = '16px';
             } else {
                 chartContainer.style.border = 'none';
             }
@@ -5387,17 +5434,17 @@
                 })(),
                 series: [{
                     type: 'sankey',
-                    focusNodeAdjacency: 'none', // 👈 evita que el hover cambie el enfoque
+                    focusNodeAdjacency: 'none',
                     top: 60,
                     bottom: 120,
-                    left: 20,
-                    right: 120,
+                    left: '5%',    // <-- usar % en vez de px
+                    right: '5%',   // <-- usar % en vez de px
                     data: Array.from(nodeMap.values()),
                     links: links,
                     nodeWidth: 35,
                     nodeGap: 20,
                     layoutIterations: 0,
-                    nodeAlign: 'justify',
+                    nodeAlign: 'center', // opcional: 'center' en lugar de 'justify' centra columnas
                     label: {
                         formatter: function (params) {
                             const value = params.data.value || 0;
@@ -5462,6 +5509,12 @@
 
             subSankeyChart.setOption(option);
 
+            
+            // Forzar resize un par de ms después para que DOM se estabilice
+            setTimeout(() => {
+                subSankeyChart.resize();
+            }, 50);
+
             // El botón de descarga ahora abre el modal (manejado en otro lugar)
         }
 
@@ -5514,6 +5567,46 @@
         setupControlTooltipsPortal();
 
         // ...existing code...
+        // --- Función que ajusta márgenes del Sankey según sidebar ---
+        function ajustarSankey() {
+            const collapsed = document.body.classList.contains("sidebar-collapsed");
+
+            if (typeof sankeyChart !== 'undefined' && sankeyChart) {
+                sankeyChart.setOption({
+                    series: [{
+                        left: collapsed ? '5%' : '5%',
+                        right: collapsed ? '5%' : '5%'
+                    }]
+                });
+                sankeyChart.resize();
+            }
+
+            if (typeof subSankeyChart !== 'undefined' && subSankeyChart) {
+                subSankeyChart.setOption({
+                    series: [{
+                        left: collapsed ? '5%' : '5%',
+                        right: collapsed ? '5%' : '5%'
+                    }]
+                });
+                subSankeyChart.resize();
+            }
+        }
+
+        // --- Engancharlo al toggle del sidebar ---
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                setTimeout(() => {
+                    ajustarSankey();
+                }, 250); // esperamos la animación del sidebar
+            });
+        }
+
+        // --- Ajustar también al cambiar tamaño de ventana ---
+        window.addEventListener('resize', ajustarSankey);
+
+        // --- Ajuste inicial al cargar la vista ---
+        document.addEventListener("DOMContentLoaded", ajustarSankey);
     });
 
     // Funcionalidad del panel lateral de filtros

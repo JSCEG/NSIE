@@ -167,7 +167,7 @@ namespace NSIE.Controllers
 
         // Procesa la edición de usuario
         [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
             if (!ModelState.IsValid)

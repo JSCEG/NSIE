@@ -32,6 +32,7 @@
 <div class="container mt-5">
 
     <form asp-action="Edit" method="post" class="mt-4">
+        @Html.AntiForgeryToken()
         <h6 class="display-6 fw-bold subtitulo pl-3%">Información del Usuario</h6>
         <input type="hidden" asp-for="IdUsuario" />
         <div class="row p-3">

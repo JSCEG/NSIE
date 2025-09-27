@@ -231,7 +231,7 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
                 </div>
                 <div class="card-body">
                     <div class="module-list">
-                        <a href="@Url.Action("SankeyPublico", "Sankey")">
+                        <a href="@Url.Action("BalanceNacionalEnergia", "SankeySener")">
                             <i class="bi bi-diagram-3-fill module-icon"></i>
                             <span>Balance Nacional de Energía</span>
                         </a>
@@ -330,9 +330,34 @@ new { icon = "user-shield", text = "Funcionarios CRE/SENER: Gestión e integraci
     </div>
 </div>
 
-<center style="background-color: #efefee!important;">
-    <partial name="_DiagramaSEM_N" />
-</center>
+<div class="container my-4">
+    <div class="dashboard-card full-width" data-aos="fade-up">
+        <div class="card-header">
+            <div class="card-icon"><i class="bi bi-diagram-3"></i></div>
+            <h3 class="card-title">Diagrama Energético</h3>
+        </div>
+        <div class="card-body">
+            <div class="diagram-wrapper">
+                <partial name="_DiagramaSEM_N" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .diagram-wrapper {
+        max-width: 100%;
+        overflow-x: auto;   /* si se sale en pantallas chicas */
+        transform: scale(0.9);   /* más pequeño */
+        transform-origin: top center; /* escala desde arriba y centrado */
+    }
+
+    .diagram {
+        max-width: 1200px; /* o lo que necesites */
+        margin: 0 auto;    /* centrar dentro del wrapper */
+    }
+</style>
+
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
