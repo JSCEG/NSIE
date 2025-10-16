@@ -104,7 +104,7 @@
 
     @{
         // Cambia el rol para simular la vista deseada
-        string rolUsuario = "Secretario"; // o "Sujeto"
+        string rolUsuario = "Evaluacion"; // o "Sujeto"
 
         bool listadoPublicado = ViewData["ListadoPublicado"] != null && (bool)ViewData["ListadoPublicado"];
         string urlListadoPublicado = ViewData["UrlListado"]?.ToString() ?? "#";
@@ -1406,8 +1406,8 @@
                                     <div class="alert alert-@(p.EstadoEvaluacionAbierta.Contains("VIABLE") ? "success" : "danger") p-2 mb-2">
                                         <i class="bi bi-check2-circle me-1"></i> @p.EstadoEvaluacionAbierta
                                     </div>
-                                }
-                                else
+                                }                          
+                                else if (p.TieneEvaluacionSustentabilidad)
                                 {
                                     <form method="post" asp-controller="Proyectos" asp-action="EvaluarViabilidad" class="d-flex gap-2">
                                         <input type="hidden" name="carpeta" value="@p.Carpeta" />
@@ -1418,6 +1418,168 @@
                                             ❌ No viable
                                         </button>
                                     </form>
+                                }
+                                else
+                                {
+                                    <!-- Botón que abre el modal -->
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEvaluacion-@p.Carpeta">
+                                        📝 Evaluar
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="modalEvaluacion-@p.Carpeta" tabindex="-1" aria-labelledby="modalEvaluacionLabel-@p.Carpeta" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl"> <!-- más ancho porque es un formato largo -->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Evaluación del proyecto: @p.Nombre</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="post" asp-controller="Proyectos" asp-action="GuardarEvaluacion" enctype="multipart/form-data">
+                                                        <input type="hidden" name="carpeta" value="@p.Carpeta" />
+
+                                                        <!-- Instrucciones -->
+                                                        <div class="alert alert-info">
+                                                            <h6 class="fw-bold">📌 Instrucciones para el evaluador</h6>
+                                                            <p>
+                                                                Evalue la propuesta considerando si esta atiende satisfactoriamente las preguntas relacionadas al 
+                                                                cumplimiento de los criterios especificados; asignando un valor con base en la siguiente 
+                                                                <strong>Escala de Referencia</strong>:
+                                                            </p>
+
+                                                            <!-- Tabla de escala -->
+                                                            <table class="table table-sm table-bordered text-center align-middle">
+                                                                <thead class="table-light">
+                                                                    <tr>
+                                                                        <th>Valor</th>
+                                                                        <th>Equivalencia (%)</th>
+                                                                        <th>Interpretación</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td><strong>1</strong></td>
+                                                                        <td>25%</td>
+                                                                        <td>No cumple / Cumplimiento muy bajo</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>2</strong></td>
+                                                                        <td>50%</td>
+                                                                        <td>Cumplimiento parcial</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>3</strong></td>
+                                                                        <td>75%</td>
+                                                                        <td>Cumple satisfactoriamente</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>4</strong></td>
+                                                                        <td>100%</td>
+                                                                        <td>Cumplimiento excelente / totalmente satisfactorio</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                        <!-- Justificación -->
+                                                        <h6 class="fw-bold text-primary">🟨 Justificación</h6>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿La propuesta atiende de manera directa alguno de los temas específicos?</label>
+                                                            <input type="number" name="justificacion_temas" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_justificacion_temas" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿La propuesta da atención a la necesidad que dio origen a la demanda?</label>
+                                                            <input type="number" name="justificacion_demanda" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_justificacion_demanda" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿La propuesta incorpora elementos que favorezcan su trascendencia y sostenibilidad en el tiempo?</label>
+                                                            <input type="number" name="justificacion_sostenibilidad" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_justificacion_sostenibilidad" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿La propuesta presenta un impacto potencial que aumente su probabilidad de aprobación?</label>
+                                                            <input type="number" name="justificacion_impacto" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_justificacion_impacto" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+
+                                                        <!-- Calidad -->
+                                                        <h6 class="fw-bold text-success mt-4">🟩 Calidad</h6>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿Los objetivos general y específicos son claros, congruentes y aseguran la contribución esperada?</label>
+                                                            <input type="number" name="calidad_objetivos" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_calidad_objetivos" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿La metodología o estrategia de ejecución es clara, congruente y permite alcanzar los objetivos planteados?</label>
+                                                            <input type="number" name="calidad_metodologia" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_calidad_metodologia" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿Se detallan claramente los instrumentos, equipos, materiales y recursos humanos requeridos para el adecuado desarrollo de la propuesta?</label>
+                                                            <input type="number" name="calidad_recursos" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_calidad_recursos" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿Las metas, etapas y actividades son congruentes y aseguran la atención a la demanda específica?</label>
+                                                            <input type="number" name="calidad_metas" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_calidad_metas" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿Se identifican de manera clara en la propuesta los resultados que se espera lograr y cómo se estiman alcanzarlos con los objetivos específicos y metas?</label>
+                                                            <input type="number" name="calidad_resultados" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_calidad_resultados" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿Se cuenta con indicadores o métricas que permitan verificar el logro de las metas esperadas?</label>
+                                                            <input type="number" name="calidad_indicadores" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_calidad_indicadores" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿Se identifican de manera clara los productos esperados como ejemplo: patentes, software, capital humano, laboratorio, etc.?</label>
+                                                            <input type="number" name="calidad_productos" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_calidad_productos" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿La propuesta identifica los riesgos y retos que pueden presentarse durante su desarrollo?</label>
+                                                            <input type="number" name="calidad_riesgos" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_calidad_riesgos" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+
+                                                        <!-- Viabilidad -->
+                                                        <h6 class="fw-bold text-warning mt-4">🟦 Viabilidad</h6>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿El cronograma de actividades es coherente con el objetivo del proyecto y metodología en términos de alcance y tiempos de ejecución?</label>
+                                                            <input type="number" name="viabilidad_cronograma" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_viabilidad_cronograma" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿Se presentan de manera detallada los recursos materiales y humanos necesarios y suficientes para cumplir con los objetivos y metas propuestos?</label>
+                                                            <input type="number" name="viabilidad_recursos" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_viabilidad_recursos" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">¿Existe congruencia técnico-financiera en cada uno de los conceptos contemplados para el desarrollo de las actividades establecidas en el proyecto?</label>
+                                                            <input type="number" name="viabilidad_presupuesto" class="form-control" min="1" max="4" required />
+                                                            <textarea name="obs_viabilidad_presupuesto" class="form-control mt-1" placeholder="Observaciones"></textarea>
+                                                        </div>
+
+                                                        <!-- Subir documento -->
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Subir documento con evaluación</label>
+                                                            <input type="file" class="form-control" name="archivoEvaluacion" required />
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" class="btn btn-primary">Guardar evaluación</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
                             </td>
                         </tr>

@@ -11,6 +11,14 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.Layout.Borders;
+using iText.Kernel.Colors;
+using iText.Kernel.Font;
+using iText.IO.Font.Constants;
 
 
 namespace NSIE.Controllers
@@ -99,6 +107,7 @@ namespace NSIE.Controllers
                     var oficioSolicitudCuentaSubido = System.IO.File.Exists(Path.Combine(carpeta, "Oficio_Solicitud_Cuenta.pdf"));
                     var documentosCuentaBancariaSubidos = System.IO.File.Exists(Path.Combine(carpeta, "Documentos_CuentaBancaria.pdf"));
                     var transferenciaConfirmada = System.IO.File.Exists(Path.Combine(carpeta, "Transferencia_Confirmada.txt"));
+                    var tieneEvaluacionSustentabilidad = System.IO.File.Exists(Path.Combine(carpeta, "Formato_Evaluacion_Sustentabilidad.pdf"));
 
                     if (tieneDemanda && tieneCuestionario)
                     {
@@ -129,7 +138,9 @@ namespace NSIE.Controllers
                             DocumentoConvenioSubido = documentoConvenioSubido,
                             OficioSolicitudCuentaSubido = oficioSolicitudCuentaSubido,
                             DocumentosCuentaBancariaSubidos = documentosCuentaBancariaSubidos,
-                            TransferenciaConfirmada = transferenciaConfirmada
+                            TransferenciaConfirmada = transferenciaConfirmada,
+
+                            TieneEvaluacionSustentabilidad = tieneEvaluacionSustentabilidad
                         });
                     }
                 }
@@ -1536,7 +1547,7 @@ namespace NSIE.Controllers
             TempData["MensajeExito"] = "✅ Informes guardados correctamente.";
             return RedirectToAction("FondoPetroleo");
         }
-        
+
         [HttpPost]
         public IActionResult SuscribirActaFiniquito(string carpeta)
         {
@@ -1559,6 +1570,120 @@ namespace NSIE.Controllers
                 $"Informe guardado el {DateTime.Now}");
 
             TempData["MensajeExito"] = "✅ Informes guardados correctamente.";
+            return RedirectToAction("FondoPetroleo");
+        }
+
+        //FORMULARIO
+        [HttpPost]
+        public IActionResult GuardarEvaluacion(
+            string carpeta,
+            string comentarios,
+            int calificacionTecnica,
+            List<string> criterios,
+            Dictionary<string, int> calificaciones,
+            IFormFile archivoEvaluacion) 
+        {
+            if (string.IsNullOrEmpty(carpeta))
+            {
+                TempData["MensajeError"] = "⚠️ Carpeta inválida.";
+                return RedirectToAction("FondoPetroleo");
+            }
+
+            var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
+            if (!Directory.Exists(ruta))
+            {
+                Directory.CreateDirectory(ruta);
+            }
+
+            try
+            {
+                // Guardar archivo de referencia del evaluador (si lo subió)
+                if (archivoEvaluacion != null && archivoEvaluacion.Length > 0)
+                {
+                    var rutaArchivo = Path.Combine(ruta, "Archivo_Adjunto.pdf");
+                    using (var stream = new FileStream(rutaArchivo, FileMode.Create))
+                    {
+                        archivoEvaluacion.CopyTo(stream);
+                    }
+                }
+
+                // Ruta del PDF que generaremos
+                var rutaPdf = Path.Combine(ruta, "Formato_Evaluacion_Sustentabilidad.pdf");
+
+                using (var writer = new PdfWriter(rutaPdf))
+                using (var pdf = new PdfDocument(writer))
+                using (var doc = new Document(pdf))
+                {
+
+                    // Crear la fuente en negrita
+                    PdfFont bold = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+
+                    // Encabezado
+                    doc.Add(new Paragraph("📋 Formato de Evaluación del Proyecto")
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFontSize(16)
+                        .SetFont(bold));
+
+                    doc.Add(new Paragraph($"Fecha: {DateTime.Now:dd/MM/yyyy}")
+                        .SetTextAlignment(TextAlignment.RIGHT)
+                        .SetFontSize(10));
+
+                    doc.Add(new Paragraph("Instrucciones: Evalúe la propuesta considerando si atiende satisfactoriamente las preguntas relacionadas al cumplimiento de los criterios especificados; asignando un valor con base en la siguiente escala de referencia:")
+                        .SetFontSize(10));
+
+                    // Escala de referencia
+                    Table tablaEscala = new Table(5).UseAllAvailableWidth();
+                    tablaEscala.AddHeaderCell("Totalmente No Satisfactorio");
+                    tablaEscala.AddHeaderCell("1");
+                    tablaEscala.AddHeaderCell("2");
+                    tablaEscala.AddHeaderCell("3");
+                    tablaEscala.AddHeaderCell("4 - Totalmente Satisfactorio");
+                    doc.Add(tablaEscala);
+
+                    doc.Add(new Paragraph("\n"));
+
+                    // Iterar calificaciones y armar tabla
+                    Table tabla = new Table(new float[] { 3, 6, 2, 4 }).UseAllAvailableWidth();
+                    tabla.AddHeaderCell(new Cell().Add(new Paragraph("Criterio General").SetFont(bold)));
+                    tabla.AddHeaderCell(new Cell().Add(new Paragraph("Pregunta").SetFont(bold)));
+                    tabla.AddHeaderCell(new Cell().Add(new Paragraph("Calificación").SetFont(bold)));
+                    tabla.AddHeaderCell(new Cell().Add(new Paragraph("Observaciones").SetFont(bold)));
+
+                    if (calificaciones != null)
+                    {
+                        foreach (var kv in calificaciones)
+                        {
+                            tabla.AddCell(kv.Key.Split("_")[0]);  // Criterio general
+                            tabla.AddCell(kv.Key.Split("_")[1]);  // Pregunta
+                            tabla.AddCell(kv.Value.ToString());   // Calificación
+                            tabla.AddCell(""); // Observaciones vacías de momento
+                        }
+                    }
+
+                    doc.Add(tabla);
+
+                    // Sección final
+                    doc.Add(new Paragraph("\nComentarios generales:")
+                        .SetFont(bold)
+                        .SetFontSize(12));
+                    doc.Add(new Paragraph(comentarios));
+
+                    doc.Add(new Paragraph($"\nCalificación técnica: {calificacionTecnica}")
+                        .SetFontSize(12));
+
+                    if (criterios != null && criterios.Any())
+                    {
+                        doc.Add(new Paragraph("\nCriterios seleccionados: " + string.Join(", ", criterios)));
+                    }
+                }
+
+                TempData["MensajeExito"] = "✅ Evaluación guardada en PDF correctamente.";
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeError"] = $"⚠️ Error al generar PDF: {ex.Message}";
+            }
+
             return RedirectToAction("FondoPetroleo");
         }
     }
