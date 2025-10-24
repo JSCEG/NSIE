@@ -72,12 +72,24 @@ function handleAccessTypeChange() {
         
     } else {
         // No hay selección
-        camposRegistrado.style.display = 'none';
+        camposRegistrado.style.display = 'block';
         infoPublica.style.display = 'none';
-        enlacesAdicionales.style.display = 'none';
-        btnAcceso.disabled = true;
-        textoBoton.textContent = 'Selecciona tipo de acceso';
-        botonSocial.style.display = 'none';
+        enlacesAdicionales.style.display = 'block';
+        btnAcceso.disabled = false;
+        textoBoton.textContent = '<i class="bi bi-person-check me-2"></i>Iniciar Sesión';
+        botonSocial.style.display = 'block';
+
+        // Restaurar la acción del formulario para login normal
+        document.getElementById('loginForm').action = window.urlLogin;
+
+        // Agregar required a los campos de usuario registrado
+        if (correoInput) correoInput.setAttribute('required', 'required');
+        if (claveInput) claveInput.setAttribute('required', 'required');
+        
+        // Enfocar el campo de correo
+        setTimeout(() => {
+            if (correoInput) correoInput.focus();
+        }, 100);
     }
 }
 

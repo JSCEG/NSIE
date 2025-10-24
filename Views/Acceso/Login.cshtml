@@ -74,6 +74,25 @@
             background-color: #1877f2;
             color: #fff;
         }
+
+        .oculto {
+            display: none;
+        }
+
+        .barra-carga {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .barra-carga .progreso {
+            height: 100%;
+            width: 0%;
+            background-color: #81c3c9;
+            transition: width 0.6s ease-in-out;
+        }
     </style>
 
 </head>
@@ -100,10 +119,10 @@
                         <a class="nav-link" href="#beneficios">Beneficios</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#acceso">Acceso</a>
+                        <a class="nav-link" href="#registro">Registro</a>
                     </li>
                 </ul>
-                <a href="#acceso" class="btn btn-primary ms-lg-3">Iniciar sesión</a>
+                <a href="#inicio" class="btn btn-primary ms-lg-3">Iniciar sesión</a>
             </div>
         </div>
     </nav>
@@ -112,54 +131,209 @@
     <section class="hero-section" id="inicio">
         <div id="particles-js"></div>
         <div class="container-fluid px-4">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-6 hero-content" data-aos="fade-right" data-aos-duration="1000">
-                    <div class="hero-title-container">
-                        <img src="@cdn/img_snier/login/logo_snier.png" alt="SNIER Logo" class="hero-logo"
-                            data-aos="zoom-in" data-aos-delay="100">
-                        <h1 class="hero-title text-white" data-aos="fade-up" data-aos-delay="200">
-                            Sistema Nacional de
-                            <span class="text-gradient">Información Energética</span>
-                        </h1>
-                    </div>
-                    <p class="hero-description" data-aos="fade-up" data-aos-delay="400">
-                        Plataforma oficial para integrar, analizar y transparentar toda la información
-                        energética de México con tecnología de vanguardia
-                    </p>
-                    <div class="hero-actions" data-aos="fade-up" data-aos-delay="600">
-                        <a href="#acceso" class="login-btn-primary">
-                            <i class="bi bi-play-circle"></i>Acceder al sistema
-                        </a>
-                        <a href="#modulos" class="login-btn-outline">
-                            <i class="bi bi-grid-3x3-gap"></i>Ver módulos
-                        </a>
+            <div class="row align-items-start g-5">
+                <!-- Columna izquierda: título, descripción y video -->
+                <div class="col-lg-6 d-flex justify-content-center align-items-center text-start">
+                    <div class="hero-content" data-aos="fade-right" data-aos-duration="1000" style="max-width: 600px; width: 100%;">
+                        <div class="hero-title-container">
+                            <img src="@cdn/img_snier/login/logo_snier.png" alt="SNIER Logo" class="hero-logo"
+                                data-aos="zoom-in" data-aos-delay="100">
+                            <h1 class="hero-title text-white" data-aos="fade-up" data-aos-delay="200">
+                                Sistema Nacional de
+                                <span class="text-gradient">Información Energética</span>
+                            </h1>
+                        </div>
+
+                        <p class="hero-description" data-aos="fade-up" data-aos-delay="400">
+                            Plataforma oficial para integrar, analizar y transparentar toda la información
+                            energética de México con tecnología de vanguardia
+                        </p>
+
+                        <div class="hero-actions" data-aos="fade-up" data-aos-delay="600">
+                            <a href="#inicio" class="login-btn-primary">
+                                <i class="bi bi-play-circle"></i>Acceder al sistema
+                            </a>
+                            <a href="#modulos" class="login-btn-outline">
+                                <i class="bi bi-grid-3x3-gap"></i>Ver módulos
+                            </a>
+                        </div>
+
+                        <!-- Video debajo, alineado con el texto -->
+                        <div class="login-video-container mt-4" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+                            <video class="login-video w-100 rounded shadow" controls autoplay muted loop
+                                poster="@cdn/img_snier/login/logo_snier.png" preload="auto">
+                                <source src="https://cdn.sassoapps.com/video/SNIER%202025.mp4" type="video/mp4">
+                                <p>Tu navegador no soporta videos HTML5.
+                                    <a href="https://cdn.sassoapps.com/video/SNIER%202025.mp4">Descarga el video</a>.
+                                </p>
+                            </video>
+                            <div class="login-video-description mt-2">
+                                <small class="text-shadow">
+                                    <i class="bi bi-camera-video me-2"></i>
+                                    <strong>Sistema Nacional de Información Energética</strong>
+                                    <span class="mx-2">•</span>
+                                    <em>Video Oficial 2025</em>
+                                    <span class="mx-2">•</span>
+                                    <span class="badge bg-success">HD</span>
+                                </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
-                    <div class="login-video-container">
-                        <video class="login-video" controls autoplay muted loop
-                            poster="@cdn/img_snier/login/logo_snier.png" preload="auto">
-                            <source src="https://cdn.sassoapps.com/video/SNIER%202025.mp4" type="video/mp4">
-                            <p>Tu navegador no soporta videos HTML5.
-                                <a href="https://cdn.sassoapps.com/video/SNIER%202025.mp4">Descarga el
-                                    video</a>.
-                            </p>
-                        </video>
-                        <div class="login-video-description">
-                            <small class="text-shadow">
-                                <i class="bi bi-camera-video me-2"></i>
-                                <strong>Sistema Nacional de Información Energética</strong>
-                                <span class="mx-2">•</span>
-                                <em>Video Oficial 2025</em>
-                                <span class="mx-2">•</span>
-                                <span class="badge bg-success">HD</span>
-                            </small>
+
+                <!-- Columna derecha: espacio disponible para tu nuevo contenido -->
+                <div class="col-lg-6 d-flex flex-column justify-content-center align-items-center"
+                    data-aos="fade-left" data-aos-duration="1000" data-aos-delay="400">
+                    <div class="row justify-content-center w-100">
+                        <div class="col-lg-8 text-center mb-5" data-aos="fade-down">
+                            <h2 class="text-white mb-3">Accede al SNIER</h2>
+                            <p class="lead text-white-50">Plataforma oficial del Sistema Nacional de Información Energética</p>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center w-100">
+                        <div class="col-lg-10 col-xl-8" data-aos="fade-right">
+                            <div class="login-card p-4 p-md-5 mb-4 mb-lg-0 w-100">
+                                <div class="text-center mb-4">
+                                    <img src="@cdn/img_snier/login/logo_snier.png" class="img-fluid mb-3"
+                                        style="max-width: 120px;" alt="SNIER Logo">
+                                    <h4 class="fw-bold text-primary">Accede al SNIER</h4>
+                                    <p class="text-muted">Selecciona tu tipo de acceso al sistema</p>
+                                </div>
+
+                                <!-- 🔹 Sección de acceso rápido -->
+                                <div class="text-center mb-4">
+                                    <h6 class="text-muted mb-3">Accede por:</h6>
+
+                                    <div class="d-flex justify-content-center flex-wrap gap-2">
+                                        <form asp-controller="Acceso" asp-action="LoginGoogle" method="post">
+                                            <button type="submit" class="btn btn-outline-danger btn-login">
+                                                <i class="bi bi-google me-1"></i> Google
+                                            </button>
+                                        </form>
+
+                                        <form asp-controller="Acceso" asp-action="LoginFacebook" method="post">
+                                            <button type="submit" class="btn btn-outline-facebook btn-login">
+                                                <i class="bi bi-facebook me-1"></i> Facebook
+                                            </button>
+                                        </form>
+
+                                        <button type="button" class="btn btn-outline-success btn-login" id="btnPublico">
+                                            <i class="bi bi-globe me-1"></i> Consulta Pública
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <style>
+                                .btn-login {
+                                    min-width: 140px; /* Ajusta el ancho base de los botones */
+                                    font-size: 0.95rem;
+                                    padding: 8px 16px;
+                                    border-radius: 10px;
+                                    transition: all 0.2s ease-in-out;
+                                }
+
+                                .btn-login i {
+                                    font-size: 1rem;
+                                }
+
+                                /* Sutil efecto al pasar el mouse */
+                                .btn-login:hover {
+                                    transform: translateY(-2px);
+                                }
+                                </style>
+
+                                <!-- 🔹 Separador visual -->
+                                <div class="text-center my-4">
+                                    <span class="text-muted" style="font-size: 0.9rem;">
+                                        — o bien —
+                                    </span>
+                                </div>
+
+                                <!-- 🔹 Sección de login tradicional -->
+                                <h6 class="text-muted text-center mb-3">¿Ya tienes cuenta? Ingresa:</h6>
+
+                                <form id="loginForm" action="@Url.Action("Login", "Acceso")" method="post" class="mt-3">
+
+                                    <!-- Campos para usuario registrado -->
+                                    <div id="camposRegistradoLogin">
+                                        <div class="login-form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                                <input type="text" class="form-control" id="Correo" name="Correo"
+                                                    placeholder="Correo electrónico o RFC" />
+                                            </div>
+                                        </div>
+
+                                        <div class="login-form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                                <input type="password" class="form-control" id="claveInput" name="Clave"
+                                                    placeholder="Contraseña" />
+                                                <span class="input-group-text" onclick="togglePassword()" style="cursor: pointer;">
+                                                    <i class="bi bi-eye-fill" id="iconoClave"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Información para consulta pública -->
+                                    <div id="infoPublica" style="display: none;">
+                                        <div class="login-alert login-alert-info text-center">
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            <strong>Acceso Público</strong><br />
+                                            Podrás consultar información general sin necesidad de registro.
+                                            <br><small class="text-muted mt-2 d-block">
+                                                Algunas funciones avanzadas requieren registro de usuario.
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    @if (ViewData["Mensaje"] != null)
+                                    {
+                                        <div class="login-alert login-alert-danger text-center">
+                                            <i class="bi bi-exclamation-circle me-2"></i>@ViewData["Mensaje"]
+                                        </div>
+                                    }
+
+                                    <div class="d-grid mb-3">
+                                        <button type="submit" id="btnAcceso" class="login-btn-primary">
+                                            <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar sesión
+                                        </button>
+                                    </div>
+
+                                    <div class="text-center" id="enlacesAdicionalesLogin">
+                                        <small>
+                                            <a href="@Url.Action("ForgotPassword", "Acceso")" class="me-2">
+                                                <i class="bi bi-key me-1"></i>¿Olvidaste tu contraseña?
+                                            </a>
+                                            <span class="text-muted">|</span>
+                                            <a href="@Url.Action("Registro", "Acceso")" class="ms-2">
+                                                <i class="bi bi-person-plus me-1"></i>¿No tienes cuenta? Regístrate
+                                            </a>
+                                        </small>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <script>
+    document.getElementById("btnPublico").addEventListener("click", function() {
+        // Redirigir directamente a la acción AccesoPublico
+        window.location.href = "@Url.Action("AccesoComoInvitado", "Acceso")";
+    });
+    </script>
+
+    <style>
+    #camposRegistrado, #enlacesAdicionales {
+    display: block !important;
+    }
+    </style>
+
 
     <!-- Stats Section -->
     <section class="stats-section">
@@ -841,111 +1015,163 @@
         </div>
     </section>
 
-    <!-- Login Section -->
-    <section class="form-section" id="acceso">
+    <section class="form-section" id="registro">
         <video autoplay muted loop id="video-bg">
             <source src="https://cdn.sassoapps.com/video/SNIER%202025.mp4" type="video/mp4">
         </video>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center mb-5" data-aos="fade-down">
-                    <h2 class="text-white mb-3">Accede al SNIER</h2>
-                    <p class="lead text-white-50">Plataforma oficial del Sistema Nacional de Información Energética</p>
-                </div>
-            </div>
 
-            <div class="row justify-content-center">
-                <div class="col-lg-5" data-aos="fade-right">
-                    <div class="login-card p-4 p-md-5 mb-4 mb-lg-0">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                
+                <!-- Columna izquierda: Formulario de registro -->
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="form-container p-4 p-md-5 bg-white rounded shadow">
                         <div class="text-center mb-4">
-                            <img src="@cdn/img_snier/login/logo_snier.png" class="img-fluid mb-3"
-                                style="max-width: 120px;" alt="SNIER Logo">
-                            <h4 class="fw-bold text-primary">Accede al SNIER</h4>
-                            <p class="text-muted">Selecciona tu tipo de acceso al sistema</p>
+                            <img src="@cdn/img_snier/login/logo_snier.png" alt="SNIER" class="brand-logo mb-3" style="max-width: 120px;">
+                            <h2 class="fw-bold text-primary">Registro de Usuario</h2>
+                            <p class="text-muted">Completa los siguientes pasos para crear tu cuenta</p>
                         </div>
 
-                        <form id="loginForm" action="@Url.Action("Login", "Acceso")" method="post" class="mt-4">
-                            <div class="login-form-group">
-                                <label for="tipoAcceso" class="form-label">
-                                    <i class="bi bi-person-badge me-2"></i>Selecciona tu tipo de acceso:
-                                </label>
-                                <select class="form-select" id="tipoAcceso" name="tipoAcceso" required onchange="handleAccessTypeChange()">
-                                    <option value="">-- Selecciona un tipo de acceso --</option>
-                                    <option value="publico">Consulta Pública (Sin registro)</option>
-                                    <option value="registrado">Usuario Registrado</option>
-                                </select>
-                            </div>
-
-                            <!-- Campos para usuario registrado (ocultos inicialmente) -->
-                            <div id="camposRegistrado" style="display: none;">
-                                <div class="login-form-group">
+                        <!-- Aquí va TODO el contenido de tu formulario de registro por pasos -->
+                        <form id="registroForm">
+                            <!-- Paso 1 -->
+                            <div id="paso1">
+                                <p class="step-title">Paso 1: Cargar Constancia de Situación Fiscal</p>
+                                <div class="mb-3">
+                                    <label for="constanciaFile" class="form-label">Constancia Fiscal (PDF)</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                        <input type="text" class="form-control" id="Correo" name="Correo"
-                                            placeholder="Correo electrónico o RFC" />
+                                        <span class="input-group-text"><i class="bi bi-file-earmark-pdf"></i></span>
+                                        <input type="file" id="constanciaFile" class="form-control" accept=".pdf" required>
+                                    </div>
+                                    <small class="text-muted">Tamaño máximo: 5MB</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="barra-carga">
+                                        <div class="progreso" id="barraProgreso"></div>
+                                    </div>
+                                    <small id="uploadStatus" class="text-muted">Esperando archivo...</small>
+                                </div>
+
+                                <div id="datosFiscales" class="alert alert-info mt-3 oculto">
+                                    <h6 class="fw-bold mb-3"><i class="bi bi-check-circle-fill me-2"></i>Datos fiscales reconocidos
+                                    </h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><strong>RFC:</strong> SACJ820506BC5</p>
+                                            <p class="mb-1"><strong>CURP:</strong> SACJ820506HDFSLV02</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><strong>Nombre:</strong> Javier Sasso Celaya</p>
+                                            <p class="mb-1"><strong>Régimen:</strong> Sueldos y Salarios</p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="login-form-group">
+                                <div class="d-grid mt-4">
+                                    <button type="button" id="btnPaso1" class="btn btn-primary">
+                                        Continuar <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Paso 2 -->
+                            <div id="paso2" class="oculto">
+                                <p class="step-title">Paso 2: Subir Certificados</p>
+
+                                <div class="mb-3">
+                                    <label for="certCer" class="form-label">Certificado (.cer)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-file-earmark-binary"></i></span>
+                                        <input type="file" id="certCer" class="form-control" accept=".cer" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="certKey" class="form-label">Llave Privada (.key)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                        <input type="file" id="certKey" class="form-control" accept=".key" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="certPass" class="form-label">Contraseña del Certificado</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                        <input type="password" id="certPass" class="form-control"
+                                            placeholder="Ingresa la contraseña" required>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between mt-4">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="volverPaso(1)">
+                                        <i class="bi bi-arrow-left me-2"></i>Regresar
+                                    </button>
+                                    <button type="button" id="btnPaso2" class="btn btn-primary">
+                                        Siguiente <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Paso 3 -->
+                            <div id="paso3" class="oculto">
+                                <p class="step-title">Paso 3: Datos de Contacto</p>
+
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Correo electrónico</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                        <input type="email" id="email" class="form-control" placeholder="ejemplo@correo.com"
+                                            required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="telefono" class="form-label">Teléfono</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">+52</span>
+                                        <input type="tel" id="telefono" class="form-control" placeholder="55 1234 5678" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="pass" class="form-label">Contraseña</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                        <input type="password" id="pass" class="form-control"
+                                            placeholder="Crea una contraseña segura" required>
+                                    </div>
+                                    <div class="form-text">Mínimo 8 caracteres, incluyendo mayúsculas, números y símbolos</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="confPass" class="form-label">Confirmar Contraseña</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                                        <input type="password" class="form-control" id="claveInput" name="Clave"
-                                            placeholder="Contraseña" />
-                                        <span class="input-group-text" onclick="togglePassword()"
-                                            style="cursor: pointer;">
-                                            <i class="bi bi-eye-fill" id="iconoClave"></i>
-                                        </span>
+                                        <input type="password" id="confPass" class="form-control" placeholder="Repite tu contraseña"
+                                            required>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Información para consulta pública (oculta inicialmente) -->
-                            <div id="infoPublica" style="display: none;">
-                                <div class="login-alert login-alert-info text-center">
-                                    <i class="bi bi-info-circle me-2"></i>
-                                    <strong>Acceso Público</strong><br />
-                                    Podrás consultar información general sin necesidad de registro.
-                                    <br><small class="text-muted mt-2 d-block">
-                                        Algunas funciones avanzadas requieren registro de usuario.
-                                    </small>
+                                <div class="d-flex justify-content-between mt-4">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="volverPaso(2)">
+                                        <i class="bi bi-arrow-left me-2"></i>Regresar
+                                    </button>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-check-circle me-2"></i>Finalizar Registro
+                                    </button>
                                 </div>
                             </div>
-
-                            @if (ViewData["Mensaje"] != null)
-                            {
-                                <div class="login-alert login-alert-danger text-center">
-                                    <i class="bi bi-exclamation-circle me-2"></i>@ViewData["Mensaje"]
-                                </div>
-                            }
-
-                            <div class="d-grid mb-3">
-                                <button type="submit" id="btnAcceso" class="login-btn-primary" disabled>
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>
-                                    <span id="textoBoton">Selecciona tipo de acceso</span>
-                                </button>
-                            </div>
-
-                            <div class="text-center" id="enlacesAdicionales" style="display: none;">
-                                <small>
-                                    <a href="@Url.Action("ForgotPassword", "Acceso")" class="me-2">
-                                        <i class="bi bi-key me-1"></i>¿Olvidaste tu contraseña?
-                                    </a>
-                                    <span class="text-muted">|</span>
-                                    <a href="@Url.Action("Registro", "Acceso")" class="ms-2">
-                                        <i class="bi bi-person-plus me-1"></i>¿No tienes cuenta? Regístrate
-                                    </a>
-                                </small>
-                            </div>
-                            <br />
                         </form>
-                        <!-- Aquí van los accesos externos -->
-                        <div class="text-center mt-3" id="botonSocial" style="display: none;">
-                            <p class="text-muted mb-2">O accede con</p>
+                        <div class="text-center mt-4">
+                            <p class="text-muted">O regístrate con</p>
                             <form asp-controller="Acceso" asp-action="LoginGoogle" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-outline-danger me-2">
                                     <i class="bi bi-google me-1"></i> Google
                                 </button>
                             </form>
+
                             <form asp-controller="Acceso" asp-action="LoginFacebook" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-outline-facebook">
                                     <i class="bi bi-facebook me-1"></i> Facebook
@@ -955,33 +1181,26 @@
                     </div>
                 </div>
 
+                <!-- Columna derecha: Información e invitación -->
                 <div class="col-lg-5" data-aos="fade-left">
                     <div class="p-4 p-md-5 text-white">
                         <h4 class="fw-bold mb-4 text-white">¿Primera vez en el SNIER?</h4>
                         <p class="mb-4 text-white">Regístrate para acceder a todas las funcionalidades del sistema:</p>
 
                         <ul class="list-unstyled mb-5">
-                            <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> Acceso completo a
-                                todos los módulos</li>
-                            <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> Descarga de
-                                reportes personalizados</li>
-                            <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> Alertas y
-                                notificaciones personalizadas</li>
-                            <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> Herramientas
-                                avanzadas de análisis</li>
-                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Soporte técnico prioritario
-                            </li>
+                            <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> Acceso completo a todos los módulos</li>
+                            <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> Descarga de reportes personalizados</li>
+                            <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> Alertas y notificaciones personalizadas</li>
+                            <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> Herramientas avanzadas de análisis</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i> Soporte técnico prioritario</li>
                         </ul>
 
                         <div class="bg-white p-4 rounded text-dark">
                             <h5 class="fw-bold mb-3">¿Eres una institución?</h5>
-                            <p class="mb-3">Solicita una cuenta institucional con privilegios especiales para carga de
-                                datos.</p>
+                            <p class="mb-3">Solicita una cuenta institucional con privilegios especiales para carga de datos.</p>
                             <a href="@Url.Action("Registro", "Acceso")" class="btn btn-primary">Regístrate</a>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -1303,8 +1522,94 @@
         });
     </script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
 
+        AOS.init();
+
+        // Función para volver a pasos anteriores
+        function volverPaso(paso) {
+            $('[id^="paso"]').addClass('oculto');
+            $(`#paso${paso}`).removeClass('oculto');
+        }
+
+        // Validación de archivo PDF
+        $('#constanciaFile').on('change', function () {
+            const file = this.files[0];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            if (!file) {
+                $('#uploadStatus').text('Esperando archivo...').removeClass('text-success text-danger');
+                return;
+            }
+
+            if (file.type !== 'application/pdf') {
+                $('#uploadStatus').text('Error: El archivo debe ser PDF').addClass('text-danger');
+                return;
+            }
+
+            if (file.size > maxSize) {
+                $('#uploadStatus').text('Error: El archivo excede 5MB').addClass('text-danger');
+                return;
+            }
+
+            // Simular carga
+            $('#uploadStatus').text('Cargando archivo...').removeClass('text-danger');
+            $('#barraProgreso').css('width', '0%');
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                $('#barraProgreso').css('width', `${progress}%`);
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    $('#uploadStatus').text('Archivo cargado correctamente').addClass('text-success');
+                    $('#datosFiscales').removeClass('oculto');
+                }
+            }, 100);
+        });
+
+        // Navegación entre pasos
+        $('#btnPaso1').click(function () {
+            if (!$('#datosFiscales').hasClass('oculto')) {
+                $('#paso1').addClass('oculto');
+                $('#paso2').removeClass('oculto');
+            } else {
+                alert('Por favor, carga correctamente tu Constancia de Situación Fiscal antes de continuar.');
+            }
+        });
+
+        $('#btnPaso2').click(function () {
+            if ($('#certCer').val() && $('#certKey').val() && $('#certPass').val()) {
+                $('#paso2').addClass('oculto');
+                $('#paso3').removeClass('oculto');
+            } else {
+                alert('Por favor, completa todos los campos del certificado antes de continuar.');
+            }
+        });
+
+        // Validación del formulario final
+        $('#registroForm').submit(function (e) {
+            e.preventDefault();
+
+            // Validar contraseñas coincidan
+            if ($('#pass').val() !== $('#confPass').val()) {
+                alert('Las contraseñas no coinciden. Por favor verifica.');
+                return;
+            }
+
+            // Validar fortaleza de contraseña
+            const password = $('#pass').val();
+            if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
+                alert('La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, números y símbolos.');
+                return;
+            }
+
+            // Mostrar modal de éxito
+            $('#modalExito').modal('show');
+        });
     </script>
 
 
