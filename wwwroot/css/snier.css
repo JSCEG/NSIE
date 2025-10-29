@@ -1119,6 +1119,52 @@ footer .small {
 }
 
 
+/* html, body {
+    height: 100%;
+    margin: 0;
+} */
+
+/* .wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ocupa toda la altura de la ventana 
+} */
+
+/* main.flex-fill {
+    flex: 1; /* Empuja el footer hacia abajo 
+}
+
+footer.footer-snier {
+    background: linear-gradient(to right, #022336, #0b8aae);
+    position: relative;
+    width: 100%;
+} */
+
+/* Footer alineado con sidebar pero sin ocupar toda la altura */
+.footer-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    max-width: calc(100% - 250px);
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+/* Cuando el sidebar está colapsado */
+body.sidebar-collapsed .footer-content {
+    margin-left: 0px;
+    width: calc(100% - 0px);
+    max-width: calc(100% - 0px);
+}
+
+/* En pantallas pequeñas (donde el sidebar normalmente desaparece) */
+@media (max-width: 991px) {
+    .footer-content {
+        margin-left: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+
 /* Leyendas */
 
 /* Leyenda */

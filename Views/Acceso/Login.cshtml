@@ -133,7 +133,7 @@
         <div class="container-fluid px-4">
             <div class="row align-items-start g-5">
                 <!-- Columna izquierda: título, descripción y video -->
-                <div class="col-lg-6 d-flex justify-content-center align-items-center text-start">
+                <div class="col-lg-6 d-flex justify-content-center align-items-center text-start order-2 order-lg-1">
                     <div class="hero-content" data-aos="fade-right" data-aos-duration="1000" style="max-width: 600px; width: 100%;">
                         <div class="hero-title-container">
                             <img src="@cdn/img_snier/login/logo_snier.png" alt="SNIER Logo" class="hero-logo"
@@ -150,8 +150,8 @@
                         </p>
 
                         <div class="hero-actions" data-aos="fade-up" data-aos-delay="600">
-                            <a href="#inicio" class="login-btn-primary">
-                                <i class="bi bi-play-circle"></i>Acceder al sistema
+                            <a href="#registro" class="login-btn-primary">
+                                <i class="bi bi-play-circle"></i>Regístrate en el sistema
                             </a>
                             <a href="#modulos" class="login-btn-outline">
                                 <i class="bi bi-grid-3x3-gap"></i>Ver módulos
@@ -182,7 +182,7 @@
                 </div>
 
                 <!-- Columna derecha: espacio disponible para tu nuevo contenido -->
-                <div class="col-lg-6 d-flex flex-column justify-content-center align-items-center"
+                <div class="col-lg-6 d-flex flex-column justify-content-center align-items-center order-1 order-lg-2"
                     data-aos="fade-left" data-aos-duration="1000" data-aos-delay="400">
                     <div class="row justify-content-center w-100">
                         <div class="col-lg-8 text-center mb-5" data-aos="fade-down">
@@ -307,7 +307,7 @@
                                                 <i class="bi bi-key me-1"></i>¿Olvidaste tu contraseña?
                                             </a>
                                             <span class="text-muted">|</span>
-                                            <a href="@Url.Action("Registro", "Acceso")" class="ms-2">
+                                            <a href="#registro" class="ms-2">
                                                 <i class="bi bi-person-plus me-1"></i>¿No tienes cuenta? Regístrate
                                             </a>
                                         </small>
@@ -1022,6 +1022,11 @@
 
         <div class="container">
             <div class="row justify-content-center align-items-center">
+
+                <div class="text-center mb-5" data-aos="fade-down">
+                    <h2 class="fw-bold mb-3 text-white">¿Listo para explorar el sector energético mexicano?</h2>
+                    <p class="lead text-white">Regístrate hoy mismo y accede a la información más completa del sector energético nacional.</p>
+                </div>
                 
                 <!-- Columna izquierda: Formulario de registro -->
                 <div class="col-lg-6" data-aos="fade-right">
@@ -1272,22 +1277,6 @@
                     <div class="text-center mt-5">
                         <a href="#" class="btn btn-outline-primary">Ver todas las preguntas</a>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section" id="cta-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8" data-aos="zoom-in">
-                    <h2 class="fw-bold mb-4 text-white">¿Listo para explorar el sector energético mexicano?</h2>
-                    <p class="lead mb-5 text-white">Regístrate hoy mismo y accede a la información más completa del
-                        sector
-                        energético nacional.</p>
-                    <a href="#acceso" class="btn btn-light btn-lg me-3">Registrarse ahora</a>
-                    <a href="#" class="btn btn-outline-light btn-lg">Documentación técnica</a>
                 </div>
             </div>
         </div>

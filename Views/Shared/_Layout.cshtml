@@ -190,6 +190,7 @@
 </head>
 
 <body>
+<div class="wrapper d-flex">
     <!-- Header -->
     <header class="header-custom navbar navbar-expand-lg navbar-light fixed-top>
         <div class="container-fluid px-3">
@@ -560,7 +561,7 @@
 
 
     <!-- CONTENIDO PRINCIPAL -->
-    <main class="main-content content">
+    <main class="main-content content flex-fill">
         <div id="page-preloader" style="display:flex;">
             <div class="spinner"></div>
             <img src="@Cdn.Url/img_snier/login/logo_snier.png" alt="Logo de la empresa" class="preloader-logo">
@@ -575,49 +576,51 @@
 
         @RenderBody()
 
-        <!-- Footer -->
-        <footer class="footer-snier text-white pt-4 pb-0" style="background: linear-gradient(to right, #022336, #0b8aae); position: relative;">
-            <div class="container-fluid px-5">
-                <div class="row">
-                    <div class="col-md-4 mb-4">
-                        <img src="@Cdn.Url/img_snier/vistas/logo_sener_blanco.png" alt="Logo SENER" class="mb-2" style="max-height: 60px;">
-                        <p class="small mb-1">Av. Insurgentes Sur 890, Col. Del Valle Centro,<br> Benito Juárez, C.P. 03100, Ciudad de México</p>
-                        <p class="small mb-0">Tel: 55 5000 6000</p>
-                        <p class="small mb-2">&copy; 2025 Secretaría de Energía - Gobierno de México</p>
-                        <p class="small">@await Component.InvokeAsync("Visitas")</p>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <h6 class="fw-bold mb-3 text-white">Enlaces</h6>
-                        <ul class="list-unstyled small">
-                            <li><a href="/Publico/MarcoJuridico" class="footer-link">Marco Jurídico</a></li>
-                            <li><a href="/Publico/Publicaciones" class="footer-link">Publicaciones Oficiales</a></li>
-                            <li><a href="https://www.gob.mx/plataformadetransparencia" target="_blank" class="footer-link">Transparencia</a></li>
-                            <li><a href="/Contacto" class="footer-link">Contacto</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4 mb-4" style="margin-bottom: 100px;">
-                        <h6 class="fw-bold mb-3 text-white">¿Qué es gob.mx?</h6>
-                        <p class="small text-white">Portal único de trámites, información y participación ciudadana.</p>
-                        <ul class="list-unstyled small">
-                            <li><a href="https://datos.gob.mx" target="_blank" class="footer-link">Datos Abiertos</a></li>
-                            <li><a href="#" class="footer-link">Términos y Condiciones</a></li>
-                            <li><a href="#" class="footer-link">Aviso de Privacidad</a></li>
-                        </ul>
-                        <div class="mt-2"style="margin-bottom: 50px;">
-                            <span class="me-2 text-white">Síguenos:</span>
-                            <a href="https://facebook.com/SENERmx" target="_blank" class="footer-social"><i class="bi bi-facebook"></i></a>
-                            <a href="https://x.com/SENER_mx" target="_blank" class="footer-social"><i class="bi bi-twitter-x"></i></a>
-                            <a href="https://instagram.com/sener_mx" target="_blank" class="footer-social"><i class="bi bi-instagram"></i></a>
-                            <a href="https://www.youtube.com/SENERMexico" target="_blank" class="footer-social"><i class="bi bi-youtube"></i></a>
-                        </div>
-                    </div>
-                    <br>
-                    <br>
-                </div>
-            </div>
-            <div class="cinta"></div>
-        </footer>
+        </div>
     </main>
+
+    <!-- Footer -->
+    <footer class="footer-snier text-white pt-4 pb-0  footer-content" style="background: linear-gradient(to right, #022336, #0b8aae); position: relative;">
+        <div class="container-fluid px-5">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <img src="@Cdn.Url/img_snier/vistas/logo_sener_blanco.png" alt="Logo SENER" class="mb-2" style="max-height: 60px;">
+                    <p class="small mb-1">Av. Insurgentes Sur 890, Col. Del Valle Centro,<br> Benito Juárez, C.P. 03100, Ciudad de México</p>
+                    <p class="small mb-0">Tel: 55 5000 6000</p>
+                    <p class="small mb-2">&copy; 2025 Secretaría de Energía - Gobierno de México</p>
+                    <p class="small">@await Component.InvokeAsync("Visitas")</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="fw-bold mb-3 text-white">Enlaces</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="/Publico/MarcoJuridico" class="footer-link">Marco Jurídico</a></li>
+                        <li><a href="/Publico/Publicaciones" class="footer-link">Publicaciones Oficiales</a></li>
+                        <li><a href="https://www.gob.mx/plataformadetransparencia" target="_blank" class="footer-link">Transparencia</a></li>
+                        <li><a href="/Contacto" class="footer-link">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4" style="margin-bottom: 100px;">
+                    <h6 class="fw-bold mb-3 text-white">¿Qué es gob.mx?</h6>
+                    <p class="small text-white">Portal único de trámites, información y participación ciudadana.</p>
+                    <ul class="list-unstyled small">
+                        <li><a href="https://datos.gob.mx" target="_blank" class="footer-link">Datos Abiertos</a></li>
+                        <li><a href="#" class="footer-link">Términos y Condiciones</a></li>
+                        <li><a href="#" class="footer-link">Aviso de Privacidad</a></li>
+                    </ul>
+                    <div class="mt-2"style="margin-bottom: 50px;">
+                        <span class="me-2 text-white">Síguenos:</span>
+                        <a href="https://facebook.com/SENERmx" target="_blank" class="footer-social"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/SENER_mx" target="_blank" class="footer-social"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://instagram.com/sener_mx" target="_blank" class="footer-social"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/SENERMexico" target="_blank" class="footer-social"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+        <div class="cinta"></div>
+    </footer>
 
     <style>
         /* Ajustar el espacio debajo del header fijo */
