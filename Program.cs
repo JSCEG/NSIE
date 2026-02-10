@@ -78,6 +78,7 @@ builder.Services.AddTransient<FacturaExtractorService>();
 builder.Services.AddTransient<IRepositorioInscripcion, RepositorioInscripcion>();
 builder.Services.AddScoped<IRepositorioFinanzas, RepositorioFinanzas>();
 builder.Services.AddScoped<IRepositorioFuentesdeInformacion, RepositorioFuentesdeInformacion>();
+builder.Services.AddTransient<IRepositorioSIIL, RepositorioSIIL>();
 
 
 builder.Services.AddTransient<IUserStore<UsuarioApp>, UsuarioStore>();

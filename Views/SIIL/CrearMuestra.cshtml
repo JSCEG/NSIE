@@ -1,0 +1,470 @@
+@model NSIE.Models.RegistroMuestra
+@using NSIE.Models
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Registro de Muestra - Formulario 1";
+    var pronosticos = ViewBag.PronosticosPozos as List<PronosticoPozo> ?? new List<PronosticoPozo>();
+    var header = new HeaderViewModel
+    {
+        Title = "SIIL - Registro de Muestra",
+        IconPath = "siil.png",
+        Description = "Formulario 1: Captura operativa de muestras",
+        Section = "SIIL",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "Registro",
+            description = "Captura y trazabilidad de muestras",
+            functionality = "Registro operativo de muestras con ID único",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "flask", text = "Operadores de Campo: Registro de muestras" }
+            }
+        })
+    };
+}
+
+<div class="container-fluid siil-form">
+    @await Html.PartialAsync("_ViewHeader", header)
+
+    <div class="container py-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+                <div class="siil-title">
+                    <div class="siil-title__icon">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <div>
+                        <h2 class="mb-1">Registro de Muestra</h2>
+                        <div class="text-muted small">Formulario 1: Geología</div>
+                    </div>
+                </div>
+
+                <div class="alert siil-alert" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Instrucción SNIEr:</strong> Todos los campos son obligatorios para garantizar la integridad
+                    de
+                    la base de datos nacional.
+                </div>
+
+                @using (Html.BeginForm("CrearMuestra", "SIIL", FormMethod.Post, new
+                {
+                    @class = "needs-validation",
+                    id =
+                                                "formMuestra"
+                }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <!-- SECCIÓN A: DATOS GENERALES Y FUENTE -->
+                    <div class="card siil-card mb-4">
+                        <div class="card-header siil-card__header">
+                            <h5 class="mb-0">1. Definición del Recurso</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Fuente (Tipo) <span
+                                        class="text-danger">*</span></label>
+                                        <select asp-for="Fuente" class="form-select form-select-lg" id="ddlFuente"
+                                                onchange="actualizarFormulario()" required>
+                                            <option value="">Seleccione...</option>
+                                            <option value="Arcilla">Arcilla (Clays)</option>
+                                            <option value="Salmuera">Salmuera (Brines)</option>
+                                        </select>
+                                        <span asp-validation-for="Fuente" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Origen <span class="text-danger">*</span></label>
+                                        <select asp-for="Origen" class="form-select form-select-lg" id="ddlOrigen"
+                                                onchange="actualizarFormulario()" required>
+                                            <option value="">Seleccione...</option>
+                                            <option value="Prospectiva">Prospectiva (Superficie)</option>
+                                            <option value="Barrenación">Barrenación (Testigo)</option>
+                                        </select>
+                                        <span asp-validation-for="Origen" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- SECCIÓN DATOS GENERALES -->
+                                <div class="row g-3 mt-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">ID Proyecto</label>
+                                        <input asp-for="IdProyecto" type="text" class="form-control"
+                                               placeholder="ej. PROY-LITIO-2026" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Institución</label>
+                                        <input asp-for="Institucion" type="text" class="form-control" placeholder="ej. SENER" />
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Responsable del Registro (Nombre)</label>
+                                        <input type="text" class="form-control" value="@ViewData["NombreUsuario"]"
+                                               placeholder="Nombre" readonly />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Responsable del Registro (Email)</label>
+                                        <input asp-for="ResponsableRegistro" type="email" class="form-control"
+                                               placeholder="nombre@@institucion.gob.mx" readonly />
+                                    </div>
+                                </div>
+
+                                <!-- UBICACIÓN -->
+                                <div class="row g-3 mt-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Estado</label>
+                                        <input asp-for="Estado" type="text" class="form-control" placeholder="ej. Sonora" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Municipio</label>
+                                        <input asp-for="Municipio" type="text" class="form-control"
+                                               placeholder="ej. Hermosillo" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Latitud</label>
+                                        <input asp-for="Latitud" type="number" step="0.000001" class="form-control"
+                                               placeholder="29.0729" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label">Longitud</label>
+                                        <input asp-for="Longitud" type="number" step="0.000001" class="form-control"
+                                               placeholder="-110.9559" />
+                                    </div>
+                                </div>
+
+                                <!-- PREVISUALIZACIÓN DEL ID (Requisito de Trazabilidad) -->
+                                <div class="siil-id-preview text-center">
+                                    <div class="text-muted small mb-1">ID ÚNICO PRELIMINAR</div>
+                                    <div class="siil-id-preview__value" id="lblIdPreview">---</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 1: ARCILLAS (Se muestra si Fuente = Arcilla) -->
+                        <div id="panelArcillas" style="display:none;">
+                            <div class="card siil-card mb-4">
+                                <div class="card-header siil-card__header siil-card__header--warning">
+                                    <h5 class="mb-0">2. Caracterización de Roca (Arcillas)</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3 mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Familia de Rocas</label>
+                                            <select asp-for="FamiliaRoca" class="form-select">
+                                                <option value="">Seleccione...</option>
+                                                <option value="Ígneas">Ígneas</option>
+                                                <option value="Sedimentarias">Sedimentarias</option>
+                                                <option value="Metamórficas">Metamórficas</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sub-Panel: Solo si es Barrenación -->
+                                    <div id="subPanelBarrenacion" style="display:none;" class="siil-subpanel">
+                                        <h6 class="text-primary mb-3">
+                                            <i class="bi bi-rulers me-2"></i>Geometría del Testigo
+                                        </h6>
+                                        <div class="row g-3">
+                                            <div class="col-md-3">
+                                                <label class="form-label">Azimut (°)</label>
+                                                <input asp-for="Azimut" type="number" step="0.01" class="form-control"
+                                                       placeholder="0 - 360" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Inclinación (°)</label>
+                                                <input asp-for="Inclinacion" type="number" step="0.01" class="form-control"
+                                                       placeholder="0 - 90" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Largo (m)</label>
+                                                <input asp-for="Largo" type="number" step="0.01" class="form-control"
+                                                       placeholder="metros" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Diámetro (mm)</label>
+                                                <input asp-for="Diametro" type="number" step="0.1" class="form-control"
+                                                       placeholder="milímetros" />
+                                            </div>
+                                        </div>
+                                        <div class="row g-3 mt-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label">RQD (Calidad de Roca)</label>
+                                                <select asp-for="RQD" class="form-select">
+                                                    <option value="">Seleccione...</option>
+                                                    <option value="0%-25%">0%-25% (Muy mala)</option>
+                                                    <option value="25%-50%">25%-50% (Mala)</option>
+                                                    <option value="50%-75%">50%-75% (Regular)</option>
+                                                    <option value="75%-100%">75%-100% (Buena)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 2: SALMUERAS (Se muestra si Fuente = Salmuera) -->
+                        <div id="panelSalmueras" style="display:none;">
+                            <div class="card siil-card mb-4">
+                                <div class="card-header siil-card__header siil-card__header--success">
+                                    <h5 class="mb-0">2. Caracterización Hidroquímica (Salmueras)</h5>
+                                </div>
+                                <div class="card-body">
+                                    <!-- VINCULACIÓN CON PRONÓSTICOS -->
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold">
+                                            <i class="bi bi-link-45deg me-2"></i>
+                                            Pozo Pronosticado (Insumo) - Opcional
+                                        </label>
+                                        <select asp-for="IdPozo_Pronostico_FK" class="form-select">
+                                            <option value="">-- Vincular con Pozo Existente (Opcional) --</option>
+                                            @foreach (var pronostico in pronosticos)
+                                            {
+                                                <option value="@pronostico.IdInterno">
+                                                    @pronostico.Pozo (@pronostico.Campo) - Probabilidad:
+                                                    @pronostico.PosibilidadIntervalo
+                                                </option>
+                                            }
+                                        </select>
+                                        <div class="form-text">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Listado de pozos cargados desde la Interfaz de Pronóstico. Total: @pronosticos.Count
+                                            pozos disponibles.
+                                        </div>
+                                    </div>
+
+                                    <!-- Campos específicos de Salmuera -->
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">pH</label>
+                                            <input asp-for="PH" type="number" step="0.1" min="0" max="14" class="form-control"
+                                                   placeholder="0 - 14" />
+                                            <small class="text-muted">Rango: 0-14</small>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Temperatura (°C)</label>
+                                            <input asp-for="Temperatura" type="number" step="0.1" class="form-control"
+                                                   placeholder="°C" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Conductividad (µS/cm)</label>
+                                            <input asp-for="Conductividad" type="number" step="0.01" class="form-control"
+                                                   placeholder="micro-Siemens/cm" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Profundidad Pozo (m)</label>
+                                            <input asp-for="ProfundidadPozo" type="number" step="0.1" class="form-control"
+                                                   placeholder="metros" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-2">
+                            <button type="submit" class="btn btn-siil-primary btn-lg">
+                                <i class="bi bi-save me-2"></i>Guardar y Generar ID
+                            </button>
+                            <a asp-action="Index" class="btn btn-siil-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Cancelar
+                            </a>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- LÓGICA DE VISUALIZACIÓN (Javascript) -->
+    <script>
+        // Ejecutar al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            actualizarFormulario();
+        });
+
+        function actualizarFormulario() {
+            const ddlFuente = document.getElementById("ddlFuente");
+            const ddlOrigen = document.getElementById("ddlOrigen");
+            const panelArc = document.getElementById("panelArcillas");
+            const panelSal = document.getElementById("panelSalmueras");
+            const subPanelBarr = document.getElementById("subPanelBarrenacion");
+            const lblId = document.getElementById("lblIdPreview");
+
+            if (!ddlFuente || !ddlOrigen || !panelArc || !panelSal || !subPanelBarr || !lblId) {
+                return;
+            }
+
+            const fuente = ddlFuente.value;
+            const origen = ddlOrigen.value;
+
+            // 1. Mostrar/Ocultar Paneles según Diagrama
+            if (fuente === "Arcilla") {
+                panelArc.style.display = "block";
+                panelSal.style.display = "none";
+                // Lógica anidada para Barrenación
+                subPanelBarr.style.display = (origen === "Barrenación") ? "block" : "none";
+            }
+            else if (fuente === "Salmuera") {
+                panelArc.style.display = "none";
+                panelSal.style.display = "block";
+            } else {
+                panelArc.style.display = "none";
+                panelSal.style.display = "none";
+            }
+
+            // 2. Generar Previsualización del ID
+            // Formato: TIPO-ORIGEN-FECHA
+            let codigoFuente = (fuente === "Arcilla") ? "ARC" : (fuente === "Salmuera" ? "SLM" : "???");
+            let codigoOrigen = "";
+
+            if (fuente === "Salmuera") {
+                codigoOrigen = "SLM"; // Regla especial de SIIL
+            } else {
+                codigoOrigen = (origen === "Barrenación") ? "BRR" : "PRS";
+            }
+
+            const ahora = new Date();
+            const año = ahora.getFullYear();
+            const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+            const dia = String(ahora.getDate()).padStart(2, '0');
+            const hora = String(ahora.getHours()).padStart(2, '0');
+            const min = String(ahora.getMinutes()).padStart(2, '0');
+
+            const fechaFormato = `${año}/${mes}/${dia} ${hora}:${min}`;
+            lblId.innerText = `${codigoFuente}-${codigoOrigen}-${fechaFormato}`;
+        }
+    </script>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <style>
+        .form-label {
+            font-weight: 600;
+            color: #5b6472;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            font-size: 0.75rem;
+        }
+
+        .siil-form .form-control,
+        .siil-form .form-select {
+            border-radius: 14px;
+            border: 1px solid #e6edf6;
+            box-shadow: 0 1px 0 rgba(16, 24, 40, 0.02);
+            padding: 0.7rem 0.9rem;
+        }
+
+        .siil-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .siil-title__icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #e9f3ff;
+            color: #2f80ed;
+            display: grid;
+            place-items: center;
+            font-size: 1.1rem;
+        }
+
+        .siil-alert {
+            background: #f4f8ff;
+            border: 1px solid #e3ecff;
+            color: #2b3b53;
+            border-radius: 14px;
+            padding: 0.85rem 1rem;
+        }
+
+        .siil-card {
+            border-radius: 16px;
+            border: 1px solid #ecf1f6;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+        }
+
+        .siil-card__header {
+            background: #f7f9fc;
+            border-bottom: 1px solid #edf2f7;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            color: #2b3b53;
+            font-weight: 600;
+        }
+
+        .siil-card__header--warning {
+            background: #fff7e6;
+            color: #8a5b00;
+        }
+
+        .siil-card__header--success {
+            background: #ecfdf3;
+            color: #1c7c54;
+        }
+
+        .siil-subpanel {
+            background: #f7f9fc;
+            border: 1px dashed #e0e7ff;
+            border-radius: 14px;
+            padding: 1rem;
+        }
+
+        .siil-id-preview {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 16px;
+            background: #f2fceb;
+            border: 1px solid #dff2c6;
+        }
+
+        .siil-id-preview__value {
+            font-weight: 700;
+            color: #62b400;
+            letter-spacing: 0.04em;
+        }
+
+        .btn-siil-primary {
+            background: #77c308;
+            border-color: #77c308;
+            color: #fff;
+            border-radius: 14px;
+            padding: 0.85rem 1rem;
+        }
+
+        .btn-siil-primary:hover {
+            background: #66ad06;
+            border-color: #66ad06;
+            color: #fff;
+        }
+
+        .btn-siil-secondary {
+            border-radius: 14px;
+            border: 1px solid #e6edf6;
+            color: #5b6472;
+            background: #fff;
+            padding: 0.85rem 1rem;
+        }
+
+        .btn-siil-secondary:hover {
+            background: #f7f9fc;
+        }
+
+        .btn-lg {
+            font-size: 1.05rem;
+        }
+
+        .font-monospace {
+            letter-spacing: 0.05em;
+        }
+    </style>
