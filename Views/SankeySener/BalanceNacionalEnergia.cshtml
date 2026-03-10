@@ -1568,7 +1568,7 @@
 <!-- Preloader -->
 <div class="preloader hidden" id="preloader">
     <div class="preloader-content">
-        <img src="img/mujer.png" alt="Cargando" class="preloader-logo">
+        <img src="@Cdn.Url/img_snier/login/logo_snier.png" alt="Cargando" class="preloader-logo">
         <h3>Balance Nacional de Energía</h3>
         <div class="preloader-message" id="preloader-message">Cargando...</div>
         <div class="preloader-progress">
@@ -1933,7 +1933,7 @@
 
 <script type="text/javascript" src="/js/sankey_config.js"></script>
 <script type="text/javascript" src="/js/data_processor.js"></script>
-<script type="text/javascript" src="/js/datos.js"></script>
+<script type="text/javascript" src="/js/datosEnergia.js"></script>
 
 <script>
     // Funciones para controlar el preloader
@@ -1978,6 +1978,17 @@
                 progressBar.style.width = value + '%';
             }
         };
+    }
+
+    function hidePreloader() {
+        const preloader = document.getElementById('preloader');
+        updatePreloaderProgress(100);
+        setTimeout(() => preloader.classList.add('hidden'), 300);
+    }
+
+    function updatePreloaderProgress(percent) {
+        const bar = document.getElementById('preloader-progress-bar');
+        bar.style.width = percent + '%';
     }
 
     // Efecto de hover mejorado para cards
@@ -2063,6 +2074,7 @@
     document.head.appendChild(style);
 
     document.addEventListener('DOMContentLoaded', function () {
+        showPreloader('Procesando datos...');
         initializeGlassEffects();
         initializeModernButtons();
 
@@ -2614,12 +2626,17 @@
         }
 
         function updateChart(year) {
+            showPreloader('Procesando datos...');
+            updatePreloaderProgress(10);
+
             if (!energyData || !energyData.Datos) {
                 console.warn('energyData no está disponible');
                 return;
             }
 
             const processedData = window.dataProcessor.processSankeyData(energyData, year, window.sankeyConfig);
+
+            updatePreloaderProgress(30);
             const { nodes, links } = processedData;
             currentLinks = links; // Guardar los enlaces
             window.currentNodes = nodes; // Guardar los nodos para el conteo de filtros
@@ -2895,7 +2912,25 @@
                     z: 2
                 }]
             };
+            updatePreloaderProgress(60);
             sankeyChart.setOption(option, true);
+            sankeyChart.off('finished');
+            sankeyChart.off('finished');
+            sankeyChart.on('finished', () => {
+
+                updatePreloaderProgress(85);
+
+                const opt = sankeyChart.getOption();
+                if (opt?.series?.[0]?.data?.length) {
+                    createColorLegend();
+                }
+
+                updatePreloaderProgress(100);
+
+                setTimeout(() => {
+                    hidePreloader();
+                }, 200);
+            });
             populateDatalist(nodes);
             sankeyChart.dispatchAction({ type: 'unfocusNodeAdjacency', seriesIndex: 0 });
             focusedNodeIndex = null;
@@ -3700,11 +3735,6 @@
         renderColumnLabels();
         updateLabelOverlayPositions();
 
-        // Crear leyenda de colores después de que el gráfico esté listo
-        setTimeout(() => {
-            createColorLegend();
-        }, 200);
-
         // Función para actualizar el título con el año seleccionado
         function updateTitle(year) {
             const titleElement = document.querySelector('header h1');
@@ -3723,10 +3753,6 @@
             updateTitle(e.target.value); // Actualizar título con el año seleccionado
             searchInput.value = ''; // Clear search input
             document.getElementById('node-details-container').style.display = 'none'; // Hide details table
-            // Actualizar leyenda de colores después de que el gráfico se actualice
-            setTimeout(() => {
-                createColorLegend();
-            }, 100);
         });
 
         document.getElementById('exportar').onclick = function () {

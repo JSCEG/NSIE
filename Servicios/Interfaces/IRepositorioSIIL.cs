@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NSIE.Models;
 
 namespace NSIE.Servicios.Interfaces
 {
@@ -11,6 +12,14 @@ namespace NSIE.Servicios.Interfaces
         Task<bool> Actualizar<T>(string nombreTabla, T objeto) where T : class;
         Task<bool> Eliminar<T>(string nombreTabla, int id) where T : class;
         Task<List<T>> ObtenerPorFiltro<T>(string nombreTabla, string condicion, Dictionary<string, object> parametros) where T : class;
+        
+        //USUARIO Y ROLES
+        Task<UserViewModel> ObtenerUsuarioPorCorreo(string email);
+        Task<UserViewModel> ObtenerRolPorUsuarioId(int id);
+
+        //UBICACIÓN
+        Task<IEnumerable<Estado>> ObtenerTodos();
+        Task<IEnumerable<Municipio>> ObtenerMunicipiosPorEstado(int estadoId);
 
         /// <summary>
         /// Genera el identificador único para Registro_Muestras según la fórmula:

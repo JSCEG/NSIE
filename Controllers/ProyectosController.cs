@@ -157,6 +157,8 @@ namespace NSIE.Controllers
                     string estadoEvaluacion = null;
                     bool esViable = false;
 
+                    var tieneEvaluacionSustentabilidad = System.IO.File.Exists(Path.Combine(carpeta, "Formato_Evaluacion_Sustentabilidad.pdf"));
+
                     string estadoEvaluacionAbierta = null;
                     if (System.IO.File.Exists(Path.Combine(carpeta, "Viable.txt")))
                     {
@@ -181,7 +183,9 @@ namespace NSIE.Controllers
                             TienePropuesta = propuesta,
                             EstadoEvaluacion = estadoEvaluacion,
 
-                            EstadoEvaluacionAbierta = estadoEvaluacionAbierta
+                            EstadoEvaluacionAbierta = estadoEvaluacionAbierta,
+
+                            TieneEvaluacionSustentabilidad = tieneEvaluacionSustentabilidad
                         });
                     }
                 }
@@ -1575,13 +1579,7 @@ namespace NSIE.Controllers
 
         //FORMULARIO
         [HttpPost]
-        public IActionResult GuardarEvaluacion(
-            string carpeta,
-            string comentarios,
-            int calificacionTecnica,
-            List<string> criterios,
-            Dictionary<string, int> calificaciones,
-            IFormFile archivoEvaluacion) 
+        public IActionResult GuardarEvaluacion(string carpeta, IFormFile archivoEvaluacion)
         {
             if (string.IsNullOrEmpty(carpeta))
             {
@@ -1591,35 +1589,61 @@ namespace NSIE.Controllers
 
             var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "documentos", "revision_secretario", carpeta);
             if (!Directory.Exists(ruta))
-            {
                 Directory.CreateDirectory(ruta);
-            }
 
             try
             {
-                // Guardar archivo de referencia del evaluador (si lo subió)
+                var form = Request.Form;
+                var calificaciones = new Dictionary<string, int>();
+                var observaciones = new Dictionary<string, string>();
+
+                // 🔹 Recorremos todos los campos del formulario
+                foreach (var key in form.Keys)
+                {
+                    var valor = form[key];
+
+                    // Solo tomamos los que tienen números (calificaciones)
+                    if (int.TryParse(valor, out int numero))
+                    {
+                        calificaciones[key] = numero;
+                    }
+                    // Tomamos los campos de observaciones (empiezan con "obs_")
+                    else if (key.StartsWith("obs_"))
+                    {
+                        observaciones[key] = valor;
+                    }
+                }
+
+                Console.WriteLine("📋 Calificaciones recibidas:");
+                foreach (var kv in calificaciones)
+                    Console.WriteLine($"{kv.Key}: {kv.Value}");
+
+                Console.WriteLine("📋 Observaciones recibidas:");
+                foreach (var kv in observaciones)
+                    Console.WriteLine($"{kv.Key}: {kv.Value}");
+
+                Console.WriteLine("📄 Archivo: " + (archivoEvaluacion?.FileName ?? "Sin archivo"));
+
+                // 🔹 Guardar archivo adjunto (si existe)
                 if (archivoEvaluacion != null && archivoEvaluacion.Length > 0)
                 {
-                    var rutaArchivo = Path.Combine(ruta, "Archivo_Adjunto.pdf");
+                    var rutaArchivo = Path.Combine(ruta, archivoEvaluacion.FileName);
                     using (var stream = new FileStream(rutaArchivo, FileMode.Create))
                     {
                         archivoEvaluacion.CopyTo(stream);
                     }
                 }
 
-                // Ruta del PDF que generaremos
+                // 🔹 Crear el PDF
                 var rutaPdf = Path.Combine(ruta, "Formato_Evaluacion_Sustentabilidad.pdf");
-
                 using (var writer = new PdfWriter(rutaPdf))
                 using (var pdf = new PdfDocument(writer))
                 using (var doc = new Document(pdf))
                 {
-
-                    // Crear la fuente en negrita
                     PdfFont bold = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
 
                     // Encabezado
-                    doc.Add(new Paragraph("📋 Formato de Evaluación del Proyecto")
+                    doc.Add(new Paragraph("Formato de Evaluación del Proyecto")
                         .SetTextAlignment(TextAlignment.CENTER)
                         .SetFontSize(16)
                         .SetFont(bold));
@@ -1642,46 +1666,42 @@ namespace NSIE.Controllers
 
                     doc.Add(new Paragraph("\n"));
 
-                    // Iterar calificaciones y armar tabla
-                    Table tabla = new Table(new float[] { 3, 6, 2, 4 }).UseAllAvailableWidth();
-                    tabla.AddHeaderCell(new Cell().Add(new Paragraph("Criterio General").SetFont(bold)));
+                    // 🔹 Tabla principal de evaluación
+                    Table tabla = new Table(new float[] { 4, 2, 6 }).UseAllAvailableWidth();
                     tabla.AddHeaderCell(new Cell().Add(new Paragraph("Pregunta").SetFont(bold)));
                     tabla.AddHeaderCell(new Cell().Add(new Paragraph("Calificación").SetFont(bold)));
                     tabla.AddHeaderCell(new Cell().Add(new Paragraph("Observaciones").SetFont(bold)));
 
-                    if (calificaciones != null)
+                    foreach (var kv in calificaciones)
                     {
-                        foreach (var kv in calificaciones)
-                        {
-                            tabla.AddCell(kv.Key.Split("_")[0]);  // Criterio general
-                            tabla.AddCell(kv.Key.Split("_")[1]);  // Pregunta
-                            tabla.AddCell(kv.Value.ToString());   // Calificación
-                            tabla.AddCell(""); // Observaciones vacías de momento
-                        }
+                        tabla.AddCell(kv.Key); // Nombre de la pregunta
+                        tabla.AddCell(kv.Value.ToString()); // Calificación
+
+                        // Buscamos si hay observación relacionada
+                        string obsKey = "obs_" + kv.Key;
+                        observaciones.TryGetValue(obsKey, out string obs);
+                        tabla.AddCell(obs ?? "—");
                     }
 
                     doc.Add(tabla);
 
-                    // Sección final
-                    doc.Add(new Paragraph("\nComentarios generales:")
-                        .SetFont(bold)
-                        .SetFontSize(12));
-                    doc.Add(new Paragraph(comentarios));
+                    // Pie
+                    doc.Add(new Paragraph("\nEvaluación generada automáticamente.")
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFontSize(10));
 
-                    doc.Add(new Paragraph($"\nCalificación técnica: {calificacionTecnica}")
-                        .SetFontSize(12));
-
-                    if (criterios != null && criterios.Any())
-                    {
-                        doc.Add(new Paragraph("\nCriterios seleccionados: " + string.Join(", ", criterios)));
-                    }
+                    doc.Close();
                 }
+
+                var infoArchivo = new FileInfo(rutaPdf);
+                Console.WriteLine($"✅ Archivo generado en: {infoArchivo.FullName} ({infoArchivo.Length} bytes)");
 
                 TempData["MensajeExito"] = "✅ Evaluación guardada en PDF correctamente.";
             }
             catch (Exception ex)
             {
                 TempData["MensajeError"] = $"⚠️ Error al generar PDF: {ex.Message}";
+                Console.WriteLine("❌ Error: " + ex);
             }
 
             return RedirectToAction("FondoPetroleo");

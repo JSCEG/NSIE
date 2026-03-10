@@ -73,39 +73,82 @@
 
     <!-- FILA 2: ACCESOS DIRECTOS (NAVEGACIÓN) -->
     <div class="row gx-5">
-        <!-- Módulo de Operación (Formularios 1, 2, 3) -->
+
+        <!-- Módulo de Operación (Formularios) -->
         <div class="col-md-6 mb-4">
             <div class="card h-100 border-primary">
                 <div class="card-body text-center">
-                    <h3 class="card-title text-primary"><i class="bi bi-pencil-square"></i> Operación Campo</h3>
-                    <p class="card-text text-muted">Gestión de evidencia física y captura de datos.</p>
+
+                    <h3 class="card-title text-primary">
+                        <i class="bi bi-pencil-square"></i> Operación Campo
+                    </h3>
+
+                    <p class="card-text text-muted">
+                        Gestión de evidencia física y captura de datos.
+                    </p>
+
                     <hr>
-                    <a href="@Url.Action("CrearMuestra", "SIIL")" class="btn btn-primary btn-lg w-100 mb-2">
-                        <i class="bi bi-plus-circle"></i> Nuevo Registro de Muestra
+
+                    <!-- PASO 1: BARRENACIÓN -->
+                    <a href="@Url.Action("Barrenacion", "SIIL")"
+                    class="btn btn-success btn-lg w-100 mb-2">
+                        <i class="bi bi-tools"></i> Cuestionario de Barrenación
                     </a>
+
+                    <!-- PASO 2: REGISTRO DE MUESTRA -->
+                    <a href="@Url.Action("CrearNuevaMuestra", "SIIL")"
+                    class="btn btn-outline-secondary btn-lg w-100 mb-2 disabled">
+                        <i class="bi bi-plus-circle"></i> Registro de Muestra
+                    </a>
+
+                    <!-- PASO 3 y 4 -->
                     <div class="d-flex justify-content-between mt-3">
-                        <a href="#" class="btn btn-outline-secondary btn-sm disabled">Formulario 2 (Campo)</a>
-                        <a href="#" class="btn btn-outline-secondary btn-sm disabled">Formulario 3 (Lab)</a>
+
+                        <a href="#"
+                        class="btn btn-outline-secondary btn-sm disabled">
+                            Formulario Campo
+                        </a>
+
+                        <a href="#"
+                        class="btn btn-outline-secondary btn-sm disabled">
+                            Formulario Laboratorio
+                        </a>
+
                     </div>
+
                 </div>
             </div>
         </div>
 
-        <!-- Módulo de Inteligencia (Mapas y Pronósticos) -->
+
+        <!-- Módulo de Inteligencia -->
         <div class="col-md-6 mb-4">
             <div class="card h-100 border-warning">
                 <div class="card-body text-center">
-                    <h3 class="card-title text-warning text-dark"><i class="bi bi-map"></i> Inteligencia (Pronóstico)
+
+                    <h3 class="card-title text-warning text-dark">
+                        <i class="bi bi-map"></i> Inteligencia (Pronóstico)
                     </h3>
-                    <p class="card-text text-muted">Visualización de insumos históricos y mapas de calor.</p>
+
+                    <p class="card-text text-muted">
+                        Visualización de insumos históricos y mapas de calor.
+                    </p>
+
                     <hr>
-                    <a href="#" class="btn btn-outline-dark btn-lg w-100 mb-2 disabled">
+
+                    <a href="#"
+                    class="btn btn-outline-dark btn-lg w-100 mb-2 disabled">
                         <i class="bi bi-geo-alt"></i> Ver Mapa de Calor
                     </a>
-                    <p class="small text-muted mt-2">Fuente de datos: Calculadora Li probable_V4 [Insumo 202502]</p>
+
+                    <p class="small text-muted mt-2">
+                        Fuente de datos: Calculadora Li probable_V4 [Insumo 202502]
+                    </p>
+
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- RESUMEN DE ACTIVIDAD -->

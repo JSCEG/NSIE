@@ -352,6 +352,75 @@ namespace NSIE.Controllers
             return View();
         }
 
+        public async Task<IActionResult> BNE()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> GraficosBNE()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEnergyData()
+        {
+            var rows = await repositorioSankeySener.ObtenerEnergyDataAsync();
+
+            var result = new Dictionary<int, dynamic>();
+
+            foreach (var row in rows)
+            {
+                if (!result.ContainsKey(row.ParentId))
+                {
+                    result[row.ParentId] = new Dictionary<string, object>
+                    {
+                        ["Nodo Padre"] = row.ParentName,
+                        ["Nodos Hijo"] = new Dictionary<int, Dictionary<string, object>>(),
+                        ["descripcion"] = row.ParentDescription,
+                        ["id_padre"] = row.ParentId,
+                        ["color"] = row.ParentColor
+                    };
+                }
+
+                var parent = (Dictionary<string, object>)result[row.ParentId];
+                var hijos = (Dictionary<int, Dictionary<string, object>>)parent["Nodos Hijo"];
+
+                if (!hijos.ContainsKey(row.ChildId))
+                {
+                    hijos[row.ChildId] = new Dictionary<string, object>
+                    {
+                        ["Nodo Hijo"] = row.ChildName,
+                        ["tipo"] = row.Tipo,
+                        ["descripcion"] = row.ChildDescription,
+                        ["id_hijo"] = row.ChildId,
+                        ["color"] = row.ChildColor
+                    };
+                }
+
+                hijos[row.ChildId][row.Year.ToString()] = row.Value;
+            }
+
+            return Json(new
+            {
+                Datos = result.Values.Select(p => new
+                {
+                    NodoPadre = p["Nodo Padre"],
+                    NodosHijo = ((Dictionary<int, Dictionary<string, object>>)p["Nodos Hijo"]).Values,
+                    descripcion = p["descripcion"],
+                    id_padre = p["id_padre"],
+                    color = p["color"]
+                })
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEnergeticColor()
+        {
+            var colors = await repositorioSankeySener.ObtenerColorDataAsync();
+
+            return Json(colors);
+        }
 
     }
 }

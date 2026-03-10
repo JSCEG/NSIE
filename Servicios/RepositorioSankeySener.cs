@@ -29,6 +29,10 @@ namespace NSIE.Servicios
         Task<IEnumerable<NodosTablaTransformacion>> devuelveTablaTransformacion(NodosTablaTransformacion nodosTablaTransformacion);
         Task<IEnumerable<NodosTablaTipos>> devuelveTablaTipos(NodosTablaTipos nodosTablaTipos);
         Task<IEnumerable<NodosTablaUso>> devuelveTablaUso(NodosTablaUso nodosTablaUso);
+
+        //SANKEY ENERGÍA
+        Task<IEnumerable<EnergyFlatDto>> ObtenerEnergyDataAsync();
+        Task<IEnumerable<SankeyColor>> ObtenerColorDataAsync();
     }
 
     //El Select SCOPE IDENTITY devuelve el ID impactado en la BD
@@ -287,6 +291,32 @@ namespace NSIE.Servicios
             return resultado;
         }
 
+        //SANKEY ENERGÍA
+        public async Task<IEnumerable<EnergyFlatDto>> ObtenerEnergyDataAsync()
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                return await connection.QueryAsync<EnergyFlatDto>(
+                    "energy.sp_GetEnergyData",
+                    commandType: CommandType.StoredProcedure
+                );
+            }
+        }
+
+        public async Task<IEnumerable<SankeyColor>> ObtenerColorDataAsync()
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                string query = @"
+                SELECT Nombre, ColorHex FROM SankeyEnergeticColors";
+
+                return await connection.QueryAsync<SankeyColor>(query);
+            }
+        }
 
     }
 

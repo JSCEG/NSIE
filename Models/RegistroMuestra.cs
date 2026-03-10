@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using Dapper.Contrib.Extensions;
+
 namespace NSIE.Models
 {
     /// <summary>
@@ -32,13 +35,17 @@ namespace NSIE.Models
         /// IMPORTANTE: Este ID debe ser único y generado por lógica en C#
         /// No es auto-generado por la BD
         /// </summary>
-        public string IdMuestra { get; set; }
+        public string? IdMuestra { get; set; }
 
         // ============================================================
         // CONTEXTO GENERAL
         // ============================================================
 
         /// <summary>Identificador del proyecto asociado</summary>
+        /// [Required(ErrorMessage = "El ID del Proyecto es obligatorio.")]
+        [RegularExpression(@"^[A-Za-z0-9\-_\/]+$", 
+            ErrorMessage = "Formato inválido en Id Proyecto.")]
+        [StringLength(50)]
         public string IdProyecto { get; set; }
 
         /// <summary>Institución responsable del registro</summary>
@@ -46,6 +53,10 @@ namespace NSIE.Models
 
         /// <summary>Email del responsable del registro</summary>
         public string ResponsableRegistro { get; set; }
+
+        /// <summary>Email del responsable del registro</summary>
+        [Write(false)]
+        public string? NombreResponsableRegistro { get; set; }
 
         /// <summary>Fecha y hora del registro operacional</summary>
         public DateTime FechaRegistro { get; set; }
@@ -55,15 +66,19 @@ namespace NSIE.Models
         // ============================================================
 
         /// <summary>Estado de México donde se ubicó la muestra</summary>
+        [Required(ErrorMessage = "Debe seleccionar un estado.")]
         public string Estado { get; set; }
 
         /// <summary>Municipio donde se ubicó la muestra</summary>
+        [Required(ErrorMessage = "Debe seleccionar un municipio.")]
         public string Municipio { get; set; }
 
         /// <summary>Coordenada de latitud (precisión: 6 decimales = ~0.1 metros)</summary>
+        [Range(14, 33, ErrorMessage = "Latitud fuera de rango válido para México.")]
         public decimal Latitud { get; set; }
 
         /// <summary>Coordenada de longitud (precisión: 6 decimales = ~0.1 metros)</summary>
+        [Range(-118, -86, ErrorMessage = "Longitud fuera de rango válido para México.")]
         public decimal Longitud { get; set; }
 
         // ============================================================
@@ -115,10 +130,10 @@ namespace NSIE.Models
         /// Valores esperados: '0%-25%', '25%-50%', '50%-75%', '75%-100%'
         /// NULL si no aplica (no es Arcilla-Barrenación)
         /// </summary>
-        public string RQD { get; set; }
+        public string? RQD { get; set; }
 
         /// <summary>Familia de roca identificada (ej. Granito, Basalto, etc.). NULL si no aplica</summary>
-        public string FamiliaRoca { get; set; }
+        public string? FamiliaRoca { get; set; }
 
         // ============================================================
         // DATOS CONDICIONALES: SALMUERA - POZO
@@ -169,6 +184,20 @@ namespace NSIE.Models
         // ============================================================
 
         /// <summary>Referencia al pronóstico relacionado (si existe FK)</summary>
-        public PronosticoPozo PronosticoRelacionado { get; set; }
+        [Write(false)]
+        public PronosticoPozo? PronosticoRelacionado { get; set; }
+    }
+
+    public class Municipio
+    {
+        public int MunicipioID { get; set; }
+        public string Municipio_Nombre { get; set; }
+        public int EF_ID { get; set; }
+    }
+
+    public class Estado
+    {
+        public int EF_ID { get; set; }
+        public string EF_Nombre { get; set; }
     }
 }

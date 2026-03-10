@@ -40,6 +40,7 @@ namespace NSIE.Models
         // Roles
         public int Rol_ID { get; set; }//Se uesa en Roles Usuarios
         public string Rol_Nombre { get; set; }
+        public string Rol_Clave { get; set; }
         public bool Rol_Vigente { get; set; }
         public DateTime Rol_FechaMod { get; set; }
         public string Rol_Comentario { get; set; }

@@ -22,7 +22,7 @@
 
 
                 <div class="groupgris" style="margin-top: -22px">
-                    <h5>Recursos de Energía Fósil</h5>
+                    <h5 style="font-size: 0.55rem;">Recursos de Energía Fósil</h5>
                     <a class="btn-d-griso  d-flex align-items-center" title="Ver Mapa de Reservas de Petróleo" asp-area="" asp-controller="Map" asp-action="Reserva_de_Crudo">
                         <img src="@Cdn.Url/img_snier/vistas/petroleoi.png" alt="Icono personalizado" class="iconoboton" style="padding-right:5px">
 
@@ -55,7 +55,7 @@
                 </div>
                 <p></p>
                 <div class="groupverde">
-                    <h5 >Recursos de Energía Renovable</h5>
+                    <h5 style="font-size: 0.45rem;">Recursos de Energía Renovable</h5>
                     <a class="btn-d-gris  d-flex align-items-center" title="Ver Mapa de Yacimientos Geotérmicos" asp-area="" asp-controller="Map" asp-action="Yacimientos_Geotermicos">
                         <img src="@Cdn.Url/img_snier/vistas/geotermiai.png" alt="Icono personalizado" class="iconoboton" style="padding-right:5px">
 
@@ -88,7 +88,7 @@
                     </a>
                 </div>
                 <h5 class="pt-3">Suministro Natural</h5>
-                <h5 class="pt-3">FEP: Fuentes de Energía Primaria Natural</h5>
+                <h5 class="pt-3" style="font-size: 0.52rem;">FEP: Fuentes de Energía Primaria Natural</h5>
             </div>
 
             <div class="column">
@@ -101,7 +101,7 @@
                     <img src="@Cdn.Url/img_snier/vistas/refineria.png" alt="Icono personalizado" class="iconoimg">
                     <a class="btn btn-d-sectores" title="Click para Ver Mapa del Sector Petróleo y Gas" asp-area="" asp-controller="Home" asp-action="Hidrocarburos">
 
-                        <span>SECTOR PETRÓLEO Y GAS</span>
+                        <span style="font-size: 0.68rem;">SECTOR PETRÓLEO Y GAS</span>
                     </a>
                     <div>
                         <img src="@Cdn.Url/img_snier/vistas/pemex.png" alt="Icono personalizado" class="iconoimg2">
@@ -114,12 +114,12 @@
 
                         <span>SECTOR ELÉCTRICO</span>
                     </a>
-                    <div class="row">
-                        <div class="col-md-3">
-
+                    <div class="row" style="margin-left: 23px;">
+                        <div class="col-md-3 d-flex flex-column justify-content-between align-items-center" style="height: 100%;">
                             <img src="@Cdn.Url/img_snier/vistas/cfei.png" alt="Icono personalizado" class="iconoimg2">
                             <img src="@Cdn.Url/img_snier/vistas/casas.png" alt="Icono personalizado" class="iconoimg2">
                         </div>
+
                         <div class="col-md-9">
                             <ul>
                                 <li>CFE</li>
@@ -127,10 +127,8 @@
                                 <li>Generadores</li>
                                 <li>Autoabasto</li>
                             </ul>
-
                         </div>
                     </div>
-
                 </div>
 
 
@@ -300,13 +298,13 @@
                 @* <br> *@
                 <br>
                 <h3>Producción</h3>
-                <h5 style="margin-top: 77px;">
+                <h5 style="margin-top: 59px;">
 
-                    <img src="@Cdn.Url/img_snier/vistas/importacion.png" alt="Icono personalizado" class="iconoflecha">
+                    <img src="@Cdn.Url/img_snier/vistas/importacion.png" alt="Icono personalizado" class="iconoflecha" style="margin-left: -25px;">
 
                     <img src="@Cdn.Url/img_snier/vistas/exportacion.png" alt="Icono personalizado" class="iconoflecha">
                 </h5>
-                <a class="btn-d-griso  d-flex align-items-center" title="Ver Mapa de Recursos de Petróleo" asp-area="" asp-controller="Map" asp-action="TE_Petroliferos">
+                <a class="btn-d-griso  d-flex align-items-center" title="Ver Mapa de Recursos de Petróleo" asp-area="" asp-controller="Map" asp-action="TE_Petroliferos" style="margin-top: 12px;">
                     <img src="@Cdn.Url/img_snier/vistas/circulog.png" alt="Icono personalizado" class="iconoboton" style="padding-right:5px">
 
                     <span>Petrolíferos</span>
@@ -326,7 +324,7 @@
                 <br style="margin-top:15px">
 
                 <h5 style="margin-top:80px">
-                    <img src="@Cdn.Url/img_snier/vistas/importacion.png" alt="Icono personalizado" class="iconoflecha">
+                    <img src="@Cdn.Url/img_snier/vistas/importacion.png" alt="Icono personalizado" class="iconoflecha" style="margin-left: -25px;">
 
                     <img src="@Cdn.Url/img_snier/vistas/exportacion.png" alt="Icono personalizado" class="iconoflecha">
                 </h5>
@@ -388,7 +386,7 @@
                      <a class="btn-d-gris d-flex align-items-center" title="Ver Mapa de Distribución de Comercialización y Expendio al Público" href="#">
                     @* <a class="btn-d-gris d-flex align-items-center" style="height:46px" title="Ver Mapa de Distribución de Gas L.P." asp-area="" asp-controller="Home" asp-action="EnConstrucción"> *@
                         
-                        <span>  Comercialización y Expendio al Público</span>
+                        <span style="font-size: 0.62rem;">  Comercialización y Expendio al Público</span>
                     </a>
                     <br />
                 
@@ -492,15 +490,15 @@
             <p class="texto-vertical-right" style="left: 438px;top:456px">Infraestructura <br /> de Energía Renovable</p>
             <img src="@Cdn.Url/img_snier/vistas/flecha_cierre_a.png" alt="Icono personalizado" class="arrow-image" style="top: 228px; left: 604px; width: 40px; height: auto;">
             <img src="@Cdn.Url/img_snier/vistas/flecha_uno_muchos.png" alt="Icono personalizado" class="arrow-image" style="top: 247px; left: 838px; width: 40px; height: auto;">
-            <img src="@Cdn.Url/img_snier/vistas/flecha_uno_muchos.png" alt="Icono personalizado" class="arrow-image" style="top: 531px; left: 838px; width: 40px; height: auto;">
-            <p class="float-text" style="float: left; padding-left: 273px; margin-top: -17px;">(Consumo Directo e Indirecto)</p>
+            <img src="@Cdn.Url/img_snier/vistas/flecha_uno_muchos.png" alt="Icono personalizado" class="arrow-image" style="top: 541px; left: 838px; width: 40px; height: auto;">
+            <p class="float-text" style="float: left; padding-left: 45px; margin-top: 695px;">(Consumo Directo e Indirecto)</p>
             <img src="@Cdn.Url/img_snier/vistas/flecha_muchos_a_uno.png" alt="Icono personalizado" class="arrow-image" style="top: 249px; left: 975px; width: 40px; height: auto;">
-            <img src="@Cdn.Url/img_snier/vistas/flecha_muchos_a_uno2.png" alt="Icono personalizado" class="arrow-image" style="top: 536px; left: 975px; width: 40px; height: auto;">
+            <img src="@Cdn.Url/img_snier/vistas/flecha_muchos_a_uno2.png" alt="Icono personalizado" class="arrow-image" style="top: 547px; left: 975px; width: 40px; height: auto;">
             <img src="@Cdn.Url/img_snier/vistas/union.png" alt="Icono personalizado" class="arrow-image" style="top: 300px; left: 1244px; width: 40px; height: auto;">
-            <p class="texto-vertical-right" style="left: 902px;top:501px">Disipativas</p>
-            <p class="texto-vertical-right" style="left: 902px;top:690px">Hiperciclo</p>
-            <p class="texto-vertical-right" style="left: 1023px;top:585px">Comportamientos</p>
-            <img src="@Cdn.Url/img_snier/vistas/retroalimentacion.png" alt="Icono personalizado" class="arrow-image" style="top: 515px; left: 250px; width: 1200px; height: 375px">
+            <p class="texto-vertical-right" style="left: 1110px;top:490px">Disipativas</p>
+            <p class="texto-vertical-right" style="left: 1110px;top:680px">Hiperciclo</p>
+            <p class="texto-vertical-right" style="left: 1293px;top:555px">Comportamientos</p>
+            <img src="@Cdn.Url/img_snier/vistas/retroalimentacion.png" alt="Icono personalizado" class="arrow-image" style="top: 515px; left: 250px; width: 1200px; height: 375px; z-index: 0; position: absolute;">
             <img src="@Cdn.Url/img_snier/vistas/rr.png" alt="Icono personalizado" class="arrow-image" style="top: 340px;left: 735px;transform: rotate(90deg); width: 40px; height: auto;">
 
         </div>
@@ -510,65 +508,39 @@
 
 @* Estilos *@
 <style>
-/* Contenedor principal con desplazamiento horizontal */
-.map-container {
-  overflow-x: auto;
-  white-space: nowrap;
-}
+    /* Contenedor principal con desplazamiento horizontal */
+    .map-container {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
 
-/* Ajuste general del diagrama */
-.diagram {
-  display: flex;
-  position: relative;
-  flex-wrap: nowrap;         /* evita que las columnas bajen de línea */
-  gap: 30px;                 /* separa un poco las columnas */
-}
+    /* Ajuste general del diagrama */
+    .diagram {
+        display: flex;
+        position: relative;
+        flex-wrap: nowrap;         /* evita que las columnas bajen de línea */
+        gap: 30px;                 /* separa un poco las columnas */
+    }
 
-/* Cada columna */
-.column {
-  display: inline-block;
-  vertical-align: top;
-  padding: 10px;
-  min-width: 200px;          /* 🔸 asegura un ancho mínimo para evitar que se peguen */
-  flex-shrink: 0;            /* 🔸 evita que se compriman */
-}
+    /* Cada columna */
+    .column {
+        display: inline-block;
+        vertical-align: top;
+        padding: 10px;
+        min-width: 200px;          /* 🔸 asegura un ancho mínimo para evitar que se peguen */
+        flex-shrink: 0;            /* 🔸 evita que se compriman */
+    }
 
-/* Flechas normales */
-.iconoflecha {
-  width: 35px;
-  height: auto;
-  margin: 5px;
-  transition: all 0.3s ease;
-}
+    /* Flechas normales */
+    .iconoflecha {
+        width: 35px;
+        height: auto;
+        margin: 5px;
+        transition: all 0.3s ease;
+    }
 
-/* 🔽 Ajustes para pantallas pequeñas (celulares) */
-@@media (max-width: 991px) {
-
-  /* Asegura scroll horizontal y estabilidad */
-  .map-container {
-    overflow-x: scroll;
-    overflow-y: hidden;
-  }
-
-  /* Mantén las columnas alineadas horizontalmente */
-  .diagram {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 20px;              /* 🔸 menos espacio entre columnas pero sin pegarlas */
-  }
-
-  /* Flechas más pequeñas y más hacia la izquierda */
-  .iconoflecha {
-    width: 25px;
-    margin-left: -10px;
-  }
-
-  /* Columnas ligeramente más angostas pero fijas */
-  .column {
-    min-width: 160px;       /* 🔸 se reduce suavemente */
-    padding: 5px;
-    flex-shrink: 0;         /* 🔸 evita que se achiquen demasiado */
-  }
-}
+    .diagram * {
+        z-index: 1;
+    }
 </style>
 

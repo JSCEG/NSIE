@@ -206,6 +206,12 @@
 
                                     <div class="d-flex justify-content-center flex-wrap gap-2">
                                         <form asp-controller="Acceso" asp-action="LoginGoogle" method="post">
+                                            <button type="submit" class="btn btn-outline-danger btn-login" style="display:none">
+                                                <i class="bi bi-google me-1"></i> Google
+                                            </button>
+                                        </form>
+
+                                        <form asp-controller="Acceso" asp-action="LoginGoogle" method="post" class="d-inline">
                                             <button type="submit" class="btn btn-outline-danger btn-login">
                                                 <i class="bi bi-google me-1"></i> Google
                                             </button>
@@ -224,22 +230,56 @@
                                 </div>
 
                                 <style>
-                                .btn-login {
-                                    min-width: 140px; /* Ajusta el ancho base de los botones */
-                                    font-size: 0.95rem;
-                                    padding: 8px 16px;
-                                    border-radius: 10px;
-                                    transition: all 0.2s ease-in-out;
-                                }
+                                    @* .btn-login {
+                                        min-width: 140px; /* Ajusta el ancho base de los botones */
+                                        font-size: 0.95rem;
+                                        padding: 8px 16px;
+                                        border-radius: 10px;
+                                        transition: all 0.2s ease-in-out;
+                                    }
 
-                                .btn-login i {
-                                    font-size: 1rem;
-                                }
+                                    .btn-login i {
+                                        font-size: 1rem;
+                                    }
 
-                                /* Sutil efecto al pasar el mouse */
-                                .btn-login:hover {
-                                    transform: translateY(-2px);
-                                }
+                                    /* Sutil efecto al pasar el mouse */
+                                    .btn-login:hover {
+                                        transform: translateY(-2px);
+                                    } *@
+
+                                    /* Contenedor de los botones */
+                                    .d-flex.justify-content-center.flex-wrap.gap-2 {
+                                        justify-content: center;
+                                        flex-wrap: wrap;
+                                        row-gap: 10px;
+                                        column-gap: 10px;
+                                    }
+
+                                    .btn-login {
+                                        flex: 1 1 140px;
+                                        min-width: 130px;
+                                        max-width: 180px;
+
+                                        /* Centrado vertical y horizontal */
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        text-align: center;
+
+                                        /* Altura uniforme */
+                                        min-height: 58px;  /* 🔹 ajusta este valor a tu gusto */
+                                        line-height: 1.2;  /* mejora el espacio si hay texto en dos líneas */
+
+                                        padding: 10px 14px;
+                                        border-radius: 10px;
+                                        font-size: 0.95rem;
+                                        gap: 5px;
+                                    }
+
+                                    .btn-login i {
+                                        flex-shrink: 0;
+                                        font-size: 1rem;
+                                    }
                                 </style>
 
                                 <!-- 🔹 Separador visual -->
@@ -1169,7 +1209,7 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="text-center mt-4">
+                        @* <div class="text-center mt-4">
                             <p class="text-muted">O regístrate con</p>
                             <form asp-controller="Acceso" asp-action="LoginGoogle" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-outline-danger me-2">
@@ -1182,7 +1222,7 @@
                                     <i class="bi bi-facebook me-1"></i> Facebook
                                 </button>
                             </form>
-                        </div>
+                        </div> *@
                     </div>
                 </div>
 

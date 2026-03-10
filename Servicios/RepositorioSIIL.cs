@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NSIE.Models;
+using System.Data;
 
 namespace NSIE.Servicios
 {
@@ -12,6 +14,15 @@ namespace NSIE.Servicios
     {
         private readonly string _connectionString;
         private readonly IWebHostEnvironment _env;
+
+        //Seguridad
+        // private static readonly HashSet<string> TablasPermitidas = new()
+        // {
+        //     "Registro_Muestras",
+        //     "Pronostico_Pozos",
+        //     "Entidades_Federativas",
+        //     "Municipios"
+        // };
 
         public RepositorioSIIL(IConfiguration configuration, IWebHostEnvironment env)
         {
@@ -61,12 +72,21 @@ namespace NSIE.Servicios
             {
                 using (var connection = new SqlConnection(_connectionString))
                 {
-                    var propiedades = typeof(T).GetProperties();
+                    var propiedades = typeof(T).GetProperties()
+                        .Where(p =>
+                            // Ignorar propiedades complejas (clases)
+                            (p.PropertyType.IsValueType || p.PropertyType == typeof(string)) &&
+
+                            // Ignorar propiedades marcadas con [Write(false)]
+                            !Attribute.IsDefined(p, typeof(Dapper.Contrib.Extensions.WriteAttribute))
+                        );
+
                     var columnas = string.Join(", ", propiedades.Select(p => p.Name));
                     var parametros = string.Join(", ", propiedades.Select(p => $"@{p.Name}"));
                     var valores = propiedades.ToDictionary(p => p.Name, p => p.GetValue(objeto));
 
                     var query = $"INSERT INTO {nombreTabla} ({columnas}) VALUES ({parametros});";
+
                     var filas = await connection.ExecuteAsync(query, valores);
                     return filas;
                 }
@@ -227,6 +247,46 @@ namespace NSIE.Servicios
             // Formato: yyyy/MM/dd HH:mm (24 horas)
             // Nota: SQL Server soporta este string como PK (VARCHAR 50)
             return $"{tipo}-{codigoOrigen}-{fecha:yyyy/MM/dd HH:mm}";
+        }
+
+        // Implementación de métodos adicionales para usuarios y roles
+        public async Task<UserViewModel> ObtenerUsuarioPorCorreo(string email)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            return await connection.QuerySingleOrDefaultAsync<UserViewModel>(
+                "SELECT * FROM USUARIO Where Correo=@email",
+                new { email }
+            );
+        }
+
+        public async Task<UserViewModel> ObtenerRolPorUsuarioId(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var user = await connection.QuerySingleOrDefaultAsync<UserViewModel>(
+                    "sp_ObtenerUsuarioSession",
+                    new { IdUsuario = id },
+                    commandType: CommandType.StoredProcedure
+                );
+                return user;
+            }
+        }
+
+        // Implementación de método para obtener municipios por estado
+        public async Task<IEnumerable<Estado>> ObtenerTodos()
+        {
+            using var connection = new SqlConnection(_connectionString);
+            return await connection.QueryAsync<Estado>("SELECT EF_ID, EF_Nombre FROM Entidades_Federativas");
+        }
+        public async Task<IEnumerable<Municipio>> ObtenerMunicipiosPorEstado(int estadoId)
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            return await connection.QueryAsync<Municipio>(
+                "SELECT MunicipioID, Municipio_Nombre FROM Municipios WHERE EF_ID = @estadoId",
+                new { estadoId }
+            );
         }
     }
 }
