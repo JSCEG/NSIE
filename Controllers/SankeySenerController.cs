@@ -362,6 +362,11 @@ namespace NSIE.Controllers
             return View();
         }
 
+        public async Task<IActionResult> FlujoEnergia()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetEnergyData()
         {
@@ -420,6 +425,16 @@ namespace NSIE.Controllers
             var colors = await repositorioSankeySener.ObtenerColorDataAsync();
 
             return Json(colors);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> InsertData([FromBody] EnergyRequest request)
+        {
+            Console.WriteLine("Datos recibidos en el controlador:");
+
+            await repositorioSankeySener.UpsertEnergyDataAsync(request.Datos);
+
+            return Ok(new { success = true });
         }
 
     }

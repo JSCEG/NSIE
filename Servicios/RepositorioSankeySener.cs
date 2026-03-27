@@ -33,6 +33,7 @@ namespace NSIE.Servicios
         //SANKEY ENERGÍA
         Task<IEnumerable<EnergyFlatDto>> ObtenerEnergyDataAsync();
         Task<IEnumerable<SankeyColor>> ObtenerColorDataAsync();
+        Task UpsertEnergyDataAsync(List<EnergyParentDto> data);
     }
 
     //El Select SCOPE IDENTITY devuelve el ID impactado en la BD
@@ -316,6 +317,113 @@ namespace NSIE.Servicios
 
                 return await connection.QueryAsync<SankeyColor>(query);
             }
+        }
+
+        public async Task UpsertEnergyDataAsync(List<EnergyParentDto> data)
+        {
+            var table = new DataTable();
+
+            table.Columns.Add("ParentExternalId", typeof(int));
+            table.Columns.Add("ParentName", typeof(string));
+            table.Columns.Add("ParentDescription", typeof(string));
+            table.Columns.Add("ParentColor", typeof(string));
+
+            table.Columns.Add("ChildExternalId", typeof(int));
+            table.Columns.Add("ChildName", typeof(string));
+            table.Columns.Add("Tipo", typeof(string));
+            table.Columns.Add("ChildDescription", typeof(string));
+            table.Columns.Add("ChildColor", typeof(string));
+
+            table.Columns.Add("Year", typeof(int));
+            table.Columns.Add("Value", typeof(double));
+
+            foreach (var parent in data)
+            {
+                foreach (var child in parent.NodosHijo)
+                {
+                    foreach (var kvp in child.Valores)
+                    {
+                        if (int.TryParse(kvp.Key, out int year))
+                        {
+                            double valor = 0;
+
+                            if (kvp.Value is JsonElement jsonElement)
+                            {
+                                if (jsonElement.ValueKind == JsonValueKind.Number)
+                                {
+                                    valor = jsonElement.GetDouble();
+                                }
+                            }
+                            else
+                            {
+                                valor = Convert.ToDouble(kvp.Value);
+                            }
+
+                            Console.WriteLine($"Año: {year}, Valor raw: {kvp.Value}, Tipo: {kvp.Value?.GetType()}");
+
+                            table.Rows.Add(
+                                parent.id_padre,
+                                Clean(parent.NodoPadre),
+                                Clean(parent.descripcion),
+                                parent.color,
+
+                                child.id_hijo,
+                                Clean(child.NodoHijo),
+                                Clean(child.tipo),
+                                Clean(child.descripcion),
+                                child.color,
+
+                                year,
+                                valor
+                            );
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine($"Filas a insertar: {table.Rows.Count}");
+
+            var duplicados = table.AsEnumerable()
+                .GroupBy(r => new {
+                    ChildId = r["ChildExternalId"],
+                    Year = r["Year"]
+                })
+                .Where(g => g.Count() > 1)
+                .ToList();
+
+            foreach (var dup in duplicados)
+            {
+                Console.WriteLine($"DUPLICADO EN C#: ChildExternalId={dup.Key.ChildId}, Year={dup.Key.Year}, Veces={dup.Count()}");
+            }
+
+            using (var conn = new SqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                using (var cmd = new SqlCommand("energy.UpsertEnergyData", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    var param = cmd.Parameters.AddWithValue("@Data", table);
+                    param.SqlDbType = SqlDbType.Structured;
+                    param.TypeName = "energy.EnergyDataType";
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        private string Clean(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+
+            return text
+                .Replace("Ã³", "ó")
+                .Replace("Ã¡", "á")
+                .Replace("Ã©", "é")
+                .Replace("Ã­", "í")
+                .Replace("Ãº", "ú")
+                .Replace("Ã±", "ñ");
         }
 
     }

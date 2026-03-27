@@ -52,6 +52,8 @@
                 {
                     @Html.AntiForgeryToken()
 
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                 <!-- ================================= -->
                 <!-- 1 CONTEXTO DEL PUNTO DE BARRENACIÓN -->
                 <!-- ================================= -->
@@ -69,7 +71,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Litología Local *</label>
-                                <select asp-for="LitologiaLocal" class="form-select" required>
+                                <select asp-for="LitologiaLocal" id="LitologiaLocal" class="form-select" required>
                                     <option value="">Seleccione...</option>
                                     <option>Arcilla Lacustre</option>
                                     <option>Riolita</option>
@@ -179,6 +181,10 @@
                                 <label class="form-label">Perforista</label>
                                 <select asp-for="Perforista" class="form-select">
                                     <option value="">Seleccione...</option>
+                                    <option>Perforaciones del Norte</option>
+                                    <option>GeoDrill México</option>
+                                    <option>ExploraMineral SA</option>
+                                    <option>Servicios Geotécnicos MX</option>
                                 </select>
                                 <span asp-validation-for="Perforista" class="text-danger"></span>
                             </div>
@@ -201,7 +207,6 @@
                             <div class="col-md-4">
                                 <label class="form-label">Latitud (14 - 33)</label>
                                 <input asp-for="Latitud" type="number" step="0.000001"
-                                       min="14" max="33"
                                        class="form-control">
                                 <span asp-validation-for="Latitud" class="text-danger"></span>
                             </div>
@@ -209,7 +214,6 @@
                             <div class="col-md-4">
                                 <label class="form-label">Longitud (-118.5 a -86)</label>
                                 <input asp-for="Longitud" type="number" step="0.000001"
-                                       min="-118.5" max="-86"
                                        class="form-control">
                                 <span asp-validation-for="Longitud" class="text-danger"></span>
                             </div>
@@ -217,7 +221,6 @@
                             <div class="col-md-4">
                                 <label class="form-label">Altitud (msnm)</label>
                                 <input asp-for="Altitud" type="number" step="0.01"
-                                       min="0"
                                        class="form-control">
                                 <span asp-validation-for="Altitud" class="text-danger"></span>
                             </div>
@@ -229,14 +232,14 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">Azimut (0 - 360°)</label>
-                                <input asp-for="Azimut" type="number" min="0" max="360"
+                                <input asp-for="Azimut" type="number"
                                        class="form-control">
                                 <span asp-validation-for="Azimut" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">Inclinación (0 a -90°)</label>
-                                <input asp-for="Inclinacion" type="number" min="-90" max="0"
+                                <input asp-for="Inclinacion" type="number"
                                        class="form-control">
                                 <span asp-validation-for="Inclinacion" class="text-danger"></span>
                             </div>
@@ -252,7 +255,8 @@
 
                             <div class="col-md-4">
                                 <label class="form-label">Tipo de Barrenación</label>
-                                <select asp-for="TipoBarrenacion" class="form-select">
+                                <select asp-for="TipoBarrenacion" id="TipoBarrenacion" class="form-select">
+                                    <option value="">Seleccione...</option>
                                     <option>Corte Diamante</option>
                                 </select>
                                 <span asp-validation-for="TipoBarrenacion" class="text-danger"></span>
@@ -276,8 +280,7 @@
 
                             <div class="col-md-4">
                                 <label class="form-label">Longitud perforada (m)</label>
-                                <input asp-for="LongitudPerforada" type="number" step="0.01"
-                                       min="0"
+                                <input asp-for="LongitudPerforada" id="LongitudPerforada" type="number" step="0.01"
                                        class="form-control">
                                 <span asp-validation-for="LongitudPerforada" class="text-danger"></span>
                             </div>
@@ -306,8 +309,7 @@
 
                             <div class="col-md-3">
                                 <label class="form-label">Longitud recuperada (m)</label>
-                                <input asp-for="LongitudRecuperada" type="number" step="0.01"
-                                       min="0"
+                                <input asp-for="LongitudRecuperada" id="LongitudRecuperada" type="number" step="0.01"
                                        class="form-control">
                                 <span asp-validation-for="LongitudRecuperada" class="text-danger"></span>
                             </div>
@@ -320,7 +322,7 @@
 
                             <div class="col-md-3">
                                 <label class="form-label">Número de cajas</label>
-                                <input asp-for="NumeroCajas" type="number" min="1"
+                                <input asp-for="NumeroCajas" type="number"
                                        class="form-control">
                                 <span asp-validation-for="NumeroCajas" class="text-danger"></span>
                             </div>
@@ -340,9 +342,10 @@
 
                         <div class="row g-3">
 
-                            <div class="col-md-4">
+                            <div class="col-md-4" id="grupoRQD" style="display: none;">
                                 <label class="form-label">RQD</label>
-                                <select asp-for="RQD" class="form-select">
+                                <select asp-for="RQD" id="RQD" class="form-select">
+                                    <option value="">Seleccione...</option>
                                     <option>90% - 100% (Excelente)</option>
                                     <option>75% - 90% (Bueno)</option>
                                     <option>50% - 75% (Regular)</option>
@@ -353,24 +356,23 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label">TCR</label>
-                                <input asp-for="TCR" type="number"
+                                <label class="form-label">TCR (%)</label>
+                                <input asp-for="TCR" id="TCR" type="number"
                                        step="0.01"
-                                       min="0"
-                                       max="1"
-                                       class="form-control">
+                                       class="form-control"
+                                       readonly>
                                 <span asp-validation-for="TCR" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-4">
                                 <label class="form-label">Responsable</label>
-                                <select class="form-select">
-                                    @* <option value="">Seleccione un responsable</option>
-                                    <option value="1">Juan Pérez</option>
-                                    <option value="2">María García</option>
-                                    <option value="3">Carlos López</option> *@
+                                <select asp-for="Responsable" class="form-select">
+                                    <option value="">Seleccione...</option>
+                                    <option>Juan Pérez</option>
+                                    <option>María García</option>
+                                    <option>Carlos López</option>
                                 </select>
-                                @* <span asp-validation-for="Responsable" class="text-danger"></span> *@
+                                <span asp-validation-for="Responsable" class="text-danger"></span>
                             </div>
 
                         </div>
@@ -379,7 +381,7 @@
 
                             <div class="col-md-3">
                                 <label class="form-label">Intervalos</label>
-                                <input asp-for="Intervalos" type="number" min="1"
+                                <input asp-for="Intervalos" type="number"
                                        class="form-control">
                                 <span asp-validation-for="Intervalos" class="text-danger"></span>
                             </div>
@@ -395,16 +397,15 @@
                         <div class="row g-3 mt-2">
 
                             <div class="col-md-6">
-                                <label class="form-label">Archivo Descripción Núcleo</label>
-                                <input asp-for="ArchivoDescripcionNucleo" type="file" class="form-control"
-                                       accept=".xlsx,.csv">
+                                <label class="form-label">Archivo Descripción Núcleo (.xlsx, .csv)</label>
+                                <input asp-for="ArchivoDescripcionNucleo" type="file" class="form-control">
                                 <span asp-validation-for="ArchivoDescripcionNucleo" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Fotografías del Núcleo</label>
+                                <label class="form-label">Fotografías del Núcleo (.jpg, .jpeg, .png)</label>
                                 <input asp-for="FotografiasNucleo" type="file" class="form-control"
-                                       accept=".png,.jpg,.jpeg" multiple>
+                                    multiple>
                                 <span asp-validation-for="FotografiasNucleo" class="text-danger"></span>
                             </div>
 
@@ -590,7 +591,7 @@
         document.addEventListener("DOMContentLoaded", function () {
 
             inicializarEventos();
-            inicializarMapa();
+            @* inicializarMapa(); *@
 
             const form = document.getElementById("formBarrenacion");
 
@@ -621,12 +622,21 @@
             const lon = document.getElementById("Longitud");
             const litologia = document.getElementById("LitologiaLocal");
             const tcr = document.getElementById("TCR");
+            const longitudP = document.getElementById("LongitudPerforada");
+            const longitudR = document.getElementById("LongitudRecuperada");
+
+            if(longitudP && longitudR){
+                longitudP.addEventListener("input", calcularTCR);
+                longitudR.addEventListener("input", calcularTCR);
+            }
 
             if(tipo){
                 tipo.addEventListener("change", activarRQD);
             }
 
             if(lat && lon){
+                lat.addEventListener("input", limpiarErrorCoordenadaBarrenacion);
+                lon.addEventListener("input", limpiarErrorCoordenadaBarrenacion);
                 lat.addEventListener("blur", validarCoordenadasBarrenacion);
                 lon.addEventListener("blur", validarCoordenadasBarrenacion);
             }
@@ -634,6 +644,10 @@
             if(litologia && tcr){
                 litologia.addEventListener("change", validarTCRGeologico);
                 tcr.addEventListener("blur", validarTCRGeologico);
+
+                litologia.addEventListener("change", function(){
+                    validarTCRGeologico();
+                });
             }
 
         }
@@ -642,13 +656,20 @@
 
             const tipo = document.getElementById("TipoBarrenacion").value;
             const rqd = document.getElementById("RQD");
+            const grupo = document.getElementById("grupoRQD");
 
             if(tipo === "Corte Diamante"){
+
+                grupo.style.display = "block";
                 rqd.disabled = false;
+
             }
             else{
+
+                grupo.style.display = "none";
                 rqd.value = "";
                 rqd.disabled = true;
+
             }
 
         }
@@ -668,8 +689,8 @@
             const fechaInicio = document.getElementById("FechaInicio").value;
             const fechaFin = document.getElementById("FechaFin").value;
 
-            const longitudP = parseFloat(document.getElementById("Longitud_p").value);
-            const longitudR = parseFloat(document.getElementById("Longitud_r").value);
+            const longitudP = parseFloat(document.getElementById("LongitudPerforada").value);
+            const longitudR = parseFloat(document.getElementById("LongitudRecuperada").value);
 
             const diametro = parseInt(document.getElementById("Diametro").value);
             const cajas = parseInt(document.getElementById("NumeroCajas").value);
@@ -745,8 +766,8 @@
             }
 
             // TCR
-            if(isNaN(tcr) || tcr < 0 || tcr > 1){
-                marcarInvalido("TCR","El TCR debe estar entre 0 y 1.");
+            if(isNaN(tcr) || tcr < 0 || tcr > 100){
+                marcarInvalido("TCR","El TCR debe estar entre 0 y 100.");
                 valido = false;
             }
 
@@ -801,6 +822,12 @@
             const lat = parseFloat(document.getElementById("Latitud").value);
             const lon = parseFloat(document.getElementById("Longitud").value);
 
+            // LIMPIAR VALIDACIONES ANTES DE VALIDAR
+            latInput.classList.remove("is-invalid","is-valid");
+            lonInput.classList.remove("is-invalid","is-valid");
+
+            limpiarErrorCoordenadaBarrenacion();
+
             if(isNaN(lat) || isNaN(lon)) return;
 
             if(lat < 14 || lat > 33 || lon < -118.5 || lon > -86){
@@ -817,7 +844,7 @@
                 e.properties.CVE_ENT == estadoIdNormalizado
             );
 
-            const dentroMexico = false;
+            let dentroMexico = false;
 
             if (estado.geometry.type === "Polygon") {
                 dentroMexico = turf.booleanPointInPolygon(
@@ -851,14 +878,16 @@
             const litologia = document.getElementById("LitologiaLocal").value;
             const tcr = parseFloat(document.getElementById("TCR").value);
 
+            limpiarAdvertencia("TCR");
+
             if(isNaN(tcr)) return;
 
             let esperado = null;
 
-            if(litologia === "Riolita") esperado = 0.90;
-            if(litologia === "Basalto") esperado = 0.80;
-            if(litologia === "Granito") esperado = 0.85;
-            if(litologia === "Andesita") esperado = 0.75;
+            if(litologia === "Riolita") esperado = 90;
+            if(litologia === "Basalto") esperado = 80;
+            if(litologia === "Granito") esperado = 85;
+            if(litologia === "Andesita") esperado = 75;
 
             if(esperado !== null && tcr < esperado){
 
@@ -928,6 +957,72 @@
             const errorDiv = document.getElementById("errorCoordenadaBarrenacion");
 
             if(errorDiv) errorDiv.remove();
+
+        }
+
+        function limpiarAdvertencia(id){
+
+            const input = document.getElementById(id);
+
+            const aviso = input.parentElement.querySelector(".form-warning");
+
+            if(aviso) aviso.remove();
+
+        }
+
+        function calcularTCR(){
+
+            const pInput = document.getElementById("LongitudPerforada");
+            const rInput = document.getElementById("LongitudRecuperada");
+            const tcrInput = document.getElementById("TCR");
+
+            const p = parseFloat(pInput.value);
+            const r = parseFloat(rInput.value);
+
+            limpiarAdvertencia("TCR");
+
+            // limpiar errores anteriores
+            limpiarInvalido("LongitudRecuperada");
+
+            if(isNaN(p) || p <= 0){
+                tcrInput.value = "";
+                return;
+            }
+
+            if(isNaN(r) || r <= 0){
+                tcrInput.value = "";
+                return;
+            }
+
+            if(r > p){
+
+                marcarInvalido(
+                    "LongitudRecuperada",
+                    "La longitud recuperada no puede ser mayor que la perforada."
+                );
+
+                tcrInput.value = "";
+                return;
+            }
+
+            const tcr = (r / p) * 100;
+
+            tcrInput.value = tcr.toFixed(2);
+
+            // activar advertencias geológicas automáticamente
+            validarTCRGeologico();
+
+        }
+
+        function limpiarInvalido(id){
+
+            const input = document.getElementById(id);
+
+            input.classList.remove("is-invalid");
+
+            const feedback = input.parentElement.querySelector(".invalid-feedback");
+
+            if(feedback) feedback.remove();
 
         }
 

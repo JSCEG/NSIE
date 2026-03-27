@@ -135,6 +135,9 @@ namespace NSIE.Models
         /// <summary>Familia de roca identificada (ej. Granito, Basalto, etc.). NULL si no aplica</summary>
         public string? FamiliaRoca { get; set; }
 
+        /// <summary>ID del barreno al que pertenece la muestra</summary>
+        public string BarrenoID { get; set; }
+
         // ============================================================
         // DATOS CONDICIONALES: SALMUERA - POZO
         // ============================================================

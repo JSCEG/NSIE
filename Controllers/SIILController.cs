@@ -61,6 +61,10 @@ namespace NSIE.Controllers
                     PronosticosPozos = pronosticos
                 };
 
+                var existeBarreno = await _repositorioSIIL.BuscarBarreno();
+
+                ViewBag.ExisteBarreno = existeBarreno;
+
                 return View(modelo);
             }
             catch (Exception ex)
@@ -120,6 +124,10 @@ namespace NSIE.Controllers
                 var estados = await _repositorioSIIL.ObtenerTodos();
                 ViewBag.Estados = estados;
 
+                // Cargar Barrenos
+                var barrenos = await _repositorioSIIL.ObtenerBarrenos();
+                ViewBag.Barrenos = barrenos;
+
                 return View(modelo);
             }
             catch (Exception ex)
@@ -144,6 +152,16 @@ namespace NSIE.Controllers
             // =========================
             // VALIDACIONES EXTRA
             // =========================
+
+            // Validar que la fecha de inicio no sea futura
+            if (model.FechaInicio.HasValue)
+            {
+                if (model.FechaInicio.Value.Date > DateTime.Now.Date)
+                {
+                    ModelState.AddModelError("FechaInicio",
+                        "La fecha de inicio no puede ser posterior a la fecha del registro.");
+                }
+            }
 
             // 1️⃣ Validar fechas
             if (model.FechaInicio.HasValue && model.FechaFinalizacion.HasValue)
@@ -170,6 +188,35 @@ namespace NSIE.Controllers
             {
                 ModelState.AddModelError("IntervalosInteres",
                     "Debe especificar los intervalos de interés.");
+            }
+
+            if (model.LongitudRecuperada.HasValue && model.LongitudPerforada.HasValue)
+            {
+                var tcrCalculado = (model.LongitudRecuperada.Value / model.LongitudPerforada.Value) * 100m;
+
+                if (model.TCR.HasValue && Math.Abs((double)(model.TCR.Value - tcrCalculado)) > 0.5)
+                {
+                    ModelState.AddModelError("TCR",
+                        "El TCR no coincide con las longitudes registradas.");
+                }
+            }
+
+            if (model.TipoBarrenacion != "Corte Diamante" && !string.IsNullOrWhiteSpace(model.RQD))
+            {
+                ModelState.AddModelError("RQD",
+                    "El RQD solo aplica para barrenación con corte diamante.");
+            }
+
+            if (model.ArchivoDescripcionNucleo == null)
+            {
+                ModelState.AddModelError("ArchivoDescripcionNucleo",
+                    "Debe anexar el archivo de descripción del núcleo.");
+            }
+
+            if (model.FotografiasNucleo == null || !model.FotografiasNucleo.Any())
+            {
+                ModelState.AddModelError("FotografiasNucleo",
+                    "Debe anexar al menos una fotografía del núcleo.");
             }
 
             // =========================
@@ -219,6 +266,8 @@ namespace NSIE.Controllers
                 }
             }
 
+            Console.WriteLine("Validaciones completadas. Estado del modelo: " + ModelState.IsValid);
+
             // =========================
             // VALIDAR MODELO
             // =========================
@@ -231,51 +280,152 @@ namespace NSIE.Controllers
             try
             {
                 // =========================
-                // VALIDAR BARRERO EXISTENTE
+                // VALIDAR BARRENO EXISTENTE
                 // =========================
 
-                // bool existe = await _repositorioSIIL.ExisteBarreno(model.BarrenoID);
+                bool existe = await _repositorioSIIL.ExisteBarreno(model.BarrenoID);
 
-                // if (existe)
-                // {
-                //     ModelState.AddModelError("BarrenoID", "Ya existe un barreno con ese ID.");
-                //     return View(model);
-                // }
+                if (existe)
+                {
+                    ModelState.AddModelError("BarrenoID", "Ya existe un barreno con ese ID.");
+                    return View(model);
+                }
+
+                var carpetaFotos = Path.Combine(
+                    "wwwroot/img/SILL/Barrenacion",
+                    model.BarrenoID
+                );
+
+                if (!Directory.Exists(carpetaFotos))
+                {
+                    Directory.CreateDirectory(carpetaFotos);
+                }
+
+                var carpetaExcel = Path.Combine(
+                    "wwwroot/archivos/SILL/Barrenacion",
+                    model.BarrenoID
+                );
+
+                if (!Directory.Exists(carpetaExcel))
+                {
+                    Directory.CreateDirectory(carpetaExcel);
+                }
 
                 // =========================
-                // GUARDAR ARCHIVOS
+                // GUARDAR ARCHIVO EXCEL
                 // =========================
+
+                string rutaExcel = null;
 
                 if (model.ArchivoDescripcionNucleo != null)
                 {
-                    var ruta = Path.Combine("wwwroot/archivos/SILL",
-                                            model.ArchivoDescripcionNucleo.FileName);
+                    var nombreArchivo = $"{Guid.NewGuid()}_{model.ArchivoDescripcionNucleo.FileName}";
+
+                    var ruta = Path.Combine(carpetaExcel, nombreArchivo);
 
                     using (var stream = new FileStream(ruta, FileMode.Create))
                     {
                         await model.ArchivoDescripcionNucleo.CopyToAsync(stream);
                     }
+
+                    rutaExcel = $"/archivos/SILL/Barrenacion/{model.BarrenoID}/{nombreArchivo}";
                 }
+
+                Console.WriteLine("Archivos guardados correctamente. Ruta Excel: " + rutaExcel);
+
+                // =========================
+                // MAPEAR VIEWMODEL → ENTIDAD
+                // =========================
+
+                var entidad = new Barrenacion
+                {
+                    LitologiaLocal = model.LitologiaLocal,
+                    AnomaliaGravimetrica = model.AnomaliaGravimetrica,
+                    Anomalia1 = model.Anomalia1,
+                    Anomalia2 = model.Anomalia2,
+                    Anomalia3 = model.Anomalia3,
+
+                    Accesibilidad = model.Accesibilidad,
+                    TipoTerreno = model.TipoTerreno,
+
+                    BarrenoID = model.BarrenoID,
+                    Perforista = model.Perforista,
+                    Responsable = model.Responsable,
+
+                    Latitud = model.Latitud,
+                    Longitud = model.Longitud,
+                    Altitud = model.Altitud,
+
+                    Azimut = model.Azimut,
+                    Inclinacion = model.Inclinacion,
+
+                    TipoBarrenacion = model.TipoBarrenacion,
+                    FechaInicio = model.FechaInicio,
+                    FechaFinalizacion = model.FechaFinalizacion,
+
+                    LongitudPerforada = model.LongitudPerforada,
+
+                    LongitudRecuperada = model.LongitudRecuperada,
+                    Diametro = model.Diametro,
+                    NumeroCajas = model.NumeroCajas,
+                    NombreCajas = model.NombreCajas,
+
+                    RQD = model.RQD,
+                    TCR = model.TCR,
+
+                    Intervalos = model.Intervalos,
+                    IntervalosInteres = model.IntervalosInteres,
+
+                    ArchivoDescripcionRuta = rutaExcel,
+
+                    Observaciones = model.Observaciones,
+
+                    FechaCreacion = DateTime.Now
+                };
+
+                // =========================
+                // INSERTAR EN BD
+                // =========================
+
+                var barrenacionId = await _repositorioSIIL.Insertar<Barrenacion>(
+                    "Barrenaciones",
+                    entidad
+                );
+
+                entidad.Id = barrenacionId;
+
+                // =========================
+                // GUARDAR FOTOS
+                // =========================
 
                 if (model.FotografiasNucleo != null)
                 {
                     foreach (var foto in model.FotografiasNucleo)
                     {
-                        var ruta = Path.Combine("wwwroot/img/SILL", foto.FileName);
+                        var nombreFoto = $"{Guid.NewGuid()}_{foto.FileName}";
 
-                        using (var stream = new FileStream(ruta, FileMode.Create))
+                        var rutaFoto = Path.Combine(
+                            carpetaFotos,
+                            nombreFoto
+                        );
+
+                        using (var stream = new FileStream(rutaFoto, FileMode.Create))
                         {
                             await foto.CopyToAsync(stream);
                         }
+
+                        var rutaBD = $"/img/SILL/Barrenacion/{model.BarrenoID}/{nombreFoto}";
+
+                        await _repositorioSIIL.Insertar<BarrenacionFoto>(
+                            "BarrenacionFotos",
+                            new BarrenacionFoto
+                            {
+                                BarrenacionId = entidad.Id, // Asumiendo que el ID se genera al insertar la barrenación
+                                RutaFoto = rutaBD
+                            }
+                        );
                     }
                 }
-
-                // =========================
-                // GUARDADO EN BD (FUTURO)
-                // =========================
-
-                // await _context.Barrenaciones.AddAsync(entidad);
-                // await _context.SaveChangesAsync();
 
                 TempData["Success"] = "Registro de barrenación guardado correctamente.";
 

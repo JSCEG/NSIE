@@ -74,21 +74,24 @@ namespace NSIE.Servicios
                 {
                     var propiedades = typeof(T).GetProperties()
                         .Where(p =>
-                            // Ignorar propiedades complejas (clases)
                             (p.PropertyType.IsValueType || p.PropertyType == typeof(string)) &&
-
-                            // Ignorar propiedades marcadas con [Write(false)]
-                            !Attribute.IsDefined(p, typeof(Dapper.Contrib.Extensions.WriteAttribute))
+                            !Attribute.IsDefined(p, typeof(Dapper.Contrib.Extensions.WriteAttribute)) &&
+                            p.Name != "Id"   // 🔴 ignorar IDENTITY
                         );
 
                     var columnas = string.Join(", ", propiedades.Select(p => p.Name));
                     var parametros = string.Join(", ", propiedades.Select(p => $"@{p.Name}"));
                     var valores = propiedades.ToDictionary(p => p.Name, p => p.GetValue(objeto));
 
-                    var query = $"INSERT INTO {nombreTabla} ({columnas}) VALUES ({parametros});";
+                    var query = $@"
+                        INSERT INTO {nombreTabla} ({columnas})
+                        VALUES ({parametros});
+                        SELECT CAST(SCOPE_IDENTITY() as int);
+                    ";
 
-                    var filas = await connection.ExecuteAsync(query, valores);
-                    return filas;
+                    var idGenerado = await connection.ExecuteScalarAsync<int>(query, valores);
+
+                    return idGenerado;
                 }
             }
             catch (Exception ex)
@@ -171,6 +174,69 @@ namespace NSIE.Servicios
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al obtener registros filtrados de {nombreTabla}: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> ExisteBarreno(string barrenoId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = @"SELECT COUNT(1)
+                            FROM Barrenaciones
+                            WHERE BarrenoID = @BarrenoID";
+
+                var existe = await connection.ExecuteScalarAsync<int>(
+                    query,
+                    new { BarrenoID = barrenoId }
+                );
+
+                return existe > 0;
+            }
+        }
+
+        public async Task<bool> BuscarBarreno()
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    var query = @"
+                        SELECT CASE 
+                            WHEN EXISTS (SELECT 1 FROM Barrenaciones)
+                            THEN CAST(1 AS BIT)
+                            ELSE CAST(0 AS BIT)
+                        END
+                    ";
+
+                    var existe = await connection.ExecuteScalarAsync<bool>(query);
+
+                    return existe;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error verificando existencia de barrenos: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<string>> ObtenerBarrenos()
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    var query = @"SELECT BarrenoID FROM Barrenaciones ORDER BY BarrenoID";
+
+                    var barrenos = await connection.QueryAsync<string>(query);
+
+                    return barrenos;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo barrenos: {ex.Message}");
                 throw;
             }
         }

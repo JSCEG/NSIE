@@ -12,6 +12,11 @@ namespace NSIE.Servicios.Interfaces
         Task<bool> Actualizar<T>(string nombreTabla, T objeto) where T : class;
         Task<bool> Eliminar<T>(string nombreTabla, int id) where T : class;
         Task<List<T>> ObtenerPorFiltro<T>(string nombreTabla, string condicion, Dictionary<string, object> parametros) where T : class;
+        Task<bool> ExisteBarreno(string barrenoId);
+        Task<bool> BuscarBarreno();
+        Task<IEnumerable<string>> ObtenerBarrenos();
+
+
         
         //USUARIO Y ROLES
         Task<UserViewModel> ObtenerUsuarioPorCorreo(string email);

@@ -23,6 +23,10 @@
     };
 }
 
+@{
+    bool existeBarreno = ViewBag.ExisteBarreno ?? false;
+}
+
 <div class="container-fluid p-4">
     @await Html.PartialAsync("_ViewHeader", header)
 
@@ -96,8 +100,9 @@
                     </a>
 
                     <!-- PASO 2: REGISTRO DE MUESTRA -->
-                    <a href="@Url.Action("CrearNuevaMuestra", "SIIL")"
-                    class="btn btn-outline-secondary btn-lg w-100 mb-2 disabled">
+                    <a href="@Url.Action("CrearMuestra", "SIIL")"
+                        class="btn btn-lg w-100 mb-2 @(existeBarreno ? "btn-primary" : "btn-outline-secondary disabled")">
+
                         <i class="bi bi-plus-circle"></i> Registro de Muestra
                     </a>
 

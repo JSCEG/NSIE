@@ -349,6 +349,109 @@
         height: 58px;
       }
     }
+
+    .preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Fondo blur */
+    .preloader-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(6px);
+    }
+
+    /* Card */
+    .preloader-card {
+        position: relative;
+        z-index: 2;
+        width: 320px;
+        padding: 2rem;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.95);
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        animation: fadeIn 0.4s ease;
+    }
+
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    /* Logo */
+    .logo-container img {
+        display: block;
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+        margin-bottom: 1rem;
+        animation: float 2s ease-in-out infinite;
+        margin: 0 auto; /* 🔥 clave */
+    }
+
+    /* Títulos */
+    .title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .message {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-bottom: 1rem;
+    }
+
+    /* Spinner */
+    .spinner {
+        width: 30px;
+        height: 30px;
+        border: 3px solid #eee;
+        border-top: 3px solid #9F2241;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        animation: spin 1s linear infinite;
+    }
+
+    /* Progress bar */
+    .progress-container {
+        width: 100%;
+        height: 6px;
+        background: #eee;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #9F2241, #BC955C);
+        transition: width 0.3s ease;
+    }
+
+    /* Animaciones */
+    @@keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    @@keyframes float {
+        0%,100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
   </style>
 
 <div class="analytics-body">
@@ -377,13 +480,24 @@
   <main class="main-container-analytics">
 
     <!-- Preloader -->
-    <div class="preloader hidden" id="preloader">
-        <div class="preloader-content">
-            <img src="https://balance2024.pages.dev/img/mujer.png" alt="Cargando" class="preloader-logo">
-            <h3>Balance Nacional de Energía</h3>
-            <div class="preloader-message" id="preloader-message">Cargando...</div>
-            <div class="preloader-progress">
-                <div class="preloader-progress-bar" id="preloader-progress-bar"></div>
+    <div id="preloader" class="preloader hidden">
+        <div class="preloader-overlay"></div>
+
+        <div class="preloader-card">
+            <div class="logo-container">
+                <img src="https://balance2024.pages.dev/img/mujer.png" alt="Cargando" />
+            </div>
+
+            <h2 class="title">Balance Nacional de Energía</h2>
+
+            <p class="message" id="preloader-message">Cargando...</p>
+
+            <!-- Spinner -->
+            <div class="spinner"></div>
+
+            <!-- Progress -->
+            <div class="progress-container">
+                <div class="progress-bar" id="preloader-progress-bar"></div>
             </div>
         </div>
     </div>
@@ -455,49 +569,49 @@
     Secretaria de Energia · Subsecretaria de Planeacion y Transicion Energetica · Datos en Petajoules (PJ)
   </footer>
     <script>
-        // Funciones para controlar el preloader
-        function showPreloader(message = 'Cargando...') {
-            const preloader = document.getElementById('preloader');
-            const messageEl = document.getElementById('preloader-message');
-            const progressBar = document.getElementById('preloader-progress-bar');
+      // Funciones para controlar el preloader
+      function showPreloader(message = 'Cargando...') {
+        const preloader = document.getElementById('preloader');
+        const messageEl = document.getElementById('preloader-message');
+        const progressBar = document.getElementById('preloader-progress-bar');
 
-            // Actualizar mensaje
-            messageEl.textContent = message;
+        // Actualizar mensaje
+        messageEl.textContent = message;
 
-            // Mostrar preloader
-            preloader.classList.remove('hidden');
+        // Mostrar preloader
+        preloader.classList.remove('hidden');
 
-            // Iniciar animación de progreso
-            let progress = 0;
-            progressBar.style.width = '0%';
+        // Iniciar animación de progreso
+        let progress = 0;
+        progressBar.style.width = '0%';
 
-            const progressInterval = setInterval(() => {
-                progress += Math.random() * 15;
-                if (progress > 90) progress = 90;
-                progressBar.style.width = progress + '%';
-            }, 200);
+        const progressInterval = setInterval(() => {
+          progress += Math.random() * 15;
+          if (progress > 90) progress = 90;
+          progressBar.style.width = progress + '%';
+        }, 200);
 
-            return {
-                complete: () => {
-                    clearInterval(progressInterval);
-                    progressBar.style.width = '100%';
-                    setTimeout(() => {
-                        preloader.classList.add('hidden');
-                        progressBar.style.width = '0%';
-                    }, 300);
-                },
-                updateMessage: (newMessage) => {
-                    messageEl.textContent = newMessage;
-                },
-                updateProgress: (value) => {
-                    progress = Math.min(90, value);
-                    progressBar.style.width = progress + '%';
-                },
-                updateProgress: (value) => {
-                    progressBar.style.width = value + '%';
-                }
-            };
-        }
+        return {
+          complete: () => {
+              clearInterval(progressInterval);
+              progressBar.style.width = '100%';
+              setTimeout(() => {
+                  preloader.classList.add('hidden');
+                  progressBar.style.width = '0%';
+              }, 300);
+          },
+          updateMessage: (newMessage) => {
+              messageEl.textContent = newMessage;
+          },
+          updateProgress: (value) => {
+              progress = Math.min(90, value);
+              progressBar.style.width = progress + '%';
+          },
+          updateProgress: (value) => {
+              progressBar.style.width = value + '%';
+          }
+        };
+      }
 
     </script>
   <script>
