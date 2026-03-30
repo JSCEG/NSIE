@@ -259,7 +259,7 @@ namespace NSIE.Controllers
         {
             Usuario oUsuario = new Usuario
             {
-                Correo = "invitado@cre.gob.mx",
+                Correo = "invitado@energia.gob.mx",
                 Clave = "consulta_publica"
             };
             RegistrarAcceso(oUsuario.Correo, "Acceso como Consulta Pública");
@@ -397,7 +397,7 @@ namespace NSIE.Controllers
                 // Crear usuario invitado
                 Usuario usuarioInvitado = new Usuario
                 {
-                    Correo = "invitado@cre.gob.mx",
+                    Correo = "invitado@energia.gob.mx",
                     Clave = "consulta_publica"
                 };
                 
@@ -463,7 +463,7 @@ namespace NSIE.Controllers
                             "SELECT Correo FROM USUARIO WHERE IdUsuario = @IdUsuario",
                             new { IdUsuario = oUsuario.IdUsuario }
                         );
-                        RegistrarAcceso(correoUsuario, "Inicio de sesión funcionario CRE");
+                        RegistrarAcceso(correoUsuario, "Inicio de sesión funcionario SENER");
                     }
 
                     // Activar sesión

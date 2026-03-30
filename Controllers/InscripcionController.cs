@@ -27,7 +27,7 @@ namespace NSIE.Controllers
             // Crear el usuario invitado "Consulta Pública"
             Usuario oUsuario = new Usuario
             {
-                Correo = "invitado@cre.gob.mx",
+                Correo = "invitado@energia.gob.mx",
                 Clave = "consulta_publica"
             };
 

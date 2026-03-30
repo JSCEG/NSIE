@@ -1001,19 +1001,19 @@ $(document).ready(function () {
         buttons: [
             {
                 extend: 'copyHtml5',
-                title: 'Energeo - Refinerías y Despuntadoras'
+                title: 'SNIEN - Refinerías y Despuntadoras'
             },
             {
                 extend: 'excelHtml5',
-                title: 'Energeo - Refinerías y Despuntadoras'
+                title: 'SNIEN - Refinerías y Despuntadoras'
             },
             {
                 extend: 'csvHtml5',
-                title: 'Energeo - Refinerías y Despuntadoras'
+                title: 'SNIEN - Refinerías y Despuntadoras'
             },
             {
                 extend: 'pdfHtml5',
-                title: 'Energeo - Refinerías y Despuntadoras',
+                title: 'SNIEN - Refinerías y Despuntadoras',
                 customize: function (doc) {
                     doc.styles.tableHeader.color = '#9fa1a4';
                     doc.defaultStyle.alignment = 'center';

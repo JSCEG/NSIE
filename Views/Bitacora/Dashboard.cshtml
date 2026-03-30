@@ -562,7 +562,7 @@
             $.get('@Url.Action("ObtenerTotalesPorTipo", "Bitacora")', function (data) {
                 // Filtrar el resultado para cada tipo específico
                 const consultaPublica = data.find(item => item.tipoAcceso === 'Acceso como Consulta Pública');
-                const sesionCRE = data.find(item => item.tipoAcceso === 'Inicio de sesión funcionario CRE');
+                const sesionCRE = data.find(item => item.tipoAcceso === 'Inicio de sesión funcionario SENER');
 
                 $('#acceso-consulta-publica').text(consultaPublica ? consultaPublica.total.toLocaleString() : 'No data');
                 $('#inicio-sesion-cre').text(sesionCRE ? sesionCRE.total.toLocaleString() : 'No data');

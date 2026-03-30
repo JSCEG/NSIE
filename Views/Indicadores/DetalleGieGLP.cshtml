@@ -15,15 +15,6 @@
     ViewData["RolUsuario"] = perfilUsuario.Rol;
 }
 
-@*<div class="watermark-container">
-@for (int i = 0; i < 30; i++) /* Cambiamos el número 3 por 9 para tener más marcas de agua */
-{
-<div class="watermark">
-CRE-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
-</div>
-}
-</div>*@
-
 @{
     ViewData["Title"] = "Índice de Concentración de consumidores en unidades muestrales no monetarias (ICNM)";
 }
@@ -33,7 +24,7 @@ CRE-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
     @for (int i = 0; i < 50; i++) /* Cambiamos el número 3 por 9 para tener más marcas de agua */
     {
         <div class="watermark">
-            CRE-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
+            SENER-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
         </div>
     }
 </div>
@@ -791,7 +782,7 @@ CRE-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
             '-' + currentDate.getSeconds().toString().padStart(2, '0');
 
         // Cambiar el título de la página
-        document.title = 'CRE-Evaluación-' + formattedDate;
+        document.title = 'SENER-Evaluación-' + formattedDate;
 
         // Llamar a window.print()
         window.print();

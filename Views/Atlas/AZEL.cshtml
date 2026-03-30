@@ -124,7 +124,7 @@ new { icon = "eye", text = "Consulta Pública: Pronto disponible para usuarios" 
 <div class="container my-4">
   <h1 class="mb-4 text-center">AZEL - El inventario y el potencial de los recursos renovables</h1>
   <p class="text-center text-muted">
-    Fuente para el Factor de Emisión (CRE):
+    Fuente para el Factor de Emisión (SENER):
     <a href="https://www.gob.mx/cms/uploads/attachment/file/895937/Aviso_FE-SEN23.pdf" target="_blank">
       0.438 kgCO₂eq/MWh (2023)
     </a>
@@ -285,7 +285,7 @@ new { icon = "eye", text = "Consulta Pública: Pronto disponible para usuarios" 
                 </div>
                 <div class="col">
                   <label for="factorEmision" class="form-label" data-bs-toggle="tooltip"
-                    title="Factor de emisión asignado automáticamente (CRE 2023).">
+                    title="Factor de emisión asignado automáticamente (SENER 2023).">
                     Factor de Emisión (kgCO₂eq/MWh) (Auto):
                   </label>
                   <input type="number" class="form-control" id="factorEmision" step="any" disabled>
@@ -769,7 +769,7 @@ new { icon = "eye", text = "Consulta Pública: Pronto disponible para usuarios" 
           }
                                                                             <p><strong>Índice de Marginación:</strong> ${indiceMarginacion.toFixed(1)}</p>
                                                                             <p><strong>Distancia a Red de Transmisión:</strong> ${distanciaRed.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km</p>
-                                                                            <p><strong>Factor de Emisión (CRE 2023):</strong> ${factorEmision.toFixed(3)} kgCO₂eq/MWh</p>
+                                                                            <p><strong>Factor de Emisión (SENER 2023):</strong> ${factorEmision.toFixed(3)} kgCO₂eq/MWh</p>
                                                                             <hr>
                                                                             ${analisisHistorico}
                                                                             <hr>

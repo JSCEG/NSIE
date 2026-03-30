@@ -27,7 +27,7 @@
 </div>
 
 <div class="container">
-    <h2 class="fw-bold subtitulo">Chat con EnerGeoCRE</h2>
+    <h2 class="fw-bold subtitulo">Chat con SNIEN</h2>
     <br><br>
     <form asp-action="EjecutarConsulta" method="post">
         <div class="form-group mb-5">
@@ -42,7 +42,7 @@
     @if (Model != null && Model.Rows.Count > 0)
     {
         <div class="alert alert-info pt-3" role="alert">
-            <p>Respuesta de Energeo:</p>
+            <p>Respuesta de SNIEN:</p>
                </div>
               <div class="table-responsive">  
                         <table id="tablaBD" class="table table-hover table-responsive table-bordered">
@@ -91,19 +91,19 @@
             buttons: [
                 {
                     extend: 'copyHtml5',
-                    title: 'Energeo Lista de Usuarios de la Plataforma'
+                    title: 'SNIEN Lista de Usuarios de la Plataforma'
                 },
                 {
                     extend: 'excelHtml5',
-                    title: 'Energeo Lista de Usuarios de la Plataforma'
+                    title: 'SNIEN Lista de Usuarios de la Plataforma'
                 },
                 {
                     extend: 'csvHtml5',
-                    title: 'Energeo Lista de Usuarios de la Plataforma'
+                    title: 'SNIEN Lista de Usuarios de la Plataforma'
                 },
                 {
                     extend: 'pdfHtml5',
-                    title: 'Energeo Lista de Usuarios de la Plataforma',
+                    title: 'SNIEN Lista de Usuarios de la Plataforma',
                     customize: function (doc) {
                         // Cambia el color de la línea de encabezado a rojo
                         doc.styles.tableHeader.color = '#9fa1a4';

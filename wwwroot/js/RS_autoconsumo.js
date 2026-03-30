@@ -991,19 +991,19 @@ $(document).ready(function () {
         buttons: [
             {
                 extend: 'copyHtml5',
-                title: 'Energeo - Autoconsumo'
+                title: 'SNIEN - Autoconsumo'
             },
             {
                 extend: 'excelHtml5',
-                title: 'Energeo - Autoconsumo'
+                title: 'SNIEN - Autoconsumo'
             },
             {
                 extend: 'csvHtml5',
-                title: 'Energeo - Autoconsumo'
+                title: 'SNIEN - Autoconsumo'
             },
             {
                 extend: 'pdfHtml5',
-                title: 'Energeo - Autoconsumo',
+                title: 'SNIEN - Autoconsumo',
                 customize: function (doc) {
                     doc.styles.tableHeader.color = '#9fa1a4';
                     doc.defaultStyle.alignment = 'center';

@@ -29,7 +29,7 @@
         <!-- Clase modal-dialog-centered para centrar -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title subtitulo">EnerGeoCRE-Mensaje</h5>
+                <h5 class="modal-title subtitulo">SNIEN-Mensaje</h5>
                 <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close" onclick="cerraModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -65,7 +65,7 @@
         @for (int i = 0; i < 30; i++) /* Cambiamos el número 3 por 9 para tener más marcas de agua */
         {
             <div class="watermark">
-                CRE-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
+                SENER-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
             </div>
         }
     </div>
@@ -2972,7 +2972,7 @@
             '-' + currentDate.getSeconds().toString().padStart(2, '0');
 
         // Cambiar el título de la página
-        document.title = 'CRE-Evaluación-' + formattedDate;
+        document.title = 'SENER-Evaluación-' + formattedDate;
 
         // Llamar a window.print()
         window.print();

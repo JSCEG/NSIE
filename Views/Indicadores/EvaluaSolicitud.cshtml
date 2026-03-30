@@ -28,7 +28,7 @@
 
     {
         <div class="watermark">
-            CRE-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
+            SENER-@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") - @ViewData["NombreUsuario"]
         </div>
     }
 </div>
@@ -42,7 +42,7 @@
         <!-- Clase modal-dialog-centered para centrar -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title subtitulobus">EnerGeoCRE-Mensaje</h5>
+                <h5 class="modal-title subtitulobus">SNIEN-Mensaje</h5>
                 <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close"
                     onclick="cerraModal()">
                     <span aria-hidden="true">&times;</span>
@@ -288,34 +288,6 @@
                         <label for="year">Año:</label>
                         <input type="text" id="yearSelect" name="year" class="form-control" readonly>
                     </div>
-                     @* <div class="mb-3">
-                        <div class="alert alert-success" role="alert">
-                            <strong>Importante:</strong> La valoración de viabilidad positiva o negativa en EnerGeoCRE
-                            se
-                            refiere
-                            exclusivamente a los criterios e indicadores definidos para las escalas de Entidad
-                            Federativa y
-                            Municipal. Estos
-                            han sido asociados a la metodología para los usuarios finales y el mercado de hidrocarburos
-                            en
-                            relación con el
-                            Sector de Energía.
-                            <br><br>
-                            El alcance de EnerGeoCRE permite al usuario elegir ubicaciones para localizar expendios con
-                            el
-                            propósito de
-                            realizar dicha actividad en lugares lícitos a nivel de escala de barrios o colonias. Esto
-                            incluye el uso de
-                            suelo permitido, programa de desarrollo urbano local, aspectos de protección civil,
-                            vulnerabilidades, entre
-                            otros.
-                        </div>
-                        <hr>
-                        <div class="d-flex justify-content-end">
-                            <button id="paso2" type="button" class="btn btn-primary"
-                                onclick="goToStep2()">Siguiente</button>
-                        </div>
-                    </div>  *@
                 </div>
 
 
@@ -1241,19 +1213,19 @@
                             buttons: [
                                 {
                                     extend: 'copyHtml5',
-                                    title: 'Energeo-Calificación Final'
+                                    title: 'SNIEN-Calificación Final'
                                 },
                                 {
                                     extend: 'excelHtml5',
-                                    title: 'Energeo-Calificación Final'
+                                    title: 'SNIEN-Calificación Final'
                                 },
                                 {
                                     extend: 'csvHtml5',
-                                    title: 'Energeo-Calificación Final'
+                                    title: 'SNIEN-Calificación Final'
                                 },
                                 {
                                     extend: 'pdfHtml5',
-                                    title: 'Energeo-Calificación Final',
+                                    title: 'SNIEN-Calificación Final',
                                     customize: function (doc) {
                                         doc.styles.tableHeader.color = '#9fa1a4';
                                         doc.defaultStyle.alignment = 'center';
@@ -1855,19 +1827,19 @@
                             buttons: [
                                 {
                                     extend: 'copyHtml5',
-                                    title: 'Energeo-Calificación Final'
+                                    title: 'SNIEN-Calificación Final'
                                 },
                                 {
                                     extend: 'excelHtml5',
-                                    title: 'Energeo-Calificación Final'
+                                    title: 'SNIEN-Calificación Final'
                                 },
                                 {
                                     extend: 'csvHtml5',
-                                    title: 'Energeo-Calificación Final'
+                                    title: 'SNIEN-Calificación Final'
                                 },
                                 {
                                     extend: 'pdfHtml5',
-                                    title: 'Energeo-Calificación Final',
+                                    title: 'SNIEN-Calificación Final',
                                     customize: function (doc) {
                                         doc.styles.tableHeader.color = '#9fa1a4';
                                         doc.defaultStyle.alignment = 'center';
@@ -2387,11 +2359,11 @@ $(document).ready(function() {
                 var textoAdicional = "";
                 if (mercadoSelect === "petroliferos") {
 
-                    textoAdicional = "La ubicación elegida para el mercado de '<strong>" + mercadoSelectText + "</strong>' actualmente es '<strong>" + evaluacionFinal + "</strong>', en términos de los indicadores de atención al usuario final, densidad vehicular, densidad en expendios de combustibles, eventual saturación de la cadena de valor en los elementos adyacentes al eslabón de expendios(especialmente distribución) o los indicadores asociados a las políticas públicas vigentes.De no contar con un resultado Factible puede realizar una nueva consulta en otra ubicación o año.<br><br>Te recordamos que, para conseguir el otorgamiento de un permiso de expendio en una ubicación factible, debes cumplir con todos los requisitos estipulados en las Disposiciones Administrativas de Carácter General (DACG).<br><br>Por lo que, cualquier resultado en cuanto a la ubicación constituye sólo parte de la evaluación emitida por el proponente, debido a que la otra parte corresponde a los atributos de la CRE que involucran el cumplimiento del Art. 42 de la LORCME, fundamentalmente basada en un conjunto de criterios estratégicos para completar la evaluación del otorgamiento del permiso.<br><br><strong>Nota:</strong> la valoración de una factibilidad positiva está restringida exclusivamente a criterios asociados al sector de energía y se entiende que el usuario elige una ubicación, para localizar expendios, con el propósito de realizar dicha actividad en lugares que no incumplen los requisitos de seguridad o uso de suelo locales (visualmente hay restricciones lógicas acerca de las ubicaciones seleccionadas).";
+                    textoAdicional = "La ubicación elegida para el mercado de '<strong>" + mercadoSelectText + "</strong>' actualmente es '<strong>" + evaluacionFinal + "</strong>', en términos de los indicadores de atención al usuario final, densidad vehicular, densidad en expendios de combustibles, eventual saturación de la cadena de valor en los elementos adyacentes al eslabón de expendios(especialmente distribución) o los indicadores asociados a las políticas públicas vigentes.De no contar con un resultado Factible puede realizar una nueva consulta en otra ubicación o año.<br><br>Te recordamos que, para conseguir el otorgamiento de un permiso de expendio en una ubicación factible, debes cumplir con todos los requisitos estipulados en las Disposiciones Administrativas de Carácter General (DACG).<br><br>Por lo que, cualquier resultado en cuanto a la ubicación constituye sólo parte de la evaluación emitida por el proponente, debido a que la otra parte corresponde a los atributos de la SENER que involucran el cumplimiento del Art. 42 de la LORCME, fundamentalmente basada en un conjunto de criterios estratégicos para completar la evaluación del otorgamiento del permiso.<br><br><strong>Nota:</strong> la valoración de una factibilidad positiva está restringida exclusivamente a criterios asociados al sector de energía y se entiende que el usuario elige una ubicación, para localizar expendios, con el propósito de realizar dicha actividad en lugares que no incumplen los requisitos de seguridad o uso de suelo locales (visualmente hay restricciones lógicas acerca de las ubicaciones seleccionadas).";
                 }
                 else {
 
-                    textoAdicional = "La ubicación elegida para el mercado de '<strong>" + mercadoSelectText + "</strong>' actualmente es '<strong>" + evaluacionFinal + "</strong>', en términos de los indicadores de atención al usuario final, densidad vehicular, densidad de expendios de gas LP, cuotas de mercado de gas LP por tipos de recipiente, mediciones de eventual saturación de la cadena de valor, especialmente en los elementos adyacentes al eslabón de expendios (especialmente distribución) o los indicadores asociados a las políticas públicas vigentes. De no contar con un resultado Factible puede realizar una nueva consulta en otra ubicación o año.<br><br>Te recordamos que, para conseguir el otorgamiento de un permiso de expendio en una ubicación factible, debes cumplir con todos los requisitos estipulados en las Disposiciones Administrativas de Carácter General (DACG).<br><br>Por lo que, cualquier resultado en cuanto a la ubicación constituye sólo parte de la evaluación emitida por el proponente, debido a que la otra parte corresponde a los atributos de la CRE que involucran el cumplimiento del Art. 42 de la LORCME, fundamentalmente basada en un conjunto de criterios estratégicos para completar la evaluación del otorgamiento del permiso.<br><br><br><strong>Nota:</strong> la valoración de una factibilidad positiva está restringida exclusivamente a criterios asociados al sector de energía y se entiende que el usuario elige una ubicación, para localizar expendios, con el propósito de realizar dicha actividad en lugares que no incumplen los requisitos de seguridad o uso de suelo locales (visualmente hay restricciones lógicas acerca de las ubicaciones seleccionadas).";
+                    textoAdicional = "La ubicación elegida para el mercado de '<strong>" + mercadoSelectText + "</strong>' actualmente es '<strong>" + evaluacionFinal + "</strong>', en términos de los indicadores de atención al usuario final, densidad vehicular, densidad de expendios de gas LP, cuotas de mercado de gas LP por tipos de recipiente, mediciones de eventual saturación de la cadena de valor, especialmente en los elementos adyacentes al eslabón de expendios (especialmente distribución) o los indicadores asociados a las políticas públicas vigentes. De no contar con un resultado Factible puede realizar una nueva consulta en otra ubicación o año.<br><br>Te recordamos que, para conseguir el otorgamiento de un permiso de expendio en una ubicación factible, debes cumplir con todos los requisitos estipulados en las Disposiciones Administrativas de Carácter General (DACG).<br><br>Por lo que, cualquier resultado en cuanto a la ubicación constituye sólo parte de la evaluación emitida por el proponente, debido a que la otra parte corresponde a los atributos de la SENER que involucran el cumplimiento del Art. 42 de la LORCME, fundamentalmente basada en un conjunto de criterios estratégicos para completar la evaluación del otorgamiento del permiso.<br><br><br><strong>Nota:</strong> la valoración de una factibilidad positiva está restringida exclusivamente a criterios asociados al sector de energía y se entiende que el usuario elige una ubicación, para localizar expendios, con el propósito de realizar dicha actividad en lugares que no incumplen los requisitos de seguridad o uso de suelo locales (visualmente hay restricciones lógicas acerca de las ubicaciones seleccionadas).";
 
                 }
 

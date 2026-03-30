@@ -985,19 +985,19 @@ $(document).ready(function () {
         buttons: [
             {
                 extend: 'copyHtml5',
-                title: 'Energeo - Complejos de Gas'
+                title: 'SNIEN - Complejos de Gas'
             },
             {
                 extend: 'excelHtml5',
-                title: 'Energeo - Complejos de Gas'
+                title: 'SNIEN - Complejos de Gas'
             },
             {
                 extend: 'csvHtml5',
-                title: 'Energeo - Complejos de Gas'
+                title: 'SNIEN - Complejos de Gas'
             },
             {
                 extend: 'pdfHtml5',
-                title: 'Energeo - Complejos de Gas',
+                title: 'SNIEN - Complejos de Gas',
                 customize: function (doc) {
                     doc.styles.tableHeader.color = '#9fa1a4';
                     doc.defaultStyle.alignment = 'center';
