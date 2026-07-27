@@ -1,0 +1,726 @@
+@* Views/SiliMx/Barrenos.cshtml *@
+@using NSIE.Models
+@using Newtonsoft.Json
+@model NSIE.Models.SilimxRegistroViewModel
+@{
+    ViewData["Title"] = "SILiMx - Barrenos";
+    var proyectosEE = ViewBag.ProyectosEE as
+        IEnumerable<NSIE.Models.SilimxProyectoSelector> ?? Enumerable.Empty<NSIE.Models.SilimxProyectoSelector>();
+
+    var proyectos = ViewBag.Proyectos as
+        IEnumerable<NSIE.Models.SilimxProyectoSelector> ?? Enumerable.Empty<NSIE.Models.SilimxProyectoSelector>();
+
+    var header = new HeaderViewModel
+    {
+        Title = "SILiMx - Barrenos",
+        IconPath = "siil.png",
+        Description = "Plataforma de Inteligencia y Catálogo Nacional de Muestreo (SNIEn)",
+        Section = "SILiMx",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "SIIL",
+            description = "Registro y consultorio de información de litio",
+            functionality = "Registro, consultoría y análisis de muestras y pronósticos",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "flask", text = "Registro: captura de muestras" },
+                new { icon = "map", text = "Consultorio: pronósticos y mapas" }
+            }
+        })
+    };
+}
+
+<style>
+    .paso-tab {
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: default;
+        display: inline-block;
+    }
+
+    .paso-tab.activo {
+        background-color: #621132;
+        color: white;
+    }
+
+    .paso-tab.completado {
+        background-color: #c9a86a;
+        color: white;
+    }
+
+    .paso-tab.pendiente {
+        background-color: #e0e0e0;
+        color: #666;
+    }
+
+    table.tabla-intervalos th {
+        background-color: #c9a86a;
+        color: white;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 10px;
+    }
+
+    table.tabla-intervalos td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        vertical-align: middle;
+    }
+
+    table.tabla-intervalos tr:nth-child(odd) td {
+        background-color: #fafafa;
+    }
+
+    table.tabla-intervalos tr td:first-child {
+        color: #621132;
+        font-weight: 600;
+    }
+</style>
+
+<div class="container-fluid p-4">
+
+    @await Html.PartialAsync("_ViewHeader", header)
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* {{-- Breadcrumb --}} *@
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0" style="font-size:0.85rem;">
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("ExploracionExplotacion", "SiliMx")"
+                   style="color:#1b4332; text-decoration:none;">
+                    I. Exploración y Explotación
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("Exploracion", "SiliMx")"
+                   style="color:#1b4332; text-decoration:none;">
+                    I.1 Exploración
+                </a>
+            </li>
+            <li class="breadcrumb-item active fw-semibold" style="color:#555;">
+                Barrenos
+            </li>
+        </ol>
+    </nav>
+
+    @* {{-- Bloque descriptivo --}} *@
+    <div class="card border-0 shadow-sm mb-4"
+         style="border-radius:10px; border:1px solid #ddd !important;">
+        <div class="card-body p-4 p-md-5">
+
+            <h2 class="text-center fw-bold mb-3"
+                style="font-variant:small-caps; letter-spacing:1px;">
+                Registro de Barrenos
+            </h2>
+
+            <hr style="border-color:#c9a86a;">
+
+            <p style="text-align:justify; color:#c9a86a; font-style:italic; font-size:0.88rem;">
+                "Este formulario registra los barrenos para de exploración de litio. Almacena datos
+                clave de localización, geometría y calidad de la perforación. Sirve como catálogo
+                auxiliar para vincular las muestras y análisis a su punto de origen, permitiendo
+                sondear la infraestructura de perforación desplegada por los distintos actores."
+            </p>
+
+            <p class="text-center fst-italic mt-2"
+               style="color:#1b4332; font-size:0.82rem;">
+                "Tu contribución para el registro es muy valiosa para construir juntos el inventario
+                de barrenos para exploración de litio más completo de México".
+            </p>
+
+            <p class="text-center mt-1"
+               style="color:#888; font-size:0.75rem;">
+                *Todos los campos son obligatorios para garantizar la integridad de la base de datos nacional.*
+            </p>
+
+        </div>
+    </div>
+
+    @* {{-- Botones de navegación superiores --}} *@
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="@Url.Action("Dashboard", "SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8; color:#333; border:1px solid #ccc; font-weight:500;">
+            ← Volver al inicio
+        </a>
+        <a href="@Url.Action("CatalogoBarrenos", "SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8; color:#333; border:1px solid #ccc; font-weight:500;">
+            Catálogo de Barrenos
+        </a>
+        <a href="@Url.Action("Exploracion", "SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8; color:#333; border:1px solid #ccc; font-weight:500;">
+            Volver
+        </a>
+    </div>
+
+    @* {{-- Etiqueta de inicio --}} *@
+    <p class="fw-semibold mb-2" style="color:#333;">Inicia registro:</p>
+
+    @* {{-- Indicador de pasos --}} *@
+    <div class="d-flex gap-2 flex-wrap mb-4" id="indicadorPasosBarreno">
+        <span class="paso-tab activo" id="btab-1">1. Contexto del barreno</span>
+        <span class="paso-tab pendiente" id="btab-2">2. Barreno</span>
+        <span class="paso-tab pendiente" id="btab-3">3. Intervalos</span>
+        <span class="paso-tab pendiente" id="btab-4">4. Notas finales y Evidencias</span>
+    </div>
+
+    @* {{-- Wizard container --}} *@
+    <div class="card border-0 shadow-sm" style="border-radius:10px;">
+        <div class="card-body p-4">
+
+            @* {{-- PASO 1: Contexto del barreno --}} *@
+            <div id="bPaso1" class="barreno-paso">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Tu Proyecto (ID)</label>
+                        <select id="b-IdProyecto" class="form-select">
+                            <option value="">Formato: lista — usar "Catálogo de Proyectos"</option>
+                            @foreach (var p in proyectos)
+                            {
+                                <option value="@p.IdProyecto">@p.IdVisible — @p.NombreProyecto</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                            style="color:#c9a86a;">
+                            Proyecto EE (ID) de la Muestra
+                        </label>
+
+                        <select id="b-ProyectoEEID" class="form-select">
+                            <option value="">
+                                Selecciona un Proyecto de Exploración y Explotación...
+                            </option>
+
+                            @foreach (var p in proyectosEE)
+                            {
+                                <option value="@p.IdVisible">
+                                    @p.IdVisible — @p.NombreProyecto
+                                </option>
+                            }
+                        </select>
+
+                        <small class="text-muted" style="font-size:0.7rem;">
+                            Sólo se muestran proyectos de Exploración y Explotación.
+                        </small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            Barreno (ID)
+                        </label>
+                        <input type="text" id="b-BarrenoID" class="form-control"
+                               placeholder="Formato: texto corto. Sin espacios, sólo letras (A-Z), números y puntos (.)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Responsable</label>
+                        <input type="text" id="b-Responsable" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Empresa perforista</label>
+                        <input type="text" id="b-EmpresaPerforista" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">
+                            Responsable de "Descripción del Núcleo"
+                        </label>
+                        <input type="text" id="b-ResponsableDescNucleo" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Estado</label>
+                        <select id="b-Estado" class="form-select">
+                            <option value="">Seleccione un estado...</option>
+
+                            @foreach (var estado in ViewBag.Estados)
+                            {
+                                <option value="@estado.EF_ID">
+                                    @estado.EF_Nombre
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Municipio</label>
+                        <select id="b-Municipio" class="form-select" disabled>
+                            <option value="">
+                                Seleccione un municipio...
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Localidad</label>
+                        <input type="text" id="b-Localidad" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="irAPasoBarreno(2)">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 2: Barreno --}} *@
+            <div id="bPaso2" class="barreno-paso d-none">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            Latitud N (WGS84; 5 a 6 decimales)
+                        </label>
+                        <input type="number" id="b-LatitudN" class="form-control"
+                               step="0.000001" min="14" max="33"
+                               placeholder="Formato: número decimal (14.000000# a 33.000000#)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            Longitud O (WGS84; 5 a 6 decimales)
+                        </label>
+                        <input type="number" id="b-LongitudO" class="form-control"
+                               step="0.000001" min="86" max="119"
+                               placeholder="Formato: número decimal (86.000000# a 119.000000#)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Altitud (msnm)</label>
+                        <input type="number" id="b-Altitud" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Azimut (0° a 360°)</label>
+                        <input type="number" id="b-Azimut" class="form-control"
+                               min="0" max="360" placeholder="Formato: número entero" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Inclinación (0° a -90°)</label>
+                        <input type="text" id="b-Inclinacion" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Tipo de barrenación</label>
+                        <select id="b-TipoBarrenacion" class="form-select">
+                            <option value="">-- Selecciona --</option>
+                            <option>Corte Diamante</option>
+                            <option>Circulación inversa</option>
+                            <option>Aire nucleo</option>
+                            <option>Sónica</option>
+                            <option>Helicoidal</option>
+                            <option>Otro (especifique)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Fecha inicio</label>
+                        <input type="date" id="b-FechaInicio" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Fecha fin</label>
+                        <input type="date" id="b-FechaFin" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Longitud perforada (m)</label>
+                        <input type="number" id="b-LongitudPerforada" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Longitud recuperada (m)</label>
+                        <input type="number" id="b-LongitudRecuperada" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Diámetro (mm)</label>
+                        <input type="number" id="b-Diametro" class="form-control"
+                               placeholder="Formato: número entero" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">RQD</label>
+                        <select id="b-RQD" class="form-select">
+                            <option value="">-- Selecciona --</option>
+                            <option>90% - 100% (Excelente)</option>
+                            <option>75% - 90% (Bueno)</option>
+                            <option>50% - 75% (Regular)</option>
+                            <option>25% - 50% (Pobre)</option>
+                            <option>0% - 25% (Muy pobre)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Número de cajas</label>
+                        <input type="number" id="b-NumeroCajas" class="form-control"
+                               placeholder="Formato: número entero" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Nombre de primera caja</label>
+                        <input type="text" id="b-NombrePrimeraCaja" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Gravimetría (mGal)</label>
+                        <input type="number" id="b-Gravimetria" class="form-control"
+                               step="0.0001" placeholder="Formato: número decimal" />
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="irAPasoBarreno(1)">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="irAPasoBarreno(3)">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 3: Intervalos --}} *@
+            <div id="bPaso3" class="barreno-paso d-none">
+                <h6 class="fw-semibold mb-1">Intervalos del núcleo</h6>
+                <p class="text-muted mb-3" style="font-size:0.75rem;">
+                    Cada intervalo debe ser continuo y cerrar exactamente en la longitud perforada.
+                    Marcar los intervalos de interés por probable concentración de litio.
+                </p>
+
+                <div class="table-responsive mb-3">
+                    <table class="table tabla-intervalos border">
+                        <thead>
+                            <tr>
+                                <th style="width:25%;">Nombre</th>
+                                <th style="width:25%; color:#c9a86a;">Desde (m)</th>
+                                <th style="width:25%; color:#c9a86a;">Hasta (m)</th>
+                                <th style="width:15%; text-align:center;">De interés</th>
+                                <th style="width:10%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaIntervalosBody">
+                            @* {{-- Filas dinámicas --}} *@
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="button" class="btn btn-sm px-3"
+                        style="background-color:#1b4332; color:white; border-radius:6px;"
+                        onclick="agregarIntervalo()">
+                    + Agregar intervalo
+                </button>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="irAPasoBarreno(2)">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="irAPasoBarreno(4)">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 4: Notas finales y Evidencias --}} *@
+            <div id="bPaso4" class="barreno-paso d-none">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">
+                            Notas finales
+                            <span class="badge ms-2 px-2"
+                                  style="background:#f0ede8; color:#888;
+                                         font-size:0.7rem; font-weight:400;">
+                                Formato: texto largo
+                            </span>
+                        </label>
+                        <textarea id="b-NotasFinales" class="form-control" rows="5"
+                                  placeholder="Notas finales y otras observaciones (geológicas, geofísicas, geoquímicas, etc.) que considere de interés sobre el barreno."></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">
+                            Evidencia ("Descripción del Núcleo" y fotografía)
+                        </label>
+                        <div class="d-flex align-items-center gap-3 p-3"
+                             style="border:1px solid #dee2e6; border-radius:6px;">
+                            <button type="button" class="btn text-white px-3"
+                                    style="background-color:#621132;"
+                                    onclick="document.getElementById('b-inputEvidencias').click()">
+                                Elegir archivos
+                            </button>
+                            <span id="b-lblEvidencias" class="text-muted small">
+                                Ningún archivo seleccionado
+                            </span>
+                            <input type="file" id="b-inputEvidencias" multiple accept=".xlsx,.xls,.png,.jpg,.jpge" class="d-none"
+                                   onchange="mostrarNombresBarreno(this)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="irAPasoBarreno(3)">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#621132;"
+                            id="btnGuardarBarreno">
+                        <span id="txtGuardarBarreno">Guardar barreno</span>
+                        <span id="spnGuardarBarreno"
+                              class="spinner-border spinner-border-sm ms-1 d-none"></span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@* {{-- Modal confirmación --}} *@
+<div class="modal fade" id="modalBarrenoGuardado" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:10px;">
+            <div class="modal-body p-5 text-center">
+                <div class="mb-3">
+                    <span style="width:48px; height:48px; border-radius:50%;
+                                 background:#1b4332; display:inline-flex;
+                                 align-items:center; justify-content:center;">
+                        <i class="bi bi-check-lg text-white fs-4"></i>
+                    </span>
+                </div>
+                <h5 class="fw-bold">Barreno guardado</h5>
+                <div class="p-3 mt-2 text-start"
+                     style="background:#f8f8f8; border-radius:6px; font-size:0.88rem;">
+                    1. Barreno guardado correctamente.<br>
+                    2. ID del barreno: <strong id="idBarrenoGenerado">—</strong>
+                </div>
+                <button class="btn mt-4 px-4 text-white" style="background-color:#621132;"
+                        data-bs-dismiss="modal" onclick="resetearFormBarreno()">
+                    <i class="bi bi-check me-1"></i> Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    var contadorIntervalo = 0;
+
+    // ===== NAVEGACIÓN DE PASOS =====
+    function irAPasoBarreno(numero) {
+        document.querySelectorAll('.barreno-paso').forEach(function (el) {
+            el.classList.add('d-none');
+        });
+        document.getElementById('bPaso' + numero).classList.remove('d-none');
+
+        for (var i = 1; i <= 4; i++) {
+            var tab = document.getElementById('btab-' + i);
+            if (i === numero) {
+                tab.className = 'paso-tab activo';
+            } else if (i < numero) {
+                tab.className = 'paso-tab completado';
+            } else {
+                tab.className = 'paso-tab pendiente';
+            }
+        }
+    }
+
+    // ===== INTERVALOS: agregar fila dinámica =====
+    function agregarIntervalo() {
+        contadorIntervalo++;
+        var nombre = 'INT-' + String(contadorIntervalo).padStart(2, '0');
+        var tbody = document.getElementById('tablaIntervalosBody');
+
+        var tr = document.createElement('tr');
+        tr.id = 'int-row-' + contadorIntervalo;
+        tr.innerHTML = `
+            <td style="color:#621132; font-weight:600;">${nombre}
+                <input type="hidden" class="int-nombre" value="${nombre}">
+            </td>
+            <td>
+                <input type="number" class="form-control form-control-sm int-desde"
+                       step="0.01" min="0" value="" placeholder="0" />
+            </td>
+            <td>
+                <input type="number" class="form-control form-control-sm int-hasta"
+                       step="0.01" min="0" value="" placeholder="0" />
+            </td>
+            <td class="text-center">
+                <input type="checkbox" class="int-interes"
+                       style="width:20px; height:20px; cursor:pointer;" />
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-sm text-danger p-0"
+                        style="font-size:1rem; background:none; border:none;"
+                        onclick="eliminarIntervalo(${contadorIntervalo})">✕</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function eliminarIntervalo(id) {
+        var row = document.getElementById('int-row-' + id);
+        if (row) row.remove();
+    }
+
+    // ===== EVIDENCIAS =====
+    function mostrarNombresBarreno(input) {
+        var nombres = Array.from(input.files).map(function (f) { return f.name; }).join(', ');
+        document.getElementById('b-lblEvidencias').textContent =
+            nombres || 'Ningún archivo seleccionado';
+    }
+
+    document
+    .getElementById('b-Estado')
+    .addEventListener('change', function () {
+
+        cargarMunicipios(this.value);
+
+    });
+
+    function cargarMunicipios(estadoId) {
+
+        const municipioSelect =
+            document.getElementById('b-Municipio');
+
+        municipioSelect.innerHTML =
+            '<option value="">Cargando...</option>';
+
+        municipioSelect.disabled = true;
+
+        if (!estadoId) {
+
+            municipioSelect.innerHTML =
+                '<option value="">Seleccione un municipio...</option>';
+
+            return;
+        }
+
+        fetch(`/SiliMx/ObtenerMunicipiosPorEstado?estadoId=${estadoId}`)
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                municipioSelect.innerHTML =
+                    '<option value="">Seleccione un municipio...</option>';
+
+                data.forEach(m => {
+                    const option = document.createElement("option");
+                    option.value = m.municipio_Nombre; // ✅ Guarda el nombre
+                    option.text = m.municipio_Nombre;
+                    municipioSelect.appendChild(option);
+                });
+
+                municipioSelect.disabled = false;
+            })
+
+            .catch(function () {
+
+                municipioSelect.innerHTML =
+                    '<option value="">Error al cargar municipios</option>';
+
+            });
+    }
+
+    // ===== GUARDAR BARRENO =====
+    document.getElementById('btnGuardarBarreno').addEventListener('click', function () {
+
+        // Recopilar intervalos
+        var intervalos = [];
+        document.querySelectorAll('#tablaIntervalosBody tr').forEach(function (row) {
+            intervalos.push({
+                Nombre: row.querySelector('.int-nombre').value,
+                DesdeM: parseFloat(row.querySelector('.int-desde').value) || 0,
+                HastaM: parseFloat(row.querySelector('.int-hasta').value) || 0,
+                DeInteres: row.querySelector('.int-interes').checked
+            });
+        });
+
+        var formData = new FormData();
+
+        var archivos = document.getElementById('b-inputEvidencias').files;
+
+        formData.append('b-IdProyecto', parseInt(document.getElementById('b-IdProyecto').value) || null);
+        formData.append('b-ProyectoEEID', document.getElementById('b-ProyectoEEID').value.trim());
+        formData.append('b-BarrenoID', document.getElementById('b-BarrenoID').value.trim());
+        formData.append('b-Responsable', document.getElementById('b-Responsable').value.trim());
+        formData.append('b-EmpresaPerforista', document.getElementById('b-EmpresaPerforista').value.trim());
+        formData.append('b-ResponsableDescNucleo', document.getElementById('b-ResponsableDescNucleo').value.trim());
+        formData.append('b-Estado', document.getElementById('b-Estado').options[document.getElementById('b-Estado').selectedIndex]
+            .text);
+        formData.append('b-Municipio', document.getElementById('b-Municipio').options[document.getElementById('b-Municipio').selectedIndex]
+            .text);
+        formData.append('b-Localidad', document.getElementById('b-Localidad').value.trim());
+        formData.append('b-LatitudN', parseFloat(document.getElementById('b-LatitudN').value) || null);
+        formData.append('b-LongitudO', parseFloat(document.getElementById('b-LongitudO').value) || null);
+        formData.append('b-Altitud', parseFloat(document.getElementById('b-Altitud').value) || null);
+        formData.append('b-Azimut', parseInt(document.getElementById('b-Azimut').value) || null);
+        formData.append('b-Inclinacion', document.getElementById('b-Inclinacion').value.trim());
+        formData.append('b-TipoBarrenacion', document.getElementById('b-TipoBarrenacion').value);
+        formData.append('b-FechaInicio', document.getElementById('b-FechaInicio').value);
+        formData.append('b-FechaFin', document.getElementById('b-FechaFin').value);
+        formData.append('b-LongitudPerforada', parseFloat(document.getElementById('b-LongitudPerforada').value) || null);
+        formData.append('b-LongitudRecuperada', parseFloat(document.getElementById('b-LongitudRecuperada').value) || null);
+        formData.append('b-Diametro', parseInt(document.getElementById('b-Diametro').value) || null);
+        formData.append('b-RQD', document.getElementById('b-RQD').value);
+        formData.append('b-NumeroCajas', parseInt(document.getElementById('b-NumeroCajas').value) || null);
+        formData.append('b-NombrePrimeraCaja', document.getElementById('b-NombrePrimeraCaja').value.trim());
+        formData.append('b-Gravimetria', parseFloat(document.getElementById('b-Gravimetria').value) || null);
+        formData.append(
+            'b-Intervalos',
+            JSON.stringify(intervalos)
+        );
+        formData.append('b-NotasFinales', document.getElementById('b-NotasFinales').value.trim());
+        for (var i = 0; i < archivos.length; i++) {
+            formData.append('b-Evidencias', archivos[i]);
+        }
+
+        // Validar BarrenoID
+        if (!document.getElementById('b-BarrenoID').value.trim()) {
+            alert('El Barreno (ID) es obligatorio.');
+            irAPasoBarreno(1);
+            return;
+        }
+
+        document.getElementById('txtGuardarBarreno').textContent = 'Guardando...';
+        document.getElementById('spnGuardarBarreno').classList.remove('d-none');
+        document.getElementById('btnGuardarBarreno').disabled = true;
+
+        fetch('/SiliMx/GuardarBarreno', {
+            method: 'POST',
+            body: formData
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            document.getElementById('txtGuardarBarreno').textContent = 'Guardar barreno';
+            document.getElementById('spnGuardarBarreno').classList.add('d-none');
+            document.getElementById('btnGuardarBarreno').disabled = false;
+
+            if (data.success) {
+                document.getElementById('idBarrenoGenerado').textContent =
+                    data.barrenoIdVisible;
+                new bootstrap.Modal(
+                    document.getElementById('modalBarrenoGuardado')
+                ).show();
+            } else {
+                alert('Error al guardar el barreno.');
+            }
+        })
+        .catch(function () {
+            document.getElementById('txtGuardarBarreno').textContent = 'Guardar barreno';
+            document.getElementById('spnGuardarBarreno').classList.add('d-none');
+            document.getElementById('btnGuardarBarreno').disabled = false;
+            alert('Error de conexión. Intenta de nuevo.');
+        });
+    });
+
+    function resetearFormBarreno() {
+        document.querySelectorAll('#bPaso1 input, #bPaso1 select').forEach(
+            function (el) { el.value = ''; });
+        document.querySelectorAll('#bPaso2 input, #bPaso2 select').forEach(
+            function (el) { el.value = ''; });
+        document.getElementById('tablaIntervalosBody').innerHTML = '';
+        contadorIntervalo = 0;
+        document.getElementById('b-NotasFinales').value = '';
+        document.getElementById('b-lblEvidencias').textContent = 'Ningún archivo seleccionado';
+        irAPasoBarreno(1);
+    }
+</script>
+}

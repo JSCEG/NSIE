@@ -1,0 +1,182 @@
+@* Views/SiliMx/Bienvenida.cshtml *@
+@model NSIE.Models.SilimxRegistroViewModel
+@using NSIE.Models
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "SILiMx - Bienvenida";
+    string estatus = ViewBag.Estatus as string ?? "Pendiente";
+
+    var header = new HeaderViewModel
+    {
+        Title = "SILiMx - Bienvenida",
+        IconPath = "siil.png",
+        Description = "Plataforma de Inteligencia y Catálogo Nacional de Muestreo (SNIEn)",
+        Section = "SILiMx",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "SIIL",
+            description = "Registro y consultorio de información de litio",
+            functionality = "Registro, consultoría y análisis de muestras y pronósticos",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "flask", text = "Registro: captura de muestras" },
+                new { icon = "map", text = "Consultorio: pronósticos y mapas" }
+            }
+        })
+    };
+}
+
+<div class="container-fluid p-4">
+
+    @await Html.PartialAsync("_ViewHeader", header)
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* {{-- Bloque de presentación del sistema --}} *@
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 10px;">
+        <div class="card-body p-4 p-md-5">
+
+            <h2 class="text-center fw-bold mb-3" style="letter-spacing: 1px;">
+                <span style="font-style: italic;">S</span>istema de
+                <span style="font-style: italic;">I</span>nteligencia del
+                <span style="font-style: italic;">L</span>itio
+                <span style="font-style: italic;">M</span>exicano
+                (<strong>SIL<span style="font-style: italic;">i</span>Mx</strong>)
+            </h2>
+
+            <hr style="border-color: #c9a86a;">
+
+            <p class="text-justify" style="text-align: justify;">
+                Bienvenido al Sistema de Inteligencia del Litio Mexicano (<strong>SILiMx</strong>),
+                una plataforma informática desarrollada por la Secretaría de Ciencia Humanidades
+                Tecnología e Innovación (<strong>SECIHTI</strong>) y <strong>LitioMx</strong>,
+                en coordinación con la Secretaría de Energía (<strong>SENER</strong>), como un componente
+                especializado del Sistema Nacional de Información Energética (SNIEn) para mapear, articular
+                y fortalecer las capacidades científicas, tecnológicas e industriales del país en torno a la
+                cadena de valor del litio.
+            </p>
+
+            <p class="text-justify" style="text-align: justify;">
+                La gestión, resguardo y análisis de la información geocientífica, técnica y operativa
+                relacionada con el litio en México servirá como base para impulsar alianzas estratégicas,
+                orientar políticas públicas de financiamiento y acelerar la soberanía tecnológica de México
+                en materia de transición energética.
+            </p>
+
+            <p class="text-center fst-italic" style="color: #1b4332; font-size: 0.92rem;">
+                ¡Tu contribución para el registro es muy valiosa para construir juntos el inventario
+                de actividades en la cadena de valor del litio más completo de México!
+            </p>
+
+        </div>
+    </div>
+
+    @* {{-- Perfil del capturista (solo lectura) --}} *@
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 10px;">
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <div>
+                    <h6 class="fw-bold mb-0">Perfil del capturista</h6>
+                    <small class="text-muted">
+                        Estos datos se leen automáticamente del usuario autenticado
+                        y forman parte del registro conforme al perfil activo.
+                    </small>
+                </div>
+                <span class="badge px-3 py-2"
+                      style="background-color: #f0f0f0; color: #555; font-size: 0.8rem; letter-spacing: 1px;">
+                    SOLO LECTURA
+                </span>
+            </div>
+
+            <hr style="border-color: #c9a86a;">
+
+            <div class="row g-3 mt-1">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold small text-muted">Correo</label>
+                    <input type="text" class="form-control" value="@ViewBag.Correo" readonly
+                           style="background-color: #f8f8f8; border-color: #ddd;" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold small text-muted">Nombre</label>
+                    <input type="text" class="form-control" value="@ViewBag.Nombre" readonly
+                           style="background-color: #f8f8f8; border-color: #ddd;" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold small text-muted">Institución</label>
+                    <input type="text" class="form-control" value="@ViewBag.Institucion" readonly
+                           style="background-color: #f8f8f8; border-color: #ddd;" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @* {{-- Aviso de privacidad + botón Ingresar --}} *@
+    <div class="card border-0 shadow-sm" style="border-radius: 10px;">
+        <div class="card-body p-4">
+
+            <div class="d-flex align-items-start gap-3">
+
+                @* {{-- Checkbox --}} *@
+                <div class="pt-1">
+                    <input type="checkbox" id="chkReconocimiento"
+                           style="width: 28px; height: 28px; cursor: pointer; border: 2px solid #1b4332; border-radius: 4px;" />
+                </div>
+
+                @* {{-- Texto del aviso --}} *@
+                <p class="mb-0 fst-italic small" style="text-align: justify; color: #333;">
+                    Reconozco que la información que a continuación registraré será tratada conforme a lo
+                    dispuesto en la Ley General de Protección de Datos Personales en Posesión de Sujetos
+                    Obligados y la Ley Federal de Protección a la Propiedad Industrial, utilizándose
+                    únicamente para fines estadísticos y diseño de políticas públicas. Al enviar este
+                    formulario, declaro que cuento con las facultades o autorizaciones institucionales para
+                    registrar este esfuerzo en el "Sistema de Inteligencia del Litio Mexicano"
+                    (<strong>SILiMx</strong>).
+                </p>
+
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <button id="btnIngresar"
+                        class="btn btn-lg px-5 text-white"
+                        style="background-color: #1b4332; opacity: 0.45; cursor: not-allowed;"
+                        disabled>
+                    Ingresar
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+<script>
+    // Habilitar/deshabilitar botón según checkbox
+    document.getElementById('chkReconocimiento').addEventListener('change', function () {
+        var btn = document.getElementById('btnIngresar');
+        if (this.checked) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+        } else {
+            btn.disabled = true;
+            btn.style.opacity = '0.45';
+            btn.style.cursor = 'not-allowed';
+        }
+    });
+
+    // Redirigir al Dashboard/Inicio del módulo
+    document.getElementById('btnIngresar').addEventListener('click', function () {
+        window.location.href = '@Url.Action("Dashboard", "SiliMx")';
+    });
+</script>
+}

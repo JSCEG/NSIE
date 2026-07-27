@@ -46,7 +46,7 @@ namespace NSIE.Models
         [RegularExpression(@"^[A-Za-z0-9\-_\/]+$", 
             ErrorMessage = "Formato inválido en Id Proyecto.")]
         [StringLength(50)]
-        public string IdProyecto { get; set; }
+        public string Proyecto { get; set; }
 
         /// <summary>Institución responsable del registro</summary>
         public string Institucion { get; set; }
@@ -72,6 +72,10 @@ namespace NSIE.Models
         /// <summary>Municipio donde se ubicó la muestra</summary>
         [Required(ErrorMessage = "Debe seleccionar un municipio.")]
         public string Municipio { get; set; }
+
+        /// <summary>Localidad donde se ubicó la muestra</summary>
+        [Required(ErrorMessage = "Debe seleccionar una localidad.")]
+        public string Localidad { get; set; }
 
         /// <summary>Coordenada de latitud (precisión: 6 decimales = ~0.1 metros)</summary>
         [Range(14, 33, ErrorMessage = "Latitud fuera de rango válido para México.")]

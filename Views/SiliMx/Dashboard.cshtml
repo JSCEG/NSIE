@@ -1,0 +1,1792 @@
+@* Views/SiliMx/Dashboard.cshtml *@
+@model NSIE.Models.SilimxRegistroViewModel
+@using NSIE.Models
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "SILiMx - Pantalla de Inicio";
+    bool esDirectivo = ViewBag.EsDirectivo ?? false;
+
+    var header = new HeaderViewModel
+    {
+        Title = "SILiMx - Pantalla de Inicio",
+        IconPath = "siil.png",
+        Description = "Plataforma de Inteligencia y Catálogo Nacional de Muestreo (SNIEn)",
+        Section = "SILiMx",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "SIIL",
+            description = "Registro y consultorio de información de litio",
+            functionality = "Registro, consultoría y análisis de muestras y pronósticos",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "flask", text = "Registro: captura de muestras" },
+                new { icon = "map", text = "Consultorio: pronósticos y mapas" }
+            }
+        })
+    };
+}
+
+<div class="container-fluid p-4">
+
+    @await Html.PartialAsync("_ViewHeader", header)
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* {{-- Presentación del sistema --}} *@
+    <div class="card border-0 shadow-sm mb-4" style="border-radius:10px; border: 1px solid #c9a86a !important;">
+        <div class="card-body p-4">
+            <h2 class="text-center fw-bold mb-3">
+                <span class="fst-italic">S</span>istema de
+                <span class="fst-italic">I</span>nteligencia del
+                <span class="fst-italic">L</span>itio
+                <span class="fst-italic">M</span>exicano
+                (<strong>SIL<span class="fst-italic">i</span>Mx</strong>)
+            </h2>
+            <hr style="border-color:#c9a86a;">
+            <p style="text-align:justify;">
+                El Sistema de Inteligencia del Litio Mexicano (<strong>SILiMx</strong>) es una plataforma informática
+                desarrollada por la Secretaría de Ciencia Humanidades Tecnología e Innovación (<strong>SECIHTI</strong>)
+                y <strong>LitioMx</strong>, en coordinación con la Secretaría de Energía (<strong>SENER</strong>), como
+                un componente especializado del Sistema Nacional de Información Energética (SNIEn) para mapear, articular
+                y fortalecer las capacidades científicas, tecnológicas e industriales del país en torno a la cadena de
+                valor del litio.
+            </p>
+            <p style="text-align:justify;">
+                La gestión, resguardo y análisis de la información geocientífica, técnica y operativa relacionada con el
+                litio en México servirá como base para impulsar alianzas estratégicas, orientar políticas públicas de
+                financiamiento y acelerar la soberanía tecnológica de México en materia de transición energética.
+            </p>
+            <p class="text-center fst-italic" style="color:#1b4332; font-size:0.9rem;">
+                ¡Tu contribución para el registro es muy valiosa para construir juntos el inventario
+                de actividades en la cadena de valor del litio más completo de México!
+            </p>
+        </div>
+    </div>
+
+    @* {{-- Acordeón principal --}} *@
+    <div class="accordion mb-4" id="acordeonSiliMx">
+
+        @* {{-- 1. Registre su Proyecto --}} *@
+        <div class="accordion-item border mb-3" style="border-color:#c9a86a !important; border-radius:8px; overflow:hidden;">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fst-italic"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#panelRegistro"
+                        style="background-color:#f8f8f8; color:#555; font-size:1rem;">
+                    Registre su Proyecto
+                </button>
+            </h2>
+            <div id="panelRegistro" class="accordion-collapse collapse" data-bs-parent="#acordeonSiliMx">
+                <div class="accordion-body p-4">
+
+                    @* {{-- Pasos del wizard --}} *@
+                    <div id="wizardRegistro">
+
+                        @* {{-- Indicador de pasos --}} *@
+                        <div class="d-flex gap-2 mb-4" id="indicadorPasos">
+                            <span id="paso-tab-1" class="badge px-3 py-2"
+                                  style="background-color:#1b4332; color:white; border-radius:20px; cursor:pointer;"
+                                  onclick="irAPaso(1)">1. Proyecto</span>
+                            <span id="paso-tab-2" class="badge px-3 py-2"
+                                  style="background-color:#e0e0e0; color:#666; border-radius:20px; cursor:default;">
+                                2. Permisos y autorizaciones</span>
+                            <span id="paso-tab-3" class="badge px-3 py-2"
+                                  style="background-color:#e0e0e0; color:#666; border-radius:20px; cursor:default;">
+                                3. Notas finales y Evidencias</span>
+                        </div>
+
+                        @* {{-- PASO 1: Proyecto --}} *@
+                        <div id="paso1" class="wizard-paso">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Tipo de Proyecto</label>
+                                    <select id="TipoProyecto" class="form-select">
+                                        <option value="">-- Selecciona --</option>
+                                        <option value="EE">Exploración y Explotación (EE)</option>
+                                        <option value="BE">Beneficio (BE)</option>
+                                        <option value="MA">Manufactura (MA)</option>
+                                        <option value="EC">Economía Circular (EC)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Proyecto (ID)
+                                        <small class="text-muted fw-normal">— Solo letras A-Z, números y puntos</small>
+                                    </label>
+                                    <input type="text" id="ProyectoID" class="form-control"
+                                           placeholder="Sin espacios" pattern="[A-Za-z0-9.]+" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Nombre del proyecto</label>
+                                    <input type="text" id="NombreProyecto" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Descripción del proyecto / Objetivo</label>
+                                    <input type="text" id="DescripcionObjetivo" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Institución / Empresa</label>
+                                    <input type="text" id="InstitucionEmpresa" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Tipo de Institución</label>
+                                    <select id="TipoInstitucionProy" class="form-select">
+                                        <option value="">-- Selecciona --</option>
+                                        <option>Pública (Federal)</option>
+                                        <option>Pública (Estatal)</option>
+                                        <option>Pública (Municipal)</option>
+                                        <option>Privada</option>
+                                        <option>Consorcio (Público-Privado)</option>
+                                        <option>Investigador independiente / sociedad civil</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Financiamiento</label>
+                                    <select id="Financiamiento" class="form-select">
+                                        <option value="">-- Selecciona --</option>
+                                        <option>Fondos públicos</option>
+                                        <option>Capital privado</option>
+                                        <option>Financiamiento mixto (Pública-Privada)</option>
+                                        <option>Recursos propios / sin fondos</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Responsable</label>
+                                    <input type="text" id="Responsable" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Fecha inicio</label>
+                                    <input type="date" id="FechaInicio" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Fecha fin</label>
+                                    <input type="date" id="FechaFin" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Estado actual</label>
+                                    <select id="EstadoActual" class="form-select">
+                                        <option value="">-- Selecciona --</option>
+                                        <option>En planeación</option>
+                                        <option>En progreso</option>
+                                        <option>Concluido</option>
+                                        <option>Suspendido</option>
+                                        <option>Terminación anticipada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Avance (%)</label>
+                                    <input type="number" id="Avance" class="form-control"
+                                           min="0" max="100" placeholder="0 a 100" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Entidad Federativa
+                                    </label>
+
+                                    <select id="EntidadFederativa" class="form-select">
+                                        <option value="">Seleccione un estado...</option>
+
+                                        @foreach (var estado in ViewBag.Estados)
+                                        {
+                                            <option value="@estado.EF_ID">
+                                                @estado.EF_Nombre
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Municipio
+                                    </label>
+
+                                    <select id="Municipio" class="form-select" disabled>
+                                        <option value="">
+                                            Seleccione un municipio...
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">Localidad</label>
+                                    <input type="text" id="Localidad" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-4">
+                                <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                                        onclick="irAPaso(2)">Siguiente →</button>
+                            </div>
+                        </div>
+
+                        @* {{-- PASO 2: Permisos y autorizaciones --}} *@
+                        <div id="paso2" class="wizard-paso d-none">
+                            <p class="fst-italic small text-muted mb-3">Marque si aplica</p>
+
+                            <div id="contenedorPermisos">
+                                <!-- CONANP -->
+                                <div class="permiso-bloque mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="checkbox" class="chk-institucion"
+                                               style="width:24px;height:24px;"
+                                               data-inst="CONANP"
+                                               id="chk-CONANP" />
+                                        <label for="chk-CONANP" class="mb-0" id="lbl-CONANP">
+                                            CONANP - Comisión Nacional de Áreas Naturales Protegidas
+                                        </label>
+                                    </div>
+                                    <div class="subpanel-permiso d-none mt-2 p-3"
+                                         style="border:2px solid #c9a86a; border-radius:6px;">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Permisos y autorizaciones</label>
+                                                <div class="permisos-lista">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Autorización obras y trabajos en Áreas Naturales Protegidas">
+                                                        <label class="form-check-label"">
+                                                            Autorización obras y trabajos en Áreas Naturales Protegidas
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Otro (especifique)</label>
+                                                <input type="text" class="form-control otro-especifique" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SEMARNAT -->
+                                <div class="permiso-bloque mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="checkbox" class="chk-institucion"
+                                               style="width:24px;height:24px;"
+                                               data-inst="SEMARNAT" id="chk-SEMARNAT" />
+                                        <label for="chk-SEMARNAT" class="mb-0" id="lbl-SEMARNAT">
+                                            SEMARNAT - Secretaría de Medio Ambiente y Recursos Naturales
+                                        </label>
+                                    </div>
+                                    <div class="subpanel-permiso d-none mt-2 p-3"
+                                         style="border:2px solid #c9a86a; border-radius:6px;">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Permisos y autorizaciones</label>
+                                                <div class="permisos-lista">
+
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Informe Preventivo">
+                                                        <label class="form-check-label">
+                                                            Informe Preventivo
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Manifestación de Impacto Ambiental (MIA)">
+                                                        <label class="form-check-label">
+                                                            Manifestación de Impacto Ambiental (MIA)
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Cambio de Uso de Suelo en Terrenos Forestales (CUSTF)">
+                                                        <label class="form-check-label">
+                                                            Cambio de Uso de Suelo en Terrenos Forestales (CUSTF)
+                                                        </label>
+                                                    </div>
+                                                
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Estudio de Riesgo Ambiental (ERA)">
+                                                        <label class="form-check-label">
+                                                            Estudio de Riesgo Ambiental (ERA)
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Programa para la Prevención de Accidentes (PPA)">
+                                                        <label class="form-check-label">
+                                                            Programa para la Prevención de Accidentes (PPA)
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Licencia Ambiental Única (LAU)">
+                                                        <label class="form-check-label">
+                                                            Licencia Ambiental Única (LAU)
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Registro de Plan de Manejo">
+                                                        <label class="form-check-label">
+                                                            Registro de Plan de Manejo
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Cédula de Operación Anual (COA)">
+                                                        <label class="form-check-label">
+                                                            Cédula de Operación Anual (COA)
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Programa de Restauración, Cierre y Post-Cierre de Minas">
+                                                        <label class="form-check-label">
+                                                            Programa de Restauración, Cierre y Post-Cierre de Minas
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Otro (especifique)</label>
+                                                <input type="text" class="form-control otro-especifique" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CONAGUA -->
+                                <div class="permiso-bloque mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="checkbox" class="chk-institucion"
+                                               style="width:24px;height:24px;"
+                                               data-inst="CONAGUA" id="chk-CONAGUA" />
+                                        <label for="chk-CONAGUA" class="mb-0" id="lbl-CONAGUA">
+                                            CONAGUA - Comisión Nacional del Agua
+                                        </label>
+                                    </div>
+                                    <div class="subpanel-permiso d-none mt-2 p-3"
+                                         style="border:2px solid #c9a86a; border-radius:6px;">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Permisos y autorizaciones</label>
+                                                <div class="permisos-lista">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Concesión de aguas nacionales">
+                                                        <label class="form-check-label">
+                                                            Concesión de aguas nacionales
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Ocupación y Obras de infraestructura en cauces y zonas federales">
+                                                        <label class="form-check-label">
+                                                            Ocupación y Obras de infraestructura en cauces y zonas federales
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Permiso de descarga de aguas residuales">
+                                                        <label class="form-check-label">
+                                                            Permiso de descarga de aguas residuales
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Otro (especifique)</label>
+                                                <input type="text" class="form-control otro-especifique" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SEDENA -->
+                                <div class="permiso-bloque mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="checkbox" class="chk-institucion"
+                                               style="width:24px;height:24px;"
+                                               data-inst="SEDENA" id="chk-SEDENA" />
+                                        <label for="chk-SEDENA" class="mb-0" id="lbl-SEDENA">
+                                            SEDENA - Secretaría de la Defensa Nacional
+                                        </label>
+                                    </div>
+                                    <div class="subpanel-permiso d-none mt-2 p-3"
+                                         style="border:2px solid #c9a86a; border-radius:6px;">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Permisos y autorizaciones</label>
+                                                <div class="permisos-lista">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Uso de explosivos">
+                                                        <label class="form-check-label">
+                                                            Uso de explosivos
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Otro (especifique)</label>
+                                                <input type="text" class="form-control otro-especifique" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- INAH -->
+                                <div class="permiso-bloque mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="checkbox" class="chk-institucion"
+                                               style="width:24px;height:24px;"
+                                               data-inst="INAH" id="chk-INAH" />
+                                        <label for="chk-INAH" class="mb-0" id="lbl-INAH">
+                                            INAH - Instituto Nacional de Antropología e Historia
+                                        </label>
+                                    </div>
+                                    <div class="subpanel-permiso d-none mt-2 p-3"
+                                         style="border:2px solid #c9a86a; border-radius:6px;">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Permisos y autorizaciones</label>
+                                                <div class="permisos-lista">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Carta de liberación">
+                                                        <label class="form-check-label">
+                                                            Carta de liberación
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Otro (especifique)</label>
+                                                <input type="text" class="form-control otro-especifique" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SE -->
+                                <div class="permiso-bloque mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="checkbox" class="chk-institucion"
+                                               style="width:24px;height:24px;"
+                                               data-inst="SE" id="chk-SE" />
+                                        <label for="chk-SE" class="mb-0" id="lbl-SE">
+                                            SE - Secretaría de Economía
+                                        </label>
+                                    </div>
+                                    <div class="subpanel-permiso d-none mt-2 p-3"
+                                         style="border:2px solid #c9a86a; border-radius:6px;">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Permisos y autorizaciones</label>
+                                                <div class="permisos-lista">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Informes">
+                                                        <label class="form-check-label">
+                                                            Informes
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Título de concesión minera">
+                                                        <label class="form-check-label">
+                                                            Título de concesión minera
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Inscripción en el Registro Público de Minería">
+                                                        <label class="form-check-label">
+                                                            Inscripción en el Registro Público de Minería
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="Plan de Cierre de Mina">
+                                                        <label class="form-check-label">
+                                                            Plan de Cierre de Mina
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Otro (especifique)</label>
+                                                <input type="text" class="form-control otro-especifique" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Otros -->
+                                <div class="permiso-bloque mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="checkbox" class="chk-institucion"
+                                               style="width:24px;height:24px;"
+                                               data-inst="Otros" id="chk-Otros" />
+                                        <label for="chk-Otros" class="mb-0">Otros</label>
+                                    </div>
+                                    <div class="subpanel-permiso d-none mt-2 p-3"
+                                         style="border:2px solid #c9a86a; border-radius:6px;">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Permisos y autorizaciones</label>
+                                                <div class="permisos-lista">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="IMSS e INFONAVIT: inscripción de empresa y trabajadores">
+                                                        <label class="form-check-label">
+                                                            IMSS e INFONAVIT: inscripción de empresa y trabajadores
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input permiso-item"
+                                                            type="checkbox"
+                                                            value="SHCP: Registro como persona física o moral con actividad empresarial">
+                                                        <label class="form-check-label">
+                                                            SHCP: Registro como persona física o moral con actividad empresarial
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Otro (especifique)</label>
+                                                <input type="text" class="form-control otro-especifique" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- No aplica -->
+                                <div class="d-flex align-items-center gap-2 mt-2">
+                                    <input type="checkbox" id="chk-NoAplica"
+                                           style="width:24px;height:24px;" />
+                                    <label for="chk-NoAplica" class="mb-0 text-muted">No aplica</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-secondary px-4" onclick="irAPaso(1)">← Anterior</button>
+                                <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                                        onclick="irAPaso(3)">Siguiente →</button>
+                            </div>
+                        </div>
+
+                        @* {{-- PASO 3: Notas y Evidencias --}} *@
+                        <div id="paso3" class="wizard-paso d-none">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Notas finales</label>
+                                    <textarea id="NotasFinales" class="form-control" rows="5"
+                                              placeholder="Formato: texto largo"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Evidencias</label>
+                                    <div class="d-flex align-items-center gap-3 p-3"
+                                         style="border:1px solid #dee2e6; border-radius:6px;">
+                                        <button type="button" class="btn text-white px-3"
+                                                style="background-color:#621132;"
+                                                onclick="document.getElementById('inputEvidencias').click()">
+                                            Elegir archivos
+                                        </button>
+                                        <span id="lblEvidencias" class="text-muted small">
+                                            Ningún archivo seleccionado
+                                        </span>
+                                        <input type="file" id="inputEvidencias" multiple accept=".xlsx,.xls" class="d-none"
+                                               onchange="mostrarNombresArchivos(this)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-secondary px-4" onclick="irAPaso(2)">← Anterior</button>
+                                <button class="btn px-4 text-white" style="background-color:#1b4332;"
+                                        id="btnGuardarProyecto">
+                                    <span id="txtGuardar">Guardar</span>
+                                    <span id="spnGuardar" class="spinner-border spinner-border-sm ms-1 d-none"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    @* {{-- /wizardRegistro --}} *@
+                </div>
+            </div>
+        </div>
+
+        @* {{-- 2. Seleccione Módulo --}} *@
+        <div class="accordion-item border mb-3"
+            style="border-color:#c9a86a !important; border-radius:8px; overflow:hidden;">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fst-italic"
+                        type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelModulo"
+                        style="background-color:#f8f8f8; color:#555; font-size:1rem;">
+                    Seleccione Módulo
+                </button>
+            </h2>
+            <div id="panelModulo" class="accordion-collapse collapse"
+                data-bs-parent="#acordeonSiliMx">
+                <div class="accordion-body p-4">
+                    <div class="row g-4">
+
+                        @* {{-- EE --}} *@
+                        <div class="col-md-3">
+                            <div class="h-100 p-3 text-center d-flex flex-column"
+                                style="border:2px solid #1b4332; border-radius:8px;">
+                                <div class="fw-bold text-white px-2 py-2 mb-2"
+                                    style="background-color:#1b4332; border-radius:6px;
+                                            font-size:0.85rem; line-height:1.3;">
+                                    EXPLORACIÓN<br>Y<br>EXPLOTACIÓN<br>
+                                    <span style="color:#c9a86a;">— EE —</span>
+                                </div>
+                                <p class="small text-muted text-start mt-2" style="font-size:0.78rem;">
+                                    Este módulo se enfoca en el registro de los esfuerzos nacionales orientados
+                                    al conocimiento, geolocalización y extracción del litio en el territorio mexicano.
+                                </p>
+                                <p class="small text-muted text-start" style="font-size:0.78rem;">
+                                    Su alcance abarca desde los estudios iniciales de prospección, pasando por
+                                    el desarrollo de proyectos y plantas piloto de extracción primaria, hasta la
+                                    operación de la Industria Minero-Metalúrgica primaria consolidada a gran escala.
+                                </p>
+                                <div class="mt-auto pt-3">
+                                    <a href="@Url.Action("ExploracionExplotacion", "SiliMx")"
+                                    class="btn btn-sm w-100 text-white fw-bold"
+                                    style="background-color:#1b4332; border-radius:6px; font-size:0.8rem;">
+                                        Entrar al módulo →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* {{-- BE --}} *@
+                        <div class="col-md-3">
+                            <div class="h-100 p-3 text-center d-flex flex-column"
+                                style="border:2px solid #1b4332; border-radius:8px;">
+                                <div class="fw-bold text-white px-2 py-2 mb-2"
+                                    style="background-color:#1b4332; border-radius:6px;
+                                            font-size:0.85rem;">
+                                    BENEFICIO<br>
+                                    <span style="color:#c9a86a;">— BE —</span>
+                                </div>
+                                <p class="small text-muted text-start mt-2" style="font-size:0.78rem;">
+                                    Este módulo recopila las capacidades nacionales para transformar el mineral
+                                    bruto en compuestos químicos de alta pureza y materiales especializados,
+                                    indispensables para el almacenamiento de energía.
+                                </p>
+                                <p class="small text-muted text-start" style="font-size:0.78rem;">
+                                    Su alcance comprende desde la investigación en refinación química orientada
+                                    a la obtención de carbonato o hidróxido de litio grado batería, pasando por
+                                    el escalamiento piloto para la síntesis de materiales activos y polvos catódicos,
+                                    hasta las capacidades de la industria de materiales precursores en fase de
+                                    producción comercial.
+                                </p>
+                                <div class="mt-auto pt-3">
+                                    <a href="@Url.Action("Beneficio", "SiliMx")"
+                                    class="btn btn-sm w-100 text-white fw-bold"
+                                    style="background-color:#1b4332; border-radius:6px; font-size:0.8rem;">
+                                        Entrar al módulo →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* {{-- MA --}} *@
+                        <div class="col-md-3">
+                            <div class="h-100 p-3 text-center d-flex flex-column"
+                                style="border:2px solid #1b4332; border-radius:8px;">
+                                <div class="fw-bold text-white px-2 py-2 mb-2"
+                                    style="background-color:#1b4332; border-radius:6px;
+                                            font-size:0.85rem;">
+                                    MANUFACTURA<br>
+                                    <span style="color:#c9a86a;">— MA —</span>
+                                </div>
+                                <p class="small text-muted text-start mt-2" style="font-size:0.78rem;">
+                                    Este módulo evalúa el corazón del almacenamiento energético en México,
+                                    mediante el mapeo del desarrollo e integración de los sistemas de baterías.
+                                </p>
+                                <p class="small text-muted text-start" style="font-size:0.78rem;">
+                                    Su alcance abarca desde la investigación básica y la validación de materiales
+                                    en celdas tipo botón, pasando por líneas piloto semiautomatizadas para celdas
+                                    cilíndricas, prismáticas o tipo bolsa (pouch), hasta las operaciones de la
+                                    industria de ensamblaje de baterías a nivel de módulos, paquetes (packs) y
+                                    gigafábricas con presencia en el mercado.
+                                </p>
+                                <div class="mt-auto pt-3">
+                                    <a href="@Url.Action("Manufactura", "SiliMx")"
+                                    class="btn btn-sm w-100 text-white fw-bold"
+                                    style="background-color:#1b4332; border-radius:6px; font-size:0.8rem;">
+                                        Entrar al módulo →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* {{-- EC --}} *@
+                        <div class="col-md-3">
+                            <div class="h-100 p-3 text-center d-flex flex-column"
+                                style="border:2px solid #1b4332; border-radius:8px;">
+                                <div class="fw-bold text-white px-2 py-2 mb-2"
+                                    style="background-color:#1b4332; border-radius:6px;
+                                            font-size:0.85rem;">
+                                    ECONOMÍA<br>CIRCULAR<br>
+                                    <span style="color:#c9a86a;">— EC —</span>
+                                </div>
+                                <p class="small text-muted text-start mt-2" style="font-size:0.78rem;">
+                                    Este último módulo está dedicado a los esfuerzos orientados a cerrar el
+                                    ciclo de vida de los materiales del litio y a reducir la dependencia de la
+                                    extracción primaria.
+                                </p>
+                                <p class="small text-muted text-start" style="font-size:0.78rem;">
+                                    Su alcance monitorea desde las tecnologías académicas y las plantas piloto
+                                    de reciclaje enfocadas en recuperar litio con la calidad de pureza necesaria
+                                    para reincorporarse a la cadena de manufactura, hasta los complejos de la
+                                    industria circular que operan a escala comercial.
+                                </p>
+                                <div class="mt-auto pt-3">
+                                    <a href="@Url.Action("EconomiaCircular", "SiliMx")"
+                                    class="btn btn-sm w-100 text-white fw-bold"
+                                    style="background-color:#1b4332; border-radius:6px; font-size:0.8rem;">
+                                        Entrar al módulo →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* {{-- 3. Actualice su Proyecto --}} *@
+        <div class="accordion-item border mb-3"
+            style="border-color:#c9a86a !important; border-radius:8px; overflow:hidden;">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fst-italic"
+                        type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelActualizar"
+                        style="background-color:#f8f8f8; color:#555; font-size:1rem;">
+                    Actualice su Proyecto
+                </button>
+            </h2>
+            <div id="panelActualizar" class="accordion-collapse collapse"
+                data-bs-parent="#acordeonSiliMx">
+                <div class="accordion-body p-4">
+
+                    @* {{-- Selector de proyecto + botones --}} *@
+                    <div id="selectorActualizar">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold small">Proyecto ID</label>
+                                <select id="selectProyectoActualizar" class="form-select">
+                                    <option value="">
+                                        Formato: lista — usar "Catálogo de Proyectos"
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn px-4 text-white"
+                                        style="background-color:#1b4332;"
+                                        id="btnActualizar" disabled>
+                                    Actualizar
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn px-4"
+                                        style="background-color:#e8e8e8; border:1px solid #ccc; color:#333;"
+                                        id="btnSolicitar" disabled>
+                                    Solicitar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <small class="text-muted">
+                                    <strong>Usuario:</strong> Elige el proyecto a actualizar.<br>
+                                    <strong>Sistema:</strong> Duplica el registro y renombra el
+                                    ProyectoID como
+                                    <span style="color:#c9a86a;">[A.ProyectoIDS] = [A.XX-ProyectoID-UsuarioID]</span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* {{-- Wizard de actualización (oculto hasta que se presione Actualizar) --}} *@
+                    <div id="wizardActualizar" class="d-none mt-4">
+
+                        @* {{-- Indicador de pasos --}} *@
+                        <div class="d-flex gap-2 mb-4" id="indicadorPasosAct">
+                            <span id="act-tab-1" class="badge px-3 py-2"
+                                style="background-color:#1b4332; color:white; border-radius:20px;">
+                                1. Proyecto
+                            </span>
+                            <span id="act-tab-2" class="badge px-3 py-2"
+                                style="background-color:#e0e0e0; color:#666; border-radius:20px;">
+                                2. Permisos y autorizaciones
+                            </span>
+                            <span id="act-tab-3" class="badge px-3 py-2"
+                                style="background-color:#e0e0e0; color:#666; border-radius:20px;">
+                                3. Notas finales y Evidencias
+                            </span>
+                        </div>
+
+                        @* {{-- PASO A1: Proyecto (campos bloqueados / editables) --}} *@
+                        <div id="actPaso1" class="act-wizard-paso">
+                            <div class="row g-3">
+                                @* {{-- Solo lectura --}} *@
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Tipo de Proyecto
+                                        <span class="badge ms-1"
+                                            style="background:#f0ede8; color:#888;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. No se edita.
+                                        </span>
+                                    </label>
+                                    <input type="text" id="act-TipoProyecto" class="form-control"
+                                        readonly style="background:#f8f8f8;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Proyecto (ID)
+                                        <span class="badge ms-1"
+                                            style="background:#f0ede8; color:#888;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Precargado con sigla "A" agregada. No se edita.
+                                        </span>
+                                    </label>
+                                    <input type="text" id="act-IdVisible" class="form-control"
+                                        readonly style="background:#f8f8f8;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Nombre del proyecto
+                                        <span class="badge ms-1"
+                                            style="background:#f0ede8; color:#888;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. No se edita.
+                                        </span>
+                                    </label>
+                                    <input type="text" id="act-NombreProyecto" class="form-control"
+                                        readonly style="background:#f8f8f8;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Descripción del proyecto / Objetivo
+                                        <span class="badge ms-1"
+                                            style="background:#f0ede8; color:#888;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. No se edita.
+                                        </span>
+                                    </label>
+                                    <input type="text" id="act-DescripcionObjetivo" class="form-control"
+                                        readonly style="background:#f8f8f8;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Institución / Empresa
+                                        <span class="badge ms-1"
+                                            style="background:#f0ede8; color:#888;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. No se edita.
+                                        </span>
+                                    </label>
+                                    <input type="text" id="act-InstitucionEmpresa" class="form-control"
+                                        readonly style="background:#f8f8f8;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Tipo de Institución
+                                        <span class="badge ms-1"
+                                            style="background:#f0ede8; color:#888;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. No se edita.
+                                        </span>
+                                    </label>
+                                    <input type="text" id="act-TipoInstitucion" class="form-control"
+                                        readonly style="background:#f8f8f8;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Financiamiento
+                                        <span class="badge ms-1"
+                                            style="background:#f0ede8; color:#888;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. No se edita.
+                                        </span>
+                                    </label>
+                                    <input type="text" id="act-Financiamiento" class="form-control"
+                                        readonly style="background:#f8f8f8;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Responsable
+                                        <span class="badge ms-1"
+                                            style="background:#f0ede8; color:#888;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. No se edita.
+                                        </span>
+                                    </label>
+                                    <input type="text" id="act-Responsable" class="form-control"
+                                        readonly style="background:#f8f8f8;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Fecha inicio
+                                        <span class="badge ms-1"
+                                            style="background:#f0ede8; color:#888;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. No se edita.
+                                        </span>
+                                    </label>
+                                    <input type="text" id="act-FechaInicio" class="form-control"
+                                        readonly style="background:#f8f8f8;" />
+                                </div>
+
+                                @* {{-- Editables --}} *@
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Fecha fin
+                                        <span class="badge ms-1"
+                                            style="background:#e8f5e9; color:#2e7d32;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. Sí se edita.
+                                        </span>
+                                    </label>
+                                    <input type="date" id="act-FechaFin" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Estado actual
+                                        <span class="badge ms-1"
+                                            style="background:#e8f5e9; color:#2e7d32;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. Sí se edita.
+                                        </span>
+                                    </label>
+                                    <select id="act-EstadoActual" class="form-select">
+                                        <option value="">-- Selecciona --</option>
+                                        <option>En planeación</option>
+                                        <option>En progreso</option>
+                                        <option>Concluido</option>
+                                        <option>Suspendido</option>
+                                        <option>Terminación anticipada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Avance (%)
+                                        <span class="badge ms-1"
+                                            style="background:#e8f5e9; color:#2e7d32;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. Sí se edita.
+                                        </span>
+                                    </label>
+                                    <input type="number" id="act-Avance" class="form-control"
+                                        min="0" max="100" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Entidad Federativa
+                                        <span class="badge ms-1"
+                                            style="background:#e8f5e9; color:#2e7d32;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. Sí se edita.
+                                        </span>
+                                    </label>
+                                    <select id="act-EntidadFederativa" class="form-select">
+                                        <option value="">Seleccione un estado...</option>
+
+                                        @foreach (var estado in ViewBag.Estados)
+                                        {
+                                            <option value="@estado.EF_ID">
+                                                @estado.EF_Nombre
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Municipio
+                                        <span class="badge ms-1"
+                                            style="background:#e8f5e9; color:#2e7d32;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. Sí se edita.
+                                        </span>
+                                    </label>
+                                    <select id="act-Municipio" class="form-select" disabled>
+                                        <option value="">
+                                            Seleccione un municipio...
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small">
+                                        Localidad
+                                        <span class="badge ms-1"
+                                            style="background:#e8f5e9; color:#2e7d32;
+                                                    font-size:0.68rem; font-weight:400;">
+                                            Respuesta precargada. Sí se edita.
+                                        </span>
+                                    </label>
+                                    <input type="text" id="act-Localidad" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-4">
+                                <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                                        onclick="irAPasoAct(2)">Siguiente →</button>
+                            </div>
+                        </div>
+
+                        @* {{-- PASO A2: Permisos (precargados, editables) --}} *@
+                        <div id="actPaso2" class="act-wizard-paso d-none">
+                            <p class="fst-italic small" style="color:#c9a86a;">
+                                Respuestas precargadas. Sí se editan.
+                            </p>
+                            <p class="fst-italic small text-muted mb-3">Marque si aplica</p>
+
+                            @* {{-- Reutilizamos la misma estructura de checkboxes con IDs distintos (prefijo "act-") --}} *@
+                            <div id="contenedorPermisosAct">
+
+                                @foreach (var inst in new[] {
+                                    new { Id="CONANP", Label="CONANP - Comisión Nacional de Áreas Naturales Protegidas",
+                                        Opciones=new[]{"Autorización obras y trabajos en Áreas Naturales Protegidas"} },
+                                    new { Id="SEMARNAT", Label="SEMARNAT - Secretaría de Medio Ambiente y Recursos Naturales",
+                                        Opciones=new[]{"Informe Preventivo","Manifestación de Impacto Ambiental (MIA)",
+                                        "Cambio de Uso de Suelo en Terrenos Forestales (CUSTF)",
+                                        "Estudio de Riesgo Ambiental (ERA)",
+                                        "Programa para la Prevención de Accidentes (PPA)",
+                                        "Licencia Ambiental Única (LAU)","Registro de Plan de Manejo",
+                                        "Cédula de Operación Anual (COA)",
+                                        "Programa de Restauración, Cierre y Post-Cierre de Minas"} },
+                                    new { Id="CONAGUA", Label="CONAGUA - Comisión Nacional del Agua",
+                                        Opciones=new[]{"Concesión de aguas nacionales",
+                                        "Ocupación y Obras de infraestructura en cauces y zonas federales",
+                                        "Permiso de descarga de aguas residuales"} },
+                                    new { Id="SEDENA", Label="SEDENA - Secretaría de la Defensa Nacional",
+                                        Opciones=new[]{"Uso de explosivos"} },
+                                    new { Id="INAH", Label="INAH - Instituto Nacional de Antropología e Historia",
+                                        Opciones=new[]{"Carta de liberación"} },
+                                    new { Id="SE", Label="SE - Secretaría de Economía",
+                                        Opciones=new[]{"Informes","Título de concesión minera",
+                                        "Inscripción en el Registro Público de Minería","Plan de Cierre de Mina"} },
+                                    new { Id="Otros", Label="Otros",
+                                        Opciones=new[]{"IMSS e INFONAVIT: inscripción de empresa y trabajadores",
+                                        "SHCP: Registro como persona física o moral con actividad empresarial"} }
+                                })
+                                {
+                                    <div class="permiso-bloque-act mb-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <input type="checkbox" class="chk-inst-act"
+                                                style="width:24px;height:24px;"
+                                                data-inst="@inst.Id"
+                                                id="act-chk-@inst.Id" />
+                                            <label for="act-chk-@inst.Id" class="mb-0">@inst.Label</label>
+                                        </div>
+                                        <div class="subpanel-act d-none mt-2 p-3"
+                                            style="border:2px solid #c9a86a; border-radius:6px;">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label small fw-semibold">
+                                                        Permisos y autorizaciones
+                                                    </label>
+                                                    <div class="lista-permisos-act">
+                                                        @foreach (var op in inst.Opciones)
+                                                        {
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input permiso-item-act"
+                                                                    type="checkbox"
+                                                                    value="@op"
+                                                                    id="act-@inst.Id-@op.Replace(" ","").Replace("/","").Replace("(","").Replace(")","")" />
+
+                                                                <label class="form-check-label"
+                                                                    for="act-@inst.Id-@op.Replace(" ","").Replace("/","").Replace("(","").Replace(")","")">
+                                                                    @op
+                                                                </label>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label small fw-semibold">
+                                                        Otro (especifique)
+                                                    </label>
+                                                    <input type="text" class="form-control otro-esp-act" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="d-flex align-items-center gap-2 mt-2">
+                                    <input type="checkbox" id="act-chk-NoAplica"
+                                        style="width:24px;height:24px;" />
+                                    <label for="act-chk-NoAplica" class="mb-0 text-muted">No aplica</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-secondary px-4"
+                                        onclick="irAPasoAct(1)">← Anterior</button>
+                                <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                                        onclick="irAPasoAct(3)">Siguiente →</button>
+                            </div>
+                        </div>
+
+                        @* {{-- PASO A3: Notas y Evidencias --}} *@
+                        <div id="actPaso3" class="act-wizard-paso d-none">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">
+                                        Resuma los avances obtenidos
+                                        <span class="badge ms-2 px-2"
+                                            style="background:#f0ede8; color:#888;
+                                                    font-size:0.7rem; font-weight:400;">
+                                            Agregar pregunta
+                                        </span>
+                                    </label>
+                                    <textarea id="act-ResumenAvances" class="form-control" rows="4"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Notas finales</label>
+                                    <textarea id="act-NotasFinales" class="form-control" rows="4"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Evidencias</label>
+                                    <div class="d-flex align-items-center gap-3 p-3"
+                                        style="border:1px solid #dee2e6; border-radius:6px;">
+                                        <button type="button" class="btn text-white px-3"
+                                                style="background-color:#621132;"
+                                                onclick="document.getElementById('act-inputEvidencias').click()">
+                                            Elegir archivos
+                                        </button>
+                                        <span id="act-lblEvidencias" class="text-muted small">
+                                            Ningún archivo seleccionado
+                                        </span>
+                                        <input type="file" id="act-inputEvidencias" multiple accept=".xlsx,.xls" class="d-none"
+                                            onchange="mostrarNombresAct(this)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-secondary px-4"
+                                        onclick="irAPasoAct(2)">← Anterior</button>
+                                <button class="btn px-4 text-white" style="background-color:#1b4332;"
+                                        id="btnGuardarActualizacion">
+                                    <span id="txtGuardarAct">Guardar</span>
+                                    <span id="spnGuardarAct"
+                                        class="spinner-border spinner-border-sm ms-1 d-none"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    @* {{-- /wizardActualizar --}} *@
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @* {{-- /acordeón --}} *@
+
+    @* {{-- Botones inferiores --}} *@
+    <div class="d-flex justify-content-between align-items-center mt-2">
+        <div>
+            @if (esDirectivo)
+            {
+                <a href="@Url.Action("Aprobaciones", "SiliMx")"
+                   class="btn btn-sm btn-outline-secondary px-3"
+                   style="font-size:0.82rem; border-color:#999; color:#666;">
+                    <i class="bi bi-person-check me-1"></i> Aprobaciones
+                </a>
+            }
+        </div>
+        <a href="@Url.Action("CatalogoProyectos", "SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8; color:#333; border:1px solid #ccc; font-weight:500;">
+            Catálogo de Proyectos
+        </a>
+    </div>
+
+</div>
+
+@* {{-- Modal de confirmación al guardar --}} *@
+<div class="modal fade" id="modalProyectoGuardado" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:10px;">
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3">
+                    <span style="width:48px;height:48px;border-radius:50%;background:#1b4332;
+                                 display:inline-flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-check-lg text-white fs-4"></i>
+                    </span>
+                </div>
+                <h5 class="fw-bold">Proyecto guardado</h5>
+                <div class="p-3 mt-2" style="background:#f8f8f8; border-radius:6px; font-size:0.9rem;">
+                    1. Proyecto guardado correctamente.<br>
+                    2. ID del Proyecto: <strong id="idProyectoGenerado">—</strong>
+                </div>
+                <button class="btn mt-4 px-4 text-white" style="background-color:#1b4332;"
+                        data-bs-dismiss="modal" onclick="resetearWizard()">
+                    <i class="bi bi-check me-1"></i> Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // ===== WIZARD =====
+    var pasoActual = 1;
+
+    function irAPaso(numero) {
+        if (numero === 2 && !validarPaso1()) return;
+
+        document.querySelectorAll('.wizard-paso').forEach(function (el) {
+            el.classList.add('d-none');
+        });
+        document.getElementById('paso' + numero).classList.remove('d-none');
+
+        for (var i = 1; i <= 3; i++) {
+            var tab = document.getElementById('paso-tab-' + i);
+            if (i === numero) {
+                tab.style.backgroundColor = '#1b4332';
+                tab.style.color = 'white';
+                tab.style.cursor = 'pointer';
+            } else if (i < numero) {
+                tab.style.backgroundColor = '#c9a86a';
+                tab.style.color = 'white';
+                tab.style.cursor = 'pointer';
+            } else {
+                tab.style.backgroundColor = '#e0e0e0';
+                tab.style.color = '#666';
+                tab.style.cursor = 'default';
+            }
+        }
+        pasoActual = numero;
+    }
+
+    function validarPaso1() {
+        var requeridos = ['TipoProyecto', 'ProyectoID', 'NombreProyecto', 'DescripcionObjetivo'];
+        var valido = true;
+        requeridos.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el.value || !el.value.trim()) {
+                el.classList.add('is-invalid');
+                valido = false;
+            } else {
+                el.classList.remove('is-invalid');
+            }
+        });
+        if (!valido) alert('Por favor completa los campos obligatorios del Paso 1.');
+        return valido;
+    }
+
+    // ===== PERMISOS: mostrar/ocultar subpanel =====
+    document.querySelectorAll('.chk-institucion').forEach(function (chk) {
+        chk.addEventListener('change', function () {
+            var bloque = this.closest('.permiso-bloque');
+            var subpanel = bloque.querySelector('.subpanel-permiso');
+            var label = bloque.querySelector('label');
+
+            if (this.checked) {
+                subpanel.classList.remove('d-none');
+                label.style.fontWeight = 'bold';
+                label.style.color = '#1b4332';
+                // Si se marca cualquier institución, desmarca "No aplica"
+                document.getElementById('chk-NoAplica').checked = false;
+            } else {
+                subpanel.classList.add('d-none');
+                label.style.fontWeight = '';
+                label.style.color = '';
+            }
+        });
+    });
+
+    // "No aplica" desmarca todas las instituciones
+    document.getElementById('chk-NoAplica').addEventListener('change', function () {
+        if (this.checked) {
+            document.querySelectorAll('.chk-institucion').forEach(function (chk) {
+                chk.checked = false;
+                var bloque = chk.closest('.permiso-bloque');
+                bloque.querySelector('.subpanel-permiso').classList.add('d-none');
+                var label = bloque.querySelector('label');
+                label.style.fontWeight = '';
+                label.style.color = '';
+            });
+        }
+    });
+
+    // ===== EVIDENCIAS =====
+    function mostrarNombresArchivos(input) {
+        var nombres = Array.from(input.files).map(function (f) { return f.name; }).join(', ');
+        document.getElementById('lblEvidencias').textContent = nombres || 'Ningún archivo seleccionado';
+    }
+
+    // ===== GUARDAR PROYECTO =====
+    document.getElementById('btnGuardarProyecto').addEventListener('click', function () {
+        var permisos = [];
+        document.querySelectorAll('.chk-institucion:checked').forEach(function (chk) {
+            var bloque = chk.closest('.permiso-bloque');
+            var seleccionados = Array.from(
+                bloque.querySelectorAll('.permiso-item:checked')
+            ).map(function (o) {
+                return o.value;
+            });
+            var otro = bloque.querySelector('.otro-especifique').value.trim();
+
+            permisos.push({
+                Institucion: chk.dataset.inst,
+                PermisosSeleccionados: seleccionados,
+                OtroEspecifique: otro
+            });
+        });
+
+        var formData = new FormData();
+
+        var archivos = document.getElementById('inputEvidencias').files;
+        
+        formData.append('TipoProyecto', document.getElementById('TipoProyecto').value);
+        formData.append('ProyectoID', document.getElementById('ProyectoID').value.trim());
+        formData.append('NombreProyecto', document.getElementById('NombreProyecto').value.trim());
+        formData.append('DescripcionObjetivo', document.getElementById('DescripcionObjetivo').value.trim());
+        formData.append('InstitucionEmpresa', document.getElementById('InstitucionEmpresa').value.trim());
+        formData.append('TipoInstitucion', document.getElementById('TipoInstitucionProy').value);
+        formData.append('Financiamiento', document.getElementById('Financiamiento').value);
+        formData.append('Responsable', document.getElementById('Responsable').value.trim());
+        formData.append('FechaInicio', document.getElementById('FechaInicio').value);
+        formData.append('FechaFin', document.getElementById('FechaFin').value);
+        formData.append('EstadoActual', document.getElementById('EstadoActual').value);
+        formData.append('Avance', parseInt(document.getElementById('Avance').value) || 0);
+        formData.append(
+            'EntidadFederativa',
+            document.getElementById('EntidadFederativa')
+                .options[document.getElementById('EntidadFederativa').selectedIndex]
+                .text
+        );
+        formData.append('Municipio', document.getElementById('Municipio').value.trim());
+        formData.append('Localidad', document.getElementById('Localidad').value.trim());
+        formData.append('NotasFinales', document.getElementById('NotasFinales').value.trim());
+        for (var i = 0; i < archivos.length; i++) {
+            formData.append('Archivos', archivos[i]);
+        }
+        formData.append(
+            'PermisosJson',
+            JSON.stringify(permisos)
+        );
+
+        // Spinner
+        document.getElementById('txtGuardar').textContent = 'Guardando...';
+        document.getElementById('spnGuardar').classList.remove('d-none');
+        document.getElementById('btnGuardarProyecto').disabled = true;
+
+        fetch('/SiliMx/GuardarProyecto', {
+            method: 'POST',
+            body: formData
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            document.getElementById('txtGuardar').textContent = 'Guardar';
+            document.getElementById('spnGuardar').classList.add('d-none');
+            document.getElementById('btnGuardarProyecto').disabled = false;
+
+            if (data.success) {
+                document.getElementById('idProyectoGenerado').textContent = data.idVisible;
+                new bootstrap.Modal(document.getElementById('modalProyectoGuardado')).show();
+            } else {
+                alert('Ocurrió un error al guardar el proyecto.');
+            }
+        })
+        .catch(function () {
+            document.getElementById('txtGuardar').textContent = 'Guardar';
+            document.getElementById('spnGuardar').classList.add('d-none');
+            document.getElementById('btnGuardarProyecto').disabled = false;
+            alert('Error de conexión. Intenta de nuevo.');
+        });
+    });
+
+    function resetearWizard() {
+        // Limpiar todos los campos
+        document.querySelectorAll('#wizardRegistro input, #wizardRegistro select, #wizardRegistro textarea')
+            .forEach(function (el) { el.value = ''; });
+        document.querySelectorAll('.chk-institucion').forEach(function (chk) {
+            chk.checked = false;
+            chk.closest('.permiso-bloque').querySelector('.subpanel-permiso').classList.add('d-none');
+        });
+        document.getElementById('chk-NoAplica').checked = false;
+        document.getElementById('lblEvidencias').textContent = 'Ningún archivo seleccionado';
+        irAPaso(1);
+    }
+
+    document
+    .getElementById('EntidadFederativa')
+    .addEventListener('change', function () {
+
+        cargarMunicipios(this.value);
+
+    });
+
+    document
+    .getElementById('act-EntidadFederativa')
+    .addEventListener('change', function () {
+
+        cargarMunicipiosAct(this.value);
+
+    });
+
+    function cargarMunicipios(estadoId) {
+
+        const municipioSelect =
+            document.getElementById('Municipio');
+
+        municipioSelect.innerHTML =
+            '<option value="">Cargando...</option>';
+
+        municipioSelect.disabled = true;
+
+        if (!estadoId) {
+
+            municipioSelect.innerHTML =
+                '<option value="">Seleccione un municipio...</option>';
+
+            return;
+        }
+
+        fetch(`/SiliMx/ObtenerMunicipiosPorEstado?estadoId=${estadoId}`)
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                municipioSelect.innerHTML =
+                    '<option value="">Seleccione un municipio...</option>';
+
+                data.forEach(m => {
+                    const option = document.createElement("option");
+                    option.value = m.municipio_Nombre; // ✅ Guarda el nombre
+                    option.text = m.municipio_Nombre;
+                    municipioSelect.appendChild(option);
+                });
+
+                municipioSelect.disabled = false;
+            })
+
+            .catch(function () {
+
+                municipioSelect.innerHTML =
+                    '<option value="">Error al cargar municipios</option>';
+
+            });
+    }
+
+    function cargarMunicipiosAct(estadoId) {
+
+        const municipioSelect =
+            document.getElementById('act-Municipio');
+
+        municipioSelect.innerHTML =
+            '<option value="">Cargando...</option>';
+
+        municipioSelect.disabled = true;
+
+        if (!estadoId) {
+
+            municipioSelect.innerHTML =
+                '<option value="">Seleccione un municipio...</option>';
+
+            return;
+        }
+
+        fetch(`/SiliMx/ObtenerMunicipiosPorEstado?estadoId=${estadoId}`)
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                municipioSelect.innerHTML =
+                    '<option value="">Seleccione un municipio...</option>';
+
+                data.forEach(m => {
+                    const option = document.createElement("option");
+                    option.value = m.municipio_Nombre; // ✅ Guarda el nombre
+                    option.text = m.municipio_Nombre;
+                    municipioSelect.appendChild(option);
+                });
+
+                municipioSelect.disabled = false;
+            })
+
+            .catch(function () {
+
+                municipioSelect.innerHTML =
+                    '<option value="">Error al cargar municipios</option>';
+
+            });
+    }
+
+    // Cargar proyectos en el selector al abrir el acordeón
+    document.getElementById('panelActualizar').addEventListener('show.bs.collapse', function () {
+        cargarSelectorProyectos();
+    });
+
+    function cargarSelectorProyectos() {
+        fetch('/SiliMx/ObtenerSelectorProyectos')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var sel = document.getElementById('selectProyectoActualizar');
+                sel.innerHTML = '<option value="">Formato: lista — usar "Catálogo de Proyectos"</option>';
+                data.forEach(function (p) {
+                    var opt = document.createElement('option');
+                    opt.value = p.idProyecto;
+                    opt.textContent = p.idVisible + ' — ' + p.nombreProyecto;
+                    sel.appendChild(opt);
+                });
+            })
+            .catch(function () { console.error('Error al cargar proyectos.'); });
+    }
+
+    // Habilitar botones al seleccionar proyecto
+    document.getElementById('selectProyectoActualizar').addEventListener('change', function () {
+        var tieneValor = !!this.value;
+        document.getElementById('btnActualizar').disabled = !tieneValor;
+        document.getElementById('btnSolicitar').disabled = !tieneValor;
+        // Ocultar wizard si cambia la selección
+        document.getElementById('wizardActualizar').classList.add('d-none');
+        document.getElementById('selectorActualizar').querySelector('.row').classList.remove('d-none');
+    });
+
+    // Botón Actualizar: carga datos y abre wizard
+    document.getElementById('btnActualizar').addEventListener('click', function () {
+        var idProyecto = document.getElementById('selectProyectoActualizar').value;
+        if (!idProyecto) return;
+
+        fetch('/SiliMx/ObtenerProyectoCompleto?idProyecto=' + idProyecto)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var p = data.proyecto;
+
+                // Prellenar campos solo lectura
+                document.getElementById('act-TipoProyecto').value = p.tipoProyecto || '';
+                document.getElementById('act-IdVisible').value = 'A.' + (p.idVisible || '');
+                document.getElementById('act-NombreProyecto').value = p.nombreProyecto || '';
+                document.getElementById('act-DescripcionObjetivo').value = p.descripcionObjetivo || '';
+                document.getElementById('act-InstitucionEmpresa').value = p.institucionEmpresa || '';
+                document.getElementById('act-TipoInstitucion').value = p.tipoInstitucion || '';
+                document.getElementById('act-Financiamiento').value = p.financiamiento || '';
+                document.getElementById('act-Responsable').value = p.responsable || '';
+                document.getElementById('act-FechaInicio').value = p.fechaInicio
+                    ? p.fechaInicio.substring(0, 10) : '';
+
+                // Prellenar editables
+                document.getElementById('act-FechaFin').value = p.fechaFin
+                    ? p.fechaFin.substring(0, 10) : '';
+                document.getElementById('act-EstadoActual').value = p.estadoActual || '';
+                document.getElementById('act-Avance').value = p.avance || 0;
+                document.getElementById('act-EntidadFederativa').options[document.getElementById('act-EntidadFederativa').selectedIndex]
+                .text = p.entidadFederativa || '';
+                document.getElementById('act-Municipio').options[document.getElementById('act-Municipio').selectedIndex]
+                .text = p.municipio || '';
+                document.getElementById('act-Localidad').value = p.localidad || '';
+
+                // Prellenar permisos
+                if (data.permisos && data.permisos.length > 0) {
+                    data.permisos.forEach(function (perm) {
+                        var chk = document.getElementById('act-chk-' + perm.institucion);
+                        if (chk) {
+                            chk.checked = true;
+                            var bloque = chk.closest('.permiso-bloque-act');
+                            bloque.querySelector('.subpanel-act').classList.remove('d-none');
+
+                            var valores = (perm.permisosSeleccionados || '').split('|');
+
+                            bloque.querySelectorAll('.permiso-item-act').forEach(function (chkPermiso) {
+
+                                chkPermiso.checked = valores.includes(chkPermiso.value);
+
+                            });
+
+                            bloque.querySelector('.otro-esp-act').value =
+                                perm.otroEspecifique || '';
+                        }
+                    });
+                }
+
+                // Guardar el ID de proyecto seleccionado para el POST
+                document.getElementById('wizardActualizar').dataset.idProyecto = idProyecto;
+
+                // Mostrar wizard, ir al paso 1
+                document.getElementById('wizardActualizar').classList.remove('d-none');
+                irAPasoAct(1);
+            })
+            .catch(function () { alert('Error al cargar el proyecto.'); });
+    });
+
+    // Wizard de actualización: navegación entre pasos
+    function irAPasoAct(numero) {
+        document.querySelectorAll('.act-wizard-paso').forEach(function (el) {
+            el.classList.add('d-none');
+        });
+        document.getElementById('actPaso' + numero).classList.remove('d-none');
+
+        for (var i = 1; i <= 3; i++) {
+            var tab = document.getElementById('act-tab-' + i);
+            if (i === numero) {
+                tab.style.backgroundColor = '#1b4332';
+                tab.style.color = 'white';
+            } else if (i < numero) {
+                tab.style.backgroundColor = '#c9a86a';
+                tab.style.color = 'white';
+            } else {
+                tab.style.backgroundColor = '#e0e0e0';
+                tab.style.color = '#666';
+            }
+        }
+    }
+
+    // Permisos del wizard de actualización
+    document.querySelectorAll('.chk-inst-act').forEach(function (chk) {
+        chk.addEventListener('change', function () {
+            var bloque = this.closest('.permiso-bloque-act');
+            var subpanel = bloque.querySelector('.subpanel-act');
+            if (this.checked) {
+                subpanel.classList.remove('d-none');
+                document.getElementById('act-chk-NoAplica').checked = false;
+            } else {
+                subpanel.classList.add('d-none');
+            }
+        });
+    });
+
+    document.getElementById('act-chk-NoAplica').addEventListener('change', function () {
+        if (this.checked) {
+            document.querySelectorAll('.chk-inst-act').forEach(function (chk) {
+                chk.checked = false;
+                chk.closest('.permiso-bloque-act')
+                .querySelector('.subpanel-act').classList.add('d-none');
+            });
+        }
+    });
+
+    function mostrarNombresAct(input) {
+        var nombres = Array.from(input.files).map(function (f) { return f.name; }).join(', ');
+        document.getElementById('act-lblEvidencias').textContent =
+            nombres || 'Ningún archivo seleccionado';
+    }
+
+    // Guardar actualización
+    document.getElementById('btnGuardarActualizacion').addEventListener('click', function () {
+        var idProyecto = parseInt(document.getElementById('wizardActualizar').dataset.idProyecto);
+
+        var permisosAct = [];
+        document.querySelectorAll('.chk-inst-act:checked').forEach(function (chk) {
+            var bloque = chk.closest('.permiso-bloque-act');
+            var seleccionados = Array.from(
+                bloque.querySelectorAll('.permiso-item-act:checked')
+            ).map(function (o) {
+                return o.value;
+            });
+            var otro = bloque.querySelector('.otro-esp-act').value.trim();
+
+            permisosAct.push({
+                Institucion: chk.dataset.inst,
+                PermisosSeleccionados: seleccionados,
+                OtroEspecifique: otro
+            });
+        });
+
+        var formData = new FormData();
+
+        formData.append("IdProyecto", idProyecto);
+        formData.append("TipoProyecto", document.getElementById('act-TipoProyecto').value);
+        formData.append("ProyectoID", document.getElementById('act-IdVisible').value);
+        formData.append("NombreProyecto", document.getElementById('act-NombreProyecto').value);
+        formData.append("DescripcionObjetivo", document.getElementById('act-DescripcionObjetivo').value);
+        formData.append("InstitucionEmpresa", document.getElementById('act-InstitucionEmpresa').value);
+        formData.append("TipoInstitucion", document.getElementById('act-TipoInstitucion').value);
+        formData.append("Financiamiento", document.getElementById('act-Financiamiento').value);
+        formData.append("Responsable", document.getElementById('act-Responsable').value);
+        formData.append("FechaInicio", document.getElementById('act-FechaInicio').value);
+        formData.append("FechaFin", document.getElementById('act-FechaFin').value);
+        formData.append("EstadoActual", document.getElementById('act-EstadoActual').value);
+        formData.append("Avance", parseInt(document.getElementById('act-Avance').value) || 0);
+        formData.append(
+            'EntidadFederativa',
+            document.getElementById('act-EntidadFederativa')
+                .options[document.getElementById('act-EntidadFederativa').selectedIndex]
+                .text
+        );
+        formData.append(
+            'Municipio',
+            document.getElementById('act-Municipio')
+                .options[document.getElementById('act-Municipio').selectedIndex]
+                .text
+        );
+        formData.append("Localidad", document.getElementById('act-Localidad').value.trim());
+        formData.append("ResumenAvances", document.getElementById('act-ResumenAvances').value.trim());
+        formData.append("NotasFinales", document.getElementById('act-NotasFinales').value.trim());
+        for (const archivo of document.getElementById("act-inputEvidencias").files) {
+            formData.append("Archivos", archivo);
+        }
+
+        formData.append(
+            "PermisosJson",
+            JSON.stringify(permisosAct)
+        );
+
+        document.getElementById('txtGuardarAct').textContent = 'Guardando...';
+        document.getElementById('spnGuardarAct').classList.remove('d-none');
+        document.getElementById('btnGuardarActualizacion').disabled = true;
+
+        fetch('/SiliMx/GuardarActualizacion', {
+            method: 'POST',
+            body: formData
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            document.getElementById('txtGuardarAct').textContent = 'Guardar';
+            document.getElementById('spnGuardarAct').classList.add('d-none');
+            document.getElementById('btnGuardarActualizacion').disabled = false;
+
+            if (data.success) {
+                document.getElementById('idProyectoGenerado').textContent = data.idVisible;
+                new bootstrap.Modal(document.getElementById('modalProyectoGuardado')).show();
+                // Reutilizamos el mismo modal de confirmación del wizard de registro
+            } else {
+                alert('Ocurrió un error al guardar la actualización.');
+            }
+        })
+        .catch(function () {
+            document.getElementById('txtGuardarAct').textContent = 'Guardar';
+            document.getElementById('spnGuardarAct').classList.add('d-none');
+            document.getElementById('btnGuardarActualizacion').disabled = false;
+            alert('Error de conexión. Intenta de nuevo.');
+        });
+    });
+</script>
+}

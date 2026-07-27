@@ -1,0 +1,306 @@
+@* Views/SiliMx/CatalogoBarrenos.cshtml *@
+@model IEnumerable<NSIE.Models.SilimxBarrenoCatalogo>
+@using NSIE.Models
+@using Newtonsoft.Json
+@* @model NSIE.Models.SilimxRegistroViewModel *@
+@{
+    ViewData["Title"] = "SILiMx - Catálogo de Barrenos";
+
+    var header = new HeaderViewModel
+    {
+        Title = "SILiMx - Catálogo de Barrenos",
+        IconPath = "siil.png",
+        Description = "Plataforma de Inteligencia y Catálogo Nacional de Muestreo (SNIEn)",
+        Section = "SILiMx",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "SIIL",
+            description = "Registro y consultorio de información de litio",
+            functionality = "Registro, consultoría y análisis de muestras y pronósticos",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "flask", text = "Registro: captura de muestras" },
+                new { icon = "map", text = "Consultorio: pronósticos y mapas" }
+            }
+        })
+    };
+}
+
+<div class="container-fluid p-4">
+
+    @await Html.PartialAsync("_ViewHeader", header)
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0" style="font-size:0.85rem;">
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("ExploracionExplotacion", "SiliMx")"
+                   style="color:#1b4332; text-decoration:none;">
+                    I. Exploración y Explotación
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("Exploracion", "SiliMx")"
+                   style="color:#1b4332; text-decoration:none;">
+                    I.1 Exploración
+                </a>
+            </li>
+            <li class="breadcrumb-item active fw-semibold" style="color:#555;">
+                Catálogo de Barrenos
+            </li>
+        </ol>
+    </nav>
+
+    <div class="mb-3">
+        <h5 class="fw-bold mb-0" style="color:#1b4332;">Catálogo de barrenos</h5>
+        <p class="text-muted small mb-0">
+            Listado de barrenos disponibles para consulta
+            <span style="color:#c9a86a; font-style:italic;">técnica</span> y
+            vinculación con muestras de arcilla profunda.
+        </p>
+    </div>
+
+    <div class="card border-0 shadow-sm" style="border-radius:10px; overflow:hidden;">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead style="background-color:#1b4332; color:white;">
+                    <tr>
+                        <th class="px-3 py-3" style="min-width:200px;">Barreno (ID)</th>
+                        <th class="px-3 py-3" style="min-width:160px;">Longitud</th>
+                        <th class="px-3 py-3" style="min-width:160px;">Ubicación</th>
+                        <th class="px-3 py-3" style="min-width:80px;">Año</th>
+                        <th class="px-3 py-3" style="min-width:160px;">Institución</th>
+                        <th class="px-3 py-3" style="min-width:110px;">Estado</th>
+                        <th class="px-3 py-3" style="min-width:160px;">Operación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* {{-- Fila de referencia --}} *@
+                    @* <tr style="background-color:#f0ede8; font-size:0.75rem;
+                                color:#888; font-style:italic;">
+                        <td class="px-3 py-2">
+                            B.BarrenoID-UsuarioID<br>
+                            <span style="font-size:0.68rem;">
+                                ProyectoEEID / ProyectoID
+                            </span>
+                        </td>
+                        <td class="px-3 py-2">
+                            Longitud recuperada<br>RQD
+                        </td>
+                        <td class="px-3 py-2">Estado / Municipio<br>Localidad</td>
+                        <td class="px-3 py-2">200#</td>
+                        <td class="px-3 py-2">Institución</td>
+                        <td class="px-3 py-2">Pendiente ó Completo</td>
+                        <td class="px-3 py-2">Ver &nbsp; Editar &nbsp;/&nbsp; Inhabilitar*</td>
+                    </tr> *@
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5 fst-italic">
+                                No tienes barrenos registrados aún.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var b in Model)
+                        {
+                            bool esPendiente = b.Estatus != "Completo";
+                            <tr>
+                                <td class="px-3 py-3">
+                                    <div style="color:#c9a86a; font-weight:500; font-size:0.88rem;">
+                                        @b.BarrenoIDVisible
+                                    </div>
+                                    <div class="text-muted" style="font-size:0.72rem;">
+                                        @(b.ProyectoEEID ?? "—") / @(b.IdVisible ?? "—")
+                                    </div>
+                                </td>
+                                <td class="px-3 py-3">
+                                    <div class="small fw-semibold">
+                                        @(b.LongitudRecuperada.HasValue ?
+                                            $"{b.LongitudRecuperada:0.##} m" : "—")
+                                    </div>
+                                    <div class="text-muted" style="font-size:0.72rem;">
+                                        @(b.RQD ?? "—")
+                                    </div>
+                                </td>
+                                <td class="px-3 py-3">
+                                    <div class="small">
+                                        @(b.Estado ?? "—") / @(b.Municipio ?? "—")
+                                    </div>
+                                    <div class="text-muted" style="font-size:0.72rem;">
+                                        @(b.Localidad ?? "—")
+                                    </div>
+                                </td>
+                                <td class="px-3 py-3">
+                                    <div class="small">
+                                        @(b.FechaFin.HasValue ?
+                                            b.FechaFin.Value.Year.ToString() : "—")
+                                    </div>
+                                </td>
+                                <td class="px-3 py-3">
+                                    <div class="small">@(b.InstitucionEmpresa ?? "—")</div>
+                                </td>
+                                <td class="px-3 py-3">
+                                    @if (esPendiente)
+                                    {
+                                        <span class="badge px-2 py-1"
+                                              style="background-color:#fff3cd;
+                                                     color:#856404; font-size:0.75rem;">
+                                            Pendiente
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge px-2 py-1"
+                                              style="background-color:#d1e7dd;
+                                                     color:#0a3622; font-size:0.75rem;">
+                                            Completo
+                                        </span>
+                                    }
+                                </td>
+                                <td class="px-3 py-3">
+                                    <div class="d-flex gap-1 flex-wrap">
+                                        <a href="@Url.Action("VerBarreno", "SiliMx",
+                                               new { id = b.IdBarreno })"
+                                           class="btn btn-sm px-2 py-1"
+                                           style="background-color:#e8e8e8; color:#333;
+                                                  font-size:0.75rem; border:1px solid #ccc;">
+                                            Ver
+                                        </a>
+                                        @if (esPendiente)
+                                        {
+                                            <a href="@Url.Action("EditarBarreno", "SiliMx",
+                                                   new { id = b.IdBarreno })"
+                                               class="btn btn-sm px-2 py-1 text-white"
+                                               style="background-color:#1b4332; font-size:0.75rem;">
+                                                Editar
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-sm px-2 py-1 text-white
+                                                          btn-inhabilitar-barreno"
+                                                    style="background-color:#621132;
+                                                           font-size:0.75rem;"
+                                                    data-id="@b.IdBarreno"
+                                                    data-nombre="@b.BarrenoIDVisible">
+                                                Inhabilitar
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p class="text-muted mt-3" style="font-size:0.75rem;">
+        * El botón <strong>Inhabilitar</strong> existe para dar oportunidad al capturista
+        de inhabilitar el registro que considere erróneo. No se podrá eliminar ni editar
+        ningún registro una vez "Completo".
+    </p>
+
+    <div class="d-flex justify-content-end mt-2">
+        <a href="@Url.Action("Barrenos", "SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8; color:#333; border:1px solid #ccc; font-weight:500;">
+            Volver
+        </a>
+    </div>
+
+</div>
+
+@* {{-- Modal Inhabilitar --}} *@
+<div class="modal fade" id="modalInhabilitarBarreno" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:10px;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Confirmar inhabilitación</h5>
+            </div>
+            <div class="modal-body pt-2">
+                <p class="mb-1">
+                    ¿Estás seguro de inhabilitar el barreno
+                    <strong id="nombreBarrenoModal">—</strong>?
+                </p>
+                <p class="text-muted small">
+                    Esta acción no puede revertirse.
+                </p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button class="btn btn-outline-secondary px-4"
+                        data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn px-4 text-white" style="background-color:#621132;"
+                        id="btnConfirmarInhabilitarBarreno">
+                    <span id="txtInhabBarreno">Inhabilitar</span>
+                    <span id="spnInhabBarreno"
+                          class="spinner-border spinner-border-sm ms-1 d-none"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    var idBarrenoAInhabilitar = null;
+    var modalInhab = new bootstrap.Modal(
+        document.getElementById('modalInhabilitarBarreno'));
+
+    document.querySelectorAll('.btn-inhabilitar-barreno').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            idBarrenoAInhabilitar = parseInt(this.dataset.id);
+            document.getElementById('nombreBarrenoModal').textContent =
+                this.dataset.nombre;
+            modalInhab.show();
+        });
+    });
+
+    document.getElementById('btnConfirmarInhabilitarBarreno')
+        .addEventListener('click', function () {
+        if (!idBarrenoAInhabilitar) return;
+
+        document.getElementById('txtInhabBarreno').textContent = 'Inhabilitando...';
+        document.getElementById('spnInhabBarreno').classList.remove('d-none');
+        this.disabled = true;
+
+        fetch('/SiliMx/InhabilitarBarreno', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(idBarrenoAInhabilitar)
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.success) {
+                modalInhab.hide();
+                window.location.reload();
+            } else {
+                alert('No se pudo inhabilitar.');
+                resetBtnInhab();
+            }
+        })
+        .catch(function () {
+            alert('Error de conexión.');
+            resetBtnInhab();
+        });
+    });
+
+    function resetBtnInhab() {
+        document.getElementById('txtInhabBarreno').textContent = 'Inhabilitar';
+        document.getElementById('spnInhabBarreno').classList.add('d-none');
+        document.getElementById('btnConfirmarInhabilitarBarreno').disabled = false;
+    }
+</script>
+}

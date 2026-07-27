@@ -15,6 +15,8 @@ namespace NSIE.Servicios.Interfaces
         Task<bool> ExisteBarreno(string barrenoId);
         Task<bool> BuscarBarreno();
         Task<IEnumerable<string>> ObtenerBarrenos();
+        Task<int> ObtenerSiguienteConsecutivo(string proyecto, string zona);
+        Task<int> ObtenerSiguienteConsecutivoCaja(string barrenoID);
 
 
         

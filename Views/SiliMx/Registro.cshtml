@@ -1,0 +1,272 @@
+@* Views/SiliMx/Registro.cshtml *@
+@model NSIE.Models.SilimxRegistroViewModel
+@using NSIE.Models
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "SILiMx - Registro de Usuario";
+    var header = new HeaderViewModel
+    {
+        Title = "SILiMx - Registro de Usuario",
+        IconPath = "siil.png",
+        Description = "Plataforma de Inteligencia y Catálogo Nacional de Muestreo (SNIEn)",
+        Section = "SILiMx",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "SIIL",
+            description = "Registro y consultorio de información de litio",
+            functionality = "Registro, consultoría y análisis de muestras y pronósticos",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "flask", text = "Registro: captura de muestras" },
+                new { icon = "map", text = "Consultorio: pronósticos y mapas" }
+            }
+        })
+    };
+}
+
+<div class="container-fluid p-4">
+    @await Html.PartialAsync("_ViewHeader", header)
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div id="alertaContainer"></div>
+
+    <div class="card shadow-sm border-0" style="border: 1px solid #c9a86a !important; border-radius: 10px;">
+        <div class="card-body p-4 p-md-5">
+
+            <div class="d-flex align-items-center mb-4">
+                <span class="badge rounded-pill px-3 py-2" style="background-color:#1b4332; font-size: 0.95rem;">
+                    <i class="bi bi-person-plus me-1"></i> Registro de usuario
+                </span>
+            </div>
+
+            <form id="formRegistroSiliMx">
+                <input type="hidden" id="IdUsuario" value="@ViewBag.IdUsuario" />
+                <input type="hidden" id="IdRegistro" value="" />
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Apellido Paterno</label>
+                        <input type="text" id="ApellidoPaterno" class="form-control" placeholder="Formato: texto corto" />
+                        <span class="text-danger small d-none" id="err-ApellidoPaterno"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Apellido Materno</label>
+                        <input type="text" id="ApellidoMaterno" class="form-control" placeholder="Formato: texto corto" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nombre(s)</label>
+                        <input type="text" id="Nombres" class="form-control" placeholder="Formato: texto corto" />
+                        <span class="text-danger small d-none" id="err-Nombres"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Tipo de Institución</label>
+                        <select id="TipoInstitucion" class="form-select">
+                            <option value="">-- Selecciona --</option>
+                            <option value="Pública / Federal">Pública / Federal</option>
+                            <option value="Pública / Estatal">Pública / Estatal</option>
+                            <option value="Pública / Municipal">Pública / Municipal</option>
+                            <option value="Privada">Privada</option>
+                            <option value="Consorcio (Pública-Privada)">Consorcio (Pública-Privada)</option>
+                            <option value="Investigador independiente / sociedad civil">Investigador independiente / sociedad civil</option>
+                        </select>
+                        <span class="text-danger small d-none" id="err-TipoInstitucion"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Institución</label>
+                        <input type="text" id="Institucion" class="form-control" placeholder="Formato: texto corto" />
+                        <span class="text-danger small d-none" id="err-Institucion"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Puesto</label>
+                        <input type="text" id="Puesto" class="form-control" placeholder="Formato: texto corto" />
+                        <span class="text-danger small d-none" id="err-Puesto"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Correo institucional</label>
+                        <input type="email" id="CorreoInstitucional" class="form-control" placeholder="Formato: texto corto" />
+                        <span class="text-danger small d-none" id="err-CorreoInstitucional"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Teléfono de contacto</label>
+                        <input type="tel" id="TelefonoContacto" class="form-control" placeholder="Formato: número" />
+                        <span class="text-danger small d-none" id="err-TelefonoContacto"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Perfil solicitado</label>
+                        <select id="PerfilSolicitado" class="form-select">
+                            <option value="">-- Selecciona --</option>
+                            <option value="Directivo">Directivo</option>
+                            <option value="Operador capturista">Operador capturista</option>
+                        </select>
+                        <span class="text-danger small d-none" id="err-PerfilSolicitado"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-5">
+                    <button type="button" id="btnEnviarSolicitud" class="btn btn-lg px-4 text-white"
+                            style="background-color:#1b4332;">
+                        <span id="btnTexto">Enviar Solicitud</span>
+                        <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // ----- Autollenado al cargar -----
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarDatosIniciales();
+        });
+
+        function cargarDatosIniciales() {
+            fetch('/SiliMx/ObtenerMiRegistro', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.existe) {
+                    var r = data.registro;
+                    document.getElementById('IdRegistro').value = r.idRegistro;
+                    document.getElementById('ApellidoPaterno').value = r.apellidoPaterno || '';
+                    document.getElementById('ApellidoMaterno').value = r.apellidoMaterno || '';
+                    document.getElementById('Nombres').value = r.nombres || '';
+                    document.getElementById('TipoInstitucion').value = r.tipoInstitucion || '';
+                    document.getElementById('Institucion').value = r.institucion || '';
+                    document.getElementById('Puesto').value = r.puesto || '';
+                    document.getElementById('CorreoInstitucional').value = r.correoInstitucional || '';
+                    document.getElementById('TelefonoContacto').value = r.telefonoContacto || '';
+                    document.getElementById('PerfilSolicitado').value = r.perfilSolicitado || '';
+                } else if (data.datosBase) {
+                    var d = data.datosBase;
+                    document.getElementById('Nombres').value = d.nombre || '';
+                    document.getElementById('Institucion').value = d.unidad_de_Adscripcion || '';
+                    document.getElementById('Puesto').value = d.cargo || '';
+                    document.getElementById('CorreoInstitucional').value = d.correo || '';
+                }
+            })
+            .catch(error => console.error('Error al cargar datos iniciales:', error));
+        }
+
+        // ----- Envío del formulario -----
+        document.getElementById('btnEnviarSolicitud').addEventListener('click', function () {
+            limpiarErrores();
+
+            if (!validarFormulario()) return;
+
+            var request = {
+                IdUsuario: parseInt(document.getElementById('IdUsuario').value),
+                ApellidoPaterno: document.getElementById('ApellidoPaterno').value.trim(),
+                ApellidoMaterno: document.getElementById('ApellidoMaterno').value.trim(),
+                Nombres: document.getElementById('Nombres').value.trim(),
+                TipoInstitucion: document.getElementById('TipoInstitucion').value,
+                Institucion: document.getElementById('Institucion').value.trim(),
+                Puesto: document.getElementById('Puesto').value.trim(),
+                CorreoInstitucional: document.getElementById('CorreoInstitucional').value.trim(),
+                TelefonoContacto: document.getElementById('TelefonoContacto').value.trim(),
+                PerfilSolicitado: document.getElementById('PerfilSolicitado').value
+            };
+
+            toggleLoading(true);
+
+            fetch('/SiliMx/GuardarRegistro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(request)
+            })
+            .then(response => response.json())
+            .then(data => {
+                toggleLoading(false);
+                if (data.success) {
+                    window.location.href = '/SiliMx/Bienvenida';
+                } else {
+                    mostrarAlerta('danger', 'Ocurrió un error al enviar tu solicitud.');
+                }
+            })
+            .catch(error => {
+                toggleLoading(false);
+                console.error('Error:', error);
+                mostrarAlerta('danger', 'Ocurrió un error al enviar tu solicitud.');
+            });
+        });
+
+        function validarFormulario() {
+            var valido = true;
+            var requeridos = ['ApellidoPaterno', 'Nombres', 'TipoInstitucion', 'Institucion',
+                               'Puesto', 'CorreoInstitucional', 'TelefonoContacto', 'PerfilSolicitado'];
+
+            requeridos.forEach(function (campo) {
+                var el = document.getElementById(campo);
+                if (!el.value || el.value.trim() === '') {
+                    mostrarError(campo, 'Este campo es obligatorio');
+                    valido = false;
+                }
+            });
+
+            var correo = document.getElementById('CorreoInstitucional').value.trim();
+            if (correo && !/^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(correo)) {
+                mostrarError('CorreoInstitucional', 'Formato de correo no válido');
+                valido = false;
+            }
+
+            return valido;
+        }
+
+        function mostrarError(campo, mensaje) {
+            var span = document.getElementById('err-' + campo);
+            if (span) {
+                span.textContent = mensaje;
+                span.classList.remove('d-none');
+            }
+            document.getElementById(campo).classList.add('is-invalid');
+        }
+
+        function limpiarErrores() {
+            document.querySelectorAll('.text-danger.small').forEach(function (el) {
+                el.classList.add('d-none');
+                el.textContent = '';
+            });
+            document.querySelectorAll('.is-invalid').forEach(function (el) {
+                el.classList.remove('is-invalid');
+            });
+        }
+
+        function toggleLoading(activo) {
+            var btn = document.getElementById('btnEnviarSolicitud');
+            var texto = document.getElementById('btnTexto');
+            var spinner = document.getElementById('btnSpinner');
+
+            btn.disabled = activo;
+            spinner.classList.toggle('d-none', !activo);
+            texto.textContent = activo ? 'Enviando...' : 'Enviar Solicitud';
+        }
+
+        function mostrarAlerta(tipo, mensaje) {
+            var html = `
+                <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                    ${mensaje}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;
+            document.getElementById('alertaContainer').innerHTML = html;
+        }
+    </script>
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+</div>

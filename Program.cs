@@ -79,6 +79,7 @@ builder.Services.AddTransient<IRepositorioInscripcion, RepositorioInscripcion>()
 builder.Services.AddScoped<IRepositorioFinanzas, RepositorioFinanzas>();
 builder.Services.AddScoped<IRepositorioFuentesdeInformacion, RepositorioFuentesdeInformacion>();
 builder.Services.AddTransient<IRepositorioSIIL, RepositorioSIIL>();
+builder.Services.AddScoped<IRepositorioSiliMx, RepositorioSiliMx>();
 
 
 builder.Services.AddTransient<IUserStore<UsuarioApp>, UsuarioStore>();

@@ -10,9 +10,6 @@ namespace NSIE.Models
         // CONTEXTO
         // =========================
 
-        [Required(ErrorMessage = "Debe seleccionar la litología local.")]
-        public string LitologiaLocal { get; set; }
-
         [Range(-10000, 10000, ErrorMessage = "La anomalía gravimétrica debe estar entre -10000 y 10000.")]
         public decimal? AnomaliaGravimetrica { get; set; }
         
@@ -48,6 +45,10 @@ namespace NSIE.Models
         [StringLength(100, ErrorMessage = "El nombre del responsable no debe superar los 100 caracteres.")]
         public string Responsable { get; set; }
 
+        [Required(ErrorMessage = "Debe registrar al responsable de la descripción del núcleo.")]
+        [StringLength(100, ErrorMessage = "El nombre del responsable no debe superar los 100 caracteres.")]
+        public string ResponsableNucleo { get; set; }
+
 
         // =========================
         // COORDENADAS
@@ -78,6 +79,8 @@ namespace NSIE.Models
         [Required(ErrorMessage = "Debe seleccionar el tipo de barrenación.")]
         public string TipoBarrenacion { get; set; }
 
+        public string? TipoBarrenacionOtro { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime? FechaInicio { get; set; }
 
@@ -102,32 +105,34 @@ namespace NSIE.Models
         [Range(1, 1000, ErrorMessage = "Debe registrar al menos una caja.")]
         public int? NumeroCajas { get; set; }
 
-        [Required(ErrorMessage = "Debe registrar el nombre de las cajas.")]
-        [StringLength(200, ErrorMessage = "El nombre de las cajas no debe superar los 200 caracteres.")]
-        public string NombreCajas { get; set; }
-
-        [StringLength(500, ErrorMessage = "La lista de RQD es demasiado larga.")]
-        public string RQD { get; set; }
+        // [StringLength(500, ErrorMessage = "La lista de RQD es demasiado larga.")]
+        public string? RQD { get; set; }
 
         [Range(0, 100, ErrorMessage = "El TCR debe estar entre 0 y 100.")]
         public decimal? TCR { get; set; }
 
-        [Range(1, 1000, ErrorMessage = "Debe registrar al menos un intervalo.")]
-        public int? Intervalos { get; set; }
+        [StringLength(500, ErrorMessage = "Las notas no deben superar los 500 caracteres.")]
+        public string? TCRNotas { get; set; }
 
-        [Required(ErrorMessage = "Debe registrar la descripción de intervalos.")]
-        [StringLength(500, ErrorMessage = "La descripción de intervalos es demasiado larga.")]
-        public string IntervalosInteres { get; set; }
+        public List<IntervaloViewModel> Intervalos { get; set; } = new();
+
+        public class IntervaloViewModel
+        {
+            public string Nombre { get; set; }
+            public decimal Desde { get; set; }
+            public decimal Hasta { get; set; }
+            public bool EsInteres { get; set; }
+        }
 
 
         // =========================
         // ARCHIVOS
         // =========================
         // [Required(ErrorMessage = "Debe anexar el archivo de descripción del núcleo.")]
-        public IFormFile ArchivoDescripcionNucleo { get; set; }
+        public IFormFile? ArchivoDescripcionNucleo { get; set; }
 
         // [Required(ErrorMessage = "Debe anexar al menos una fotografía del núcleo.")]
-        public List<IFormFile> FotografiasNucleo { get; set; }
+        public List<IFormFile>? FotografiasNucleo { get; set; }
 
 
         // =========================
@@ -143,7 +148,7 @@ namespace NSIE.Models
         public int Id { get; set; }
 
         // CONTEXTO
-        public string LitologiaLocal { get; set; }
+        // public string LitologiaLocal { get; set; }
         public decimal? AnomaliaGravimetrica { get; set; }
 
         public string? Anomalia1 { get; set; }
@@ -157,6 +162,7 @@ namespace NSIE.Models
         public string BarrenoID { get; set; }
         public string? Perforista { get; set; }
         public string? Responsable { get; set; }
+        public string? ResponsableNucleo { get; set; }
 
         // COORDENADAS
         public decimal Latitud { get; set; }
@@ -177,13 +183,10 @@ namespace NSIE.Models
         public decimal? LongitudRecuperada { get; set; }
         public int? Diametro { get; set; }
         public int? NumeroCajas { get; set; }
-        public string? NombreCajas { get; set; }
 
-        public string RQD { get; set; }
+        public string? RQD { get; set; }
         public decimal? TCR { get; set; }
-
-        public int? Intervalos { get; set; }
-        public string? IntervalosInteres { get; set; }
+        public string? TCRNotas { get; set; }
 
         // ARCHIVOS
         public string? ArchivoDescripcionRuta { get; set; }
@@ -206,5 +209,27 @@ namespace NSIE.Models
 
         [Write(false)]
         public DateTime? FechaSubida { get; set; }
+    }
+
+    // INTERVALOS
+    public class BarrenacionIntervalo
+    {
+        public int Id { get; set; }
+        public int BarrenacionId { get; set; }
+
+        public string Nombre { get; set; }
+        public decimal Desde { get; set; }
+        public decimal Hasta { get; set; }
+        public bool EsInteres { get; set; }
+    }
+
+    // CAJAS
+    public class BarrenacionCaja
+    {
+        public int Id { get; set; }
+        public int BarrenacionId { get; set; }
+
+        public string CajaID { get; set; }
+        public int Consecutivo { get; set; }
     }
 }

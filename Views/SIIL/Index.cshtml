@@ -23,9 +23,9 @@
     };
 }
 
-@{
+@* @{
     bool existeBarreno = ViewBag.ExisteBarreno ?? false;
-}
+} *@
 
 <div class="container-fluid p-4">
     @await Html.PartialAsync("_ViewHeader", header)
@@ -92,18 +92,14 @@
                     </p>
 
                     <hr>
-
-                    <!-- PASO 1: BARRENACIÓN -->
-                    <a href="@Url.Action("Barrenacion", "SIIL")"
-                    class="btn btn-success btn-lg w-100 mb-2">
-                        <i class="bi bi-tools"></i> Cuestionario de Barrenación
-                    </a>
-
-                    <!-- PASO 2: REGISTRO DE MUESTRA -->
+                    
+                    <!-- PASO 1 y 2: REGISTRO DE MUESTRA (OPCIÓN DE BARRENACIÓN) -->
                     <a href="@Url.Action("CrearMuestra", "SIIL")"
-                        class="btn btn-lg w-100 mb-2 @(existeBarreno ? "btn-primary" : "btn-outline-secondary disabled")">
+                        class="btn btn-lg w-100 mb-2 btn-primary"
+                        onclick="limpiarMuestraTemp()">
 
-                        <i class="bi bi-plus-circle"></i> Registro de Muestra
+                            <i class="bi bi-plus-circle"></i>
+                            Registro de Muestra
                     </a>
 
                     <!-- PASO 3 y 4 -->
@@ -186,3 +182,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    function limpiarMuestraTemp() {
+
+        sessionStorage.removeItem("crearMuestraTemp");
+        sessionStorage.removeItem("origen");
+
+        console.log("🧹 Storage limpiado");
+    }
+</script>

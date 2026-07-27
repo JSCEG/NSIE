@@ -139,16 +139,72 @@ namespace NSIE.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Barrenacion()
+        public async Task<IActionResult> Barrenacion(string proyecto, string estado, string municipio)
         {
+            ViewBag.Proyecto = proyecto;
+            ViewBag.Estado = estado;
+            ViewBag.Municipio = municipio;
+            
             var model = new BarrenacionViewModel();
             return View(model);
+        }
+
+       [HttpGet]
+        public async Task<IActionResult> ObtenerSiguienteConsecutivo(string proyecto, string zona)
+        {
+            try
+            {
+                int siguiente = await _repositorioSIIL.ObtenerSiguienteConsecutivo(proyecto, zona);
+
+                return Ok(new
+                {
+                    success = true,
+                    consecutivo = siguiente.ToString("D3")
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener consecutivo: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    success = false,
+                    error = "Error al obtener consecutivo"
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerSiguienteConsecutivoCaja(string barrenoID)
+        {
+            try
+            {
+                int siguiente = await _repositorioSIIL.ObtenerSiguienteConsecutivoCaja(barrenoID);
+
+                return Ok(new
+                {
+                    success = true,
+                    consecutivo = siguiente.ToString("D3")
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener consecutivo de caja: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    success = false,
+                    error = "Error al obtener consecutivo de caja"
+                });
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Barrenacion(BarrenacionViewModel model)
         {
+            Console.WriteLine("ENTRÓ AL POST DE BARRENACIÓN");
+            Console.WriteLine($"ModelState válido: {ModelState.IsValid}");
             // =========================
             // VALIDACIONES EXTRA
             // =========================
@@ -183,11 +239,23 @@ namespace NSIE.Controllers
                 }
             }
 
-            // 3️⃣ Validar intervalos
-            if (model.Intervalos.HasValue && string.IsNullOrWhiteSpace(model.IntervalosInteres))
+            if (model.Intervalos == null || !model.Intervalos.Any())
             {
-                ModelState.AddModelError("IntervalosInteres",
-                    "Debe especificar los intervalos de interés.");
+                ModelState.AddModelError("Intervalos",
+                    "Debe registrar al menos un intervalo.");
+            }
+
+            // 3️⃣ Validar intervalos
+            if (model.Intervalos != null)
+            {
+                foreach (var i in model.Intervalos)
+                {
+                    if (i.Hasta <= i.Desde)
+                    {
+                        ModelState.AddModelError("Intervalos",
+                            $"El intervalo {i.Nombre} tiene valores inválidos.");
+                    }
+                }
             }
 
             if (model.LongitudRecuperada.HasValue && model.LongitudPerforada.HasValue)
@@ -199,12 +267,40 @@ namespace NSIE.Controllers
                     ModelState.AddModelError("TCR",
                         "El TCR no coincide con las longitudes registradas.");
                 }
+                if (model.TCR.HasValue && model.TCR < 50)
+                {
+                    if (string.IsNullOrWhiteSpace(model.TCRNotas))
+                    {
+                        ModelState.AddModelError("TCRNotas",
+                            "Debe agregar una nota cuando el TCR es menor a 50%.");
+                    }
+                }
+            }
+
+            if (model.TipoBarrenacion == "Corte Diamante" &&
+                string.IsNullOrWhiteSpace(model.RQD))
+            {
+                ModelState.AddModelError("RQD",
+                    "El RQD es obligatorio para Corte Diamante.");
             }
 
             if (model.TipoBarrenacion != "Corte Diamante" && !string.IsNullOrWhiteSpace(model.RQD))
             {
                 ModelState.AddModelError("RQD",
                     "El RQD solo aplica para barrenación con corte diamante.");
+            }
+
+            if (model.TipoBarrenacion == "OTRO")
+            {
+                if (string.IsNullOrWhiteSpace(model.TipoBarrenacionOtro))
+                {
+                    ModelState.AddModelError("TipoBarrenacion",
+                        "Debe especificar el tipo de barrenación.");
+                }
+                else
+                {
+                    model.TipoBarrenacion = model.TipoBarrenacionOtro;
+                }
             }
 
             if (model.ArchivoDescripcionNucleo == null)
@@ -263,6 +359,14 @@ namespace NSIE.Controllers
                             "Cada imagen debe ser menor a 5MB.");
                         break;
                     }
+                }
+            }
+
+            foreach (var error in ModelState)
+            {
+                foreach (var subError in error.Value.Errors)
+                {
+                    Console.WriteLine($"Campo: {error.Key} | Error: {subError.ErrorMessage}");
                 }
             }
 
@@ -339,7 +443,6 @@ namespace NSIE.Controllers
 
                 var entidad = new Barrenacion
                 {
-                    LitologiaLocal = model.LitologiaLocal,
                     AnomaliaGravimetrica = model.AnomaliaGravimetrica,
                     Anomalia1 = model.Anomalia1,
                     Anomalia2 = model.Anomalia2,
@@ -351,6 +454,7 @@ namespace NSIE.Controllers
                     BarrenoID = model.BarrenoID,
                     Perforista = model.Perforista,
                     Responsable = model.Responsable,
+                    ResponsableNucleo = model.ResponsableNucleo, // ✅ NUEVO
 
                     Latitud = model.Latitud,
                     Longitud = model.Longitud,
@@ -364,20 +468,16 @@ namespace NSIE.Controllers
                     FechaFinalizacion = model.FechaFinalizacion,
 
                     LongitudPerforada = model.LongitudPerforada,
-
                     LongitudRecuperada = model.LongitudRecuperada,
+
                     Diametro = model.Diametro,
                     NumeroCajas = model.NumeroCajas,
-                    NombreCajas = model.NombreCajas,
 
                     RQD = model.RQD,
                     TCR = model.TCR,
-
-                    Intervalos = model.Intervalos,
-                    IntervalosInteres = model.IntervalosInteres,
+                    TCRNotas = model.TCRNotas, // ✅ NUEVO
 
                     ArchivoDescripcionRuta = rutaExcel,
-
                     Observaciones = model.Observaciones,
 
                     FechaCreacion = DateTime.Now
@@ -393,6 +493,36 @@ namespace NSIE.Controllers
                 );
 
                 entidad.Id = barrenacionId;
+
+                foreach (var intervalo in model.Intervalos)
+                {
+                    var entidadIntervalo = new BarrenacionIntervalo
+                    {
+                        BarrenacionId = barrenacionId,
+                        Nombre = intervalo.Nombre,
+                        Desde = intervalo.Desde,
+                        Hasta = intervalo.Hasta,
+                        EsInteres = intervalo.EsInteres
+                    };
+
+                    await _repositorioSIIL.Insertar("BarrenacionIntervalos", entidadIntervalo);
+                }
+
+                for (int i = 1; i <= model.NumeroCajas; i++)
+                {
+                    var consecutivo = i.ToString("D3");
+
+                    var cajaID = $"{model.BarrenoID}_C.{consecutivo}";
+
+                    var caja = new BarrenacionCaja
+                    {
+                        BarrenacionId = barrenacionId,
+                        CajaID = cajaID,
+                        Consecutivo = i
+                    };
+
+                    await _repositorioSIIL.Insertar("BarrenacionCajas", caja);
+                }
 
                 // =========================
                 // GUARDAR FOTOS
@@ -429,12 +559,14 @@ namespace NSIE.Controllers
 
                 TempData["Success"] = "Registro de barrenación guardado correctamente.";
 
-                return RedirectToAction("Index");
+                return RedirectToAction("CrearMuestra", "SIIL");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error completo al guardar barrenación");
+
                 ModelState.AddModelError("",
-                    "Ocurrió un error al guardar el registro.");
+                    $"Error real: {ex.Message}");
 
                 return View(model);
             }

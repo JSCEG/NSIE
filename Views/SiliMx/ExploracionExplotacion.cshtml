@@ -1,0 +1,117 @@
+@* Views/SiliMx/ExploracionExplotacion.cshtml *@
+@using NSIE.Models
+@using Newtonsoft.Json
+@model NSIE.Models.SilimxRegistroViewModel
+@{
+    ViewData["Title"] = "SILiMx - Exploración y Explotación";
+
+    var header = new HeaderViewModel
+    {
+        Title = "SILiMx - Exploración y Explotación",
+        IconPath = "siil.png",
+        Description = "Plataforma de Inteligencia y Catálogo Nacional de Muestreo (SNIEn)",
+        Section = "SILiMx",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "SIIL",
+            description = "Registro y consultorio de información de litio",
+            functionality = "Registro, consultoría y análisis de muestras y pronósticos",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "flask", text = "Registro: captura de muestras" },
+                new { icon = "map", text = "Consultorio: pronósticos y mapas" }
+            }
+        })
+    };
+}
+
+<div class="container-fluid p-4">
+
+    @await Html.PartialAsync("_ViewHeader", header)
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* {{-- Bloque descriptivo del módulo --}} *@
+    <div class="card border-0 shadow-sm mb-4"
+         style="border-radius:10px; border:1px solid #c9a86a !important;">
+        <div class="card-body p-4 p-md-5">
+
+            <h2 class="text-center fw-bold mb-3" style="font-variant:small-caps; letter-spacing:1px;">
+                Exploración y Explotación
+            </h2>
+
+            <hr style="border-color:#c9a86a;">
+
+            <p style="text-align:justify; color:#c9a86a;">
+                Este módulo se enfoca en el registro de los esfuerzos nacionales orientados al
+                conocimiento, geolocalización y extracción del litio en el territorio mexicano.
+            </p>
+            <p style="text-align:justify; color:#c9a86a;">
+                Su alcance abarca desde los estudios iniciales de prospección, pasando por el
+                desarrollo de proyectos y plantas piloto de extracción primaria, hasta la operación
+                de la Industria Minero-Metalúrgica primaria consolidada a gran escala.
+            </p>
+
+        </div>
+    </div>
+
+    @* {{-- Acordeón: Seleccione Sección --}} *@
+    <div class="accordion mb-4" id="acordeonEE">
+        <div class="accordion-item border"
+             style="border-color:#c9a86a !important; border-radius:8px; overflow:hidden;">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fst-italic"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#panelSeccionEE"
+                        style="background-color:#f8f8f8; color:#555; font-size:1rem;">
+                    Seleccione Sección
+                </button>
+            </h2>
+            <div id="panelSeccionEE" class="accordion-collapse collapse"
+                 data-bs-parent="#acordeonEE">
+                <div class="accordion-body p-4">
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+
+                        <a href="@Url.Action("Exploracion", "SiliMx")"
+                           class="btn px-5 py-3 fw-bold text-white"
+                           style="background-color:#1b4332; border-radius:8px;
+                                  font-size:0.95rem; letter-spacing:1px; min-width:180px;">
+                            EXPLORACIÓN
+                        </a>
+
+                        <a href="@Url.Action("Explotacion", "SiliMx")"
+                           class="btn px-5 py-3 fw-bold text-white"
+                           style="background-color:#1b4332; border-radius:8px;
+                                  font-size:0.95rem; letter-spacing:1px; min-width:180px;">
+                            EXPLOTACIÓN
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* {{-- Botones inferiores --}} *@
+    <div class="d-flex justify-content-between align-items-center mt-2">
+        <a href="@Url.Action("Dashboard", "SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8; color:#333; border:1px solid #ccc; font-weight:500;">
+            ← Volver al Inicio
+        </a>
+        <a href="@Url.Action("CatalogoProyectos", "SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8; color:#333; border:1px solid #ccc; font-weight:500;">
+            Catálogo de Proyectos
+        </a>
+    </div>
+
+</div>

@@ -241,6 +241,60 @@ namespace NSIE.Servicios
             }
         }
 
+        public async Task<int> ObtenerSiguienteConsecutivo(string proyecto, string zona)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    var prefijo = $"{proyecto}-{zona}-BRN-";
+
+                    var query = @"
+                        SELECT ISNULL(MAX(CAST(RIGHT(BarrenoID, 3) AS INT)), 0) + 1
+                        FROM Barrenaciones
+                        WHERE BarrenoID LIKE @Prefijo + '%'";
+
+                    int siguiente = await connection.ExecuteScalarAsync<int>(query, new
+                    {
+                        Prefijo = prefijo
+                    });
+
+                    return siguiente;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener consecutivo: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<int> ObtenerSiguienteConsecutivoCaja(string barrenoID)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    var query = @"
+                        SELECT ISNULL(MAX(Consecutivo), 0) + 1
+                        FROM BarrenacionCajas
+                        WHERE CajaID LIKE @Prefijo + '%'";
+
+                    int siguiente = await connection.ExecuteScalarAsync<int>(query, new
+                    {
+                        Prefijo = $"{barrenoID}_C."
+                    });
+
+                    return siguiente;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener consecutivo de caja: {ex.Message}");
+                throw;
+            }
+        }
+
         /// <summary>
         /// Genera el identificador único para Registro_Muestras según la fórmula:
         /// [CÓDIGO_FUENTE] - [CÓDIGO_ORIGEN] - [TIMESTAMP]

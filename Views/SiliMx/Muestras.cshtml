@@ -1,0 +1,1175 @@
+@* Views/SiliMx/Muestras.cshtml *@
+@using NSIE.Models
+@using Newtonsoft.Json
+@model NSIE.Models.SilimxRegistroViewModel
+@{
+    ViewData["Title"] = "SILiMx - Muestras";
+    var proyectosEE = ViewBag.ProyectosEE as
+        IEnumerable<NSIE.Models.SilimxProyectoSelector>
+        ?? Enumerable.Empty<NSIE.Models.SilimxProyectoSelector>();
+    var proyectos = ViewBag.Proyectos as
+        IEnumerable<NSIE.Models.SilimxProyectoSelector> 
+        ?? Enumerable.Empty<NSIE.Models.SilimxProyectoSelector>();
+    var barrenos = ViewBag.Barrenos as
+        IEnumerable<NSIE.Models.SilimxBarrenoSelector>
+        ?? Enumerable.Empty<NSIE.Models.SilimxBarrenoSelector>();
+
+    var header = new HeaderViewModel
+    {
+        Title = "SILiMx - Muestras",
+        IconPath = "siil.png",
+        Description = "Plataforma de Inteligencia y Catálogo Nacional de Muestreo (SNIEn)",
+        Section = "SILiMx",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "SIIL",
+            description = "Registro y consultorio de información de litio",
+            functionality = "Registro, consultoría y análisis de muestras y pronósticos",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "flask", text = "Registro: captura de muestras" },
+                new { icon = "map", text = "Consultorio: pronósticos y mapas" }
+            }
+        })
+    };
+}
+
+<style>
+    .paso-tab { padding:8px 16px; border-radius:20px; font-size:0.82rem;
+                font-weight:500; display:inline-block; }
+    .paso-tab.activo   { background-color:#621132; color:white; }
+    .paso-tab.completado { background-color:#c9a86a; color:white; }
+    .paso-tab.pendiente  { background-color:#e0e0e0; color:#666; }
+
+    .opcion-fuente {
+        display:flex; align-items:center; gap:12px;
+        padding:14px 18px; border-radius:8px;
+        border:1px solid #dee2e6; cursor:pointer;
+        margin-bottom:10px; transition:border-color 0.2s;
+    }
+    .opcion-fuente.seleccionada {
+        border:2px solid #c9a86a;
+        background-color:#fffdf7;
+    }
+    .opcion-fuente input[type=radio] {
+        width:20px; height:20px; accent-color:#621132;
+    }
+    .bloque-registro-barreno {
+        background:#f8f8f8; border:1px solid #c9a86a;
+        border-radius:8px; padding:12px 16px; margin-bottom:16px;
+        font-size:0.82rem;
+    }
+</style>
+
+<div class="container-fluid p-4">
+
+    @await Html.PartialAsync("_ViewHeader", header)
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* {{-- Breadcrumb --}} *@
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0" style="font-size:0.85rem;">
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("ExploracionExplotacion","SiliMx")"
+                   style="color:#1b4332;text-decoration:none;">
+                    I. Exploración y Explotación
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("Exploracion","SiliMx")"
+                   style="color:#1b4332;text-decoration:none;">
+                    I.1 Exploración
+                </a>
+            </li>
+            <li class="breadcrumb-item active fw-semibold" style="color:#555;">
+                Muestras
+            </li>
+        </ol>
+    </nav>
+
+    @* {{-- Bloque descriptivo --}} *@
+    <div class="card border-0 shadow-sm mb-4"
+         style="border-radius:10px;border:1px solid #ddd !important;">
+        <div class="card-body p-4 p-md-5">
+            <h2 class="text-center fw-bold mb-3" style="font-variant:small-caps;">
+                Registro de Muestras
+            </h2>
+            <hr style="border-color:#c9a86a;">
+            <p style="text-align:justify;color:#c9a86a;font-style:italic;font-size:0.88rem;">
+                "Este formulario registra las muestras de litio recolectadas en campo según
+                origen —salmueras petroleras o geotérmicas, o arcillas superficiales o
+                profundas—. Los datos aquí capturados permitirán conocer la distribución y
+                características del litio en el territorio nacional, así como sondear los
+                esfuerzos de muestreo a lo largo del país."
+            </p>
+            <p class="text-center fst-italic mt-2" style="color:#1b4332;font-size:0.82rem;">
+                "Tu contribución para el registro es muy valiosa para construir juntos el
+                inventario de muestras para exploración de litio más completo de México".
+            </p>
+            <p class="text-center mt-1" style="color:#888;font-size:0.75rem;">
+                *Todos los campos son obligatorios para garantizar la integridad de la base
+                de datos nacional.*
+            </p>
+        </div>
+    </div>
+
+    @* {{-- Navegación superior --}} *@
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="@Url.Action("Dashboard","SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8;color:#333;border:1px solid #ccc;font-weight:500;">
+            ← Volver al inicio
+        </a>
+        <a href="@Url.Action("CatalogoMuestras","SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8;color:#333;border:1px solid #ccc;font-weight:500;">
+            Catálogo de Muestras
+        </a>
+        <a href="@Url.Action("Exploracion","SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8;color:#333;border:1px solid #ccc;font-weight:500;">
+            Volver
+        </a>
+    </div>
+
+    <p class="fw-semibold mb-2">Inicia registro:</p>
+
+    @* {{-- Indicador de pasos (dinámico) --}} *@
+    <div class="d-flex gap-2 flex-wrap mb-4" id="indicadorPasosMuestra"></div>
+
+    @* {{-- Wizard --}} *@
+    <div class="card border-0 shadow-sm" style="border-radius:10px;">
+        <div class="card-body p-4">
+
+            @* {{-- PASO 1: Contexto --}} *@
+            <div id="mPaso1" class="muestra-paso">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Tu Proyecto (ID)</label>
+                        <select id="m-IdProyecto" class="form-select">
+                            <option value="">Formato: lista — usar "Catálogo de Proyectos"</option>
+                            @foreach (var p in proyectos)
+                            {
+                                <option value="@p.IdProyecto">@p.IdVisible — @p.NombreProyecto</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            ProyectoEE (ID) de la muestra
+                        </label>
+                        <select id="m-ProyectoEEID" class="form-select">
+                            <option value="">
+                                Selecciona un Proyecto de Exploración y Explotación...
+                            </option>
+
+                            @foreach (var p in proyectosEE)
+                            {
+                                <option value="@p.IdVisible">
+                                    @p.IdVisible — @p.NombreProyecto
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            Muestra (ID)
+                        </label>
+                        <input type="text" id="m-MuestraID" class="form-control"
+                               placeholder="Sin espacios, sólo letras (A-Z), números y puntos (.)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">
+                            Tamaño de muestra (kg ó L)
+                        </label>
+                        <input type="number" id="m-TamanoMuestra" class="form-control"
+                               step="0.001" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">
+                            Responsable de muestreo
+                        </label>
+                        <input type="text" id="m-ResponsableMuestreo" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Fecha de muestreo</label>
+                        <input type="date" id="m-FechaMuestreo" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Estado</label>
+                        <select id="m-Estado" class="form-select">
+                            <option value="">Seleccione un estado...</option>
+
+                            @foreach (var estado in ViewBag.Estados)
+                            {
+                                <option value="@estado.EF_ID">
+                                    @estado.EF_Nombre
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Municipio</label>
+                        <select id="m-Municipio" class="form-select" disabled>
+                            <option value="">
+                                Seleccione un municipio...
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label fw-semibold small">
+                            Localidad (opcional)
+                        </label>
+                        <input type="text" id="m-Localidad" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="mSiguiente()">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 2: Fuente --}} *@
+            <div id="mPaso2" class="muestra-paso d-none">
+                <label class="form-label fw-semibold mb-3">Fuente</label>
+                <div class="opcion-fuente" id="opt-arcilla"
+                     onclick="seleccionarFuente('Arcilla')">
+                    <input type="radio" name="m-Fuente" id="radio-arcilla" value="Arcilla" />
+                    <label for="radio-arcilla" class="mb-0" style="cursor:pointer;">
+                        Arcilla
+                    </label>
+                </div>
+                <div class="opcion-fuente" id="opt-salmuera"
+                     onclick="seleccionarFuente('Salmuera')">
+                    <input type="radio" name="m-Fuente" id="radio-salmuera" value="Salmuera" />
+                    <label for="radio-salmuera" class="mb-0" style="cursor:pointer;">
+                        Salmuera
+                    </label>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="mAnterior()">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="mSiguiente()">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 3A: Sub-tipo Salmuera --}} *@
+            <div id="mPaso3S" class="muestra-paso d-none">
+                <label class="form-label fw-semibold mb-3">Campo</label>
+                <div class="opcion-fuente" id="opt-petrolero"
+                     onclick="seleccionarTipoCampo('Petrolero')">
+                    <input type="radio" name="m-TipoCampo" id="radio-petrolero"
+                           value="Petrolero" />
+                    <label for="radio-petrolero" class="mb-0" style="cursor:pointer;">
+                        Campo Petrolero
+                    </label>
+                </div>
+                <div class="opcion-fuente" id="opt-geotermico"
+                     onclick="seleccionarTipoCampo('Geotermico')">
+                    <input type="radio" name="m-TipoCampo" id="radio-geotermico"
+                           value="Geotermico" />
+                    <label for="radio-geotermico" class="mb-0" style="cursor:pointer;">
+                        Campo Geotérmico
+                    </label>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="mAnterior()">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="mSiguiente()">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 3B: Sub-tipo Arcilla --}} *@
+            <div id="mPaso3A" class="muestra-paso d-none">
+                <label class="form-label fw-semibold mb-3">Tipo</label>
+                <div class="opcion-fuente" id="opt-superficial"
+                     onclick="seleccionarTipoArcilla('Superficial')">
+                    <input type="radio" name="m-TipoArcilla" id="radio-superficial"
+                           value="Superficial" />
+                    <label for="radio-superficial" class="mb-0" style="cursor:pointer;">
+                        Superficial
+                    </label>
+                </div>
+                <div class="opcion-fuente" id="opt-profunda"
+                     onclick="seleccionarTipoArcilla('Profunda')">
+                    <input type="radio" name="m-TipoArcilla" id="radio-profunda"
+                           value="Profunda" />
+                    <label for="radio-profunda" class="mb-0" style="cursor:pointer;">
+                        Profunda
+                    </label>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="mAnterior()">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="mSiguiente()">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 4SP: Salmuera Petrolera --}} *@
+            <div id="mPaso4SP" class="muestra-paso d-none">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Campo</label>
+                        <input type="text" id="sp-Campo" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Pozo</label>
+                        <input type="text" id="sp-Pozo" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            Latitud N (WGS84; 5 a 6 decimales)
+                        </label>
+                        <input type="number" id="sp-LatitudN" class="form-control"
+                               step="0.000001" min="14" max="33"
+                               placeholder="Formato: número decimal (14.000000# a 33.000000#)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            Longitud O (WGS84; 5 a 6 decimales)
+                        </label>
+                        <input type="number" id="sp-LongitudO" class="form-control"
+                               step="0.000001" min="86" max="119"
+                               placeholder="Formato: número decimal (86.000000# a 119.000000#)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Altitud (msnm)</label>
+                        <input type="number" id="sp-Altitud" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Profundidad (m)</label>
+                        <input type="number" id="sp-Profundidad" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">
+                            Intervalo de producción - inicio (m)
+                        </label>
+                        <input type="number" id="sp-IntervaloInicio" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">
+                            Intervalo de producción - fin (m)
+                        </label>
+                        <input type="number" id="sp-IntervaloFin" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Corte de agua (%)</label>
+                        <input type="number" id="sp-CorteAgua" class="form-control"
+                               min="0" max="100" placeholder="Formato: número entero" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Presión (PSI)</label>
+                        <input type="number" id="sp-Presion" class="form-control"
+                               step="0.001" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Temperatura (°C)</label>
+                        <input type="number" id="sp-Temperatura" class="form-control"
+                               placeholder="Formato: número entero" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">pH</label>
+                        <input type="number" id="sp-pH" class="form-control"
+                               step="0.01" min="0" max="14"
+                               placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">
+                            Oxígeno disuelto (mg/L)
+                        </label>
+                        <input type="number" id="sp-OxigenoDisuelto" class="form-control"
+                               step="0.001" placeholder="Formato: número decimal" />
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="mAnterior()">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="mSiguiente()">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 4SG: Salmuera Geotérmica --}} *@
+            <div id="mPaso4SG" class="muestra-paso d-none">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Campo</label>
+                        <input type="text" id="sg-Campo" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">
+                            Punto de muestra
+                        </label>
+                        <input type="text" id="sg-PuntoMuestra" class="form-control"
+                               placeholder="Formato: texto corto" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            Latitud N (WGS84; 5 a 6 decimales)
+                        </label>
+                        <input type="number" id="sg-LatitudN" class="form-control"
+                               step="0.000001" min="14" max="33"
+                               placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            Longitud O (WGS84; 5 a 6 decimales)
+                        </label>
+                        <input type="number" id="sg-LongitudO" class="form-control"
+                               step="0.000001" min="86" max="119"
+                               placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Altitud (msnm)</label>
+                        <input type="number" id="sg-Altitud" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Profundidad (m)</label>
+                        <input type="number" id="sg-Profundidad" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Temperatura (°C)</label>
+                        <input type="number" id="sg-Temperatura" class="form-control"
+                               placeholder="Formato: número entero" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">pH</label>
+                        <input type="number" id="sg-pH" class="form-control"
+                               step="0.01" min="0" max="14"
+                               placeholder="Formato: número decimal" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">
+                            Oxígeno disuelto (mg/L)
+                        </label>
+                        <input type="number" id="sg-OxigenoDisuelto" class="form-control"
+                               step="0.001" placeholder="Formato: número decimal" />
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="mAnterior()">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="mSiguiente()">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 4AS: Arcilla Superficial --}} *@
+            <div id="mPaso4AS" class="muestra-paso d-none">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            Latitud N (WGS84; 5 a 6 decimales)
+                        </label>
+                        <input type="number" id="as-LatitudN" class="form-control"
+                               step="0.000001" min="14" max="33"
+                               placeholder="Formato: número decimal (14.000000# a 33.000000#)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small"
+                               style="color:#c9a86a;">
+                            Longitud O (WGS84; 5 a 6 decimales)
+                        </label>
+                        <input type="number" id="as-LongitudO" class="form-control"
+                               step="0.000001" min="86" max="119"
+                               placeholder="Formato: número decimal (86.000000# a 119.000000#)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Altitud (msnm)</label>
+                        <input type="number" id="as-Altitud" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal" />
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="mAnterior()">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="mSiguiente()">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 4AP: Arcilla Profunda --}} *@
+            <div id="mPaso4AP" class="muestra-paso d-none">
+                <div class="bloque-registro-barreno">
+                    <strong>Registro de Barreno</strong><br>
+                    <span style="color:#621132; font-size:0.78rem;">
+                        Si la muestra que a continuación va a registrar proviene de un núcleo
+                        que aún no está en el catálogo de barrenos,
+                        <a href="@Url.Action("Barrenos","SiliMx")" target="_blank"
+                           style="color:#621132; text-decoration:underline;">
+                            ¡regístrese aquí!
+                        </a>
+                    </span>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Barreno (ID)</label>
+                        <select id="ap-BarrenoID" class="form-select"
+                                onchange="cargarIntervalosBarreno(this.value)">
+                            <option value="">
+                                Formato: lista. Tomar del "Catálogo de Barrenos"
+                            </option>
+                            @foreach (var bar in barrenos)
+                            {
+                                <option value="@bar.BarrenoIDVisible">
+                                    @bar.BarrenoIDVisible
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Intervalo (ID)</label>
+                        <select id="ap-IntervaloID" class="form-select">
+                            <option value="">
+                                Formato: lista. Tomar del "Catálogo de Barrenos"
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Desde (m)</label>
+                        <input type="number" id="ap-DesdeM" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal"
+                               readonly style="background:#f8f8f8;" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Hasta (m)</label>
+                        <input type="number" id="ap-HastaM" class="form-control"
+                               step="0.01" placeholder="Formato: número decimal"
+                               readonly style="background:#f8f8f8;" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Estructuras</label>
+                        <select id="ap-Estructuras" class="form-select">
+                            <option value="">-- Selecciona --</option>
+                            <option>Fracturas rellenas</option>
+                            <option>Vetas de yeso</option>
+                            <option>Nódulos de carbonato</option>
+                            <option>Otra (especifique)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="mAnterior()">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="mSiguiente()">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO 5AR: Descripción Técnica (solo Arcilla) --}} *@
+            <div id="mPaso5AR" class="muestra-paso d-none">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Litología</label>
+                        <select id="ar-Litologia" class="form-select">
+                            <option value="">-- Selecciona --</option>
+                            <option>Ígneas</option>
+                            <option>Sedimentarias</option>
+                            <option>Metamórficas</option>
+                            <option>Otra (especifique)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Color</label>
+                        <select id="ar-Color" class="form-select">
+                            <option value="">-- Selecciona --</option>
+                            <option>Blanco</option>
+                            <option>Gris</option>
+                            <option>Café</option>
+                            <option>Rojo</option>
+                            <option>Verde</option>
+                            <option>Negro</option>
+                            <option>Amarillo</option>
+                            <option>Otro (especifique)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Textura</label>
+                        <select id="ar-Textura" class="form-select">
+                            <option value="">-- Selecciona --</option>
+                            <option>Masiva</option>
+                            <option>Laminada</option>
+                            <option>Fisurada</option>
+                            <option>Bioturbada</option>
+                            <option>Brechoide</option>
+                            <option>Otra (especifique)</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold small">Notas</label>
+                        <textarea id="ar-NotasDescripcion" class="form-control"
+                                  rows="4" placeholder="Formato: texto largo"></textarea>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="mAnterior()">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#c9a86a;"
+                            onclick="mSiguiente()">Siguiente →</button>
+                </div>
+            </div>
+
+            @* {{-- PASO FINAL: Notas y Evidencias --}} *@
+            <div id="mPasoFinal" class="muestra-paso d-none">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Notas Finales</label>
+                        <textarea id="m-NotasFinales" class="form-control"
+                                  rows="5" placeholder="Formato: texto largo"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">
+                            Evidencia de la muestra (fotografía)
+                        </label>
+                        <div class="d-flex align-items-center gap-3 p-3"
+                             style="border:1px solid #dee2e6; border-radius:6px;">
+                            <button type="button" class="btn text-white px-3"
+                                    style="background-color:#621132;"
+                                    onclick="document.getElementById('m-inputEvidencias').click()">
+                                Elegir archivos
+                            </button>
+                            <span id="m-lblEvidencias" class="text-muted small">
+                                Ningún archivo seleccionado
+                            </span>
+                            <input type="file" id="m-inputEvidencias" multiple class="d-none"
+                                   onchange="mostrarNombresMuestra(this)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-outline-secondary px-4"
+                            onclick="mAnterior()">← Anterior</button>
+                    <button class="btn px-4 text-white" style="background-color:#621132;"
+                            id="btnGuardarMuestra">
+                        <span id="txtGuardarMuestra">Guardar análisis</span>
+                        <span id="spnGuardarMuestra"
+                              class="spinner-border spinner-border-sm ms-1 d-none"></span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@* {{-- Modal confirmación --}} *@
+<div class="modal fade" id="modalMuestraGuardada" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:10px;">
+            <div class="modal-body p-5 text-center">
+                <div class="mb-3">
+                    <span style="width:48px;height:48px;border-radius:50%;
+                                 background:#1b4332;display:inline-flex;
+                                 align-items:center;justify-content:center;">
+                        <i class="bi bi-check-lg text-white fs-4"></i>
+                    </span>
+                </div>
+                <h5 class="fw-bold">Muestra guardada</h5>
+                <div class="p-3 mt-2 text-start"
+                     style="background:#f8f8f8;border-radius:6px;font-size:0.88rem;">
+                    1. Muestra guardada correctamente.<br>
+                    2. ID de la muestra: <strong id="idMuestraGenerado">—</strong>
+                </div>
+                <button class="btn mt-4 px-4 text-white" style="background-color:#621132;"
+                        data-bs-dismiss="modal" onclick="resetearFormMuestra()">
+                    <i class="bi bi-check me-1"></i> Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+// ===== DATOS DE BARRENOS (para intervalos) =====
+var barrenosData = @Html.Raw(
+    System.Text.Json.JsonSerializer.Serialize(
+        (ViewBag.Barrenos as IEnumerable<NSIE.Models.SilimxBarrenoSelector> ??
+         Enumerable.Empty<NSIE.Models.SilimxBarrenoSelector>())
+        .Select(b => new {
+            id = b.IdBarreno,
+            visible = b.BarrenoIDVisible,
+            intervalosJson = b.IntervalosJson
+        })
+    )
+);
+
+// ===== LÓGICA DEL WIZARD DINÁMICO =====
+// El wizard tiene rutas:
+// SP: [1, 2, 3S, 4SP, Final]
+// SG: [1, 2, 3S, 4SG, Final]
+// AS: [1, 2, 3A, 4AS, 5AR, Final]
+// AP: [1, 2, 3A, 4AP, 5AR, Final]
+
+var mFuente = '';       // Arcilla | Salmuera
+var mTipoCampo = '';    // Petrolero | Geotermico | Superficial | Profunda
+
+// Construye la secuencia de pasos según las selecciones
+function construirSecuencia() {
+    if (mFuente === 'Salmuera' && mTipoCampo === 'Petrolero')
+        return ['mPaso1','mPaso2','mPaso3S','mPaso4SP','mPasoFinal'];
+    if (mFuente === 'Salmuera' && mTipoCampo === 'Geotermico')
+        return ['mPaso1','mPaso2','mPaso3S','mPaso4SG','mPasoFinal'];
+    if (mFuente === 'Arcilla' && mTipoCampo === 'Superficial')
+        return ['mPaso1','mPaso2','mPaso3A','mPaso4AS','mPaso5AR','mPasoFinal'];
+    if (mFuente === 'Arcilla' && mTipoCampo === 'Profunda')
+        return ['mPaso1','mPaso2','mPaso3A','mPaso4AP','mPaso5AR','mPasoFinal'];
+    // Default (antes de seleccionar)
+    if (mFuente === 'Salmuera')
+        return ['mPaso1','mPaso2','mPaso3S','mPasoFinal'];
+    if (mFuente === 'Arcilla')
+        return ['mPaso1','mPaso2','mPaso3A','mPasoFinal'];
+    return ['mPaso1','mPaso2'];
+}
+
+var mPasoActualIdx = 0;
+
+function mSiguiente() {
+    var seq = construirSecuencia();
+    if (mPasoActualIdx < seq.length - 1) {
+        mPasoActualIdx++;
+        mostrarPasoMuestra(seq[mPasoActualIdx]);
+    }
+}
+
+function mAnterior() {
+    var seq = construirSecuencia();
+    if (mPasoActualIdx > 0) {
+        mPasoActualIdx--;
+        mostrarPasoMuestra(seq[mPasoActualIdx]);
+    }
+}
+
+function mostrarPasoMuestra(idPaso) {
+    document.querySelectorAll('.muestra-paso').forEach(function(el) {
+        el.classList.add('d-none');
+    });
+    document.getElementById(idPaso).classList.remove('d-none');
+    actualizarIndicador();
+}
+
+// ===== INDICADOR DE PASOS =====
+var labelsPasos = {
+    'mPaso1':    '1. Contexto de la muestra',
+    'mPaso2':    '2. Fuente',
+    'mPaso3S':   '3. Salmuera',
+    'mPaso3A':   '3. Arcilla',
+    'mPaso4SP':  '4. Petrolera',
+    'mPaso4SG':  '4. Geotérmica',
+    'mPaso4AS':  '4. Superficial',
+    'mPaso4AP':  '4. Profunda',
+    'mPaso5AR':  '5. Descripción Técnica',
+    'mPasoFinal': 'Notas finales y Evidencias'
+};
+
+function actualizarIndicador() {
+    var seq = construirSecuencia();
+    var contenedor = document.getElementById('indicadorPasosMuestra');
+    contenedor.innerHTML = '';
+    seq.forEach(function(idPaso, idx) {
+        var n = idx + 1;
+        var label = (n + '. ') + (labelsPasos[idPaso] || idPaso)
+            .replace(/^\d+\.\s*/, '');
+        var span = document.createElement('span');
+        span.className = 'paso-tab ' + (
+            idx === mPasoActualIdx ? 'activo' :
+            idx < mPasoActualIdx  ? 'completado' : 'pendiente'
+        );
+        span.textContent = n + '. ' + labelsPasos[idPaso].replace(/^\d+\.\s*/, '');
+        contenedor.appendChild(span);
+    });
+}
+
+// ===== SELECCIÓN DE FUENTE =====
+function seleccionarFuente(fuente) {
+    mFuente = fuente;
+    mTipoCampo = ''; // reset sub-tipo
+
+    document.getElementById('radio-arcilla').checked  = fuente === 'Arcilla';
+    document.getElementById('radio-salmuera').checked = fuente === 'Salmuera';
+
+    document.getElementById('opt-arcilla').classList.toggle(
+        'seleccionada', fuente === 'Arcilla');
+    document.getElementById('opt-salmuera').classList.toggle(
+        'seleccionada', fuente === 'Salmuera');
+}
+
+function seleccionarTipoCampo(tipo) {
+    mTipoCampo = tipo;
+    document.getElementById('radio-petrolero').checked  = tipo === 'Petrolero';
+    document.getElementById('radio-geotermico').checked = tipo === 'Geotermico';
+    document.getElementById('opt-petrolero').classList.toggle(
+        'seleccionada', tipo === 'Petrolero');
+    document.getElementById('opt-geotermico').classList.toggle(
+        'seleccionada', tipo === 'Geotermico');
+}
+
+function seleccionarTipoArcilla(tipo) {
+    mTipoCampo = tipo;
+    document.getElementById('radio-superficial').checked = tipo === 'Superficial';
+    document.getElementById('radio-profunda').checked    = tipo === 'Profunda';
+    document.getElementById('opt-superficial').classList.toggle(
+        'seleccionada', tipo === 'Superficial');
+    document.getElementById('opt-profunda').classList.toggle(
+        'seleccionada', tipo === 'Profunda');
+}
+
+// ===== INTERVALOS DE BARRENO =====
+function cargarIntervalosBarreno(barrenoVisible) {
+    var sel = document.getElementById('ap-IntervaloID');
+    sel.innerHTML = '<option value="">-- Selecciona --</option>';
+    document.getElementById('ap-DesdeM').value = '';
+    document.getElementById('ap-HastaM').value = '';
+
+    if (!barrenoVisible) return;
+
+    var barreno = barrenosData.find(function(b) {
+        return b.visible === barrenoVisible;
+    });
+
+    if (barreno && barreno.intervalosJson) {
+        try {
+            var intervalos = JSON.parse(barreno.intervalosJson);
+            intervalos.forEach(function(iv) {
+                var opt = document.createElement('option');
+                opt.value = iv.Nombre;
+                opt.dataset.desde = iv.DesdeM;
+                opt.dataset.hasta = iv.HastaM;
+                opt.textContent = iv.Nombre + ' (' + iv.DesdeM + 'm – ' + iv.HastaM + 'm)';
+                sel.appendChild(opt);
+            });
+        } catch(e) {
+            console.error('Error parseando intervalos:', e);
+        }
+    }
+
+    sel.addEventListener('change', function() {
+        var opt = this.options[this.selectedIndex];
+        document.getElementById('ap-DesdeM').value = opt.dataset.desde || '';
+        document.getElementById('ap-HastaM').value = opt.dataset.hasta || '';
+    });
+}
+
+// ===== EVIDENCIAS =====
+function mostrarNombresMuestra(input) {
+    var nombres = Array.from(input.files).map(function(f) { return f.name; }).join(', ');
+    document.getElementById('m-lblEvidencias').textContent =
+        nombres || 'Ningún archivo seleccionado';
+}
+
+document
+.getElementById('m-Estado')
+.addEventListener('change', function () {
+
+    cargarMunicipios(this.value);
+
+});
+
+function cargarMunicipios(estadoId) {
+
+    const municipioSelect =
+        document.getElementById('m-Municipio');
+
+    municipioSelect.innerHTML =
+        '<option value="">Cargando...</option>';
+
+    municipioSelect.disabled = true;
+
+    if (!estadoId) {
+
+        municipioSelect.innerHTML =
+            '<option value="">Seleccione un municipio...</option>';
+
+        return;
+    }
+
+    fetch(`/SiliMx/ObtenerMunicipiosPorEstado?estadoId=${estadoId}`)
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            municipioSelect.innerHTML =
+                '<option value="">Seleccione un municipio...</option>';
+
+            data.forEach(m => {
+                const option = document.createElement("option");
+                option.value = m.municipio_Nombre; // ✅ Guarda el nombre
+                option.text = m.municipio_Nombre;
+                municipioSelect.appendChild(option);
+            });
+
+            municipioSelect.disabled = false;
+        })
+
+        .catch(function () {
+
+            municipioSelect.innerHTML =
+                '<option value="">Error al cargar municipios</option>';
+
+        });
+}
+
+// ===== GUARDAR =====
+document.getElementById('btnGuardarMuestra').addEventListener('click', function() {
+    var formData = new FormData();
+
+    var archivos = document.getElementById('m-inputEvidencias').files;
+
+    formData.append('m-IdProyecto',
+        parseInt(document.getElementById('m-IdProyecto').value) || null);
+
+    formData.append('m-ProyectoEEID',
+        document.getElementById('m-ProyectoEEID').value.trim());
+
+    formData.append('m-MuestraID',
+        document.getElementById('m-MuestraID').value.trim());
+
+    formData.append('m-TamanoMuestra',
+        parseFloat(document.getElementById('m-TamanoMuestra').value) || null);
+
+    formData.append('m-ResponsableMuestreo',
+        document.getElementById('m-ResponsableMuestreo').value.trim());
+
+    formData.append('m-FechaMuestreo',
+        document.getElementById('m-FechaMuestreo').value);
+
+    formData.append(
+        'm-Estado',
+        document.getElementById('m-Estado')
+            .options[document.getElementById('m-Estado').selectedIndex]
+            .text
+    );
+
+    formData.append(
+        'm-Municipio',
+        document.getElementById('m-Municipio')
+            .options[document.getElementById('m-Municipio').selectedIndex]
+            .text
+    );
+
+    formData.append('m-Localidad',
+        document.getElementById('m-Localidad').value.trim());
+
+    formData.append('m-Fuente', mFuente);
+
+    formData.append('m-TipoCampo', mTipoCampo);
+
+    // ============================
+    // SP
+    // ============================
+
+    formData.append('sp-Campo',
+        document.getElementById('sp-Campo').value.trim());
+
+    formData.append('sp-Pozo',
+        document.getElementById('sp-Pozo').value.trim());
+
+    formData.append('sp-LatitudN',
+        parseFloat(document.getElementById('sp-LatitudN').value) || null);
+
+    formData.append('sp-LongitudO',
+        parseFloat(document.getElementById('sp-LongitudO').value) || null);
+
+    formData.append('sp-Altitud',
+        parseFloat(document.getElementById('sp-Altitud').value) || null);
+
+    formData.append('sp-Profundidad',
+        parseFloat(document.getElementById('sp-Profundidad').value) || null);
+
+    formData.append('sp-IntervaloInicio',
+        parseFloat(document.getElementById('sp-IntervaloInicio').value) || null);
+
+    formData.append('sp-IntervaloFin',
+        parseFloat(document.getElementById('sp-IntervaloFin').value) || null);
+
+    formData.append('sp-CorteAgua',
+        parseInt(document.getElementById('sp-CorteAgua').value) || null);
+
+    formData.append('sp-Presion',
+        parseFloat(document.getElementById('sp-Presion').value) || null);
+
+    formData.append('sp-Temperatura',
+        parseInt(document.getElementById('sp-Temperatura').value) || null);
+
+    formData.append('sp-pH',
+        parseFloat(document.getElementById('sp-pH').value) || null);
+
+    formData.append('sp-OxigenoDisuelto',
+        parseFloat(document.getElementById('sp-OxigenoDisuelto').value) || null);
+
+    // ============================
+    // SG
+    // ============================
+
+    formData.append('sg-Campo',
+        document.getElementById('sg-Campo').value.trim());
+
+    formData.append('sg-PuntoMuestra',
+        document.getElementById('sg-PuntoMuestra').value.trim());
+
+    formData.append('sg-LatitudN',
+        parseFloat(document.getElementById('sg-LatitudN').value) || null);
+
+    formData.append('sg-LongitudO',
+        parseFloat(document.getElementById('sg-LongitudO').value) || null);
+
+    formData.append('sg-Altitud',
+        parseFloat(document.getElementById('sg-Altitud').value) || null);
+
+    formData.append('sg-Profundidad',
+        parseFloat(document.getElementById('sg-Profundidad').value) || null);
+
+    formData.append('sg-Temperatura',
+        parseInt(document.getElementById('sg-Temperatura').value) || null);
+
+    formData.append('sg-pH',
+        parseFloat(document.getElementById('sg-pH').value) || null);
+
+    formData.append('sg-OxigenoDisuelto',
+        parseFloat(document.getElementById('sg-OxigenoDisuelto').value) || null);
+
+    // ============================
+    // AS
+    // ============================
+
+    formData.append('as-LatitudN',
+        parseFloat(document.getElementById('as-LatitudN').value) || null);
+
+    formData.append('as-LongitudO',
+        parseFloat(document.getElementById('as-LongitudO').value) || null);
+
+    formData.append('as-Altitud',
+        parseFloat(document.getElementById('as-Altitud').value) || null);
+
+    // ============================
+    // AP
+    // ============================
+
+    formData.append('ap-BarrenoID',
+        document.getElementById('ap-BarrenoID').value);
+
+    formData.append('ap-IntervaloID',
+        document.getElementById('ap-IntervaloID').value);
+
+    formData.append('ap-DesdeM',
+        parseFloat(document.getElementById('ap-DesdeM').value) || null);
+
+    formData.append('ap-HastaM',
+        parseFloat(document.getElementById('ap-HastaM').value) || null);
+
+    formData.append('ap-Estructuras',
+        document.getElementById('ap-Estructuras').value);
+
+    // ============================
+    // AR
+    // ============================
+
+    formData.append('ar-Litologia',
+        document.getElementById('ar-Litologia').value);
+
+    formData.append('ar-Color',
+        document.getElementById('ar-Color').value);
+
+    formData.append('ar-Textura',
+        document.getElementById('ar-Textura').value);
+
+    formData.append('ar-NotasDescripcion',
+        document.getElementById('ar-NotasDescripcion').value.trim());
+
+    // ============================
+    // Final
+    // ============================
+
+    formData.append('m-NotasFinales',
+        document.getElementById('m-NotasFinales').value.trim());
+
+    for (var i = 0; i < archivos.length; i++) {
+        formData.append('m-Evidencias', archivos[i]);
+    }
+
+    // Validaciones
+
+    if (!document.getElementById('m-MuestraID').value.trim()) {
+        alert('El Muestra (ID) es obligatorio.');
+        return;
+    }
+
+    if (!mFuente) {
+        alert('Selecciona la Fuente.');
+        return;
+    }
+
+    document.getElementById('txtGuardarMuestra').textContent = 'Guardando...';
+    document.getElementById('spnGuardarMuestra').classList.remove('d-none');
+    document.getElementById('btnGuardarMuestra').disabled = true;
+
+    fetch('/SiliMx/GuardarMuestra', {
+        method: 'POST',
+        body: formData
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        document.getElementById('txtGuardarMuestra').textContent = 'Guardar análisis';
+        document.getElementById('spnGuardarMuestra').classList.add('d-none');
+        document.getElementById('btnGuardarMuestra').disabled = false;
+        if (data.success) {
+            document.getElementById('idMuestraGenerado').textContent =
+                data.muestraIdVisible;
+            new bootstrap.Modal(
+                document.getElementById('modalMuestraGuardada')).show();
+        } else {
+            alert('Error al guardar la muestra.');
+        }
+    })
+    .catch(function() {
+        document.getElementById('txtGuardarMuestra').textContent = 'Guardar análisis';
+        document.getElementById('spnGuardarMuestra').classList.add('d-none');
+        document.getElementById('btnGuardarMuestra').disabled = false;
+        alert('Error de conexión.');
+    });
+});
+
+function resetearFormMuestra() {
+    mFuente = ''; mTipoCampo = ''; mPasoActualIdx = 0;
+    document.querySelectorAll('.muestra-paso input, .muestra-paso select, .muestra-paso textarea').forEach(function(el) { el.value = ''; });
+    document.querySelectorAll('.opcion-fuente').forEach(function(el) {
+        el.classList.remove('seleccionada');
+    });
+    document.getElementById('m-lblEvidencias').textContent = 'Ningún archivo seleccionado';
+    mostrarPasoMuestra('mPaso1');
+}
+
+// Inicializar
+mostrarPasoMuestra('mPaso1');
+</script>
+}

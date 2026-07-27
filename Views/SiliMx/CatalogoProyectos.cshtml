@@ -1,0 +1,300 @@
+@* Views/SiliMx/CatalogoProyectos.cshtml *@
+@* @model NSIE.Models.SilimxRegistroViewModel *@
+@using NSIE.Models
+@using Newtonsoft.Json
+@model IEnumerable<NSIE.Models.SilimxProyectoCatalogo>
+@{
+    ViewData["Title"] = "SILiMx - Catálogo de Proyectos";
+
+    var header = new HeaderViewModel
+    {
+        Title = "SILiMx - Catálogo de Proyectos",
+        IconPath = "siil.png",
+        Description = "Plataforma de Inteligencia y Catálogo Nacional de Muestreo (SNIEn)",
+        Section = "SILiMx",
+        ModuleInfo = JsonConvert.SerializeObject(new
+        {
+            title = "SIIL",
+            description = "Registro y consultorio de información de litio",
+            functionality = "Registro, consultoría y análisis de muestras y pronósticos",
+            stage = "Operación",
+            roles = new[] {
+                new { icon = "flask", text = "Registro: captura de muestras" },
+                new { icon = "map", text = "Consultorio: pronósticos y mapas" }
+            }
+        })
+    };
+}
+
+<div class="container-fluid p-4">
+
+    @await Html.PartialAsync("_ViewHeader", header)
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* {{-- Encabezado --}} *@
+    <div class="mb-3">
+        <h5 class="fw-bold mb-0" style="color:#1b4332;">Catálogo de Proyectos</h5>
+        <p class="text-muted small mb-0">
+            Listado de proyectos de exploración disponibles para consulta
+            <span style="color:#c9a86a; font-style:italic;">técnica</span> y
+            <span style="color:#c9a86a; font-style:italic;">vinculación</span> posterior.
+        </p>
+    </div>
+
+    @* {{-- Tabla --}} *@
+    <div class="card border-0 shadow-sm" style="border-radius:10px; overflow:hidden;">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead style="background-color:#1b4332; color:white;">
+                    <tr>
+                        <th class="px-3 py-3" style="min-width:180px;">Proyecto (ID)</th>
+                        <th class="px-3 py-3" style="min-width:200px;">Proyecto</th>
+                        <th class="px-3 py-3" style="min-width:160px;">Ubicación</th>
+                        <th class="px-3 py-3" style="min-width:140px;">Periodo</th>
+                        <th class="px-3 py-3" style="min-width:180px;">Institución</th>
+                        <th class="px-3 py-3" style="min-width:120px;">Estado</th>
+                        <th class="px-3 py-3" style="min-width:180px;">Operación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* {{-- Fila de referencia (cabecera secundaria) --}} *@
+                    @* <tr style="background-color:#f0ede8; font-size:0.78rem; color:#888; font-style:italic;">
+                        <td class="px-3 py-2">XX-ProyectoID-UsuarioID</td>
+                        <td class="px-3 py-2">Lista de módulos<br><span>% de avance / Estado actual</span></td>
+                        <td class="px-3 py-2">Estado / Municipio<br>Localidad</td>
+                        <td class="px-3 py-2">Año inicio - Año fin<br>Año de registro</td>
+                        <td class="px-3 py-2">Institución<br>tipo de institución / Financiamiento</td>
+                        <td class="px-3 py-2">Pendiente ó Completo</td>
+                        <td class="px-3 py-2">Ver &nbsp; Editar &nbsp;/&nbsp; Inhabilitar*</td>
+                    </tr> *@
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5 fst-italic">
+                                No tienes proyectos registrados aún.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var p in Model)
+                        {
+                            // Construir el ID visible: TipoProyecto-ProyectoID-UsuarioID
+                            string tipoSigla = p.TipoProyecto ?? "XX";
+                            string idVisible = p.IdVisible ?? $"{tipoSigla}-{p.ProyectoID?.Trim() ?? "0000"}-{p.UsuarioID:D4}";
+                            bool esPendiente = p.Estatus != "Completo";
+
+                            <tr>
+                                @* {{-- Proyecto (ID) --}} *@
+                                <td class="px-3 py-3">
+                                    <span style="color:#c9a86a; font-weight:500; font-size:0.9rem;">
+                                        @idVisible
+                                    </span>
+                                </td>
+
+                                @* {{-- Proyecto --}} *@
+                                <td class="px-3 py-3">
+                                    <div class="fw-semibold small">
+                                        @switch (p.TipoProyecto)
+                                        {
+                                            case "EE": <text>Exploración y Explotación</text> break;
+                                            case "BE": <text>Beneficio</text> break;
+                                            case "MA": <text>Manufactura</text> break;
+                                            case "EC": <text>Economía Circular</text> break;
+                                            default: @p.TipoProyecto break;
+                                        }
+                                    </div>
+                                    <div class="text-muted" style="font-size:0.78rem;">
+                                        @(p.Avance ?? 0)% /
+                                        <span class="fst-italic">@(p.EstadoActual ?? "—")</span>
+                                    </div>
+                                </td>
+
+                                @* {{-- Ubicación --}} *@
+                                <td class="px-3 py-3">
+                                    <div class="small">@(p.EntidadFederativa ?? "—") / @(p.Municipio ?? "—")</div>
+                                    <div class="text-muted" style="font-size:0.78rem;">@(p.Localidad ?? "—")</div>
+                                </td>
+
+                                @* {{-- Periodo --}} *@
+                                <td class="px-3 py-3">
+                                    <div class="small">
+                                        @(p.FechaInicio.HasValue ? p.FechaInicio.Value.Year.ToString() : "—")
+                                        –
+                                        @(p.FechaFin.HasValue ? p.FechaFin.Value.Year.ToString() : "—")
+                                    </div>
+                                    <div class="text-muted" style="font-size:0.78rem;">
+                                        @p.FechaRegistro.Year
+                                    </div>
+                                </td>
+
+                                @* {{-- Institución --}} *@
+                                <td class="px-3 py-3">
+                                    <div class="small fw-semibold">@(p.InstitucionEmpresa ?? "—")</div>
+                                    <div class="text-muted" style="font-size:0.78rem;">
+                                        @(p.TipoInstitucion ?? "—") / @(p.Financiamiento ?? "—")
+                                    </div>
+                                </td>
+
+                                @* {{-- Estado --}} *@
+                                <td class="px-3 py-3">
+                                    @if (esPendiente)
+                                    {
+                                        <span class="badge px-2 py-1"
+                                              style="background-color:#fff3cd; color:#856404; font-size:0.78rem;">
+                                            Pendiente
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge px-2 py-1"
+                                              style="background-color:#d1e7dd; color:#0a3622; font-size:0.78rem;">
+                                            Completo
+                                        </span>
+                                    }
+                                </td>
+
+                                @* {{-- Operación --}} *@
+                                <td class="px-3 py-3">
+                                    <div class="d-flex gap-1 flex-wrap">
+                                        @* {{-- Ver: siempre disponible --}} *@
+                                        <a href="@Url.Action("VerProyecto", "SiliMx", new { id = p.IdProyecto })"
+                                           class="btn btn-sm px-2 py-1"
+                                           style="background-color:#e8e8e8; color:#333; font-size:0.78rem; border:1px solid #ccc;">
+                                            Ver
+                                        </a>
+
+                                        @if (esPendiente)
+                                        {
+                                            @* {{-- Pendiente: Ver + Editar --}} *@
+                                            <a href="@Url.Action("EditarProyecto", "SiliMx", new { id = p.IdProyecto })"
+                                               class="btn btn-sm px-2 py-1"
+                                               style="background-color:#1b4332; color:white; font-size:0.78rem;">
+                                                Editar
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            @* {{-- Completo: Ver + Inhabilitar --}} *@
+                                            <button class="btn btn-sm px-2 py-1 btn-inhabilitar"
+                                                    style="background-color:#621132; color:white; font-size:0.78rem;"
+                                                    data-id="@p.IdProyecto"
+                                                    data-nombre="@p.ProyectoID">
+                                                Inhabilitar
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @* {{-- Nota sobre Inhabilitar --}} *@
+    <p class="text-muted mt-3" style="font-size:0.78rem;">
+        * El botón <strong>Inhabilitar</strong> existe para dar oportunidad al capturista de inhabilitar
+        el registro que considere erróneo. No se podrá eliminar ni editar ningún registro una vez "Completo".
+    </p>
+
+    @* {{-- Volver --}} *@
+    <div class="d-flex justify-content-end mt-2">
+        <a href="@Url.Action("Dashboard", "SiliMx")"
+           class="btn px-4"
+           style="background-color:#e8e8e8; color:#333; border:1px solid #ccc; font-weight:500;">
+            Volver
+        </a>
+    </div>
+
+</div>
+
+@* {{-- Modal confirmación Inhabilitar --}} *@
+<div class="modal fade" id="modalInhabilitar" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:10px;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Confirmar inhabilitación</h5>
+            </div>
+            <div class="modal-body pt-2">
+                <p class="mb-1">
+                    ¿Estás seguro de inhabilitar el proyecto
+                    <strong id="nombreProyectoModal">—</strong>?
+                </p>
+                <p class="text-muted small">
+                    Esta acción no puede revertirse. El registro dejará de ser visible en el catálogo.
+                </p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn px-4 text-white" style="background-color:#621132;"
+                        id="btnConfirmarInhabilitar">
+                    <span id="txtInhabilitar">Inhabilitar</span>
+                    <span id="spnInhabilitar" class="spinner-border spinner-border-sm ms-1 d-none"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    var idProyectoAInhabilitar = null;
+    var modalInhabilitar = new bootstrap.Modal(document.getElementById('modalInhabilitar'));
+
+    // Abrir modal al hacer click en Inhabilitar
+    document.querySelectorAll('.btn-inhabilitar').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            idProyectoAInhabilitar = parseInt(this.dataset.id);
+            document.getElementById('nombreProyectoModal').textContent = this.dataset.nombre;
+            modalInhabilitar.show();
+        });
+    });
+
+    // Confirmar inhabilitación
+    document.getElementById('btnConfirmarInhabilitar').addEventListener('click', function () {
+        if (!idProyectoAInhabilitar) return;
+
+        document.getElementById('txtInhabilitar').textContent = 'Inhabilitando...';
+        document.getElementById('spnInhabilitar').classList.remove('d-none');
+        document.getElementById('btnConfirmarInhabilitar').disabled = true;
+
+        fetch('/SiliMx/InhabilitarProyecto', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(idProyectoAInhabilitar)
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.success) {
+                modalInhabilitar.hide();
+                // Recargar la página para reflejar el cambio
+                window.location.reload();
+            } else {
+                alert('No se pudo inhabilitar el proyecto.');
+                resetarBtnInhabilitar();
+            }
+        })
+        .catch(function () {
+            alert('Error de conexión. Intenta de nuevo.');
+            resetarBtnInhabilitar();
+        });
+    });
+
+    function resetarBtnInhabilitar() {
+        document.getElementById('txtInhabilitar').textContent = 'Inhabilitar';
+        document.getElementById('spnInhabilitar').classList.add('d-none');
+        document.getElementById('btnConfirmarInhabilitar').disabled = false;
+    }
+</script>
+}

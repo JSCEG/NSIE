@@ -54,403 +54,345 @@
 
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <!-- ================================= -->
-                <!-- 1 CONTEXTO DEL PUNTO DE BARRENACIÓN -->
-                <!-- ================================= -->
+                    <!-- ================================= -->
+                    <!-- 1 CONTEXTO DEL PUNTO DE BARRENACIÓN -->
+                    <!-- ================================= -->
 
-                <div class="card siil-card mb-4">
-                    <div class="card-header siil-card__header">
-                        <h5 class="mb-0">1. Contexto del Punto de Barrenación</h5>
-                    </div>
+                    <div class="card siil-card mb-4">
 
-                    <div class="card-body">
-
-                        <h6 class="text-primary mb-3">Descripción Local</h6>
-
-                        <div class="row g-3">
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Litología Local *</label>
-                                <select asp-for="LitologiaLocal" id="LitologiaLocal" class="form-select" required>
-                                    <option value="">Seleccione...</option>
-                                    <option>Arcilla Lacustre</option>
-                                    <option>Riolita</option>
-                                    <option>Conglomerado</option>
-                                </select>
-                                <span asp-validation-for="LitologiaLocal" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Anomalía Gravimétrica (mGal)</label>
-                                <input asp-for="AnomaliaGravimetrica" type="number" step="0.01" class="form-control"
-                                       placeholder="Valor en mGal">
-                                <span asp-validation-for="AnomaliaGravimetrica" class="text-danger"></span>
-                            </div>
-
+                        <div class="card-header siil-card__header">
+                            <h5 class="mb-0">Registro de Barrenación</h5>
                         </div>
 
-                        <hr class="my-4">
+                        <div class="card-body">
 
-                        <h6 class="text-primary mb-3">Prospección Decisiva</h6>
+                            <!-- ===================== -->
+                            <!-- IDENTIFICACIÓN -->
+                            <!-- ===================== -->
 
-                        <div class="row g-3">
+                            <h6 class="text-primary mb-3">Identificación</h6>
 
-                            <div class="col-md-12">
-                                <label class="form-label">Anomalía 1</label>
-                                <textarea asp-for="Anomalia1" class="form-control" rows="2"></textarea>
-                                <span asp-validation-for="Anomalia1" class="text-danger"></span>
+                            <div class="row g-3">
+
+                                <div class="col-md-3">
+                                    <label class="form-label">Barreno (ID) <span class="text-danger">*</span></label>
+                                    <input asp-for="BarrenoID" class="form-control" required>
+                                    <span asp-validation-for="BarrenoID" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label">Perforista <span class="text-danger">*</span></label>
+                                    <input asp-for="Perforista" class="form-control" required>
+                                    <span asp-validation-for="Perforista" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label">Responsable de perforación <span class="text-danger">*</span></label>
+                                    <input asp-for="Responsable" class="form-control" required>
+                                    <span asp-validation-for="Responsable" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label">Responsable de descripción del núcleo <span class="text-danger">*</span></label>
+                                    <input asp-for="ResponsableNucleo" class="form-control" required>
+                                    <span asp-validation-for="ResponsableNucleo" class="text-danger"></span>
+                                </div>
+
                             </div>
 
-                            <div class="col-md-12">
-                                <label class="form-label">Anomalía 2</label>
-                                <textarea asp-for="Anomalia2" class="form-control" rows="2"></textarea>
-                                <span asp-validation-for="Anomalia2" class="text-danger"></span>
+                            <hr class="my-4">
+
+                            <!-- ===================== -->
+                            <!-- CONTEXTO -->
+                            <!-- ===================== -->
+
+                            <h6 class="text-primary mb-3">Contexto</h6>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-3">
+                                    <label>Gravimetría *</label>
+                                    <input asp-for="AnomaliaGravimetrica" type="number" step="0.01" class="form-control" placeholder="Valor en mGal" required>
+                                    <span asp-validation-for="AnomaliaGravimetrica" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-9">
+                                    <label>Justificación principal <span class="text-danger">*</span></label>
+                                    <textarea asp-for="Anomalia1" class="form-control" required></textarea>
+                                    <span asp-validation-for="Anomalia1" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Justificación secundaria</label>
+                                    <textarea asp-for="Anomalia2" class="form-control"></textarea>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Justificación terciaria</label>
+                                    <textarea asp-for="Anomalia3" class="form-control"></textarea>
+                                </div>
+
                             </div>
 
-                            <div class="col-md-12">
-                                <label class="form-label">Anomalía 3</label>
-                                <textarea asp-for="Anomalia3" class="form-control" rows="2"></textarea>
-                                <span asp-validation-for="Anomalia3" class="text-danger"></span>
+                            <hr class="my-4">
+
+                            <!-- ===================== -->
+                            <!-- CONDICIONES -->
+                            <!-- ===================== -->
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <label>Accesibilidad <span class="text-danger">*</span></label>
+                                    <select asp-for="Accesibilidad" class="form-select" required>
+                                        <option value="">Seleccione...</option>
+                                        <option>Buena</option>
+                                        <option>Regular</option>
+                                        <option>Mala</option>
+                                        <option>Solo Helicóptero</option>
+                                    </select>
+                                    <span asp-validation-for="Accesibilidad" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Tipo de Terreno <span class="text-danger">*</span></label>
+                                    <select asp-for="TipoTerreno" class="form-select" required>
+                                        <option value="">Seleccione...</option>
+                                        <option>Planicie (Valle o Cuenca)</option>
+                                        <option>Lomerío suave</option>
+                                        <option>Piedemonte</option>
+                                        <option>Cañada / Arroyo</option>
+                                        <option>Mesa / Meseta</option>
+                                        <option>Sierra (Ladera)</option>
+                                        <option>Banco de Material</option>
+                                    </select>
+                                    <span asp-validation-for="TipoTerreno" class="text-danger"></span>
+                                </div>
+
                             </div>
 
-                        </div>
+                            <hr class="my-4">
 
-                        <hr class="my-4">
+                            <!-- ===================== -->
+                            <!-- COORDENADAS -->
+                            <!-- ===================== -->
 
-                        <h6 class="text-primary mb-3">Condiciones de Campo</h6>
+                            <h6 class="text-primary mb-3">Ubicación</h6>
 
-                        <div class="row g-3">
+                            <div class="row g-3">
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Accesibilidad *</label>
-                                <select asp-for="Accesibilidad" class="form-select" required>
-                                    <option value="">Seleccione...</option>
-                                    <option>Buena</option>
-                                    <option>Regular</option>
-                                    <option>Mala</option>
-                                    <option>Solo Helicóptero</option>
-                                </select>
-                                <span asp-validation-for="Accesibilidad" class="text-danger"></span>
+                                <div class="col-md-4">
+                                    <label>Latitud (Y) <span class="text-danger">*</span></label>
+                                    <input asp-for="Latitud" class="form-control" type="number" step="0.00001" required>
+                                    <span asp-validation-for="Latitud" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Longitud (X) <span class="text-danger">*</span></label>
+                                    <input asp-for="Longitud" class="form-control" type="number" step="0.00001" required>
+                                    <span asp-validation-for="Longitud" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Altitud (Z) <span class="text-danger">*</span></label>
+                                    <input asp-for="Altitud" class="form-control" type="number" step="0.01" required>
+                                    <span asp-validation-for="Altitud" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Azimut <span class="text-danger">*</span></label>
+                                    <input asp-for="Azimut" class="form-control" type="number" required>
+                                    <span asp-validation-for="Azimut" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Inclinación <span class="text-danger">*</span></label>
+                                    <input asp-for="Inclinacion" class="form-control" type="number" required>
+                                    <span asp-validation-for="Inclinacion" class="text-danger"></span>
+                                </div>
+
                             </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Tipo de Terreno *</label>
-                                <select asp-for="TipoTerreno" class="form-select" required>
-                                    <option value="">Seleccione...</option>
-                                    <option>Planicie (Valle o Cuenca)</option>
-                                    <option>Lomerío suave</option>
-                                    <option>Piedemonte</option>
-                                    <option>Cañada / Arroyo</option>
-                                    <option>Mesa / Meseta</option>
-                                    <option>Sierra (Ladera)</option>
-                                    <option>Banco de Material</option>
-                                </select>
-                                <span asp-validation-for="TipoTerreno" class="text-danger"></span>
+                            <hr class="my-4">
+
+                            <!-- ===================== -->
+                            <!-- PROGRAMA -->
+                            <!-- ===================== -->
+
+                            <div class="row g-3">
+
+                                <div class="col-md-4">
+                                    <label>Tipo de barrenación <span class="text-danger">*</span></label>
+                                    <select asp-for="TipoBarrenacion" id="TipoBarrenacion" class="form-select" required>
+                                        <option value="">Seleccione...</option>
+                                        <option>Corte Diamante</option>
+                                        <option>Circulación inversa</option>
+                                        <option>Aire nucleo</option>
+                                        <option>Sónica</option>
+                                        <option>Helicoidal</option>
+                                        <option value="OTRO">Otro:</option>
+                                    </select>
+                                    <input asp-for="TipoBarrenacionOtro" id="TipoBarrenacionOtro" class="form-control mt-2" style="display:none;" placeholder="Escriba otro tipo de barrenación">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Fecha de inicio <span class="text-danger">*</span></label>
+                                    <input asp-for="FechaInicio" type="date" class="form-control" required>
+                                    <span asp-validation-for="FechaInicio" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Fecha de finalización <span class="text-danger">*</span></label>
+                                    <input asp-for="FechaFinalizacion" type="date" class="form-control" required>
+                                    <span asp-validation-for="FechaFinalizacion" class="text-danger"></span>
+                                </div>
+
                             </div>
 
-                        </div>
+                            <hr class="my-4">
 
-                    </div>
-                </div>
+                            <!-- ===================== -->
+                            <!-- NÚCLEO -->
+                            <!-- ===================== -->
 
+                            <div class="row g-3">
 
-                <!-- =========================== -->
-                <!-- 2 DESCRIPCIÓN DEL BARRENO -->
-                <!-- =========================== -->
+                                <div class="col-md-3">
+                                    <label>Longitud perforada <span class="text-danger">*</span></label>
+                                    <input asp-for="LongitudPerforada" id="LongitudPerforada"  type="number" step="0.01" class="form-control" required>
+                                    <span asp-validation-for="LongitudPerforada" class="text-danger"></span>
+                                </div>
 
-                <div class="card siil-card mb-4">
+                                <div class="col-md-3">
+                                    <label>Longitud recuperada <span class="text-danger">*</span></label>
+                                    <input asp-for="LongitudRecuperada" id="LongitudRecuperada" class="form-control" required>
+                                    <span asp-validation-for="LongitudRecuperada" class="text-danger"></span>
+                                </div>
 
-                    <div class="card-header siil-card__header">
-                        <h5 class="mb-0">2. Descripción del Barreno</h5>
-                    </div>
+                                <div class="col-md-3">
+                                    <label>TCR <span class="text-danger">*</span></label>
+                                    <input asp-for="TCR" id="TCR" type="number" step="0.01" class="form-control" readonly required>
+                                    <span asp-validation-for="TCR" class="text-danger"></span>
+                                </div>
 
-                    <div class="card-body">
+                                <div class="col-md-12">
+                                    <label>TCR Notas</label>
+                                    <textarea asp-for="TCRNotas" class="form-control"></textarea>
+                                </div>
 
-                        <h6 class="text-primary mb-3">Identificación</h6>
+                                <div class="col-md-3">
+                                    <label>Diámetro <span class="text-danger">*</span></label>
+                                    <input asp-for="Diametro" class="form-control" type="number" required>
+                                    <span asp-validation-for="Diametro" class="text-danger"></span>
+                                </div>
 
-                        <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label>Número de cajas <span class="text-danger">*</span></label>
+                                    <input asp-for="NumeroCajas" class="form-control" type="number" required>
+                                    <span asp-validation-for="NumeroCajas" class="text-danger"></span>
+                                </div>
 
-                            <div class="col-md-4">
-                                <label class="form-label">Barreno (ID) *</label>
-                                <input asp-for="BarrenoID" type="text" class="form-control"
-                                       placeholder="PROY-SR-BRN-001" required>
-                                <span asp-validation-for="BarrenoID" class="text-danger"></span>
+                                <div class="col-md-6">
+                                    <label>Nombre de la primera caja <span class="text-danger">*</span></label>
+                                    <input class="form-control" id="CajaID"  placeholder="SEFMP31-SONNOGAL-BRN-001_C.001" readonly>
+                                    @* <span asp-validation-for="NombreCajas" class="text-danger"></span> *@
+                                </div>
+
+                                <div class="col-md-3" id="grupoRQD" style="display: none;">
+                                    <label>RQD</label>
+                                    <select asp-for="RQD" id="RQD" class="form-select">
+                                        <option value="">Seleccione...</option>
+                                        <option>90% - 100% (Excelente)</option>
+                                        <option>75% - 90% (Bueno)</option>
+                                        <option>50% - 75% (Regular)</option>
+                                        <option>25% - 50% (Pobre)</option>
+                                        <option>0% - 25% (Muy pobre)</option>
+                                    </select>
+                                </div>
+
                             </div>
 
-                            <div class="col-md-4">
-                                <label class="form-label">Perforista</label>
-                                <select asp-for="Perforista" class="form-select">
-                                    <option value="">Seleccione...</option>
-                                    <option>Perforaciones del Norte</option>
-                                    <option>GeoDrill México</option>
-                                    <option>ExploraMineral SA</option>
-                                    <option>Servicios Geotécnicos MX</option>
-                                </select>
-                                <span asp-validation-for="Perforista" class="text-danger"></span>
+                            <hr class="my-4">
+
+                            <!-- ===================== -->
+                            <!-- INTERVALOS -->
+                            <!-- ===================== -->
+
+                            <h6 class="text-primary mb-3">Intervalos</h6>
+
+                            <!-- tu tabla aquí -->
+                            <table class="table table-bordered" id="tablaIntervalos">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Desde (m)</th>
+                                        <th>Hasta (m)</th>
+                                        <th>¿Interés?</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Filas dinámicas -->
+                                </tbody>
+                            </table>
+
+                            <button type="button" class="btn btn-primary" onclick="agregarFila()">
+                                Agregar intervalo
+                            </button>
+
+                            <hr class="my-4">
+
+                            <!-- ===================== -->
+                            <!-- NOTAS -->
+                            <!-- ===================== -->
+
+                            <div>
+                                <label>Notas finales <span class="text-danger">*</span></label>
+                                <textarea asp-for="Observaciones" class="form-control"></textarea>
                             </div>
 
-                            <div class="col-md-4">
-                                <label class="form-label">Responsable</label>
-                                <input asp-for="Responsable" type="text" class="form-control">
-                                <span asp-validation-for="Responsable" class="text-danger"></span>
-                            </div>
+                            <hr class="my-4">
 
-                        </div>
+                            <!-- ===================== -->
+                            <!-- ARCHIVOS -->
+                            <!-- ===================== -->
 
+                            <div class="row g-3">
 
-                        <hr class="my-4">
+                                <div class="col-md-6">
+                                    <label>Archivo de Descripción del Núcleo <span class="text-danger">*</span></label>
+                                    <input asp-for="ArchivoDescripcionNucleo" type="file" class="form-control" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv">
+                                    <span asp-validation-for="ArchivoDescripcionNucleo" class="text-danger"></span>
+                                </div>
 
-                        <h6 class="text-primary mb-3">Localización y Geometría</h6>
+                                <div class="col-md-6">
+                                    <label>Fotografías del núcleo <span class="text-danger">*</span></label>
+                                    <input asp-for="FotografiasNucleo" type="file" class="form-control" multiple accept="image/jpeg,image/png,.jpg,.jpeg,.png">
+                                    <span asp-validation-for="FotografiasNucleo" class="text-danger"></span>
+                                </div>
 
-                        <div class="row g-3">
-
-                            <div class="col-md-4">
-                                <label class="form-label">Latitud (14 - 33)</label>
-                                <input asp-for="Latitud" type="number" step="0.000001"
-                                       class="form-control">
-                                <span asp-validation-for="Latitud" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Longitud (-118.5 a -86)</label>
-                                <input asp-for="Longitud" type="number" step="0.000001"
-                                       class="form-control">
-                                <span asp-validation-for="Longitud" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Altitud (msnm)</label>
-                                <input asp-for="Altitud" type="number" step="0.01"
-                                       class="form-control">
-                                <span asp-validation-for="Altitud" class="text-danger"></span>
-                            </div>
-
-                        </div>
-
-
-                        <div class="row g-3 mt-1">
-
-                            <div class="col-md-6">
-                                <label class="form-label">Azimut (0 - 360°)</label>
-                                <input asp-for="Azimut" type="number"
-                                       class="form-control">
-                                <span asp-validation-for="Azimut" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Inclinación (0 a -90°)</label>
-                                <input asp-for="Inclinacion" type="number"
-                                       class="form-control">
-                                <span asp-validation-for="Inclinacion" class="text-danger"></span>
-                            </div>
-
-                        </div>
-
-
-                        <hr class="my-4">
-
-                        <h6 class="text-primary mb-3">Programa y Ejecución</h6>
-
-                        <div class="row g-3">
-
-                            <div class="col-md-4">
-                                <label class="form-label">Tipo de Barrenación</label>
-                                <select asp-for="TipoBarrenacion" id="TipoBarrenacion" class="form-select">
-                                    <option value="">Seleccione...</option>
-                                    <option>Corte Diamante</option>
-                                </select>
-                                <span asp-validation-for="TipoBarrenacion" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Fecha Inicio</label>
-                                <input asp-for="FechaInicio" type="date" class="form-control">
-                                <span asp-validation-for="FechaInicio" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Fecha Finalización</label>
-                                <input asp-for="FechaFinalizacion" type="date" class="form-control">
-                                <span asp-validation-for="FechaFinalizacion" class="text-danger"></span>
-                            </div>
-
-                        </div>
-
-                        <div class="row g-3 mt-1">
-
-                            <div class="col-md-4">
-                                <label class="form-label">Longitud perforada (m)</label>
-                                <input asp-for="LongitudPerforada" id="LongitudPerforada" type="number" step="0.01"
-                                       class="form-control">
-                                <span asp-validation-for="LongitudPerforada" class="text-danger"></span>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <!-- =========================== -->
-                <!-- 3 DESCRIPCIÓN DEL NÚCLEO -->
-                <!-- =========================== -->
-
-                <div class="card siil-card mb-4">
-
-                    <div class="card-header siil-card__header">
-                        <h5 class="mb-0">3. Descripción del Núcleo</h5>
-                    </div>
-
-                    <div class="card-body">
-
-                        <h6 class="text-primary mb-3">Datos Generales</h6>
-
-                        <div class="row g-3">
-
-                            <div class="col-md-3">
-                                <label class="form-label">Longitud recuperada (m)</label>
-                                <input asp-for="LongitudRecuperada" id="LongitudRecuperada" type="number" step="0.01"
-                                       class="form-control">
-                                <span asp-validation-for="LongitudRecuperada" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label">Diámetro (mm)</label>
-                                <input asp-for="Diametro" type="number" class="form-control">
-                                <span asp-validation-for="Diametro" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label">Número de cajas</label>
-                                <input asp-for="NumeroCajas" type="number"
-                                       class="form-control">
-                                <span asp-validation-for="NumeroCajas" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label">Nombre de cajas</label>
-                                <input asp-for="NombreCajas" type="text" class="form-control">
-                                <span asp-validation-for="NombreCajas" class="text-danger"></span>
-                            </div>
-
-                        </div>
-
-
-                        <hr class="my-4">
-
-                        <h6 class="text-primary mb-3">Descripción Técnica</h6>
-
-                        <div class="row g-3">
-
-                            <div class="col-md-4" id="grupoRQD" style="display: none;">
-                                <label class="form-label">RQD</label>
-                                <select asp-for="RQD" id="RQD" class="form-select">
-                                    <option value="">Seleccione...</option>
-                                    <option>90% - 100% (Excelente)</option>
-                                    <option>75% - 90% (Bueno)</option>
-                                    <option>50% - 75% (Regular)</option>
-                                    <option>25% - 50% (Pobre)</option>
-                                    <option>0% - 25% (Muy pobre)</option>
-                                </select>
-                                <span asp-validation-for="RQD" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">TCR (%)</label>
-                                <input asp-for="TCR" id="TCR" type="number"
-                                       step="0.01"
-                                       class="form-control"
-                                       readonly>
-                                <span asp-validation-for="TCR" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Responsable</label>
-                                <select asp-for="Responsable" class="form-select">
-                                    <option value="">Seleccione...</option>
-                                    <option>Juan Pérez</option>
-                                    <option>María García</option>
-                                    <option>Carlos López</option>
-                                </select>
-                                <span asp-validation-for="Responsable" class="text-danger"></span>
-                            </div>
-
-                        </div>
-
-                        <div class="row g-3 mt-1">
-
-                            <div class="col-md-3">
-                                <label class="form-label">Intervalos</label>
-                                <input asp-for="Intervalos" type="number"
-                                       class="form-control">
-                                <span asp-validation-for="Intervalos" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-9">
-                                <label class="form-label">Intervalos de interés</label>
-                                <textarea asp-for="IntervalosInteres" class="form-control" rows="2"></textarea>
-                                <span asp-validation-for="IntervalosInteres" class="text-danger"></span>
-                            </div>
-
-                        </div>
-
-                        <div class="row g-3 mt-2">
-
-                            <div class="col-md-6">
-                                <label class="form-label">Archivo Descripción Núcleo (.xlsx, .csv)</label>
-                                <input asp-for="ArchivoDescripcionNucleo" type="file" class="form-control">
-                                <span asp-validation-for="ArchivoDescripcionNucleo" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Fotografías del Núcleo (.jpg, .jpeg, .png)</label>
-                                <input asp-for="FotografiasNucleo" type="file" class="form-control"
-                                    multiple>
-                                <span asp-validation-for="FotografiasNucleo" class="text-danger"></span>
                             </div>
 
                         </div>
 
                     </div>
-                </div>
 
 
-                <!-- =========================== -->
-                <!-- 4 NOTAS -->
-                <!-- =========================== -->
+                    <!-- BOTONES -->
 
-                <div class="card siil-card mb-4">
+                    <div class="d-grid gap-2">
 
-                    <div class="card-header siil-card__header">
-                        <h5 class="mb-0">4. Notas</h5>
-                    </div>
+                        <button type="submit" class="btn btn-siil-primary btn-lg">
+                            <i class="bi bi-save me-2"></i>
+                            Guardar Registro de Barrenación
+                        </button>
 
-                    <div class="card-body">
-
-                        <label class="form-label">Observaciones</label>
-                        <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
-                        <span asp-validation-for="Observaciones" class="text-danger"></span>
+                        <a asp-action="CrearMuestra" class="btn btn-siil-secondary">
+                            <i class="bi bi-x-circle me-2"></i>
+                            Regresar
+                        </a>
 
                     </div>
-
-                </div>
-
-
-                <!-- BOTONES -->
-
-                <div class="d-grid gap-2">
-
-                    <button type="submit" class="btn btn-siil-primary btn-lg">
-                        <i class="bi bi-save me-2"></i>
-                        Guardar Registro de Barrenación
-                    </button>
-
-                    <a asp-action="Index" class="btn btn-siil-secondary">
-                        <i class="bi bi-x-circle me-2"></i>
-                        Cancelar
-                    </a>
-
-                </div>
 
                 }
 
@@ -588,6 +530,10 @@
 
     <script>
 
+        const proyectoVB = "@ViewBag.Proyecto";
+        const estadoVB = "@ViewBag.Estado";
+        const municipioVB = "@ViewBag.Municipio";
+
         document.addEventListener("DOMContentLoaded", function () {
 
             inicializarEventos();
@@ -595,35 +541,83 @@
 
             const form = document.getElementById("formBarrenacion");
 
+            document.getElementById("BarrenoID").addEventListener("input", generarCajaID);
+
             generarBarrenoID();
+            inicializarIntervalos();
 
             if (form) {
+
                 form.addEventListener("submit", function (e) {
 
-                    const valido = validarFormularioBarrenacion();
+                    @* e.preventDefault(); *@
 
-                    if (!valido) {
+                    debugIntervalos();
+
+                    const validoForm = validarFormularioBarrenacion();
+                    const validoIntervalos = validarIntervalosFinal();
+
+                    if (!validoForm || !validoIntervalos) {
                         e.preventDefault();
                         return;
                     }
+
+                    // 🔥 CHECKBOXES
+                    document.querySelectorAll(".input-interes").forEach(chk => {
+
+                        // eliminar hidden previos
+                        const prev =
+                            form.querySelectorAll(`input[type="hidden"][name="${chk.name}"]`);
+
+                        prev.forEach(x => x.remove());
+
+                        // si NO está marcado → mandar false
+                        if (!chk.checked) {
+
+                            const hidden = document.createElement("input");
+
+                            hidden.type = "hidden";
+                            hidden.name = chk.name;
+                            hidden.value = "false";
+
+                            form.appendChild(hidden);
+                        }
+                    });
 
                     const btn = form.querySelector("button[type='submit']");
                     btn.disabled = true;
                     btn.innerHTML = "Guardando...";
                 });
             }
-
         });
+
+        function debugIntervalos() {
+           
+            const form = document.getElementById("formBarrenacion");
+            const formData = new FormData(form);
+
+            console.clear();
+
+            console.log("===== INTERVALOS =====");
+
+            for (let pair of formData.entries()) {
+
+                if (pair[0].startsWith("Intervalos")) {
+                    console.log(pair[0], pair[1]);
+                }
+            }
+        }
 
         function inicializarEventos(){
 
             const tipo = document.getElementById("TipoBarrenacion");
             const lat = document.getElementById("Latitud");
             const lon = document.getElementById("Longitud");
-            const litologia = document.getElementById("LitologiaLocal");
             const tcr = document.getElementById("TCR");
             const longitudP = document.getElementById("LongitudPerforada");
             const longitudR = document.getElementById("LongitudRecuperada");
+
+            const inputOtro = document.getElementById("TipoBarrenacionOtro");
 
             if(longitudP && longitudR){
                 longitudP.addEventListener("input", calcularTCR);
@@ -641,15 +635,23 @@
                 lon.addEventListener("blur", validarCoordenadasBarrenacion);
             }
 
-            if(litologia && tcr){
-                litologia.addEventListener("change", validarTCRGeologico);
-                tcr.addEventListener("blur", validarTCRGeologico);
+            // 🔹 Lógica "Otro"
+            if (tipo && inputOtro) {
 
-                litologia.addEventListener("change", function(){
-                    validarTCRGeologico();
-                });
+                function toggleOtro() {
+
+                    if (tipo.value === "OTRO") {
+                        inputOtro.style.display = "block";
+                    } else {
+                        inputOtro.style.display = "none";
+                        inputOtro.value = "";
+                    }
+                }
+
+                toggleOtro();
+
+                tipo.addEventListener("change", toggleOtro);
             }
-
         }
 
         function activarRQD(){
@@ -658,21 +660,48 @@
             const rqd = document.getElementById("RQD");
             const grupo = document.getElementById("grupoRQD");
 
-            if(tipo === "Corte Diamante"){
+            const inputOtro = document.getElementById("TipoBarrenacionOtro");
 
+            // 🔹 Lógica RQD
+            if(tipo === "Corte Diamante"){
                 grupo.style.display = "block";
                 rqd.disabled = false;
-
-            }
-            else{
-
+            } else {
                 grupo.style.display = "none";
                 rqd.value = "";
                 rqd.disabled = true;
-
             }
 
+            // 🔹 Lógica "Otro"
+            if (tipo && inputOtro) {
+
+                function toggleOtro() {
+
+                    if (tipo.value === "OTRO") {
+                        inputOtro.style.display = "block";
+                    } else {
+                        inputOtro.style.display = "none";
+                        inputOtro.value = "";
+                    }
+                }
+
+                toggleOtro();
+
+                tipo.addEventListener("change", toggleOtro);
+            }
         }
+
+        @* document.querySelector("form").addEventListener("submit", function () {
+    
+            const select = document.getElementById("TipoBarrenacion");
+            const inputOtro = document.getElementById("TipoBarrenacionOtro");
+
+            console.log("Valor antes de submit:", select.value);
+
+            if(select.value === "OTRO"){
+                select.value = inputOtro.value; // 🔥 reemplaza el valor
+            }
+        }); *@
 
         function validarFormularioBarrenacion(){
 
@@ -696,7 +725,7 @@
             const cajas = parseInt(document.getElementById("NumeroCajas").value);
 
             const tcr = parseFloat(document.getElementById("TCR").value);
-            const intervalos = parseInt(document.getElementById("Intervalos").value);
+            @* const intervalos = parseInt(document.getElementById("Intervalos").value); *@
 
             // LATITUD
             if(isNaN(lat) || lat < 14 || lat > 33){
@@ -705,8 +734,8 @@
             }
 
             // LONGITUD
-            if(isNaN(lon) || lon < -118.5 || lon > -86){
-                marcarInvalido("Longitud","Longitud fuera de rango (-118.5 a -86).");
+            if(isNaN(lon) || lon < -118 || lon > -86){
+                marcarInvalido("Longitud","Longitud fuera de rango (-118 a -86).");
                 valido = false;
             }
 
@@ -772,10 +801,10 @@
             }
 
             // INTERVALOS
-            if(isNaN(intervalos) || intervalos <= 0){
+            @* if(isNaN(intervalos) || intervalos <= 0){
                 marcarInvalido("Intervalos","Debe ser mayor a 0.");
                 valido = false;
-            }
+            } *@
 
             return valido;
 
@@ -873,7 +902,7 @@
 
         }
 
-        function validarTCRGeologico(){
+        @* function validarTCRGeologico(){
 
             const litologia = document.getElementById("LitologiaLocal").value;
             const tcr = parseFloat(document.getElementById("TCR").value);
@@ -898,7 +927,7 @@
 
             }
 
-        }
+        } *@
 
         function mostrarAdvertencia(id,mensaje){
 
@@ -918,19 +947,73 @@
 
         }
 
-        function generarBarrenoID(){
+        function generarBarrenoID() {
 
-            const proyecto = "LIT";
-            const zona = "SNR";
+            const proyecto = proyectoVB;
+            const estado = estadoVB.trim();
+            const municipio = municipioVB.trim();
 
-            const numero = Math.floor(Math.random()*99999)+1;
+            if (!proyecto || !estado || !municipio) {
+                alert("Faltan datos para generar el ID");
+                return;
+            }
 
-            const consecutivo = numero.toString().padStart(5,"0");
+            const zona = generarZona(estado, municipio);
 
-            const id = proyecto + "-" + zona + "-BRN-" + consecutivo;
+            console.log("Generando ID para:", { proyecto, estado, municipio, zona });
 
-            document.getElementById("BarrenoID").value = id;
+            fetch(`/SIIL/ObtenerSiguienteConsecutivo?proyecto=${proyecto}&zona=${zona}`)
+                .then(res => res.json())
+                .then(data => {
 
+                    const consecutivo = data.consecutivo;
+
+                    const id = `${proyecto}-${zona}-BRN-${consecutivo}`;
+
+                    const input = document.getElementById("BarrenoID");
+                    input.value = id;
+
+                    input.setAttribute("readonly", true);
+
+                    generarCajaID();
+                });
+        }
+
+        function generarZona(estado, municipio) {
+
+            const estado3 = estado.substring(0, 3).toUpperCase();
+            const municipio5 = municipio.substring(0, 5).toUpperCase();
+
+            return estado3 + municipio5;
+        }
+
+        function generarCajaID() {
+
+            const barrenoID = document.getElementById("BarrenoID").value;
+
+            if (!barrenoID) {
+                alert("Primero genera el BarrenoID");
+                return;
+            }
+
+            fetch(`/SIIL/ObtenerSiguienteConsecutivoCaja?barrenoID=${encodeURIComponent(barrenoID)}`)
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data.success) {
+                        alert("Error al generar consecutivo");
+                        return;
+                    }
+
+                    const consecutivo = data.consecutivo;
+
+                    const cajaID = `${barrenoID}_C.${consecutivo}`;
+
+                    const input = document.getElementById("CajaID");
+                    input.value = cajaID;
+
+                    input.setAttribute("readonly", true);
+                });
         }
 
         function mostrarErrorCoordenadaBarrenacion(mensaje){
@@ -1010,7 +1093,7 @@
             tcrInput.value = tcr.toFixed(2);
 
             // activar advertencias geológicas automáticamente
-            validarTCRGeologico();
+            @* validarTCRGeologico(); *@
 
         }
 
@@ -1024,6 +1107,296 @@
 
             if(feedback) feedback.remove();
 
+        }
+
+        function agregarFila() {
+            const tbody = document.querySelector("#tablaIntervalos tbody");
+            const longitudPerforadaInput = document.getElementById("LongitudPerforada");
+
+            const index = tbody.querySelectorAll("tr").length;
+
+            // 🔥 Obtener valor anterior de "Hasta"
+            let desde = 0;
+
+            if (index > 0) {
+                const ultimaFila = tbody.querySelectorAll("tr")[index - 1];
+                const ultimoHasta = ultimaFila.querySelector(".input-hasta").value;
+
+                desde = parseFloat(ultimoHasta) || 0;
+            }
+
+            if (index > 0) {
+                const ultima = tbody.querySelectorAll("tr")[index - 1];
+                const hasta = ultima.querySelector(".input-hasta").value;
+
+                if (!hasta) {
+                    alert("Debes completar el intervalo actual antes de agregar otro.");
+                    return;
+                }
+            }
+
+            const fila = `
+                <tr>
+                    <td>
+                        <input type="text"
+                            name="Intervalos[${index}].Nombre"
+                            class="form-control input-nombre"
+                            value="INT-${String(index + 1).padStart(2, '0')}"
+                            readonly />
+                    </td>
+
+                    <td>
+                        <input type="number"
+                            step="0.01"
+                            name="Intervalos[${index}].Desde"
+                            class="form-control input-desde"
+                            value="${desde}"
+                            readonly />
+                    </td>
+
+                    <td>
+                        <input type="number"
+                            step="0.01"
+                            name="Intervalos[${index}].Hasta"
+                            class="form-control input-hasta"
+                            min="${desde}"
+                            onblur="validarIntervaloIndividual(this)"
+                            required />
+                    </td>
+
+                    <td class="text-center">
+
+                        <input type="checkbox"
+                            class="form-check-input input-interes"
+                            name="Intervalos[${index}].EsInteres"
+                            value="true" />
+
+                    </td>
+
+                    <td>
+                        <button type="button"
+                            class="btn btn-danger btn-sm"
+                            onclick="eliminarFila(this)">
+                            X
+                        </button>
+                    </td>
+                </tr>
+            `;
+
+            tbody.insertAdjacentHTML("beforeend", fila);
+
+            //validarIntervalos();
+        }
+
+        function eliminarFila(btn) {
+            const fila = btn.closest("tr");
+            fila.remove();
+
+            reordenarIntervalos();
+            //validarIntervalos();
+        }
+
+        function reordenarIntervalos() {
+            const tbody = document.querySelector("#tablaIntervalos tbody");
+            const filas = tbody.querySelectorAll("tr");
+
+            let desde = 0;
+
+            filas.forEach((fila, index) => {
+                const nombre = fila.querySelector(".input-nombre");
+                const inputDesde = fila.querySelector(".input-desde");
+                const inputHasta = fila.querySelector(".input-hasta");
+
+                // 🔥 Renumerar nombres
+                nombre.value = `INT-${String(index + 1).padStart(2, '0')}`;
+                nombre.name = `Intervalos[${index}].Nombre`;
+
+                // 🔥 Recalcular DESDE
+                inputDesde.value = desde;
+                inputDesde.name = `Intervalos[${index}].Desde`;
+
+                // 🔥 Reasignar HASTA
+                inputHasta.name = `Intervalos[${index}].Hasta`;
+                inputHasta.min = desde;
+
+                // 🔥 Checkbox
+                const checkbox = fila.querySelector('.input-interes');
+
+                checkbox.name = `Intervalos[${index}].EsInteres`;
+
+                desde = parseFloat(inputHasta.value) || desde;
+            });
+        }
+
+        function validarIntervalos() {
+            const tbody = document.querySelector("#tablaIntervalos tbody");
+            const filas = tbody.querySelectorAll("tr");
+
+            const longitudPerforada =
+                parseFloat(document.getElementById("LongitudPerforada").value) || 0;
+
+            if (filas.length === 0) {
+                alert("Debe existir al menos un intervalo.");
+                return false;
+            }
+
+            let ultimoHasta = 0;
+
+            for (let i = 0; i < filas.length; i++) {
+                const fila = filas[i];
+
+                const desde =
+                    parseFloat(fila.querySelector(".input-desde").value) || 0;
+
+                const hastaRaw = fila.querySelector(".input-hasta").value;
+
+                // 🔥 SI NO HA ESCRITO TODAVÍA → IGNORAR
+                if (!hastaRaw) continue;
+
+                const hasta = parseFloat(hastaRaw);
+
+                if (hasta <= desde) {
+                    alert(`El intervalo INT-${String(i + 1).padStart(2, '0')} tiene valores inválidos.`);
+                    return false;
+                }
+
+                if (longitudPerforada > 0 && hasta > longitudPerforada) {
+                    alert(`El intervalo INT-${String(i + 1).padStart(2, '0')} supera la Longitud Perforada.`);
+                    return false;
+                }
+
+                ultimoHasta = hasta;
+            }
+
+            return true;
+        }
+
+        function validarIntervalosFinal() {
+            const tbody = document.querySelector("#tablaIntervalos tbody");
+            const filas = tbody.querySelectorAll("tr");
+
+            const longitudPerforada =
+                parseFloat(document.getElementById("LongitudPerforada").value) || 0;
+
+            if (filas.length === 0) {
+                alert("Debe existir al menos un intervalo.");
+                return false;
+            }
+
+            let ultimoHasta = 0;
+
+            for (let i = 0; i < filas.length; i++) {
+                const fila = filas[i];
+
+                const desde =
+                    parseFloat(fila.querySelector(".input-desde").value) || 0;
+
+                const hastaRaw = fila.querySelector(".input-hasta").value;
+
+                // 🔴 AQUÍ SÍ ES OBLIGATORIO
+                if (!hastaRaw) {
+                    alert(`Debe completar el intervalo INT-${String(i + 1).padStart(2, '0')}`);
+                    return false;
+                }
+
+                const hasta = parseFloat(hastaRaw);
+
+                if (hasta <= desde) {
+                    alert(`El intervalo INT-${String(i + 1).padStart(2, '0')} tiene valores inválidos.`);
+                    return false;
+                }
+
+                if (hasta > longitudPerforada) {
+                    alert(`El intervalo INT-${String(i + 1).padStart(2, '0')} supera la Longitud Perforada.`);
+                    return false;
+                }
+
+                ultimoHasta = hasta;
+            }
+
+            if (longitudPerforada > 0 && ultimoHasta !== longitudPerforada) {
+                alert("Los intervalos deben cubrir exactamente la Longitud Perforada.");
+                return false;
+            }
+
+            return true;
+        }
+
+        function validarIntervaloIndividual(input) {
+
+            const fila = input.closest("tr");
+            const tbody = document.querySelector("#tablaIntervalos tbody");
+
+            const longitudPerforadaInput = document.getElementById("LongitudPerforada");
+            const longitudPerforada = parseFloat(longitudPerforadaInput.value);
+
+            const desde = parseFloat(fila.querySelector(".input-desde").value) || 0;
+            const hasta = parseFloat(input.value);
+
+            // 🔴 1. No hay longitud perforada
+            if (!longitudPerforada || longitudPerforada <= 0) {
+                alert("Primero debes ingresar la Longitud Perforada.");
+
+                input.value = ""; // 🔥 limpiar
+                return;
+            }
+
+            // 🔴 2. Valor inválido
+            if (!hasta || hasta <= desde) {
+                alert("El valor 'Hasta' debe ser mayor que 'Desde'.");
+
+                input.value = "";
+                return;
+            }
+
+            // 🔴 3. Se pasa del límite
+            if (hasta > longitudPerforada) {
+                alert("El intervalo supera la Longitud Perforada.");
+
+                input.value = ""; // 🔥 limpiar automáticamente
+                return;
+            }
+
+            // 🔥 4. Ajustar siguiente fila automáticamente (UX PRO)
+            const filas = tbody.querySelectorAll("tr");
+            const index = Array.from(filas).indexOf(fila);
+
+            if (index < filas.length - 1) {
+                const siguienteFila = filas[index + 1];
+                const siguienteDesde = siguienteFila.querySelector(".input-desde");
+
+                siguienteDesde.value = hasta;
+            }
+        }
+
+        document.getElementById("LongitudPerforada")
+            .addEventListener("change", function () {
+
+                const tbody = document.querySelector("#tablaIntervalos tbody");
+
+                // 🔥 limpiar todo
+                tbody.innerHTML = "";
+
+                // 🔥 crear intervalo inicial limpio
+                agregarFila();
+
+                alert("Se reiniciaron los intervalos porque cambió la Longitud Perforada.");
+            });
+
+        function inicializarIntervalos() {
+            const tbody = document.querySelector("#tablaIntervalos tbody");
+
+            // 🔥 Siempre crear uno por defecto
+            if (tbody.querySelectorAll("tr").length === 0) {
+                agregarFila();
+            }
+
+            // 🔥 Validar antes de enviar form
+            @* document.querySelector("form").addEventListener("submit", function (e) {
+                if (!validarIntervalos()) {
+                    e.preventDefault();
+                }
+            }); *@
         }
 
     </script>
